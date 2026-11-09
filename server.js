@@ -127,12 +127,29 @@ function maskApiKey(key) {
   return key.slice(0, 4) + '••••••••••••' + key.slice(-4);
 }
 
+function resolveRequestPathname(req, parsedUrl) {
+  const qp = parsedUrl.searchParams.get('__pathname');
+  if (qp && !qp.includes(':path') && !qp.includes('$1')) {
+    return qp.startsWith('/') ? qp : `/${qp}`;
+  }
+  const routeMatches = req.headers['x-now-route-matches'];
+  if (routeMatches) {
+    const matchParams = new URLSearchParams(String(routeMatches));
+    const p = matchParams.get('path') || matchParams.get('1') || '';
+    if (p) {
+      if (qp && qp.startsWith('/api/')) {
+        return `/api/${p.replace(/^\/+/, '')}`;
+      }
+      return p.startsWith('/') ? p : `/${p}`;
+    }
+  }
+  return parsedUrl.pathname;
+}
+
 const requestHandler = async (req, res) => {
   try {
     const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-    const rewrittenPath = parsedUrl.searchParams.get('__pathname');
-    const rawPathname = rewrittenPath ? rewrittenPath : parsedUrl.pathname;
-    const pathname = rawPathname.startsWith('/') ? rawPathname : `/${rawPathname}`;
+    const pathname = resolveRequestPathname(req, parsedUrl);
 
     // 1. Phục vụ trang chủ index.html & Favicon MatrixEdu
     if (req.method === 'GET' && (pathname === '/favicon.svg' || pathname === '/favicon.ico')) {
