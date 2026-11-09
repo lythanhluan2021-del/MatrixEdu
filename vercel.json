@@ -1,18 +1,14 @@
 {
   "version": 2,
   "functions": {
-    "api/index.js": {
+    "api/**/*.js": {
       "includeFiles": "{index.html,favicon.svg,*.docx,*.pdf,*.jpg,src/**,data/**}"
     }
   },
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "/api/index.js?__pathname=/api/:path*"
-    },
-    {
-      "source": "/:path*",
-      "destination": "/api/index.js?__pathname=/:path*"
+      "source": "/api/:slug*",
+      "destination": "/api/[...slug]"
     }
   ]
 }

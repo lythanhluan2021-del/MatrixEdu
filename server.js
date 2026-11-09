@@ -128,19 +128,31 @@ function maskApiKey(key) {
 }
 
 function resolveRequestPathname(req, parsedUrl) {
-  const qp = parsedUrl.searchParams.get('__pathname');
-  if (qp && !qp.includes(':path') && !qp.includes('$1')) {
+  if (req.query) {
+    if (req.query.slug) {
+      const s = Array.isArray(req.query.slug) ? req.query.slug.join('/') : String(req.query.slug);
+      return `/api/${s.replace(/^\/+/, '')}`;
+    }
+    if (req.query.__pathname) {
+      const p = Array.isArray(req.query.__pathname) ? req.query.__pathname.join('/') : String(req.query.__pathname);
+      if (!p.includes(':path') && !p.includes(':slug')) {
+        return p.startsWith('/') ? p : `/${p}`;
+      }
+    }
+  }
+  const qp = parsedUrl.searchParams.get('__pathname') || parsedUrl.searchParams.get('slug');
+  if (qp && !qp.includes(':path') && !qp.includes(':slug') && !qp.includes('$1')) {
+    if (parsedUrl.searchParams.has('slug') && !qp.startsWith('/api/')) {
+      return `/api/${qp.replace(/^\/+/, '')}`;
+    }
     return qp.startsWith('/') ? qp : `/${qp}`;
   }
   const routeMatches = req.headers['x-now-route-matches'];
   if (routeMatches) {
     const matchParams = new URLSearchParams(String(routeMatches));
-    const p = matchParams.get('path') || matchParams.get('1') || '';
+    const p = matchParams.get('slug') || matchParams.get('path') || matchParams.get('1') || '';
     if (p) {
-      if (qp && qp.startsWith('/api/')) {
-        return `/api/${p.replace(/^\/+/, '')}`;
-      }
-      return p.startsWith('/') ? p : `/${p}`;
+      return `/api/${p.replace(/^\/+/, '')}`;
     }
   }
   return parsedUrl.pathname;
