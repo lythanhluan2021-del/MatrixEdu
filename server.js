@@ -130,7 +130,9 @@ function maskApiKey(key) {
 const requestHandler = async (req, res) => {
   try {
     const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-    const pathname = parsedUrl.pathname;
+    const rewrittenPath = parsedUrl.searchParams.get('__pathname');
+    const rawPathname = rewrittenPath ? rewrittenPath : parsedUrl.pathname;
+    const pathname = rawPathname.startsWith('/') ? rawPathname : `/${rawPathname}`;
 
     // 1. Phục vụ trang chủ index.html & Favicon MatrixEdu
     if (req.method === 'GET' && (pathname === '/favicon.svg' || pathname === '/favicon.ico')) {
