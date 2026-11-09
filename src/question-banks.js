@@ -366,9 +366,9 @@ const SUBJECT_POOLS = {
       },
       {
         rowId: 'row_3', level: 'Vận dụng',
-        stem: '[LISTENING] According to the podcast tapescript, how many months did it take students in Singapore to collect 12 tons of recyclable materials? (Write a number)',
-        answer: '3',
-        explanation: 'Tapescript: "collecting 12 tons of recyclable paper and plastic within just three months" -> 3.'
+        stem: '[READING] According to the passage, what do traditional festivals, local cuisine, and community values help citizens maintain? (Write NO MORE THAN TWO WORDS)',
+        answer: 'cultural identity',
+        explanation: 'In the passage: "helps citizens maintain their cultural identity in a globalised world".'
       }
     ],
     ESSAY: [

@@ -1,7 +1,7 @@
 {
   "id": "profile_thpt_eng_12",
   "title": "Cuối học kỳ I - Tiếng Anh Lớp 12 (THPT)",
-  "updatedAt": "2026-11-09T21:47:25.642Z",
+  "updatedAt": "2026-11-09T22:17:24.669Z",
   "metadata": {
     "schoolName": "TRƯỜNG THPT CHUYÊN NGOẠI NGỮ",
     "departmentName": "TỔ NGOẠI NGỮ",
@@ -815,9 +815,9 @@
     {
       "rowId": "row_3",
       "level": "Vận dụng",
-      "stem": "[LISTENING] According to the podcast tapescript, how many months did it take students in Singapore to collect 12 tons of recyclable materials? (Write a number)",
-      "answer": "3",
-      "explanation": "Tapescript: \"collecting 12 tons of recyclable paper and plastic within just three months\" -> 3.",
+      "stem": "[READING] According to the passage, what do traditional festivals, local cuisine, and community values help citizens maintain? (Write NO MORE THAN TWO WORDS)",
+      "answer": "cultural identity",
+      "explanation": "In the passage: \"helps citizens maintain their cultural identity in a globalised world\".",
       "id": "q_sa_4",
       "type": "SA",
       "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
@@ -1350,9 +1350,9 @@
         {
           "rowId": "row_3",
           "level": "Vận dụng",
-          "stem": "[LISTENING] According to the podcast tapescript, how many months did it take students in Singapore to collect 12 tons of recyclable materials? (Write a number)",
-          "answer": "3",
-          "explanation": "Tapescript: \"collecting 12 tons of recyclable paper and plastic within just three months\" -> 3.",
+          "stem": "[READING] According to the passage, what do traditional festivals, local cuisine, and community values help citizens maintain? (Write NO MORE THAN TWO WORDS)",
+          "answer": "cultural identity",
+          "explanation": "In the passage: \"helps citizens maintain their cultural identity in a globalised world\".",
           "id": "q_sa_4",
           "type": "SA",
           "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
@@ -1885,9 +1885,9 @@
         {
           "rowId": "row_3",
           "level": "Vận dụng",
-          "stem": "[LISTENING] According to the podcast tapescript, how many months did it take students in Singapore to collect 12 tons of recyclable materials? (Write a number)",
-          "answer": "3",
-          "explanation": "Tapescript: \"collecting 12 tons of recyclable paper and plastic within just three months\" -> 3.",
+          "stem": "[READING] According to the passage, what do traditional festivals, local cuisine, and community values help citizens maintain? (Write NO MORE THAN TWO WORDS)",
+          "answer": "cultural identity",
+          "explanation": "In the passage: \"helps citizens maintain their cultural identity in a globalised world\".",
           "id": "q_sa_4",
           "type": "SA",
           "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
@@ -1987,6 +1987,7 @@
       "Tổng điểm các câu hỏi trong Đề kiểm tra (10.0đ) khớp tuyệt đối với Ma trận (10.0đ).",
       "100% câu hỏi (24/24) có mã liên kết trực tiếp với Ma trận và Bản đặc tả.",
       "100% câu hỏi (24/24) có đầy đủ đáp án và hướng dẫn chấm chi tiết.",
+      "100% câu hỏi (24/24) bám sát chuẩn xác nội dung đơn vị kiến thức theo Ma trận và Bản đặc tả.",
       "Đã khởi tạo 2 mã đề (101, 102) đồng bộ số câu và bảng đáp án riêng."
     ],
     "warnings": [],

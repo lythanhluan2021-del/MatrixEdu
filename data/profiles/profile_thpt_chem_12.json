@@ -1,7 +1,7 @@
 {
   "id": "profile_thpt_chem_12",
   "title": "Cuối học kỳ I - Hóa học Lớp 12 (THPT)",
-  "updatedAt": "2026-11-09T21:47:28.181Z",
+  "updatedAt": "2026-11-09T22:17:27.461Z",
   "metadata": {
     "schoolName": "TRƯỜNG THPT NGUYỄN THƯỢNG HIỀN",
     "departmentName": "TỔ HÓA HỌC - SINH HỌC",
@@ -655,38 +655,82 @@
       "matrixRef": "ĐS2(a,b,c,d) [Dòng 2: Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)]"
     },
     {
-      "id": "q_tf_3",
-      "type": "TF",
       "rowId": "row_2",
-      "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
-      "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
       "level": "Vận dụng",
-      "points": 1,
-      "matrixRef": "ĐS3(a,b,c,d) [Dòng 2: Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)]",
-      "stem": "Cho tình huống và kiến thức trọng tâm thuộc bài \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" (Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+      "stem": "Thực hiện phản ứng tráng bạc hoàn toàn m gam glucose (C6H12O6, M=180) bằng lượng dư dung dịch AgNO3 trong NH3 đun nóng, thu được 21,6 gam kết tủa bạc (Ag, M=108). Xét tính Đúng (Đ) hoặc Sai (S) của các phát biểu sau:",
       "statements": [
         {
-          "text": "Khái niệm và tính chất cơ bản của \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" được xác định đúng theo tài liệu giáo khoa.",
+          "text": "Trong phản ứng tráng bạc, glucose đóng vai trò là chất khử (bị oxi hóa thành muối ammonium gluconate).",
           "isTrue": true,
-          "level": "Biết"
+          "level": "Hiểu",
+          "letter": "a",
+          "answer": "Đúng"
         },
         {
-          "text": "Mọi trường hợp áp dụng \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" luôn tuân theo điều kiện ràng buộc của bài học.",
+          "text": "Số mol kết tủa Ag thu được là 0,2 mol.",
           "isTrue": true,
-          "level": "Biết"
+          "level": "Hiểu",
+          "letter": "b",
+          "answer": "Đúng"
         },
         {
-          "text": "Khi áp dụng quy tắc trong \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\", kết quả suy luận dẫn đến kết quả trái ngược với lý thuyết chuẩn.",
-          "isTrue": false,
-          "level": "Hiểu"
+          "text": "Tỉ lệ số mol n(glucose) : n(Ag) trong phương trình phản ứng là 1 : 2.",
+          "isTrue": true,
+          "level": "Vận dụng",
+          "letter": "c",
+          "answer": "Đúng"
         },
         {
-          "text": "Có thể vận dụng trực tiếp kiến thức bài \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" để giải quyết bài toán thực tiễn nêu trong kế hoạch dạy học.",
+          "text": "Giá trị của m (khối lượng glucose đã phản ứng) bằng 18,0 gam.",
           "isTrue": true,
-          "level": "Vận dụng"
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Đúng"
         }
       ],
-      "explanation": "Đối chiếu Bản đặc tả mục \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\": a) Đúng; b) Đúng; c) Sai; d) Đúng."
+      "explanation": "a) Đúng; b) Đúng (21,6 / 108 = 0,2 mol); c) Đúng; d) Đúng vì n(glucose) = 0,2 / 2 = 0,1 mol ⇒ m = 0,1 × 180 = 18,0 gam.",
+      "mathVerify": {
+        "expression": "((21.6 / 108) / 2) * 180",
+        "expected": 18
+      },
+      "items": [
+        {
+          "text": "Trong phản ứng tráng bạc, glucose đóng vai trò là chất khử (bị oxi hóa thành muối ammonium gluconate).",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Số mol kết tủa Ag thu được là 0,2 mol.",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Tỉ lệ số mol n(glucose) : n(Ag) trong phương trình phản ứng là 1 : 2.",
+          "isTrue": true,
+          "level": "Vận dụng",
+          "letter": "c",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Giá trị của m (khối lượng glucose đã phản ứng) bằng 18,0 gam.",
+          "isTrue": true,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+      "isZeroHallucination": true,
+      "id": "q_tf_3",
+      "type": "TF",
+      "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+      "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+      "points": 1,
+      "matrixRef": "ĐS3(a,b,c,d) [Dòng 2: Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)]"
     },
     {
       "rowId": "row_3",
@@ -1258,38 +1302,82 @@
           "matrixRef": "ĐS2(a,b,c,d) [Dòng 2: Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)]"
         },
         {
-          "id": "q_tf_3",
-          "type": "TF",
           "rowId": "row_2",
-          "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
-          "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
           "level": "Vận dụng",
-          "points": 1,
-          "matrixRef": "ĐS3(a,b,c,d) [Dòng 2: Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)]",
-          "stem": "Cho tình huống và kiến thức trọng tâm thuộc bài \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" (Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "stem": "Thực hiện phản ứng tráng bạc hoàn toàn m gam glucose (C6H12O6, M=180) bằng lượng dư dung dịch AgNO3 trong NH3 đun nóng, thu được 21,6 gam kết tủa bạc (Ag, M=108). Xét tính Đúng (Đ) hoặc Sai (S) của các phát biểu sau:",
           "statements": [
             {
-              "text": "Khái niệm và tính chất cơ bản của \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" được xác định đúng theo tài liệu giáo khoa.",
+              "text": "Trong phản ứng tráng bạc, glucose đóng vai trò là chất khử (bị oxi hóa thành muối ammonium gluconate).",
               "isTrue": true,
-              "level": "Biết"
+              "level": "Hiểu",
+              "letter": "a",
+              "answer": "Đúng"
             },
             {
-              "text": "Mọi trường hợp áp dụng \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" luôn tuân theo điều kiện ràng buộc của bài học.",
+              "text": "Số mol kết tủa Ag thu được là 0,2 mol.",
               "isTrue": true,
-              "level": "Biết"
+              "level": "Hiểu",
+              "letter": "b",
+              "answer": "Đúng"
             },
             {
-              "text": "Khi áp dụng quy tắc trong \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\", kết quả suy luận dẫn đến kết quả trái ngược với lý thuyết chuẩn.",
-              "isTrue": false,
-              "level": "Hiểu"
+              "text": "Tỉ lệ số mol n(glucose) : n(Ag) trong phương trình phản ứng là 1 : 2.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "c",
+              "answer": "Đúng"
             },
             {
-              "text": "Có thể vận dụng trực tiếp kiến thức bài \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" để giải quyết bài toán thực tiễn nêu trong kế hoạch dạy học.",
+              "text": "Giá trị của m (khối lượng glucose đã phản ứng) bằng 18,0 gam.",
               "isTrue": true,
-              "level": "Vận dụng"
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
             }
           ],
-          "explanation": "Đối chiếu Bản đặc tả mục \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\": a) Đúng; b) Đúng; c) Sai; d) Đúng."
+          "explanation": "a) Đúng; b) Đúng (21,6 / 108 = 0,2 mol); c) Đúng; d) Đúng vì n(glucose) = 0,2 / 2 = 0,1 mol ⇒ m = 0,1 × 180 = 18,0 gam.",
+          "mathVerify": {
+            "expression": "((21.6 / 108) / 2) * 180",
+            "expected": 18
+          },
+          "items": [
+            {
+              "text": "Trong phản ứng tráng bạc, glucose đóng vai trò là chất khử (bị oxi hóa thành muối ammonium gluconate).",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Số mol kết tủa Ag thu được là 0,2 mol.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Tỉ lệ số mol n(glucose) : n(Ag) trong phương trình phản ứng là 1 : 2.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Giá trị của m (khối lượng glucose đã phản ứng) bằng 18,0 gam.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_3",
+          "type": "TF",
+          "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+          "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+          "points": 1,
+          "matrixRef": "ĐS3(a,b,c,d) [Dòng 2: Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)]"
         },
         {
           "rowId": "row_3",
@@ -1861,38 +1949,82 @@
           "matrixRef": "ĐS2(a,b,c,d) [Dòng 2: Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)]"
         },
         {
-          "id": "q_tf_3",
-          "type": "TF",
           "rowId": "row_2",
-          "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
-          "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
           "level": "Vận dụng",
-          "points": 1,
-          "matrixRef": "ĐS3(a,b,c,d) [Dòng 2: Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)]",
-          "stem": "Cho tình huống và kiến thức trọng tâm thuộc bài \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" (Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "stem": "Thực hiện phản ứng tráng bạc hoàn toàn m gam glucose (C6H12O6, M=180) bằng lượng dư dung dịch AgNO3 trong NH3 đun nóng, thu được 21,6 gam kết tủa bạc (Ag, M=108). Xét tính Đúng (Đ) hoặc Sai (S) của các phát biểu sau:",
           "statements": [
             {
-              "text": "Khái niệm và tính chất cơ bản của \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" được xác định đúng theo tài liệu giáo khoa.",
+              "text": "Trong phản ứng tráng bạc, glucose đóng vai trò là chất khử (bị oxi hóa thành muối ammonium gluconate).",
               "isTrue": true,
-              "level": "Biết"
+              "level": "Hiểu",
+              "letter": "a",
+              "answer": "Đúng"
             },
             {
-              "text": "Mọi trường hợp áp dụng \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" luôn tuân theo điều kiện ràng buộc của bài học.",
+              "text": "Số mol kết tủa Ag thu được là 0,2 mol.",
               "isTrue": true,
-              "level": "Biết"
+              "level": "Hiểu",
+              "letter": "b",
+              "answer": "Đúng"
             },
             {
-              "text": "Khi áp dụng quy tắc trong \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\", kết quả suy luận dẫn đến kết quả trái ngược với lý thuyết chuẩn.",
-              "isTrue": false,
-              "level": "Hiểu"
+              "text": "Tỉ lệ số mol n(glucose) : n(Ag) trong phương trình phản ứng là 1 : 2.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "c",
+              "answer": "Đúng"
             },
             {
-              "text": "Có thể vận dụng trực tiếp kiến thức bài \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" để giải quyết bài toán thực tiễn nêu trong kế hoạch dạy học.",
+              "text": "Giá trị của m (khối lượng glucose đã phản ứng) bằng 18,0 gam.",
               "isTrue": true,
-              "level": "Vận dụng"
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
             }
           ],
-          "explanation": "Đối chiếu Bản đặc tả mục \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\": a) Đúng; b) Đúng; c) Sai; d) Đúng."
+          "explanation": "a) Đúng; b) Đúng (21,6 / 108 = 0,2 mol); c) Đúng; d) Đúng vì n(glucose) = 0,2 / 2 = 0,1 mol ⇒ m = 0,1 × 180 = 18,0 gam.",
+          "mathVerify": {
+            "expression": "((21.6 / 108) / 2) * 180",
+            "expected": 18
+          },
+          "items": [
+            {
+              "text": "Trong phản ứng tráng bạc, glucose đóng vai trò là chất khử (bị oxi hóa thành muối ammonium gluconate).",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Số mol kết tủa Ag thu được là 0,2 mol.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Tỉ lệ số mol n(glucose) : n(Ag) trong phương trình phản ứng là 1 : 2.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Giá trị của m (khối lượng glucose đã phản ứng) bằng 18,0 gam.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_3",
+          "type": "TF",
+          "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+          "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+          "points": 1,
+          "matrixRef": "ĐS3(a,b,c,d) [Dòng 2: Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)]"
         },
         {
           "rowId": "row_3",
@@ -2132,7 +2264,8 @@
       "Tổng điểm các câu hỏi trong Đề kiểm tra (10.0đ) khớp tuyệt đối với Ma trận (10.0đ).",
       "100% câu hỏi (22/22) có mã liên kết trực tiếp với Ma trận và Bản đặc tả.",
       "100% câu hỏi (22/22) có đầy đủ đáp án và hướng dẫn chấm chi tiết.",
-      "Đã kiểm chứng độc lập 9 phép tính Toán/Khoa học: 100% kết quả trùng khớp tuyệt đối với đáp án.",
+      "100% câu hỏi (22/22) bám sát chuẩn xác nội dung đơn vị kiến thức theo Ma trận và Bản đặc tả.",
+      "Đã kiểm chứng độc lập 10 phép tính Toán/Khoa học: 100% kết quả trùng khớp tuyệt đối với đáp án.",
       "Đã khởi tạo 2 mã đề (101, 102) đồng bộ số câu và bảng đáp án riêng."
     ],
     "warnings": [],
@@ -2168,6 +2301,14 @@
         "expression": "(6 / 60) * 0.8 * 88",
         "computedValue": 7.04,
         "expectedValue": 7.04,
+        "passed": true
+      },
+      {
+        "questionIndex": 15,
+        "matrixRef": "ĐS3(a,b,c,d) [Dòng 2: Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)]",
+        "expression": "((21.6 / 108) / 2) * 180",
+        "computedValue": 18,
+        "expectedValue": 18,
         "passed": true
       },
       {

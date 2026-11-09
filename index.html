@@ -5110,7 +5110,8 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
                 <span class="badge badge-teal">🔗 Mã Ma trận: ${escapeHtml(q.matrixRef || 'MT')}</span>
                 <span class="badge badge-amber">Mức độ: ${escapeHtml(q.level || '')}</span>
                 <span class="badge badge-green">${Number(q.points || 0.25)} điểm</span>
-                ${q.sourceFile ? `<span class="badge" style="background:#eff6ff; color:#0369a1; border:1px solid #bfdbfe;" title="${escapeHtml(q.sourceFile)}">🛡️ ${escapeHtml(q.sourceBadge || q.sourceFile)}</span>` : ''}
+                ${q.isPlaceholder ? `<span class="badge badge-red" style="font-weight:700;">⚠️ Câu dự thảo (Cần duyệt)</span>` : `<span class="badge badge-green" title="Bám sát 100% Ma trận & Bản đặc tả">🎯 Bám sát ma trận</span>`}
+                ${q.sourceBadge ? `<span class="badge" style="background:#eff6ff; color:#0369a1; border:1px solid #bfdbfe;" title="${escapeHtml(q.sourceFile || q.sourceBadge)}">🛡️ ${escapeHtml(q.sourceBadge)}</span>` : (q.sourceFile ? `<span class="badge" style="background:#eff6ff; color:#0369a1; border:1px solid #bfdbfe;">🛡️ ${escapeHtml(q.sourceFile)}</span>` : '')}
               </div>
               <div style="display:flex; gap:6px; flex-wrap:wrap;">
                 <button class="btn btn-primary btn-sm" onclick="openSwapQuestionBankModal(${idx})" style="background:#2563eb; border-color:#1d4ed8; font-weight:700;" title="Mở danh sách câu hỏi trong Ngân hàng đề để chọn câu thay thế cho Câu ${idx + 1}">
@@ -5124,6 +5125,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
                 </button>
               </div>
             </div>
+            ${q.isPlaceholder ? `<div class="alert alert-danger" style="margin:8px 0 4px 0; padding:6px 10px; font-size:0.80rem; font-weight:700;">${escapeHtml(q.placeholderNotice || '⚠️ Chưa có câu hỏi trong Ngân hàng nội bộ. Vui lòng bấm "🤖 Tạo biến thể AI" hoặc "📚 Chọn từ Ngân hàng đề" để nạp câu hỏi thực tế.')}</div>` : ''}
             <div class="form-group">
               <label>Nội dung câu hỏi (Chủ đề: ${escapeHtml(q.unit || q.topic || '')}):</label>
               <textarea rows="2" onchange="updateQuestionField(${idx}, 'stem', this.value)">${escapeHtml(q.stem || '')}</textarea>
@@ -5724,7 +5726,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         qaEl.innerHTML = `
           <div class="alert ${statusClass}">
             <div style="font-weight:700; font-size:1rem; margin-bottom:6px;">
-              ${qa.isValid ? '✅ HỒ SƠ ĐỀ KIỂM TRA ĐẠT CHUẨN CHUYÊN MÔN (ĐIỂM QA: 100/100)' : '⚠️ PHÁT HIỆN ĐIỂM CẦN HIỆU CHỈNH TRONG HỒ SƠ'}
+              ${qa.isValid ? '✅ HỒ SƠ ĐỀ KIỂM TRA ĐẠT CHUẨN CHUYÊN MÔN (ĐIỂM QA: 100/100)' : `⚠️ PHÁT HIỆN ĐIỂM CẦN HIỆU CHỈNH TRONG HỒ SƠ (ĐIỂM QA: ${qa.score !== undefined ? qa.score : 0}/100)`}
             </div>
             <ul style="padding-left:20px; font-size:0.88rem;">
               ${(qa.passedChecks || []).map(c => `<li style="color:#15803d;">✔ ${escapeHtml(c)}</li>`).join('')}

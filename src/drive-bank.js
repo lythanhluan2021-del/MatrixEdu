@@ -257,11 +257,11 @@ function resolveTargetBankFiles(row = {}, metadata = {}) {
 
   // Kiểm tra từ khóa đặc trưng bằng word boundary để tránh nhầm chữ "bài", "tài" thành "ai"
   const hasAI = /tri tue nhan tao|\b(ai|ani|agi)\b|hoc may|alan turing|dartmouth/i.test(full);
-  const hasNetDevice = /thiet bi mang|switch|router|access point|modem|\bhub\b|cap mang|bai 3\b/i.test(full);
-  const hasNetProtocol = /giao thuc|tcp\/ip|dia chi ip|ipv4|ipv6|goi tin|dns|dhcp|\bip\b|bai 4\b/i.test(full);
-  const hasResourceSharing = /chia se tai nguyen|ket noi cac thiet bi|ket noi mang|thiet bi so|wlan|lan\b|bai 5\b/i.test(full);
-  const hasCyberLaw = /dao duc|phap luat|van hoa|khong gian mang|moi truong so|ung xu|giao tiep|an toan mang|bai 6\b/i.test(full);
-  const hasWeb = /tao trang web|trang web|\bhtml\b|\bweb\b|mobirise|bai 7\b/i.test(full);
+  const hasNetDevice = /thiet bi mang|switch|router|access point|modem|\bhub\b|cap mang|cd3\b/i.test(full);
+  const hasNetProtocol = /giao thuc|tcp\/ip|dia chi ip|ipv4|ipv6|goi tin|dns|dhcp|\bip\b/i.test(full);
+  const hasResourceSharing = /chia se tai nguyen|ket noi cac thiet bi|ket noi mang|thiet bi so|wlan/i.test(full);
+  const hasCyberLaw = /dao duc|phap luat|van hoa|khong gian mang|moi truong so|ung xu|giao tiep|an toan mang/i.test(full);
+  const hasWeb = /tao trang web|trang web|\bhtml\b|\bweb\b|mobirise|\bcss\b/i.test(full);
   const hasCareer = /huong nghiep|nhom nghe|dich vu va quan tri/i.test(full);
   const hasCSDL = /co so du lieu|\bcsdl\b|\bsql\b|khoa chinh/i.test(full);
   const hasPython = /lap trinh|python|\bbien\b|phep gan/i.test(full);

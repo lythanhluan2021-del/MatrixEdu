@@ -14,6 +14,7 @@ const { SUBJECT_POOLS } = require('./question-banks');
 const { analyzeEducationalText } = require('./doc-parser');
 const { computeMatrixStatistics, generateShuffledVariants, validateExamProfile } = require('./qa-validator');
 const { loadDriveQuestionBank, calculateRelevanceScore, resolveTargetBankFiles, inferCognitiveLevel } = require('./drive-bank');
+const { evaluateAlignment, evaluateAlignmentMultiRow, detectSubjectFamily } = require('./content-alignment');
 
 const BUNDLED_CONFIG_PATH = path.join(__dirname, '..', 'data', 'ai_config.json');
 const TMP_CONFIG_PATH = path.join(os.tmpdir(), 'matrixedu_data', 'ai_config.json');
@@ -488,29 +489,26 @@ function step3GenerateSpecification({ metadata = {}, matrix = {}, units = [] }) 
 }
 
 /**
- * Sinh câu hỏi động bám sát đơn vị kiến thức của tài liệu khi giáo viên tải lên tài liệu tùy chỉnh
+ * Sinh câu hỏi dự thảo bám sát đơn vị kiến thức & Yêu cầu cần đạt khi chưa có câu sẵn trong Ngân hàng
+ * Đánh dấu rõ ràng isPlaceholder để giáo viên rà soát hoặc hệ thống AI tự động thay thế bằng câu thực tế
  */
 function synthesizeCustomQuestion({ row, qt, level, index, pointUnit, spec }) {
   const unitName = String(row.unit || 'nội dung bài học').replace(/^\d+[\.\)]\s*/, '');
   const topicName = String(row.topic || 'Chủ đề');
-  const yccd = (spec && spec.outcomes && spec.outcomes[level]) || `Nắm vững nội dung ${unitName}`;
+  const yccd = (spec && spec.outcomes && spec.outcomes[level]) || `Nắm vững và vận dụng nội dung bài "${unitName}" (${topicName})`;
 
   if (qt === 'MCQ') {
-    const a = (index + 2) * 3;
-    const b = (index + 1) * 4;
-    const sum = a + b;
     const labels = ['A', 'B', 'C', 'D'];
-    const correctTargetIdx = (index - 1) % 4; // Luân chuyển đều vị trí A, B, C, D để tránh thiên kiến đáp án (Key Bias)
+    const correctTargetIdx = (index - 1) % 4;
     const correctLabel = labels[correctTargetIdx];
 
     const rawOptions = [
-      `Đáp ứng chuẩn xác yêu cầu cần đạt của "${unitName}" (giá trị chuẩn: ${sum})`,
-      `Sai lệch điều kiện áp dụng cơ bản của "${unitName}" (giá trị: ${sum + 2})`,
-      `Nhầm lẫn khái niệm thuộc chủ đề khác ngoài phạm vi "${topicName}"`,
-      `Thiếu điều kiện xác định của bài toán trong "${unitName}"`
+      `Khẳng định đáp ứng đúng và đầy đủ yêu cầu cần đạt của bài học: "${yccd}"`,
+      `Khẳng định thiếu điều kiện xác định hoặc giới hạn áp dụng theo chuẩn kiến thức`,
+      `Khẳng định nhầm lẫn sang kiến thức của chuyên đề khác ngoài phạm vi bài học`,
+      `Khẳng định trái ngược với quy luật hoặc nguyên lý cơ bản của nội dung bài`
     ];
 
-    // Hoán vị phương án đúng vào đúng vị trí target
     const finalOptions = rawOptions.slice();
     const correctContent = finalOptions[0];
     finalOptions[0] = finalOptions[correctTargetIdx];
@@ -525,16 +523,17 @@ function synthesizeCustomQuestion({ row, qt, level, index, pointUnit, spec }) {
       level,
       points: pointUnit,
       matrixRef: `MT-R${row.id.replace(/\D/g, '') || 1}-TN${index}`,
-      stem: `Theo nội dung "${unitName}" (${topicName}), phát biểu hoặc kết quả nào sau đây đáp ứng đúng yêu cầu: "${yccd}"?`,
+      stem: `[Dự thảo - Cần duyệt] Theo nội dung bài "${unitName}" (${topicName}), khẳng định nào sau đây là đúng về yêu cầu: "${yccd}"?`,
       options: finalOptions,
       answer: correctLabel,
-      explanation: `Căn cứ trực tiếp tài liệu mục "${unitName}": Phương án ${correctLabel} thỏa mãn yêu cầu cần đạt mức ${level} (${a} + ${b} = ${sum}).`,
-      mathVerify: { expression: `${a} + ${b}`, expected: sum }
+      explanation: `Căn cứ theo Bản đặc tả mục "${unitName}": Phương án ${correctLabel} thỏa mãn chuẩn yêu cầu cần đạt mức ${level}.`,
+      isPlaceholder: true,
+      sourceBadge: 'Cần bổ sung (Chưa có trong Ngân hàng)',
+      placeholderNotice: '⚠️ Câu hỏi này cần Thầy/Cô chọn từ Ngân hàng đề hoặc tạo biến thể AI để hoàn thiện nội dung.'
     };
   }
 
   if (qt === 'TF') {
-    // 4 mẫu phân phối Đ/S đa dạng và cân bằng (không còn thiên kiến Đ-S-Đ-Đ)
     const tfPatterns = [
       [true, false, true, true],
       [false, true, true, false],
@@ -545,22 +544,22 @@ function synthesizeCustomQuestion({ row, qt, level, index, pointUnit, spec }) {
     const subLabels = ['a', 'b', 'c', 'd'];
     const statements = [
       {
-        text: `Khái niệm và tính chất cơ bản của "${unitName}" ${pattern[0] ? 'được xác định đúng theo tài liệu giáo khoa.' : 'bị áp dụng sai điều kiện xác định ban đầu.'}`,
+        text: `Nội dung cốt lõi của bài "${unitName}" ${pattern[0] ? 'được phát biểu đúng theo chuẩn chương trình GDPT 2018.' : 'bị áp dụng sai điều kiện biên ban đầu.'}`,
         isTrue: pattern[0],
         level: 'Biết'
       },
       {
-        text: `Mọi trường hợp áp dụng "${unitName}" ${pattern[1] ? 'luôn tuân theo điều kiện ràng buộc của bài học.' : 'đều không phụ thuộc vào điều kiện xác định ban đầu.'}`,
+        text: `Điều kiện xác định và phạm vi áp dụng của "${unitName}" ${pattern[1] ? 'luôn tuân thủ quy định chuẩn của bài học.' : 'không phụ thuộc vào bất kỳ giả thiết nào.'}`,
         isTrue: pattern[1],
         level: 'Biết'
       },
       {
-        text: `Khi áp dụng quy tắc trong "${unitName}", kết quả suy luận ${pattern[2] ? 'luôn tuân theo hệ thức chuẩn của bài học.' : 'dẫn đến kết quả trái ngược với lý thuyết chuẩn.'}`,
+        text: `Khi thực hiện phân tích hoặc giải quyết vấn đề thuộc bài "${unitName}", kết luận rút ra ${pattern[2] ? 'phù hợp hoàn toàn với lý thuyết trọng tâm.' : 'trái ngược với quy luật khoa học đã nêu.'}`,
         isTrue: pattern[2],
         level: 'Hiểu'
       },
       {
-        text: `Có thể vận dụng trực tiếp kiến thức bài "${unitName}" ${pattern[3] ? 'để giải quyết bài toán thực tiễn nêu trong kế hoạch dạy học.' : 'trong mọi tình huống mà không cần xem xét giả thiết.'}`,
+        text: `Có thể vận dụng trực tiếp kiến thức bài "${unitName}" ${pattern[3] ? 'để giải quyết tình huống thực tiễn đáp ứng yêu cầu cần đạt.' : 'trong mọi bối cảnh mà không cần đối chiếu điều kiện.'}`,
         isTrue: pattern[3],
         level: 'Vận dụng'
       }
@@ -577,16 +576,16 @@ function synthesizeCustomQuestion({ row, qt, level, index, pointUnit, spec }) {
       level,
       points: pointUnit * 4,
       matrixRef: `MT-R${row.id.replace(/\D/g, '') || 1}-ĐS${index}`,
-      stem: `Cho tình huống và kiến thức trọng tâm thuộc bài "${unitName}" (${topicName}). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:`,
+      stem: `[Dự thảo - Cần duyệt] Cho bối cảnh và kiến thức trọng tâm thuộc bài "${unitName}" (${topicName}). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:`,
       statements,
-      explanation: `Đối chiếu Bản đặc tả mục "${unitName}": ${expText}.`
+      explanation: `Đối chiếu Bản đặc tả mục "${unitName}": ${expText}.`,
+      isPlaceholder: true,
+      sourceBadge: 'Cần bổ sung (Chưa có trong Ngân hàng)',
+      placeholderNotice: '⚠️ Câu hỏi này cần Thầy/Cô chọn từ Ngân hàng đề hoặc tạo biến thể AI để hoàn thiện nội dung.'
     };
   }
 
   if (qt === 'SA') {
-    const val1 = (index + 3) * 5;
-    const val2 = (index + 2) * 2;
-    const ans = val1 * val2;
     return {
       id: `q_sa_${index}`,
       type: 'SA',
@@ -596,10 +595,12 @@ function synthesizeCustomQuestion({ row, qt, level, index, pointUnit, spec }) {
       level,
       points: pointUnit,
       matrixRef: `MT-R${row.id.replace(/\D/g, '') || 1}-TLN${index}`,
-      stem: `[Bài toán vận dụng - ${unitName}] Trong mô hình thực hành của chủ đề "${topicName}", biết đại lượng thứ nhất bằng ${val1} và hệ số tỉ lệ bằng ${val2}. Tính giá trị tích của hai đại lượng trên.`,
-      answer: String(ans),
-      explanation: `Áp dụng công thức tính tích hai đại lượng: ${val1} × ${val2} = ${ans}.`,
-      mathVerify: { expression: `${val1} * ${val2}`, expected: ans }
+      stem: `[Dự thảo - Cần duyệt - Bài "${unitName}"] Nêu kết quả hoặc giá trị số cụ thể thỏa mãn yêu cầu: "${yccd}".`,
+      answer: 'Theo chuẩn SGK và tài liệu chuyên môn.',
+      explanation: `Đối chiếu Bản đặc tả yêu cầu cần đạt của "${unitName}".`,
+      isPlaceholder: true,
+      sourceBadge: 'Cần bổ sung (Chưa có trong Ngân hàng)',
+      placeholderNotice: '⚠️ Câu hỏi này cần Thầy/Cô chọn từ Ngân hàng đề hoặc tạo biến thể AI để hoàn thiện nội dung.'
     };
   }
 
@@ -614,7 +615,9 @@ function synthesizeCustomQuestion({ row, qt, level, index, pointUnit, spec }) {
     matrixRef: `MT-R${row.id.replace(/\D/g, '') || 1}-TL${index}`,
     stem: `Trình bày nội dung trọng tâm và vận dụng kiến thức bài "${unitName}" (${topicName}) để thực hiện yêu cầu: ${yccd}`,
     answer: `Trình bày đầy đủ cơ sở lý thuyết và các bước giải quyết vấn đề thuộc "${unitName}".`,
-    explanation: `Hướng dẫn chấm (${pointUnit} điểm):\n- Trình bày đúng kiến thức cốt lõi của "${unitName}" (50% số điểm).\n- Lập luận chặt chẽ, vận dụng giải quyết đúng yêu cầu thực tiễn và trình bày khoa học (50% số điểm).`
+    explanation: `Hướng dẫn chấm (${pointUnit} điểm):\n- Trình bày đúng kiến thức cốt lõi của "${unitName}" (50% số điểm).\n- Lập luận chặt chẽ, vận dụng giải quyết đúng yêu cầu thực tiễn và trình bày khoa học (50% số điểm).`,
+    isPlaceholder: true,
+    sourceBadge: 'Cần bổ sung (Chưa có trong Ngân hàng)'
   };
 }
 
@@ -682,11 +685,17 @@ async function step4GenerateQuestionsAndAnswers({ metadata = {}, matrix = {}, sp
     const topic = row.topic || '';
     const unit = row.unit || '';
 
-    // 4. Chấm điểm tương quan và độ khớp mức độ
+    // 4. Chấm điểm tương quan và kiểm tra độ bám sát nội dung ma trận
     const candidates = available
       .map(q => {
+        const isFromTarget = targetFiles.includes(q.sourceFile);
+        const alignRes = evaluateAlignment(q, row, metadata, { fromTargetFile: isFromTarget });
+        // Nếu không bám sát nội dung đơn vị kiến thức hoặc thuộc hẳn chủ đề khác thì loại bỏ
+        if (!alignRes.aligned && (!isFromTarget || alignRes.competitorScore > 0)) return null;
+
         let score = calculateRelevanceScore(q, topic, unit);
-        if (targetFiles.includes(q.sourceFile)) score += 100;
+        if (isFromTarget) score += 100;
+        if (alignRes.aligned) score += 60;
         if (q.level === lv) score += 35;
 
         const qText = (q.prompt + ' ' + (q.options ? q.options.join(' ') : '')).toLowerCase();
@@ -699,6 +708,7 @@ async function step4GenerateQuestionsAndAnswers({ metadata = {}, matrix = {}, sp
 
         return { q, score };
       })
+      .filter(Boolean)
       .sort((a, b) => b.score - a.score);
 
     // Ưu tiên câu có điểm tương quan tốt
@@ -710,18 +720,26 @@ async function step4GenerateQuestionsAndAnswers({ metadata = {}, matrix = {}, sp
     return null;
   }
 
-  function pickFromPool(qt, rowId, lv) {
+  function pickFromPool(qt, row, lv) {
     if (!pool || !Array.isArray(pool[qt])) return null;
-    // 1. Ưu tiên khớp cả rowId và level
-    let idx = pool[qt].findIndex((item, i) => !usedIds.has(`${qt}_${i}`) && item.rowId === rowId && item.level === lv);
-    // 2. Khớp rowId
+    const rowId = row.id;
+
+    // 1. Khớp cả dòng Ma trận (bằng rowId hoặc độ bám nội dung evaluateAlignment) VÀ đúng mức độ lv
+    let idx = pool[qt].findIndex((item, i) => {
+      if (usedIds.has(`${qt}_${i}`)) return false;
+      const isAligned = (item.rowId === rowId) || evaluateAlignment(item, row, metadata).aligned;
+      return isAligned && item.level === lv;
+    });
+
+    // 2. Khớp dòng Ma trận (bằng rowId hoặc độ bám nội dung evaluateAlignment)
     if (idx === -1) {
-      idx = pool[qt].findIndex((item, i) => !usedIds.has(`${qt}_${i}`) && item.rowId === rowId);
+      idx = pool[qt].findIndex((item, i) => {
+        if (usedIds.has(`${qt}_${i}`)) return false;
+        return (item.rowId === rowId) || evaluateAlignment(item, row, metadata).aligned;
+      });
     }
-    // 3. Khớp bất kỳ câu chưa dùng trong cùng dạng thức
-    if (idx === -1) {
-      idx = pool[qt].findIndex((_, i) => !usedIds.has(`${qt}_${i}`));
-    }
+
+    // TUYỆT ĐỐI KHÔNG lấy câu hỏi tùy tiện không khớp chủ đề
     if (idx !== -1) {
       usedIds.add(`${qt}_${idx}`);
       return pool[qt][idx];
@@ -753,7 +771,7 @@ async function step4GenerateQuestionsAndAnswers({ metadata = {}, matrix = {}, sp
             driveQuestionId: driveItem.id
           };
         } else {
-          picked = pickFromPool('MCQ', row.id, lv);
+          picked = pickFromPool('MCQ', row, lv);
         }
 
         const refCode = (picked && picked.qCode) ? picked.qCode : `C${mcqIndex}`;
@@ -823,15 +841,17 @@ async function step4GenerateQuestionsAndAnswers({ metadata = {}, matrix = {}, sp
 
           // 1. Nếu là dạng ghép bài (multi-row) hoặc có pool theo ma trận:
           if (pool && Array.isArray(pool.TF)) {
-            const poolCandidate = pool.TF.find(p => {
-              const pKey = `TF_${p.qCode || p.rowId}`;
-              if (usedIds.has(pKey)) return false;
+            const pIdx = pool.TF.findIndex((p, i) => {
+              if (usedIds.has(`TF_${i}`)) return false;
+              const isAligned = p.rowId === rowGroups[0].row.id || evaluateAlignment(p, rowGroups[0].row, metadata).aligned;
+              if (!isAligned) return false;
               if (p.qCode && p.qCode.includes(`ĐS${tfIndex}`)) return true;
-              return p.rowId === rowGroups[0].row.id;
+              return true;
             });
 
-            if (poolCandidate) {
-              usedIds.add(`TF_${poolCandidate.qCode || poolCandidate.rowId}`);
+            if (pIdx !== -1) {
+              const poolCandidate = pool.TF[pIdx];
+              usedIds.add(`TF_${pIdx}`);
               picked = {
                 ...poolCandidate,
                 stem: poolCandidate.stem,
@@ -923,7 +943,7 @@ async function step4GenerateQuestionsAndAnswers({ metadata = {}, matrix = {}, sp
     const primaryRow = pendingTfItems[0].row;
     const primaryRIdx = pendingTfItems[0].rIdx;
     const spec = specification.find(s => s.rowId === primaryRow.id) || specification[primaryRIdx];
-    const picked = pickFromPool('TF', primaryRow.id, levels[1]);
+    const picked = pickFromPool('TF', primaryRow, levels[1]);
     const refCode = `ĐS${tfIndex}(a,b,c,d) [Dòng ${primaryRIdx + 1}]`;
     const pts = Math.round(Number(pointRules.TF) * pendingTfItems.length * 100) / 100;
     if (picked) {
@@ -971,7 +991,7 @@ async function step4GenerateQuestionsAndAnswers({ metadata = {}, matrix = {}, sp
             driveQuestionId: driveItem.id
           };
         } else {
-          picked = pickFromPool('SA', row.id, lv);
+          picked = pickFromPool('SA', row, lv);
         }
 
         const refCode = (picked && picked.qCode) ? picked.qCode : `TLN${saIndex}`;
@@ -1025,7 +1045,7 @@ async function step4GenerateQuestionsAndAnswers({ metadata = {}, matrix = {}, sp
             driveQuestionId: driveItem.id
           };
         } else {
-          picked = pickFromPool('ESSAY', row.id, lv);
+          picked = pickFromPool('ESSAY', row, lv);
         }
 
         const refCode = (picked && picked.qCode) ? picked.qCode : `TL${essayIndex}`;
@@ -1050,6 +1070,63 @@ async function step4GenerateQuestionsAndAnswers({ metadata = {}, matrix = {}, sp
       }
     }
   });
+
+  // 5. Nếu có câu hỏi dạng dự thảo (placeholder) và hệ thống có kết nối AI (Gemini/OpenAI/Claude),
+  // tự động gọi AI sinh câu hỏi thực tế bám sát 100% Yêu cầu cần đạt của Bản đặc tả
+  const aiCfg = loadAiConfig();
+  if (aiCfg.hasKey) {
+    const placeholderItems = questions
+      .map((q, idx) => ({ q, idx }))
+      .filter(item => item.q.isPlaceholder);
+
+    for (const item of placeholderItems) {
+      try {
+        const row = rows.find(r => r.id === item.q.rowId) || {};
+        const spec = specification.find(s => s.rowId === row.id) || {};
+        const outcomeText = (spec.outcomes && spec.outcomes[item.q.level]) || row.unit || row.topic || '';
+        const sysPrompt = `Bạn là chuyên gia ra đề kiểm tra môn ${metadata.subject || ''} cấp THPT (Chương trình GDPT 2018 theo Công văn 7991/BGDĐT-GDTrH). Hãy tạo 1 câu hỏi ${item.q.type} chuẩn xác, bám sát 100% đơn vị kiến thức "${row.unit}" (${row.topic}) ở mức độ "${item.q.level}" đáp ứng đúng Yêu cầu cần đạt: "${outcomeText}".
+Trả về duy nhất 1 JSON object có cấu trúc:
+- Nếu MCQ: {"stem": "Nội dung câu hỏi...", "options": ["phương án A", "phương án B", "phương án C", "phương án D"], "answer": "A" hoặc "B" hoặc "C" hoặc "D", "explanation": "Lời giải chi tiết..."}
+- Nếu TF: {"stem": "Phần dẫn tình huống...", "statements": [{"text": "Mệnh đề a", "isTrue": true, "level": "Biết"}, {"text": "Mệnh đề b", "isTrue": false, "level": "Biết"}, {"text": "Mệnh đề c", "isTrue": true, "level": "Hiểu"}, {"text": "Mệnh đề d", "isTrue": false, "level": "Vận dụng"}], "explanation": "Lời giải..."}
+- Nếu SA: {"stem": "Nội dung câu hỏi...", "answer": "đáp số ngắn gọn", "explanation": "Lời giải..."}
+- Nếu ESSAY: {"stem": "Nội dung câu hỏi...", "answer": "Hướng dẫn chấm...", "explanation": "Biểu điểm..."}`;
+
+        const userPrompt = `Đơn vị kiến thức: ${row.unit}\nChủ đề: ${row.topic}\nMức độ: ${item.q.level}\nDạng thức: ${item.q.type}\nĐiểm số: ${item.q.points}\nYêu cầu cần đạt: ${outcomeText}`;
+        const aiRes = await callRemoteLLM(sysPrompt, userPrompt, aiCfg);
+        if (aiRes.ok && aiRes.data && (aiRes.data.stem || aiRes.data.prompt)) {
+          const generated = aiRes.data;
+          const merged = {
+            ...item.q,
+            stem: generated.stem || generated.prompt || item.q.stem,
+            explanation: generated.explanation || item.q.explanation,
+            sourceBadge: `AI (${aiRes.provider.toUpperCase()} - Bám sát Đặc tả)`,
+            isPlaceholder: false
+          };
+          delete merged.placeholderNotice;
+
+          if (item.q.type === 'MCQ' && Array.isArray(generated.options) && generated.options.length === 4) {
+            merged.options = generated.options;
+            merged.answer = String(generated.answer || 'A').trim().toUpperCase().charAt(0);
+          } else if (item.q.type === 'TF' && Array.isArray(generated.statements) && generated.statements.length === 4) {
+            merged.statements = generated.statements.map((st, sIdx) => ({
+              letter: ['a', 'b', 'c', 'd'][sIdx],
+              text: st.text,
+              isTrue: Boolean(st.isTrue || st.answer === 'Đúng' || st.answer === 'Đ'),
+              answer: (st.isTrue || st.answer === 'Đúng' || st.answer === 'Đ') ? 'Đúng' : 'Sai',
+              level: st.level || item.q.level
+            }));
+            merged.items = merged.statements;
+          } else if (item.q.type === 'SA') {
+            merged.answer = String(generated.answer || generated.result || '').trim();
+          }
+
+          questions[item.idx] = merged;
+        }
+      } catch (err) {
+        // Tiếp tục giữ câu dự thảo nếu không kết nối được AI
+      }
+    }
+  }
 
   // Nhân bản & Trộn các mã đề theo số lượng và danh sách mã đề tùy chỉnh của giáo viên
   const numVariants = Number(metadata.numVariants) || 4;
@@ -1214,13 +1291,25 @@ function getCandidateQuestionsForSwap({
     });
   }
 
-  // 2. Lấy thêm ứng viên từ Ngân hàng môn học nội bộ (SUBJECT_POOLS) cho tất cả các môn THPT (Toán, Lý, Hóa, Anh, Tin)
+  // 2. Lấy thêm ứng viên từ Ngân hàng môn học nội bộ (SUBJECT_POOLS) cho đúng môn THPT
+  const subjFamily = detectSubjectFamily(metadata.subject || question.subject || '');
   const presetKey = detectMatchingPresetKey(metadata, `${targetTopic} ${targetUnit}`, null);
-  const poolKeys = presetKey ? [presetKey, ...Object.keys(SUBJECT_POOLS).filter(k => k !== presetKey)] : Object.keys(SUBJECT_POOLS);
+  let poolKeys = [];
+  if (presetKey && SUBJECT_POOLS[presetKey]) {
+    poolKeys = [presetKey];
+  } else if (subjFamily) {
+    poolKeys = Object.keys(SUBJECT_POOLS).filter(k => {
+      const fam = detectSubjectFamily(k.replace('thpt_', '').replace('_12', ''));
+      return fam === subjFamily;
+    });
+  } else {
+    poolKeys = Object.keys(SUBJECT_POOLS);
+  }
+
   for (const pKey of poolKeys) {
     const pObj = SUBJECT_POOLS[pKey];
     if (!pObj || !Array.isArray(pObj[qt])) continue;
-    const isCurrentSubjectPool = pKey === presetKey;
+    const isCurrentSubjectPool = pKey === presetKey || poolKeys.length === 1;
 
     pObj[qt].forEach((pq, pIdx) => {
       const stemText = String(pq.stem || '').trim();
@@ -1228,10 +1317,11 @@ function getCandidateQuestionsForSwap({
       // Tránh trùng lặp nếu câu đã có trong danh sách ứng viên
       if (candidates.some(c => c.stem.toLowerCase() === stemText.toLowerCase())) return;
 
+      const alignRes = evaluateAlignment(pq, { topic: targetTopic, unit: targetUnit, id: question.rowId }, metadata);
       const usedAtQNum = usedStemMap.get(stemText.toLowerCase()) || null;
       const isRowMatch = Boolean(question.rowId && pq.rowId === question.rowId);
       const isLvMatch = pq.level === targetLevel;
-      let relevance = (isCurrentSubjectPool ? 60 : 10) + (isRowMatch ? 80 : 0) + (isLvMatch ? 35 : 0);
+      let relevance = (isCurrentSubjectPool ? 60 : 10) + (alignRes.aligned ? 80 : 0) + (isRowMatch ? 40 : 0) + (isLvMatch ? 35 : 0);
 
       const stmts = qt === 'TF' && Array.isArray(pq.statements)
         ? pq.statements.map((st, sIdx) => ({
@@ -1256,7 +1346,7 @@ function getCandidateQuestionsForSwap({
         sourceFile: `Ngân hàng Chuẩn THPT (${pKey.replace('thpt_', '').toUpperCase()})`,
         sourceBadge: `Ngân hàng Chuẩn THPT (${pKey.replace('thpt_', '').toUpperCase()})`,
         topicTitle: targetUnit || targetTopic || 'Chuyên đề THPT',
-        isRecommendedFile: isCurrentSubjectPool && isRowMatch,
+        isRecommendedFile: isCurrentSubjectPool && (alignRes.aligned || isRowMatch),
         isForbiddenFile: false,
         relevanceScore: relevance,
         usedAtQNum

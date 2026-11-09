@@ -1,7 +1,7 @@
 {
   "id": "profile_thpt_math_12",
   "title": "Cuối học kỳ I - Toán Lớp 12 (THPT)",
-  "updatedAt": "2026-11-09T21:47:24.802Z",
+  "updatedAt": "2026-11-09T22:17:23.855Z",
   "metadata": {
     "schoolName": "TRƯỜNG THPT CHUYÊN CHU VĂN AN",
     "departmentName": "TỔ TOÁN - TIN HỌC",
@@ -593,38 +593,82 @@
       "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số]"
     },
     {
-      "id": "q_tf_2",
-      "type": "TF",
       "rowId": "row_1",
-      "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
-      "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
       "level": "Vận dụng",
-      "points": 1,
-      "matrixRef": "ĐS2(a,b,c,d) [Dòng 1: Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số]",
-      "stem": "Cho tình huống và kiến thức trọng tâm thuộc bài \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" (Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+      "stem": "Cho hàm số phân thức y = (2x + 1)/(x - 1) có đồ thị (H). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
       "statements": [
         {
-          "text": "Khái niệm và tính chất cơ bản của \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" bị áp dụng sai điều kiện xác định ban đầu.",
-          "isTrue": false,
-          "level": "Biết"
-        },
-        {
-          "text": "Mọi trường hợp áp dụng \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" luôn tuân theo điều kiện ràng buộc của bài học.",
+          "text": "Tập xác định của hàm số là D = ℝ \\ {1}.",
           "isTrue": true,
-          "level": "Biết"
+          "level": "Hiểu",
+          "letter": "a",
+          "answer": "Đúng"
         },
         {
-          "text": "Khi áp dụng quy tắc trong \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\", kết quả suy luận luôn tuân theo hệ thức chuẩn của bài học.",
+          "text": "Đạo hàm của hàm số là y' = -3/(x - 1)^2 < 0 với mọi x ≠ 1.",
           "isTrue": true,
-          "level": "Hiểu"
+          "level": "Hiểu",
+          "letter": "b",
+          "answer": "Đúng"
         },
         {
-          "text": "Có thể vận dụng trực tiếp kiến thức bài \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" trong mọi tình huống mà không cần xem xét giả thiết.",
+          "text": "Giao điểm của hai đường tiệm cận của đồ thị (H) là điểm I(1; 2).",
+          "isTrue": true,
+          "level": "Vận dụng",
+          "letter": "c",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Tiếp tuyến của đồ thị (H) tại điểm có hoành độ x = 2 có hệ số góc bằng 3.",
           "isTrue": false,
-          "level": "Vận dụng"
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Sai"
         }
       ],
-      "explanation": "Đối chiếu Bản đặc tả mục \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\": a) Sai; b) Đúng; c) Đúng; d) Sai."
+      "explanation": "a) Đúng; b) Đúng vì y' = (2(-1) - 1(1))/(x-1)^2 = -3/(x-1)^2; c) Đúng vì TCĐ x = 1, TCN y = 2; d) Sai vì hệ số góc k = y'(2) = -3/(2-1)^2 = -3 ≠ 3.",
+      "mathVerify": {
+        "expression": "-3 / ((2 - 1)^2)",
+        "expected": -3
+      },
+      "items": [
+        {
+          "text": "Tập xác định của hàm số là D = ℝ \\ {1}.",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Đạo hàm của hàm số là y' = -3/(x - 1)^2 < 0 với mọi x ≠ 1.",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Giao điểm của hai đường tiệm cận của đồ thị (H) là điểm I(1; 2).",
+          "isTrue": true,
+          "level": "Vận dụng",
+          "letter": "c",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Tiếp tuyến của đồ thị (H) tại điểm có hoành độ x = 2 có hệ số góc bằng 3.",
+          "isTrue": false,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Sai"
+        }
+      ],
+      "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+      "isZeroHallucination": true,
+      "id": "q_tf_2",
+      "type": "TF",
+      "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+      "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+      "points": 1,
+      "matrixRef": "ĐS2(a,b,c,d) [Dòng 1: Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số]"
     },
     {
       "rowId": "row_2",
@@ -1220,38 +1264,82 @@
           "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số]"
         },
         {
-          "id": "q_tf_2",
-          "type": "TF",
           "rowId": "row_1",
-          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
-          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
           "level": "Vận dụng",
-          "points": 1,
-          "matrixRef": "ĐS2(a,b,c,d) [Dòng 1: Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số]",
-          "stem": "Cho tình huống và kiến thức trọng tâm thuộc bài \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" (Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "stem": "Cho hàm số phân thức y = (2x + 1)/(x - 1) có đồ thị (H). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
           "statements": [
             {
-              "text": "Khái niệm và tính chất cơ bản của \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" bị áp dụng sai điều kiện xác định ban đầu.",
-              "isTrue": false,
-              "level": "Biết"
-            },
-            {
-              "text": "Mọi trường hợp áp dụng \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" luôn tuân theo điều kiện ràng buộc của bài học.",
+              "text": "Tập xác định của hàm số là D = ℝ \\ {1}.",
               "isTrue": true,
-              "level": "Biết"
+              "level": "Hiểu",
+              "letter": "a",
+              "answer": "Đúng"
             },
             {
-              "text": "Khi áp dụng quy tắc trong \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\", kết quả suy luận luôn tuân theo hệ thức chuẩn của bài học.",
+              "text": "Đạo hàm của hàm số là y' = -3/(x - 1)^2 < 0 với mọi x ≠ 1.",
               "isTrue": true,
-              "level": "Hiểu"
+              "level": "Hiểu",
+              "letter": "b",
+              "answer": "Đúng"
             },
             {
-              "text": "Có thể vận dụng trực tiếp kiến thức bài \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" trong mọi tình huống mà không cần xem xét giả thiết.",
+              "text": "Giao điểm của hai đường tiệm cận của đồ thị (H) là điểm I(1; 2).",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Tiếp tuyến của đồ thị (H) tại điểm có hoành độ x = 2 có hệ số góc bằng 3.",
               "isTrue": false,
-              "level": "Vận dụng"
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Sai"
             }
           ],
-          "explanation": "Đối chiếu Bản đặc tả mục \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\": a) Sai; b) Đúng; c) Đúng; d) Sai."
+          "explanation": "a) Đúng; b) Đúng vì y' = (2(-1) - 1(1))/(x-1)^2 = -3/(x-1)^2; c) Đúng vì TCĐ x = 1, TCN y = 2; d) Sai vì hệ số góc k = y'(2) = -3/(2-1)^2 = -3 ≠ 3.",
+          "mathVerify": {
+            "expression": "-3 / ((2 - 1)^2)",
+            "expected": -3
+          },
+          "items": [
+            {
+              "text": "Tập xác định của hàm số là D = ℝ \\ {1}.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Đạo hàm của hàm số là y' = -3/(x - 1)^2 < 0 với mọi x ≠ 1.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Giao điểm của hai đường tiệm cận của đồ thị (H) là điểm I(1; 2).",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Tiếp tuyến của đồ thị (H) tại điểm có hoành độ x = 2 có hệ số góc bằng 3.",
+              "isTrue": false,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Sai"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_2",
+          "type": "TF",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 1,
+          "matrixRef": "ĐS2(a,b,c,d) [Dòng 1: Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số]"
         },
         {
           "rowId": "row_2",
@@ -1847,38 +1935,82 @@
           "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số]"
         },
         {
-          "id": "q_tf_2",
-          "type": "TF",
           "rowId": "row_1",
-          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
-          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
           "level": "Vận dụng",
-          "points": 1,
-          "matrixRef": "ĐS2(a,b,c,d) [Dòng 1: Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số]",
-          "stem": "Cho tình huống và kiến thức trọng tâm thuộc bài \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" (Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "stem": "Cho hàm số phân thức y = (2x + 1)/(x - 1) có đồ thị (H). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
           "statements": [
             {
-              "text": "Khái niệm và tính chất cơ bản của \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" bị áp dụng sai điều kiện xác định ban đầu.",
-              "isTrue": false,
-              "level": "Biết"
-            },
-            {
-              "text": "Mọi trường hợp áp dụng \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" luôn tuân theo điều kiện ràng buộc của bài học.",
+              "text": "Tập xác định của hàm số là D = ℝ \\ {1}.",
               "isTrue": true,
-              "level": "Biết"
+              "level": "Hiểu",
+              "letter": "a",
+              "answer": "Đúng"
             },
             {
-              "text": "Khi áp dụng quy tắc trong \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\", kết quả suy luận luôn tuân theo hệ thức chuẩn của bài học.",
+              "text": "Đạo hàm của hàm số là y' = -3/(x - 1)^2 < 0 với mọi x ≠ 1.",
               "isTrue": true,
-              "level": "Hiểu"
+              "level": "Hiểu",
+              "letter": "b",
+              "answer": "Đúng"
             },
             {
-              "text": "Có thể vận dụng trực tiếp kiến thức bài \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" trong mọi tình huống mà không cần xem xét giả thiết.",
+              "text": "Giao điểm của hai đường tiệm cận của đồ thị (H) là điểm I(1; 2).",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Tiếp tuyến của đồ thị (H) tại điểm có hoành độ x = 2 có hệ số góc bằng 3.",
               "isTrue": false,
-              "level": "Vận dụng"
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Sai"
             }
           ],
-          "explanation": "Đối chiếu Bản đặc tả mục \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\": a) Sai; b) Đúng; c) Đúng; d) Sai."
+          "explanation": "a) Đúng; b) Đúng vì y' = (2(-1) - 1(1))/(x-1)^2 = -3/(x-1)^2; c) Đúng vì TCĐ x = 1, TCN y = 2; d) Sai vì hệ số góc k = y'(2) = -3/(2-1)^2 = -3 ≠ 3.",
+          "mathVerify": {
+            "expression": "-3 / ((2 - 1)^2)",
+            "expected": -3
+          },
+          "items": [
+            {
+              "text": "Tập xác định của hàm số là D = ℝ \\ {1}.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Đạo hàm của hàm số là y' = -3/(x - 1)^2 < 0 với mọi x ≠ 1.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Giao điểm của hai đường tiệm cận của đồ thị (H) là điểm I(1; 2).",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Tiếp tuyến của đồ thị (H) tại điểm có hoành độ x = 2 có hệ số góc bằng 3.",
+              "isTrue": false,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Sai"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_2",
+          "type": "TF",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 1,
+          "matrixRef": "ĐS2(a,b,c,d) [Dòng 1: Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số]"
         },
         {
           "rowId": "row_2",
@@ -2204,7 +2336,8 @@
       "Tổng điểm các câu hỏi trong Đề kiểm tra (10.0đ) khớp tuyệt đối với Ma trận (10.0đ).",
       "100% câu hỏi (22/22) có mã liên kết trực tiếp với Ma trận và Bản đặc tả.",
       "100% câu hỏi (22/22) có đầy đủ đáp án và hướng dẫn chấm chi tiết.",
-      "Đã kiểm chứng độc lập 15 phép tính Toán/Khoa học: 100% kết quả trùng khớp tuyệt đối với đáp án.",
+      "100% câu hỏi (22/22) bám sát chuẩn xác nội dung đơn vị kiến thức theo Ma trận và Bản đặc tả.",
+      "Đã kiểm chứng độc lập 16 phép tính Toán/Khoa học: 100% kết quả trùng khớp tuyệt đối với đáp án.",
       "Đã khởi tạo 2 mã đề (101, 102) đồng bộ số câu và bảng đáp án riêng."
     ],
     "warnings": [],
@@ -2264,6 +2397,14 @@
         "expression": "2^3 - 3*(2^2) + 2",
         "computedValue": -2,
         "expectedValue": -2,
+        "passed": true
+      },
+      {
+        "questionIndex": 14,
+        "matrixRef": "ĐS2(a,b,c,d) [Dòng 1: Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số]",
+        "expression": "-3 / ((2 - 1)^2)",
+        "computedValue": -3,
+        "expectedValue": -3,
         "passed": true
       },
       {

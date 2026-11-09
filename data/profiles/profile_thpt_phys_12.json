@@ -1,7 +1,7 @@
 {
   "id": "profile_thpt_phys_12",
   "title": "Cuối học kỳ I - Vật lí Lớp 12 (THPT)",
-  "updatedAt": "2026-11-09T21:47:27.333Z",
+  "updatedAt": "2026-11-09T22:17:26.607Z",
   "metadata": {
     "schoolName": "TRƯỜNG THPT CHUYÊN TRẦN ĐẠI NGHĨA",
     "departmentName": "TỔ VẬT LÍ - KỸ THUẬT",
@@ -585,38 +585,82 @@
       "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q]"
     },
     {
-      "id": "q_tf_2",
-      "type": "TF",
       "rowId": "row_1",
-      "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
-      "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
       "level": "Vận dụng",
-      "points": 1,
-      "matrixRef": "ĐS2(a,b,c,d) [Dòng 1: Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q]",
-      "stem": "Cho tình huống và kiến thức trọng tâm thuộc bài \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" (Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+      "stem": "Một khối nước đá có khối lượng m = 0,5 kg ở nhiệt độ 0°C được cung cấp nhiệt lượng để nóng chảy hoàn toàn ở 0°C. Biết nhiệt nóng chảy riêng của nước đá là λ = 334 kJ/kg. Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
       "statements": [
         {
-          "text": "Khái niệm và tính chất cơ bản của \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" bị áp dụng sai điều kiện xác định ban đầu.",
-          "isTrue": false,
-          "level": "Biết"
-        },
-        {
-          "text": "Mọi trường hợp áp dụng \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" luôn tuân theo điều kiện ràng buộc của bài học.",
+          "text": "Trong suốt quá trình nước đá đang nóng chảy, nhiệt độ của hỗn hợp giữ không đổi ở 0°C.",
           "isTrue": true,
-          "level": "Biết"
+          "level": "Hiểu",
+          "letter": "a",
+          "answer": "Đúng"
         },
         {
-          "text": "Khi áp dụng quy tắc trong \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\", kết quả suy luận luôn tuân theo hệ thức chuẩn của bài học.",
+          "text": "Đơn vị của nhiệt nóng chảy riêng λ là kJ/kg hoặc J/kg.",
           "isTrue": true,
-          "level": "Hiểu"
+          "level": "Hiểu",
+          "letter": "b",
+          "answer": "Đúng"
         },
         {
-          "text": "Có thể vận dụng trực tiếp kiến thức bài \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" trong mọi tình huống mà không cần xem xét giả thiết.",
+          "text": "Nhiệt lượng cần cung cấp để làm nóng chảy hoàn toàn 0,5 kg nước đá trên bằng 334 kJ.",
           "isTrue": false,
-          "level": "Vận dụng"
+          "level": "Vận dụng",
+          "letter": "c",
+          "answer": "Sai"
+        },
+        {
+          "text": "Nếu cung cấp nhiệt lượng 167 kJ thì toàn bộ 0,5 kg nước đá vừa kịp nóng chảy hoàn toàn thành nước ở 0°C.",
+          "isTrue": true,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Đúng"
         }
       ],
-      "explanation": "Đối chiếu Bản đặc tả mục \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\": a) Sai; b) Đúng; c) Đúng; d) Sai."
+      "explanation": "a) Đúng; b) Đúng; c) Sai vì Q = λ·m = 334 × 0,5 = 167 kJ ≠ 334 kJ; d) Đúng.",
+      "mathVerify": {
+        "expression": "334 * 0.5",
+        "expected": 167
+      },
+      "items": [
+        {
+          "text": "Trong suốt quá trình nước đá đang nóng chảy, nhiệt độ của hỗn hợp giữ không đổi ở 0°C.",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Đơn vị của nhiệt nóng chảy riêng λ là kJ/kg hoặc J/kg.",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Nhiệt lượng cần cung cấp để làm nóng chảy hoàn toàn 0,5 kg nước đá trên bằng 334 kJ.",
+          "isTrue": false,
+          "level": "Vận dụng",
+          "letter": "c",
+          "answer": "Sai"
+        },
+        {
+          "text": "Nếu cung cấp nhiệt lượng 167 kJ thì toàn bộ 0,5 kg nước đá vừa kịp nóng chảy hoàn toàn thành nước ở 0°C.",
+          "isTrue": true,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+      "isZeroHallucination": true,
+      "id": "q_tf_2",
+      "type": "TF",
+      "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+      "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+      "points": 1,
+      "matrixRef": "ĐS2(a,b,c,d) [Dòng 1: Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q]"
     },
     {
       "rowId": "row_2",
@@ -1204,38 +1248,82 @@
           "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q]"
         },
         {
-          "id": "q_tf_2",
-          "type": "TF",
           "rowId": "row_1",
-          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
-          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
           "level": "Vận dụng",
-          "points": 1,
-          "matrixRef": "ĐS2(a,b,c,d) [Dòng 1: Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q]",
-          "stem": "Cho tình huống và kiến thức trọng tâm thuộc bài \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" (Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "stem": "Một khối nước đá có khối lượng m = 0,5 kg ở nhiệt độ 0°C được cung cấp nhiệt lượng để nóng chảy hoàn toàn ở 0°C. Biết nhiệt nóng chảy riêng của nước đá là λ = 334 kJ/kg. Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
           "statements": [
             {
-              "text": "Khái niệm và tính chất cơ bản của \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" bị áp dụng sai điều kiện xác định ban đầu.",
-              "isTrue": false,
-              "level": "Biết"
-            },
-            {
-              "text": "Mọi trường hợp áp dụng \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" luôn tuân theo điều kiện ràng buộc của bài học.",
+              "text": "Trong suốt quá trình nước đá đang nóng chảy, nhiệt độ của hỗn hợp giữ không đổi ở 0°C.",
               "isTrue": true,
-              "level": "Biết"
+              "level": "Hiểu",
+              "letter": "a",
+              "answer": "Đúng"
             },
             {
-              "text": "Khi áp dụng quy tắc trong \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\", kết quả suy luận luôn tuân theo hệ thức chuẩn của bài học.",
+              "text": "Đơn vị của nhiệt nóng chảy riêng λ là kJ/kg hoặc J/kg.",
               "isTrue": true,
-              "level": "Hiểu"
+              "level": "Hiểu",
+              "letter": "b",
+              "answer": "Đúng"
             },
             {
-              "text": "Có thể vận dụng trực tiếp kiến thức bài \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" trong mọi tình huống mà không cần xem xét giả thiết.",
+              "text": "Nhiệt lượng cần cung cấp để làm nóng chảy hoàn toàn 0,5 kg nước đá trên bằng 334 kJ.",
               "isTrue": false,
-              "level": "Vận dụng"
+              "level": "Vận dụng",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Nếu cung cấp nhiệt lượng 167 kJ thì toàn bộ 0,5 kg nước đá vừa kịp nóng chảy hoàn toàn thành nước ở 0°C.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
             }
           ],
-          "explanation": "Đối chiếu Bản đặc tả mục \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\": a) Sai; b) Đúng; c) Đúng; d) Sai."
+          "explanation": "a) Đúng; b) Đúng; c) Sai vì Q = λ·m = 334 × 0,5 = 167 kJ ≠ 334 kJ; d) Đúng.",
+          "mathVerify": {
+            "expression": "334 * 0.5",
+            "expected": 167
+          },
+          "items": [
+            {
+              "text": "Trong suốt quá trình nước đá đang nóng chảy, nhiệt độ của hỗn hợp giữ không đổi ở 0°C.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Đơn vị của nhiệt nóng chảy riêng λ là kJ/kg hoặc J/kg.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Nhiệt lượng cần cung cấp để làm nóng chảy hoàn toàn 0,5 kg nước đá trên bằng 334 kJ.",
+              "isTrue": false,
+              "level": "Vận dụng",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Nếu cung cấp nhiệt lượng 167 kJ thì toàn bộ 0,5 kg nước đá vừa kịp nóng chảy hoàn toàn thành nước ở 0°C.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_2",
+          "type": "TF",
+          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+          "points": 1,
+          "matrixRef": "ĐS2(a,b,c,d) [Dòng 1: Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q]"
         },
         {
           "rowId": "row_2",
@@ -1823,38 +1911,82 @@
           "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q]"
         },
         {
-          "id": "q_tf_2",
-          "type": "TF",
           "rowId": "row_1",
-          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
-          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
           "level": "Vận dụng",
-          "points": 1,
-          "matrixRef": "ĐS2(a,b,c,d) [Dòng 1: Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q]",
-          "stem": "Cho tình huống và kiến thức trọng tâm thuộc bài \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" (Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "stem": "Một khối nước đá có khối lượng m = 0,5 kg ở nhiệt độ 0°C được cung cấp nhiệt lượng để nóng chảy hoàn toàn ở 0°C. Biết nhiệt nóng chảy riêng của nước đá là λ = 334 kJ/kg. Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
           "statements": [
             {
-              "text": "Khái niệm và tính chất cơ bản của \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" bị áp dụng sai điều kiện xác định ban đầu.",
-              "isTrue": false,
-              "level": "Biết"
-            },
-            {
-              "text": "Mọi trường hợp áp dụng \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" luôn tuân theo điều kiện ràng buộc của bài học.",
+              "text": "Trong suốt quá trình nước đá đang nóng chảy, nhiệt độ của hỗn hợp giữ không đổi ở 0°C.",
               "isTrue": true,
-              "level": "Biết"
+              "level": "Hiểu",
+              "letter": "a",
+              "answer": "Đúng"
             },
             {
-              "text": "Khi áp dụng quy tắc trong \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\", kết quả suy luận luôn tuân theo hệ thức chuẩn của bài học.",
+              "text": "Đơn vị của nhiệt nóng chảy riêng λ là kJ/kg hoặc J/kg.",
               "isTrue": true,
-              "level": "Hiểu"
+              "level": "Hiểu",
+              "letter": "b",
+              "answer": "Đúng"
             },
             {
-              "text": "Có thể vận dụng trực tiếp kiến thức bài \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" trong mọi tình huống mà không cần xem xét giả thiết.",
+              "text": "Nhiệt lượng cần cung cấp để làm nóng chảy hoàn toàn 0,5 kg nước đá trên bằng 334 kJ.",
               "isTrue": false,
-              "level": "Vận dụng"
+              "level": "Vận dụng",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Nếu cung cấp nhiệt lượng 167 kJ thì toàn bộ 0,5 kg nước đá vừa kịp nóng chảy hoàn toàn thành nước ở 0°C.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
             }
           ],
-          "explanation": "Đối chiếu Bản đặc tả mục \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\": a) Sai; b) Đúng; c) Đúng; d) Sai."
+          "explanation": "a) Đúng; b) Đúng; c) Sai vì Q = λ·m = 334 × 0,5 = 167 kJ ≠ 334 kJ; d) Đúng.",
+          "mathVerify": {
+            "expression": "334 * 0.5",
+            "expected": 167
+          },
+          "items": [
+            {
+              "text": "Trong suốt quá trình nước đá đang nóng chảy, nhiệt độ của hỗn hợp giữ không đổi ở 0°C.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Đơn vị của nhiệt nóng chảy riêng λ là kJ/kg hoặc J/kg.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Nhiệt lượng cần cung cấp để làm nóng chảy hoàn toàn 0,5 kg nước đá trên bằng 334 kJ.",
+              "isTrue": false,
+              "level": "Vận dụng",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Nếu cung cấp nhiệt lượng 167 kJ thì toàn bộ 0,5 kg nước đá vừa kịp nóng chảy hoàn toàn thành nước ở 0°C.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_2",
+          "type": "TF",
+          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+          "points": 1,
+          "matrixRef": "ĐS2(a,b,c,d) [Dòng 1: Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q]"
         },
         {
           "rowId": "row_2",
@@ -2180,7 +2312,8 @@
       "Tổng điểm các câu hỏi trong Đề kiểm tra (10.0đ) khớp tuyệt đối với Ma trận (10.0đ).",
       "100% câu hỏi (22/22) có mã liên kết trực tiếp với Ma trận và Bản đặc tả.",
       "100% câu hỏi (22/22) có đầy đủ đáp án và hướng dẫn chấm chi tiết.",
-      "Đã kiểm chứng độc lập 13 phép tính Toán/Khoa học: 100% kết quả trùng khớp tuyệt đối với đáp án.",
+      "100% câu hỏi (22/22) bám sát chuẩn xác nội dung đơn vị kiến thức theo Ma trận và Bản đặc tả.",
+      "Đã kiểm chứng độc lập 14 phép tính Toán/Khoa học: 100% kết quả trùng khớp tuyệt đối với đáp án.",
       "Đã khởi tạo 2 mã đề (101, 102) đồng bộ số câu và bảng đáp án riêng."
     ],
     "warnings": [],
@@ -2224,6 +2357,14 @@
         "expression": "(2 * 4200 * 80) / 1000",
         "computedValue": 672,
         "expectedValue": 672,
+        "passed": true
+      },
+      {
+        "questionIndex": 14,
+        "matrixRef": "ĐS2(a,b,c,d) [Dòng 1: Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q]",
+        "expression": "334 * 0.5",
+        "computedValue": 167,
+        "expectedValue": 167,
         "passed": true
       },
       {

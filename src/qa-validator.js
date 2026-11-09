@@ -4,6 +4,9 @@
  * Đảm bảo sự thống nhất 4 chiều: Ma trận ↔ Bản đặc tả ↔ Đề kiểm tra ↔ Đáp án
  */
 
+const { evaluateAlignment } = require('./content-alignment');
+const { inferCognitiveLevel } = require('./drive-bank');
+
 /**
  * Đánh giá biểu thức số học độc lập để kiểm chứng đáp án Toán / Lý / Hóa / Tin
  */
@@ -272,6 +275,37 @@ function validateExamProfile(examData) {
 
   if (missingAnswerCount === 0 && questions.length > 0) {
     passedChecks.push(`100% câu hỏi (${questions.length}/${questions.length}) có đầy đủ đáp án và hướng dẫn chấm chi tiết.`);
+  }
+
+  // 6b. Thẩm định Chuyên môn: Kiểm tra độ bám sát 100% Ma trận & Đơn vị kiến thức (Content Alignment)
+  let misalignedCount = 0;
+  let templateCount = 0;
+  questions.forEach((q, idx) => {
+    const qLabel = `Câu ${idx + 1} (${q.type})`;
+    const targetRow = matrixRows.find(r => r.id === q.rowId);
+
+    // Phát hiện câu mẫu khuôn hình tổng hợp
+    const rawPrompt = String(q.stem || q.prompt || '');
+    const isTemplate = Boolean(q.isPlaceholder) ||
+      /Đáp ứng chuẩn xác yêu cầu cần đạt|Khái niệm và tính chất cơ bản của.*bị áp dụng sai|Trong mô hình thực hành của chủ đề.*hệ số tỉ lệ|Trình bày nội dung trọng tâm và vận dụng kiến thức bài/i.test(rawPrompt);
+
+    if (isTemplate) {
+      templateCount++;
+      issues.push(`${qLabel}: Là câu mẫu tổng hợp chưa có nội dung kiểm tra thực tế ("${rawPrompt.slice(0, 60)}..."). Vui lòng tạo lại bằng AI hoặc chọn từ Ngân hàng đề.`);
+      return;
+    }
+
+    if (targetRow) {
+      const alignRes = evaluateAlignment(q, targetRow, meta);
+      if (!alignRes.aligned) {
+        misalignedCount++;
+        issues.push(`${qLabel}: Nội dung không bám sát đơn vị kiến thức "${targetRow.unit || targetRow.topic || ''}" (${alignRes.reason}).`);
+      }
+    }
+  });
+
+  if (templateCount === 0 && misalignedCount === 0 && questions.length > 0) {
+    passedChecks.push(`100% câu hỏi (${questions.length}/${questions.length}) bám sát chuẩn xác nội dung đơn vị kiến thức theo Ma trận và Bản đặc tả.`);
   }
 
   if (mathVerifications.length > 0 && mathVerifications.every(m => m.passed)) {
