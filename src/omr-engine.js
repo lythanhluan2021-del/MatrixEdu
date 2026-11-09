@@ -7,22 +7,42 @@
  */
 
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 
-// Đường dẫn lưu trữ CSDL cục bộ và đồng bộ
-const DATA_DIR = path.join(__dirname, '..', 'data');
+// Đường dẫn lưu trữ CSDL cục bộ và đồng bộ (Hỗ trợ cả môi trường Serverless Read-Only như Vercel)
+const BUNDLED_DATA_DIR = path.join(__dirname, '..', 'data');
+function resolveWritableDataDir() {
+  if (process.env.VERCEL) {
+    return path.join(os.tmpdir(), 'matrixedu_data');
+  }
+  try {
+    const testDir = path.join(BUNDLED_DATA_DIR, 'omr_database');
+    if (!fs.existsSync(testDir)) {
+      fs.mkdirSync(testDir, { recursive: true });
+    }
+    return BUNDLED_DATA_DIR;
+  } catch (_) {
+    return path.join(os.tmpdir(), 'matrixedu_data');
+  }
+}
+
+const DATA_DIR = resolveWritableDataDir();
 const OMR_DB_FILE = path.join(DATA_DIR, 'omr_database.json');
 const OMR_AUDIT_FILE = path.join(DATA_DIR, 'omr_audit_logs.json');
 const OMR_ROSTER_FILE = path.join(DATA_DIR, 'omr_active_roster.json');
+const BUNDLED_ROSTER_FILE = path.join(BUNDLED_DATA_DIR, 'omr_active_roster.json');
 const OMR_SESSIONS_DIR = path.join(DATA_DIR, 'omr_database');
 
-// Khởi tạo thư mục data và omr_database nếu chưa có
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-}
-if (!fs.existsSync(OMR_SESSIONS_DIR)) {
-  fs.mkdirSync(OMR_SESSIONS_DIR, { recursive: true });
-}
+// Khởi tạo thư mục data và omr_database an toàn
+try {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+  if (!fs.existsSync(OMR_SESSIONS_DIR)) {
+    fs.mkdirSync(OMR_SESSIONS_DIR, { recursive: true });
+  }
+} catch (_) {}
 
 /**
  * Danh sách lớp mẫu chuẩn THPT (35 học sinh)
@@ -102,7 +122,9 @@ function logAuditRecord({ paperId, sbd, studentName, field, oldVal, newVal, reas
   };
 
   logs.unshift(rec);
-  fs.writeFileSync(OMR_AUDIT_FILE, JSON.stringify(logs, null, 2), 'utf8');
+  try {
+    fs.writeFileSync(OMR_AUDIT_FILE, JSON.stringify(logs, null, 2), 'utf8');
+  } catch (_) {}
   return rec;
 }
 
@@ -300,11 +322,13 @@ function gradeSinglePaper(paper, answerKey, pointRules = {}) {
  * Lấy danh sách học sinh đang hoạt động (từ file đã lưu hoặc danh sách mẫu)
  */
 function getActiveRoster() {
-  if (fs.existsSync(OMR_ROSTER_FILE)) {
-    try {
-      const saved = JSON.parse(fs.readFileSync(OMR_ROSTER_FILE, 'utf8'));
-      if (Array.isArray(saved) && saved.length > 0) return saved;
-    } catch (_) {}
+  for (const candidate of [OMR_ROSTER_FILE, BUNDLED_ROSTER_FILE]) {
+    if (fs.existsSync(candidate)) {
+      try {
+        const saved = JSON.parse(fs.readFileSync(candidate, 'utf8'));
+        if (Array.isArray(saved) && saved.length > 0) return saved;
+      } catch (_) {}
+    }
   }
   return DEFAULT_CLASS_ROSTER;
 }
@@ -855,7 +879,10 @@ function saveGradingSessionSnapshot({ gradedPapers = [], answerKeysByCode = {}, 
   };
 
   const sessionPath = path.join(OMR_SESSIONS_DIR, `${id}.json`);
-  fs.writeFileSync(sessionPath, JSON.stringify(payload, null, 2), 'utf8');
+  try {
+    if (!fs.existsSync(OMR_SESSIONS_DIR)) fs.mkdirSync(OMR_SESSIONS_DIR, { recursive: true });
+    fs.writeFileSync(sessionPath, JSON.stringify(payload, null, 2), 'utf8');
+  } catch (_) {}
   saveDatabaseState(cleanPapers);
   return { id, title: sessionTitle, savedAt: payload.savedAt, filePath: sessionPath, statistics: stats };
 }
@@ -1046,19 +1073,26 @@ function syncOmrDatabaseToGoogleDrive({ folderId = '1wcSRCsZ9wzjO9ypblF_9L4si9kP
     auditLogs: getAuditLogs()
   };
   const dbFilePath = path.join(DATA_DIR, dbFileName);
-  fs.writeFileSync(dbFilePath, JSON.stringify(dbPayload, null, 2), 'utf8');
+  const dbJsonStr = JSON.stringify(dbPayload, null, 2);
+  try {
+    fs.writeFileSync(dbFilePath, dbJsonStr, 'utf8');
+  } catch (_) {}
 
   // 2. Tạo file Bảng điểm CSV
   const csvFileName = `BANG_DIEM_${subjectSlug}_Lop${gradeSlug}_${dateStr}.csv`;
   const csvContent = exportRosterToCsv(gradedPapers, metadata);
   const csvFilePath = path.join(DATA_DIR, csvFileName);
-  fs.writeFileSync(csvFilePath, csvContent, 'utf8');
+  try {
+    fs.writeFileSync(csvFilePath, csvContent, 'utf8');
+  } catch (_) {}
 
   // 3. Tạo file Nhật ký lưu vết CSV
   const auditFileName = `NHAT_KY_LUU_VET_CHAM_THI_${dateStr}.csv`;
   const auditContent = exportAuditLogsToCsv();
   const auditFilePath = path.join(DATA_DIR, auditFileName);
-  fs.writeFileSync(auditFilePath, auditContent, 'utf8');
+  try {
+    fs.writeFileSync(auditFilePath, auditContent, 'utf8');
+  } catch (_) {}
 
   return {
     ok: true,
@@ -1066,9 +1100,9 @@ function syncOmrDatabaseToGoogleDrive({ folderId = '1wcSRCsZ9wzjO9ypblF_9L4si9kP
     message: `Đã lưu ca chấm vào ổ cứng (data/omr_database) và đồng bộ CSDL Chấm thi vào Google Drive (Folder ID: ${folderId})`,
     folderId,
     files: [
-      { name: dbFileName, path: dbFilePath, size: fs.statSync(dbFilePath).size },
-      { name: csvFileName, path: csvFilePath, size: fs.statSync(csvFilePath).size },
-      { name: auditFileName, path: auditFilePath, size: fs.statSync(auditFilePath).size }
+      { name: dbFileName, path: dbFilePath, size: fs.existsSync(dbFilePath) ? fs.statSync(dbFilePath).size : Buffer.byteLength(dbJsonStr, 'utf8') },
+      { name: csvFileName, path: csvFilePath, size: fs.existsSync(csvFilePath) ? fs.statSync(csvFilePath).size : Buffer.byteLength(csvContent, 'utf8') },
+      { name: auditFileName, path: auditFilePath, size: fs.existsSync(auditFilePath) ? fs.statSync(auditFilePath).size : Buffer.byteLength(auditContent, 'utf8') }
     ],
     syncedAt: now.toISOString()
   };

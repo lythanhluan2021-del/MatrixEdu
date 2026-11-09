@@ -6,6 +6,7 @@
 
 const http = require('http');
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const { URL } = require('url');
 
@@ -44,27 +45,53 @@ const {
 } = require('./src/ai-engine');
 
 const PORT = Number(process.env.PORT) || 3000;
-const DATA_DIR = path.join(__dirname, 'data');
-const PROFILES_DIR = path.join(DATA_DIR, 'profiles');
-const SAMPLE_DOCS_DIR = path.join(DATA_DIR, 'sample_docs');
-const EXPORTS_DIR = path.join(DATA_DIR, 'exports');
+const BUNDLED_DATA_DIR = path.join(__dirname, 'data');
+const BUNDLED_PROFILES_DIR = path.join(BUNDLED_DATA_DIR, 'profiles');
+const SAMPLE_DOCS_DIR = path.join(BUNDLED_DATA_DIR, 'sample_docs');
 
-// Khởi tạo các thư mục dữ liệu
-for (const dir of [DATA_DIR, PROFILES_DIR, SAMPLE_DOCS_DIR, EXPORTS_DIR]) {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
+function resolveWritableRoot() {
+  if (process.env.VERCEL) {
+    return path.join(os.tmpdir(), 'matrixedu_data');
+  }
+  try {
+    const testExportDir = path.join(BUNDLED_DATA_DIR, 'exports');
+    if (!fs.existsSync(testExportDir)) {
+      fs.mkdirSync(testExportDir, { recursive: true });
+    }
+    return BUNDLED_DATA_DIR;
+  } catch (_) {
+    return path.join(os.tmpdir(), 'matrixedu_data');
   }
 }
 
-// Khởi tạo sẵn các file tài liệu .docx thực tế cho 3 tình huống kiểm thử
-function ensureSampleDocxFiles() {
-  for (const [key, doc] of Object.entries(SAMPLE_DOCUMENTS)) {
-    const filePath = path.join(SAMPLE_DOCS_DIR, doc.name);
-    if (!fs.existsSync(filePath)) {
-      const buf = createMaterialDocx(doc.title, doc.paragraphs || []);
-      fs.writeFileSync(filePath, buf);
+const DATA_DIR = resolveWritableRoot();
+const PROFILES_DIR = path.join(DATA_DIR, 'profiles');
+const EXPORTS_DIR = path.join(DATA_DIR, 'exports');
+
+// Khởi tạo các thư mục dữ liệu an toàn (Hỗ trợ cả môi trường Read-Only Serverless như Vercel)
+for (const dir of [DATA_DIR, PROFILES_DIR, EXPORTS_DIR]) {
+  try {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
     }
-  }
+  } catch (_) {}
+}
+
+// Khởi tạo sẵn các file tài liệu .docx thực tế (nếu ổ đĩa cho phép ghi)
+function ensureSampleDocxFiles() {
+  if (process.env.VERCEL) return;
+  try {
+    if (!fs.existsSync(SAMPLE_DOCS_DIR)) {
+      fs.mkdirSync(SAMPLE_DOCS_DIR, { recursive: true });
+    }
+    for (const [key, doc] of Object.entries(SAMPLE_DOCUMENTS)) {
+      const filePath = path.join(SAMPLE_DOCS_DIR, doc.name);
+      if (!fs.existsSync(filePath)) {
+        const buf = createMaterialDocx(doc.title, doc.paragraphs || []);
+        fs.writeFileSync(filePath, buf);
+      }
+    }
+  } catch (_) {}
 }
 ensureSampleDocxFiles();
 
@@ -100,7 +127,7 @@ function maskApiKey(key) {
   return key.slice(0, 4) + '••••••••••••' + key.slice(-4);
 }
 
-const server = http.createServer(async (req, res) => {
+const requestHandler = async (req, res) => {
   try {
     const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
     const pathname = parsedUrl.pathname;
@@ -461,21 +488,27 @@ const server = http.createServer(async (req, res) => {
 
     // 13. Quản lý Lưu trữ Hồ sơ đề kiểm tra (CRUD Profiles)
     if (req.method === 'GET' && pathname === '/api/profiles') {
-      const files = fs.readdirSync(PROFILES_DIR).filter(f => f.endsWith('.json'));
-      const profiles = [];
-      for (const f of files) {
-        try {
-          const content = JSON.parse(fs.readFileSync(path.join(PROFILES_DIR, f), 'utf8'));
-          profiles.push({
-            id: content.id || f.replace(/\.json$/, ''),
-            title: content.title || `${content.metadata?.subject || ''} Lớp ${content.metadata?.grade || ''} - ${content.metadata?.examPeriod || ''}`,
-            updatedAt: content.updatedAt || fs.statSync(path.join(PROFILES_DIR, f)).mtime.toISOString(),
-            metadata: content.metadata || {},
-            questionsCount: (content.questions || []).length,
-            variantsCount: (content.variants || []).length
-          });
-        } catch (_) {}
+      const profileMap = new Map();
+      for (const dir of [BUNDLED_PROFILES_DIR, PROFILES_DIR]) {
+        if (!fs.existsSync(dir)) continue;
+        const files = fs.readdirSync(dir).filter(f => f.endsWith('.json'));
+        for (const f of files) {
+          try {
+            const fullP = path.join(dir, f);
+            const content = JSON.parse(fs.readFileSync(fullP, 'utf8'));
+            const item = {
+              id: content.id || f.replace(/\.json$/, ''),
+              title: content.title || `${content.metadata?.subject || ''} Lớp ${content.metadata?.grade || ''} - ${content.metadata?.examPeriod || ''}`,
+              updatedAt: content.updatedAt || fs.statSync(fullP).mtime.toISOString(),
+              metadata: content.metadata || {},
+              questionsCount: (content.questions || []).length,
+              variantsCount: (content.variants || []).length
+            };
+            profileMap.set(item.id, item);
+          } catch (_) {}
+        }
       }
+      const profiles = Array.from(profileMap.values());
       profiles.sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
       sendJson(res, 200, { ok: true, profiles });
       return;
@@ -483,8 +516,10 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method === 'GET' && pathname.startsWith('/api/profiles/')) {
       const id = pathname.split('/')[3].replace(/[^a-zA-Z0-9_\-]/g, '');
-      const filePath = path.join(PROFILES_DIR, `${id}.json`);
-      if (!fs.existsSync(filePath)) {
+      const writablePath = path.join(PROFILES_DIR, `${id}.json`);
+      const bundledPath = path.join(BUNDLED_PROFILES_DIR, `${id}.json`);
+      const filePath = fs.existsSync(writablePath) ? writablePath : (fs.existsSync(bundledPath) ? bundledPath : null);
+      if (!filePath) {
         sendJson(res, 404, { ok: false, message: 'Không tìm thấy hồ sơ đề kiểm tra.' });
         return;
       }
@@ -503,16 +538,23 @@ const server = http.createServer(async (req, res) => {
         const m = profile.metadata || {};
         profile.title = `${m.examPeriod || 'Đề kiểm tra'} - ${m.subject || 'Môn'} Lớp ${m.grade || ''}`;
       }
-      fs.writeFileSync(path.join(PROFILES_DIR, `${id}.json`), JSON.stringify(profile, null, 2), 'utf8');
+      try {
+        if (!fs.existsSync(PROFILES_DIR)) fs.mkdirSync(PROFILES_DIR, { recursive: true });
+        fs.writeFileSync(path.join(PROFILES_DIR, `${id}.json`), JSON.stringify(profile, null, 2), 'utf8');
+      } catch (_) {}
       sendJson(res, 200, { ok: true, id, title: profile.title, updatedAt: profile.updatedAt });
       return;
     }
 
     if (req.method === 'DELETE' && pathname.startsWith('/api/profiles/')) {
       const id = pathname.split('/')[3].replace(/[^a-zA-Z0-9_\-]/g, '');
-      const filePath = path.join(PROFILES_DIR, `${id}.json`);
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
+      for (const dir of [PROFILES_DIR, BUNDLED_PROFILES_DIR]) {
+        try {
+          const filePath = path.join(dir, `${id}.json`);
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+          }
+        } catch (_) {}
       }
       sendJson(res, 200, { ok: true, deletedId: id });
       return;
@@ -635,7 +677,7 @@ const server = http.createServer(async (req, res) => {
 
     // 14.1b. Phục vụ ảnh Mẫu phiếu TLTN gốc chuẩn Bộ GD&ĐT 2025 (Từ file PDF gốc)
     if (req.method === 'GET' && (pathname === '/api/omr/template-image' || pathname === '/api/omr/template-sheet-image')) {
-      const imgPath = path.join(DATA_DIR, 'omr_template_sheet.jpg');
+      const imgPath = path.join(BUNDLED_DATA_DIR, 'omr_template_sheet.jpg');
       const fallbackPath = path.join(__dirname, 'extracted_sheet_0.jpg');
       const targetPath = fs.existsSync(imgPath) ? imgPath : (fs.existsSync(fallbackPath) ? fallbackPath : null);
       if (targetPath) {
@@ -847,7 +889,9 @@ const server = http.createServer(async (req, res) => {
   } catch (err) {
     sendJson(res, 500, { ok: false, message: err.message || 'Lỗi máy chủ nội bộ.' });
   }
-});
+};
+
+const server = http.createServer(requestHandler);
 
 if (require.main === module) {
   server.listen(PORT, () => {
@@ -858,5 +902,7 @@ if (require.main === module) {
   });
 }
 
-module.exports = { server };
+requestHandler.server = server;
+requestHandler.default = requestHandler;
+module.exports = requestHandler;
 

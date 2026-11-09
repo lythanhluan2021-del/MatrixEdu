@@ -7,6 +7,7 @@
  */
 
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const { SAMPLE_DOCUMENTS } = require('./sample-materials');
 const { SUBJECT_POOLS } = require('./question-banks');
@@ -14,16 +15,22 @@ const { analyzeEducationalText } = require('./doc-parser');
 const { computeMatrixStatistics, generateShuffledVariants, validateExamProfile } = require('./qa-validator');
 const { loadDriveQuestionBank, calculateRelevanceScore, resolveTargetBankFiles, inferCognitiveLevel } = require('./drive-bank');
 
-const CONFIG_PATH = path.join(__dirname, '..', 'data', 'ai_config.json');
+const BUNDLED_CONFIG_PATH = path.join(__dirname, '..', 'data', 'ai_config.json');
+const TMP_CONFIG_PATH = path.join(os.tmpdir(), 'matrixedu_data', 'ai_config.json');
+let memoryAiConfig = null;
 
 function loadAiConfig() {
   let fileCfg = {};
   try {
-    if (fs.existsSync(CONFIG_PATH)) {
-      fileCfg = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
+    if (memoryAiConfig) {
+      fileCfg = { ...memoryAiConfig };
+    } else if (fs.existsSync(TMP_CONFIG_PATH)) {
+      fileCfg = JSON.parse(fs.readFileSync(TMP_CONFIG_PATH, 'utf8'));
+    } else if (fs.existsSync(BUNDLED_CONFIG_PATH)) {
+      fileCfg = JSON.parse(fs.readFileSync(BUNDLED_CONFIG_PATH, 'utf8'));
     }
   } catch (_) {
-    fileCfg = {};
+    fileCfg = memoryAiConfig || {};
   }
 
   const provider = fileCfg.provider || process.env.AI_PROVIDER || 'gemini';
@@ -41,8 +48,6 @@ function loadAiConfig() {
 }
 
 function saveAiConfig(newCfg) {
-  const dir = path.dirname(CONFIG_PATH);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   const current = loadAiConfig();
   const merged = {
     provider: newCfg.provider || current.provider || 'gemini',
@@ -50,7 +55,20 @@ function saveAiConfig(newCfg) {
     model: newCfg.model || current.model || 'gemini-2.5-flash',
     baseUrl: newCfg.baseUrl !== undefined ? String(newCfg.baseUrl).trim() : current.baseUrl
   };
-  fs.writeFileSync(CONFIG_PATH, JSON.stringify(merged, null, 2), 'utf8');
+  memoryAiConfig = merged;
+
+  const targetPath = process.env.VERCEL ? TMP_CONFIG_PATH : BUNDLED_CONFIG_PATH;
+  try {
+    const dir = path.dirname(targetPath);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(targetPath, JSON.stringify(merged, null, 2), 'utf8');
+  } catch (_) {
+    try {
+      const tmpDir = path.dirname(TMP_CONFIG_PATH);
+      if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
+      fs.writeFileSync(TMP_CONFIG_PATH, JSON.stringify(merged, null, 2), 'utf8');
+    } catch (__) {}
+  }
   return loadAiConfig();
 }
 
