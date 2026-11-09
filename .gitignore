@@ -22,3 +22,4 @@ data/omr_audit_logs.json
 data/omr_database.json
 data/profiles/exam_*.json
 scripts/*.txt
+
