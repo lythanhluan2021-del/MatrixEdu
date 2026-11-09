@@ -132,7 +132,20 @@ const requestHandler = async (req, res) => {
     const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
     const pathname = parsedUrl.pathname;
 
-    // 1. Phục vụ trang chủ index.html
+    // 1. Phục vụ trang chủ index.html & Favicon MatrixEdu
+    if (req.method === 'GET' && (pathname === '/favicon.svg' || pathname === '/favicon.ico')) {
+      const favPath = path.join(__dirname, 'favicon.svg');
+      if (fs.existsSync(favPath)) {
+        const svg = fs.readFileSync(favPath);
+        res.writeHead(200, {
+          'Content-Type': 'image/svg+xml',
+          'Cache-Control': 'public, max-age=86400'
+        });
+        res.end(svg);
+        return;
+      }
+    }
+
     if (req.method === 'GET' && (pathname === '/' || pathname === '/index.html')) {
       const htmlPath = path.join(__dirname, 'index.html');
       if (!fs.existsSync(htmlPath)) {

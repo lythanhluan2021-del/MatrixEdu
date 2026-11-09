@@ -2,7 +2,7 @@
   "version": 2,
   "functions": {
     "api/index.js": {
-      "includeFiles": "{index.html,*.docx,*.pdf,*.jpg,src/**,data/**}"
+      "includeFiles": "{index.html,favicon.svg,*.docx,*.pdf,*.jpg,src/**,data/**}"
     }
   },
   "rewrites": [
@@ -12,3 +12,4 @@
     }
   ]
 }
+
