@@ -41,6 +41,7 @@ const {
   step2GenerateMatrix,
   step3GenerateSpecification,
   step4GenerateQuestionsAndAnswers,
+  getCandidateQuestionsForSwap,
   regenerateSingleQuestion
 } = require('./src/ai-engine');
 
@@ -466,11 +467,20 @@ const requestHandler = async (req, res) => {
       return;
     }
 
-    // 9. Tạo lại 1 câu hỏi đơn lẻ bằng AI / Knowledge Engine
+    // 9. Tạo lại hoặc Đổi nhanh 1 câu hỏi đơn lẻ từ Ngân hàng đề / AI
     if (req.method === 'POST' && pathname === '/api/regenerate-question') {
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
       const result = await regenerateSingleQuestion(body);
+      sendJson(res, result.ok ? 200 : 400, result);
+      return;
+    }
+
+    // 9b. Truy xuất danh sách câu hỏi ứng viên từ Ngân hàng đề để đổi/chọn lại câu hỏi ở Bước 4
+    if (req.method === 'POST' && pathname === '/api/bank-candidates') {
+      const raw = await readRequestBody(req);
+      const body = JSON.parse(raw.toString('utf8') || '{}');
+      const result = getCandidateQuestionsForSwap(body);
       sendJson(res, result.ok ? 200 : 400, result);
       return;
     }

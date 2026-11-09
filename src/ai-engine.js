@@ -1083,13 +1083,284 @@ async function step4GenerateQuestionsAndAnswers({ metadata = {}, matrix = {}, sp
 }
 
 /**
- * Tạo lại (Regenerate) 1 câu hỏi đơn lẻ theo yêu cầu của Giáo viên mà vẫn giữ đúng vị trí Ma trận
+ * Truy xuất danh sách câu hỏi ứng viên từ Ngân hàng đề (Google Drive Bank & Ngân hàng chuyên môn nội bộ)
+ * để Giáo viên chọn thay thế hoặc đổi nhanh cho 1 câu hỏi cụ thể trong Bước 4.
  */
-async function regenerateSingleQuestion({ question, metadata = {}, customInstruction = '' }) {
+function getCandidateQuestionsForSwap({
+  question = {},
+  existingQuestions = [],
+  metadata = {},
+  filterFile = '__MATCH_TOPIC__',
+  filterLevel = '',
+  keyword = '',
+  limit = 80
+}) {
+  const qt = (question.type || 'MCQ').toUpperCase();
+  const targetTopic = question.topic || '';
+  const targetUnit = question.unit || '';
+  const targetLevel = question.level || 'Biết';
+
+  // Tập hợp các câu đang dùng trong đề hiện tại để đánh dấu
+  const usedStemMap = new Map();
+  const usedDriveIdMap = new Map();
+  (existingQuestions || []).forEach((eq, idx) => {
+    const cleanStem = String(eq.stem || '').trim().toLowerCase();
+    if (cleanStem) usedStemMap.set(cleanStem, idx + 1);
+    if (eq.driveQuestionId) usedDriveIdMap.set(eq.driveQuestionId, idx + 1);
+  });
+
+  const driveBank = loadDriveQuestionBank();
+  const availableFiles = (driveBank && Array.isArray(driveBank.files)) ? driveBank.files : [];
+  const { targetFiles, forbiddenFiles, preferredKeywords, penaltyKeywords } = resolveTargetBankFiles(
+    { topic: targetTopic, unit: targetUnit },
+    metadata
+  );
+
+  const candidates = [];
+
+  // 1. Lấy ứng viên từ Ngân hàng Google Drive (nếu có)
+  if (driveBank && driveBank.totalQuestions > 0) {
+    let rawDriveList = [];
+    if (qt === 'MCQ') rawDriveList = driveBank.mcqQuestions || [];
+    else if (qt === 'TF') rawDriveList = (driveBank.tfQuestions || []).filter(q => Array.isArray(q.items) && q.items.length >= 4);
+    else rawDriveList = driveBank.saQuestions || [];
+
+    rawDriveList.forEach(dq => {
+      const stemText = String(dq.prompt || '').trim();
+      if (!stemText) return;
+
+      let relevance = calculateRelevanceScore(dq, targetTopic, targetUnit);
+      const isRecommendedFile = targetFiles.includes(dq.sourceFile);
+      const isForbiddenFile = forbiddenFiles.includes(dq.sourceFile);
+      if (isRecommendedFile) relevance += 100;
+      if (isForbiddenFile) relevance -= 80;
+      if (dq.level === targetLevel) relevance += 35;
+
+      const qTextLower = (stemText + ' ' + (dq.options ? dq.options.join(' ') : '')).toLowerCase();
+      for (const kw of preferredKeywords) {
+        if (qTextLower.includes(kw)) relevance += 20;
+      }
+      for (const kw of penaltyKeywords) {
+        if (qTextLower.includes(kw)) relevance -= 25;
+      }
+
+      const usedAtQNum = usedDriveIdMap.get(dq.id) || usedStemMap.get(stemText.toLowerCase()) || null;
+
+      let normalized = null;
+      if (qt === 'MCQ') {
+        normalized = {
+          candidateId: dq.id || `drv_mcq_${candidates.length}`,
+          driveQuestionId: dq.id,
+          type: 'MCQ',
+          stem: stemText,
+          options: Array.isArray(dq.options) ? dq.options.slice(0, 4) : ['A', 'B', 'C', 'D'],
+          answer: dq.correctAnswer || 'A',
+          explanation: `Căn cứ theo tài liệu "${dq.sourceFile}" trong Ngân hàng câu hỏi Google Drive.`,
+          level: dq.level || targetLevel,
+          sourceFile: dq.sourceFile,
+          sourceBadge: `Ngân hàng Google Drive (${dq.sourceFile})`,
+          topicTitle: dq.topicTitle || targetUnit || targetTopic,
+          hasUnderlineAnswer: Boolean(dq.hasUnderlineAnswer),
+          isRecommendedFile,
+          isForbiddenFile,
+          relevanceScore: relevance,
+          usedAtQNum
+        };
+      } else if (qt === 'TF') {
+        const stmts = dq.items.slice(0, 4).map((it, sIdx) => ({
+          letter: ['a', 'b', 'c', 'd'][sIdx],
+          text: it.text,
+          isTrue: Boolean(it.isCorrect),
+          answer: it.isCorrect ? 'Đúng' : 'Sai',
+          level: (Array.isArray(question.statements) && question.statements[sIdx]?.level) || it.level || targetLevel
+        }));
+        normalized = {
+          candidateId: dq.id || `drv_tf_${candidates.length}`,
+          driveQuestionId: dq.id,
+          type: 'TF',
+          stem: stemText,
+          statements: stmts,
+          items: stmts,
+          explanation: `Căn cứ theo tài liệu "${dq.sourceFile}" trong Ngân hàng câu hỏi Google Drive.`,
+          level: dq.level || targetLevel,
+          sourceFile: dq.sourceFile,
+          sourceBadge: `Ngân hàng Google Drive (${dq.sourceFile})`,
+          topicTitle: dq.topicTitle || targetUnit || targetTopic,
+          isRecommendedFile,
+          isForbiddenFile,
+          relevanceScore: relevance,
+          usedAtQNum
+        };
+      } else {
+        normalized = {
+          candidateId: dq.id || `drv_sa_${candidates.length}`,
+          driveQuestionId: dq.id,
+          type: qt,
+          stem: stemText,
+          answer: dq.answer || 'Đáp án theo SGK và tài liệu chuyên môn.',
+          explanation: `Căn cứ theo tài liệu "${dq.sourceFile}" trong Ngân hàng câu hỏi Google Drive.`,
+          level: dq.level || targetLevel,
+          sourceFile: dq.sourceFile,
+          sourceBadge: `Ngân hàng Google Drive (${dq.sourceFile})`,
+          topicTitle: dq.topicTitle || targetUnit || targetTopic,
+          isRecommendedFile,
+          isForbiddenFile,
+          relevanceScore: relevance,
+          usedAtQNum
+        };
+      }
+
+      if (normalized) candidates.push(normalized);
+    });
+  }
+
+  // 2. Lấy thêm ứng viên từ Ngân hàng môn học nội bộ (SUBJECT_POOLS) cho tất cả các môn THPT (Toán, Lý, Hóa, Anh, Tin)
+  const presetKey = detectMatchingPresetKey(metadata, `${targetTopic} ${targetUnit}`, null);
+  const poolKeys = presetKey ? [presetKey, ...Object.keys(SUBJECT_POOLS).filter(k => k !== presetKey)] : Object.keys(SUBJECT_POOLS);
+  for (const pKey of poolKeys) {
+    const pObj = SUBJECT_POOLS[pKey];
+    if (!pObj || !Array.isArray(pObj[qt])) continue;
+    const isCurrentSubjectPool = pKey === presetKey;
+
+    pObj[qt].forEach((pq, pIdx) => {
+      const stemText = String(pq.stem || '').trim();
+      if (!stemText) return;
+      // Tránh trùng lặp nếu câu đã có trong danh sách ứng viên
+      if (candidates.some(c => c.stem.toLowerCase() === stemText.toLowerCase())) return;
+
+      const usedAtQNum = usedStemMap.get(stemText.toLowerCase()) || null;
+      const isRowMatch = Boolean(question.rowId && pq.rowId === question.rowId);
+      const isLvMatch = pq.level === targetLevel;
+      let relevance = (isCurrentSubjectPool ? 60 : 10) + (isRowMatch ? 80 : 0) + (isLvMatch ? 35 : 0);
+
+      const stmts = qt === 'TF' && Array.isArray(pq.statements)
+        ? pq.statements.map((st, sIdx) => ({
+            ...st,
+            letter: ['a', 'b', 'c', 'd'][sIdx],
+            level: (Array.isArray(question.statements) && question.statements[sIdx]?.level) || st.level || targetLevel,
+            answer: st.isTrue ? 'Đúng' : 'Sai'
+          }))
+        : undefined;
+
+      candidates.push({
+        candidateId: `pool_${pKey}_${qt}_${pIdx}`,
+        type: qt,
+        stem: stemText,
+        options: pq.options ? pq.options.slice(0, 4) : undefined,
+        answer: pq.answer,
+        statements: stmts,
+        items: stmts,
+        explanation: pq.explanation || 'Theo Chuẩn kiến thức kỹ năng chương trình GDPT 2018.',
+        mathVerify: pq.mathVerify,
+        level: pq.level || targetLevel,
+        sourceFile: `Ngân hàng Chuẩn THPT (${pKey.replace('thpt_', '').toUpperCase()})`,
+        sourceBadge: `Ngân hàng Chuẩn THPT (${pKey.replace('thpt_', '').toUpperCase()})`,
+        topicTitle: targetUnit || targetTopic || 'Chuyên đề THPT',
+        isRecommendedFile: isCurrentSubjectPool && isRowMatch,
+        isForbiddenFile: false,
+        relevanceScore: relevance,
+        usedAtQNum
+      });
+    });
+  }
+
+  // 3. Lọc theo Chuyên đề / File nguồn, Mức độ nhận thức, và Từ khóa
+  let filtered = candidates;
+
+  if (filterFile === '__MATCH_TOPIC__') {
+    const topicMatched = filtered.filter(c => c.isRecommendedFile || (!c.isForbiddenFile && c.relevanceScore >= 40));
+    if (topicMatched.length > 0) {
+      filtered = topicMatched;
+    }
+  } else if (filterFile && filterFile !== '__ALL__') {
+    filtered = filtered.filter(c => c.sourceFile === filterFile);
+  }
+
+  if (filterLevel && filterLevel !== '__ALL__') {
+    filtered = filtered.filter(c => (c.level || '').toLowerCase() === filterLevel.toLowerCase());
+  }
+
+  if (keyword && keyword.trim()) {
+    const kw = keyword.trim().toLowerCase();
+    filtered = filtered.filter(c => {
+      const hay = [
+        c.stem,
+        ...(c.options || []),
+        ...((c.statements || []).map(s => s.text)),
+        c.sourceFile,
+        c.topicTitle
+      ].filter(Boolean).join(' ').toLowerCase();
+      return hay.includes(kw);
+    });
+  }
+
+  // 4. Sắp xếp: Ưu tiên câu CHƯA DÙNG trong đề hiện tại + Điểm khớp chủ đề & mức độ cao nhất
+  filtered.sort((a, b) => {
+    const aUsed = a.usedAtQNum ? 1 : 0;
+    const bUsed = b.usedAtQNum ? 1 : 0;
+    if (aUsed !== bUsed) return aUsed - bUsed;
+    return b.relevanceScore - a.relevanceScore;
+  });
+
+  return {
+    ok: true,
+    totalMatches: filtered.length,
+    recommendedFiles: targetFiles,
+    availableFiles,
+    candidates: filtered.slice(0, limit)
+  };
+}
+
+/**
+ * Tạo lại (Regenerate) hoặc Đổi nhanh 1 câu hỏi đơn lẻ từ Ngân hàng đề / AI mà vẫn giữ đúng vị trí Ma trận
+ */
+async function regenerateSingleQuestion({ question, existingQuestions = [], metadata = {}, customInstruction = '', preferBank = true }) {
   if (!question) {
     return { ok: false, message: 'Không tìm thấy thông tin câu hỏi cần tạo lại.' };
   }
 
+  // 1. Nếu ưu tiên lấy câu hỏi thực tế khác từ Ngân hàng đề (Đổi nhanh câu hỏi cùng Chủ đề & Mức độ)
+  if (preferBank && !customInstruction) {
+    const swapRes = getCandidateQuestionsForSwap({
+      question,
+      existingQuestions,
+      metadata,
+      filterFile: '__MATCH_TOPIC__',
+      filterLevel: '',
+      limit: 30
+    });
+    const currentStemLower = String(question.stem || '').trim().toLowerCase();
+    const unusedPool = (swapRes.candidates || []).filter(
+      c => !c.usedAtQNum && String(c.stem || '').trim().toLowerCase() !== currentStemLower
+    );
+    // Ưu tiên nhóm có cùng mức độ trước, nếu hết thì lấy câu cùng chủ đề
+    const sameLevelPool = unusedPool.filter(c => c.level === question.level);
+    const pickList = sameLevelPool.length > 0 ? sameLevelPool : unusedPool;
+
+    if (pickList.length > 0) {
+      // Chọn ngẫu nhiên trong top 5 câu phù hợp nhất để mỗi lần bấm "Đổi nhanh" ra 1 câu mới
+      const topSlice = pickList.slice(0, Math.min(5, pickList.length));
+      const picked = topSlice[Math.floor(Math.random() * topSlice.length)];
+      return {
+        ok: true,
+        source: picked.sourceBadge || 'Ngân hàng câu hỏi',
+        question: {
+          ...question,
+          ...picked,
+          id: question.id,
+          type: question.type,
+          rowId: question.rowId,
+          topic: question.topic,
+          unit: question.unit,
+          level: question.level,
+          points: question.points,
+          matrixRef: question.matrixRef
+        }
+      };
+    }
+  }
+
+  // 2. Nếu có cấu hình AI LLM và người dùng chọn tạo bằng AI
   const aiCfg = loadAiConfig();
   if (aiCfg.hasKey) {
     const sysPrompt = `Bạn là chuyên gia ra đề kiểm tra môn ${metadata.subject || ''} lớp ${metadata.grade || ''}. Hãy tạo mới 1 câu hỏi thay thế cùng đơn vị kiến thức "${question.unit}", cùng mức độ "${question.level}", cùng dạng "${question.type}" và cùng điểm số ${question.points}. Trả về JSON câu hỏi hợp lệ.`;
@@ -1112,7 +1383,7 @@ async function regenerateSingleQuestion({ question, metadata = {}, customInstruc
     }
   }
 
-  // Tạo biến thể mới với bộ số liệu mới & kiểm chứng toán học tự động
+  // 3. Fallback: Tạo biến thể mới với bộ số liệu mới & kiểm chứng toán học tự động
   const updated = JSON.parse(JSON.stringify(question));
   const seed = Math.floor(Math.random() * 8) + 2;
 
@@ -1125,7 +1396,6 @@ async function regenerateSingleQuestion({ question, metadata = {}, customInstruc
       updated.stem += ` [${customInstruction}]`;
     }
     if (Array.isArray(updated.options) && updated.options.length === 4) {
-      // Đảo vị trí đáp án đúng sang phương án khác để làm mới câu hỏi
       const labels = ['A', 'B', 'C', 'D'];
       const oldAnsIdx = Math.max(0, labels.indexOf(String(updated.answer || 'A').toUpperCase()));
       const newAnsIdx = (oldAnsIdx + 1) % 4;
@@ -1146,7 +1416,6 @@ async function regenerateSingleQuestion({ question, metadata = {}, customInstruc
   } else if (updated.type === 'TF') {
     updated.stem = `${question.stem.replace(/\s*\[Biến thể #\d+\]$/, '')} [Biến thể #${seed}]`;
     if (Array.isArray(updated.statements) && updated.statements.length === 4) {
-      // Đảo thứ tự 2 ý đầu
       const tmp = updated.statements[0];
       updated.statements[0] = updated.statements[1];
       updated.statements[1] = tmp;
@@ -1169,6 +1438,7 @@ module.exports = {
   step2GenerateMatrix,
   step3GenerateSpecification,
   step4GenerateQuestionsAndAnswers,
+  getCandidateQuestionsForSwap,
   regenerateSingleQuestion,
   detectMatchingPresetKey
 };
