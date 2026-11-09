@@ -1,0 +1,282 @@
+[
+  {
+    "sbd": "120001",
+    "name": "Nguyễn An Bình",
+    "fullName": "Nguyễn An Bình",
+    "className": "12A1",
+    "dob": "15/03/2008",
+    "gender": "Nam"
+  },
+  {
+    "sbd": "120002",
+    "name": "Trần Thị Cẩm Tú",
+    "fullName": "Trần Thị Cẩm Tú",
+    "className": "12A1",
+    "dob": "22/07/2008",
+    "gender": "Nữ"
+  },
+  {
+    "sbd": "120003",
+    "name": "Lê Hoàng Dũng",
+    "fullName": "Lê Hoàng Dũng",
+    "className": "12A1",
+    "dob": "10/11/2008",
+    "gender": "Nam"
+  },
+  {
+    "sbd": "120004",
+    "name": "Phạm Minh Đức",
+    "fullName": "Phạm Minh Đức",
+    "className": "12A1",
+    "dob": "05/01/2008",
+    "gender": "Nam"
+  },
+  {
+    "sbd": "120005",
+    "name": "Hoàng Thu Giang",
+    "fullName": "Hoàng Thu Giang",
+    "className": "12A1",
+    "dob": "18/09/2008",
+    "gender": "Nữ"
+  },
+  {
+    "sbd": "120006",
+    "name": "Đặng Tuấn Hải",
+    "fullName": "Đặng Tuấn Hải",
+    "className": "12A1",
+    "dob": "30/04/2008",
+    "gender": "Nam"
+  },
+  {
+    "sbd": "120007",
+    "name": "Vũ Bích Hạnh",
+    "fullName": "Vũ Bích Hạnh",
+    "className": "12A1",
+    "dob": "12/12/2008",
+    "gender": "Nữ"
+  },
+  {
+    "sbd": "120008",
+    "name": "Bùi Gia Huy",
+    "fullName": "Bùi Gia Huy",
+    "className": "12A1",
+    "dob": "25/08/2008",
+    "gender": "Nam"
+  },
+  {
+    "sbd": "120009",
+    "name": "Đỗ Thùy Linh",
+    "fullName": "Đỗ Thùy Linh",
+    "className": "12A1",
+    "dob": "08/02/2008",
+    "gender": "Nữ"
+  },
+  {
+    "sbd": "120010",
+    "name": "Ngô Quang Long",
+    "fullName": "Ngô Quang Long",
+    "className": "12A1",
+    "dob": "14/06/2008",
+    "gender": "Nam"
+  },
+  {
+    "sbd": "120011",
+    "name": "Dương Khánh Mai",
+    "fullName": "Dương Khánh Mai",
+    "className": "12A1",
+    "dob": "20/10/2008",
+    "gender": "Nữ"
+  },
+  {
+    "sbd": "120012",
+    "name": "Lý Quốc Nam",
+    "fullName": "Lý Quốc Nam",
+    "className": "12A1",
+    "dob": "03/05/2008",
+    "gender": "Nam"
+  },
+  {
+    "sbd": "120013",
+    "name": "Đinh Hồng Nhung",
+    "fullName": "Đinh Hồng Nhung",
+    "className": "12A1",
+    "dob": "19/03/2008",
+    "gender": "Nữ"
+  },
+  {
+    "sbd": "120014",
+    "name": "Mai Trọng Nghĩa",
+    "fullName": "Mai Trọng Nghĩa",
+    "className": "12A1",
+    "dob": "27/09/2008",
+    "gender": "Nam"
+  },
+  {
+    "sbd": "120015",
+    "name": "Trịnh Bảo Ngọc",
+    "fullName": "Trịnh Bảo Ngọc",
+    "className": "12A1",
+    "dob": "11/04/2008",
+    "gender": "Nữ"
+  },
+  {
+    "sbd": "120016",
+    "name": "Hồ Vĩnh Phát",
+    "fullName": "Hồ Vĩnh Phát",
+    "className": "12A1",
+    "dob": "09/08/2008",
+    "gender": "Nam"
+  },
+  {
+    "sbd": "120017",
+    "name": "Phan Như Quỳnh",
+    "fullName": "Phan Như Quỳnh",
+    "className": "12A1",
+    "dob": "16/11/2008",
+    "gender": "Nữ"
+  },
+  {
+    "sbd": "120018",
+    "name": "Trương Đăng Quang",
+    "fullName": "Trương Đăng Quang",
+    "className": "12A1",
+    "dob": "02/01/2008",
+    "gender": "Nam"
+  },
+  {
+    "sbd": "120019",
+    "name": "Võ Minh Quân",
+    "fullName": "Võ Minh Quân",
+    "className": "12A1",
+    "dob": "21/05/2008",
+    "gender": "Nam"
+  },
+  {
+    "sbd": "120020",
+    "name": "Đoàn Kim Ngân",
+    "fullName": "Đoàn Kim Ngân",
+    "className": "12A1",
+    "dob": "07/07/2008",
+    "gender": "Nữ"
+  },
+  {
+    "sbd": "120021",
+    "name": "Lâm Thanh Sơn",
+    "fullName": "Lâm Thanh Sơn",
+    "className": "12A1",
+    "dob": "29/12/2008",
+    "gender": "Nam"
+  },
+  {
+    "sbd": "120022",
+    "name": "Lê Diệu Thảo",
+    "fullName": "Lê Diệu Thảo",
+    "className": "12A1",
+    "dob": "14/02/2008",
+    "gender": "Nữ"
+  },
+  {
+    "sbd": "120023",
+    "name": "Nguyễn Đình Thắng",
+    "fullName": "Nguyễn Đình Thắng",
+    "className": "12A1",
+    "dob": "17/10/2008",
+    "gender": "Nam"
+  },
+  {
+    "sbd": "120024",
+    "name": "Trần Phương Thúy",
+    "fullName": "Trần Phương Thúy",
+    "className": "12A1",
+    "dob": "23/04/2008",
+    "gender": "Nữ"
+  },
+  {
+    "sbd": "120025",
+    "name": "Phạm Đức Thành",
+    "fullName": "Phạm Đức Thành",
+    "className": "12A1",
+    "dob": "06/08/2008",
+    "gender": "Nam"
+  },
+  {
+    "sbd": "120026",
+    "name": "Vũ Thanh Trúc",
+    "fullName": "Vũ Thanh Trúc",
+    "className": "12A1",
+    "dob": "31/01/2008",
+    "gender": "Nữ"
+  },
+  {
+    "sbd": "120027",
+    "name": "Đỗ Hoàng Trung",
+    "fullName": "Đỗ Hoàng Trung",
+    "className": "12A1",
+    "dob": "13/09/2008",
+    "gender": "Nam"
+  },
+  {
+    "sbd": "120028",
+    "name": "Bùi Kim Tuyến",
+    "fullName": "Bùi Kim Tuyến",
+    "className": "12A1",
+    "dob": "28/06/2008",
+    "gender": "Nữ"
+  },
+  {
+    "sbd": "120029",
+    "name": "Nguyễn Tấn Tài",
+    "fullName": "Nguyễn Tấn Tài",
+    "className": "12A1",
+    "dob": "04/03/2008",
+    "gender": "Nam"
+  },
+  {
+    "sbd": "120030",
+    "name": "Cao Ngọc Uyên",
+    "fullName": "Cao Ngọc Uyên",
+    "className": "12A1",
+    "dob": "18/12/2008",
+    "gender": "Nữ"
+  },
+  {
+    "sbd": "120031",
+    "name": "Trần Văn Việt",
+    "fullName": "Trần Văn Việt",
+    "className": "12A1",
+    "dob": "26/07/2008",
+    "gender": "Nam"
+  },
+  {
+    "sbd": "120032",
+    "name": "Lê Hoàng Vũ",
+    "fullName": "Lê Hoàng Vũ",
+    "className": "12A1",
+    "dob": "01/10/2008",
+    "gender": "Nam"
+  },
+  {
+    "sbd": "120033",
+    "name": "Phạm Kiều Vy",
+    "fullName": "Phạm Kiều Vy",
+    "className": "12A1",
+    "dob": "12/05/2008",
+    "gender": "Nữ"
+  },
+  {
+    "sbd": "120034",
+    "name": "Hoàng Minh Vương",
+    "fullName": "Hoàng Minh Vương",
+    "className": "12A1",
+    "dob": "19/08/2008",
+    "gender": "Nam"
+  },
+  {
+    "sbd": "120035",
+    "name": "Nguyễn Hải Yến",
+    "fullName": "Nguyễn Hải Yến",
+    "className": "12A1",
+    "dob": "24/11/2008",
+    "gender": "Nữ"
+  }
+]

@@ -1,0 +1,2215 @@
+{
+  "id": "profile_thpt_chem_12",
+  "title": "Cuối học kỳ I - Hóa học Lớp 12 (THPT)",
+  "updatedAt": "2026-11-08T14:27:52.881Z",
+  "metadata": {
+    "schoolName": "TRƯỜNG THPT NGUYỄN THƯỢNG HIỀN",
+    "departmentName": "TỔ HÓA HỌC - SINH HỌC",
+    "schoolYear": "2026 - 2027",
+    "level": "THPT",
+    "grade": "12",
+    "subject": "Hóa học",
+    "textbook": "Cánh Diều",
+    "examPeriod": "Cuối học kỳ I",
+    "duration": 50,
+    "numVariants": 2,
+    "regulation": "CV7991_TT22",
+    "localGuidelines": "Sử dụng danh pháp hóa học tiếng Anh theo chuẩn IUPAC của Chương trình GDPT 2018 (Ester, Lipid, Carbohydrate, Glucose, Fructose, Saccharose, Starch, Cellulose, Amine, Amino acid, Peptide, Protein, Polymer). Cấu trúc: 12 câu MCQ (3,0đ) + 4 câu Đúng/Sai × 4 ý (4,0đ) + 6 câu Trả lời ngắn tính toán hiệu suất/khối lượng (3,0đ). Tổng = 10,0 điểm."
+  },
+  "units": [
+    {
+      "id": "unit_1",
+      "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+      "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+      "outcomes": {
+        "Biết": "Gọi tên các ester đơn chức (ethyl acetate CH3COOC2H5, methyl methacrylate...), công thức chất béo (tristearin, triolein, tripalmitin).",
+        "Hiểu": "Viết phương trình thủy phân ester trong môi trường acid (thuận nghịch) và môi trường kiềm NaOH/KOH (một chiều - xà phòng hóa).",
+        "Vận dụng": "Tính khối lượng xà phòng thu được từ chất béo có hiệu suất H% và chỉ số xà phòng hóa."
+      },
+      "keyFacts": [
+        "Biết: Gọi tên các ester đơn chức (ethyl acetate CH3COOC2H5, methyl methacrylate...), công thức chất béo (tristearin, triolein, tripalmitin).",
+        "Hiểu: Viết phương trình thủy phân ester trong môi trường acid (thuận nghịch) và môi trường kiềm NaOH/KOH (một chiều - xà phòng hóa).",
+        "Vận dụng: Tính khối lượng xà phòng thu được từ chất béo có hiệu suất H% và chỉ số xà phòng hóa."
+      ]
+    },
+    {
+      "id": "unit_2",
+      "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+      "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+      "outcomes": {
+        "Biết": "Phân loại monosaccharide (glucose, fructose C6H12O6), disaccharide (saccharose, maltose C12H22O11) và polysaccharide ((C6H10O5)n).",
+        "Hiểu": "Giải thích phản ứng của glucose với thuốc thử Tollens tạo 2Ag, phản ứng màu của hồ tinh bột với iodine I2.",
+        "Vận dụng": "Tính khối lượng bạc kết tủa hoặc lượng ethanol điều chế từ quá trình lên men tinh bột/glucose thực tế."
+      },
+      "keyFacts": [
+        "Biết: Phân loại monosaccharide (glucose, fructose C6H12O6), disaccharide (saccharose, maltose C12H22O11) và polysaccharide ((C6H10O5)n).",
+        "Hiểu: Giải thích phản ứng của glucose với thuốc thử Tollens tạo 2Ag, phản ứng màu của hồ tinh bột với iodine I2.",
+        "Vận dụng: Tính khối lượng bạc kết tủa hoặc lượng ethanol điều chế từ quá trình lên men tinh bột/glucose thực tế."
+      ]
+    },
+    {
+      "id": "unit_3",
+      "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+      "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+      "outcomes": {
+        "Biết": "Nhận biết bậc của amine, công thức Glycine (H2N-CH2-COOH, M=75), Alanine (M=89), Valine (M=117), Lysine (M=146), Glutamic acid (M=147).",
+        "Hiểu": "Xác định môi trường dung dịch amino acid làm đổi màu quỳ tím và số liên kết peptide trong phân tử.",
+        "Vận dụng": "Tính khối lượng muối thu được khi cho amino acid hoặc peptide tác dụng hoàn toàn với dung dịch HCl / NaOH."
+      },
+      "keyFacts": [
+        "Biết: Nhận biết bậc của amine, công thức Glycine (H2N-CH2-COOH, M=75), Alanine (M=89), Valine (M=117), Lysine (M=146), Glutamic acid (M=147).",
+        "Hiểu: Xác định môi trường dung dịch amino acid làm đổi màu quỳ tím và số liên kết peptide trong phân tử.",
+        "Vận dụng: Tính khối lượng muối thu được khi cho amino acid hoặc peptide tác dụng hoàn toàn với dung dịch HCl / NaOH."
+      ]
+    }
+  ],
+  "matrix": {
+    "levels": [
+      "Biết",
+      "Hiểu",
+      "Vận dụng"
+    ],
+    "questionTypes": [
+      "MCQ",
+      "TF",
+      "SA",
+      "ESSAY"
+    ],
+    "pointRules": {
+      "MCQ": 0.25,
+      "TF": 0.25,
+      "SA": 0.5,
+      "ESSAY": 1
+    },
+    "rows": [
+      {
+        "id": "row_1",
+        "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+        "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+        "counts": {
+          "MCQ": {
+            "Biết": 3,
+            "Hiểu": 1,
+            "Vận dụng": 0
+          },
+          "TF": {
+            "Biết": 2,
+            "Hiểu": 1,
+            "Vận dụng": 1
+          },
+          "SA": {
+            "Biết": 0,
+            "Hiểu": 1,
+            "Vận dụng": 1
+          },
+          "ESSAY": {
+            "Biết": 0,
+            "Hiểu": 0,
+            "Vận dụng": 0
+          }
+        },
+        "points": 3
+      },
+      {
+        "id": "row_2",
+        "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+        "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+        "counts": {
+          "MCQ": {
+            "Biết": 3,
+            "Hiểu": 1,
+            "Vận dụng": 0
+          },
+          "TF": {
+            "Biết": 3,
+            "Hiểu": 3,
+            "Vận dụng": 2
+          },
+          "SA": {
+            "Biết": 0,
+            "Hiểu": 1,
+            "Vận dụng": 1
+          },
+          "ESSAY": {
+            "Biết": 0,
+            "Hiểu": 0,
+            "Vận dụng": 0
+          }
+        },
+        "points": 4
+      },
+      {
+        "id": "row_3",
+        "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+        "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+        "counts": {
+          "MCQ": {
+            "Biết": 2,
+            "Hiểu": 2,
+            "Vận dụng": 0
+          },
+          "TF": {
+            "Biết": 2,
+            "Hiểu": 1,
+            "Vận dụng": 1
+          },
+          "SA": {
+            "Biết": 0,
+            "Hiểu": 1,
+            "Vận dụng": 1
+          },
+          "ESSAY": {
+            "Biết": 0,
+            "Hiểu": 0,
+            "Vận dụng": 0
+          }
+        },
+        "points": 3
+      }
+    ]
+  },
+  "specification": [
+    {
+      "rowId": "row_1",
+      "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+      "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+      "outcomes": {
+        "Biết": "Gọi tên các ester đơn chức (ethyl acetate CH3COOC2H5, methyl methacrylate...), công thức chất béo (tristearin, triolein, tripalmitin).",
+        "Hiểu": "Viết phương trình thủy phân ester trong môi trường acid (thuận nghịch) và môi trường kiềm NaOH/KOH (một chiều - xà phòng hóa).",
+        "Vận dụng": "Tính khối lượng xà phòng thu được từ chất béo có hiệu suất H% và chỉ số xà phòng hóa."
+      },
+      "questionRefs": {
+        "MCQ": [
+          "C1",
+          "C2",
+          "C3",
+          "C4"
+        ],
+        "TF": [
+          "ĐS1a",
+          "ĐS1b",
+          "ĐS1c",
+          "ĐS1d"
+        ],
+        "SA": [
+          "TLN1",
+          "TLN2"
+        ],
+        "ESSAY": []
+      }
+    },
+    {
+      "rowId": "row_2",
+      "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+      "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+      "outcomes": {
+        "Biết": "Phân loại monosaccharide (glucose, fructose C6H12O6), disaccharide (saccharose, maltose C12H22O11) và polysaccharide ((C6H10O5)n).",
+        "Hiểu": "Giải thích phản ứng của glucose với thuốc thử Tollens tạo 2Ag, phản ứng màu của hồ tinh bột với iodine I2.",
+        "Vận dụng": "Tính khối lượng bạc kết tủa hoặc lượng ethanol điều chế từ quá trình lên men tinh bột/glucose thực tế."
+      },
+      "questionRefs": {
+        "MCQ": [
+          "C5",
+          "C6",
+          "C7",
+          "C8"
+        ],
+        "TF": [
+          "ĐS2a",
+          "ĐS2b",
+          "ĐS2c",
+          "ĐS2d",
+          "ĐS3a",
+          "ĐS3b",
+          "ĐS3c",
+          "ĐS3d"
+        ],
+        "SA": [
+          "TLN3",
+          "TLN4"
+        ],
+        "ESSAY": []
+      }
+    },
+    {
+      "rowId": "row_3",
+      "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+      "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+      "outcomes": {
+        "Biết": "Nhận biết bậc của amine, công thức Glycine (H2N-CH2-COOH, M=75), Alanine (M=89), Valine (M=117), Lysine (M=146), Glutamic acid (M=147).",
+        "Hiểu": "Xác định môi trường dung dịch amino acid làm đổi màu quỳ tím và số liên kết peptide trong phân tử.",
+        "Vận dụng": "Tính khối lượng muối thu được khi cho amino acid hoặc peptide tác dụng hoàn toàn với dung dịch HCl / NaOH."
+      },
+      "questionRefs": {
+        "MCQ": [
+          "C9",
+          "C10",
+          "C11",
+          "C12"
+        ],
+        "TF": [
+          "ĐS4a",
+          "ĐS4b",
+          "ĐS4c",
+          "ĐS4d"
+        ],
+        "SA": [
+          "TLN5",
+          "TLN6"
+        ],
+        "ESSAY": []
+      }
+    }
+  ],
+  "questions": [
+    {
+      "rowId": "row_1",
+      "level": "Biết",
+      "stem": "Hợp chất CH3COOC2H5 có tên gọi theo danh pháp IUPAC là:",
+      "options": [
+        "ethyl formate",
+        "ethyl acetate",
+        "methyl propionate",
+        "methyl acetate"
+      ],
+      "answer": "B",
+      "explanation": "CH3COOC2H5 là ester của acetic acid và ethyl alcohol nên có tên là ethyl acetate.",
+      "id": "q_mcq_1",
+      "type": "MCQ",
+      "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+      "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+      "points": 0.25,
+      "matrixRef": "C1 [Dòng 1 - Biết]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Biết",
+      "stem": "Công thức phân tử của chất béo tristearin (glycerol tristearate) là:",
+      "options": [
+        "(C17H33COO)3C3H5",
+        "CH3COOC2H5",
+        "(C17H35COO)3C3H5",
+        "(C15H31COO)3C3H5"
+      ],
+      "answer": "C",
+      "explanation": "Stearic acid là C17H35COOH nên tristearin có công thức là (C17H35COO)3C3H5.",
+      "id": "q_mcq_2",
+      "type": "MCQ",
+      "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+      "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+      "points": 0.25,
+      "matrixRef": "C2 [Dòng 1 - Biết]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Biết",
+      "stem": "Phản ứng thủy phân ester trong môi trường kiềm (NaOH hoặc KOH) đun nóng được gọi là phản ứng:",
+      "options": [
+        "Tráng bạc",
+        "Trùng hợp",
+        "Xà phòng hóa",
+        "Ester hóa"
+      ],
+      "answer": "C",
+      "explanation": "Thủy phân ester hoặc chất béo trong dung dịch kiềm đun nóng là phản ứng xà phòng hóa.",
+      "id": "q_mcq_3",
+      "type": "MCQ",
+      "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+      "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+      "points": 0.25,
+      "matrixRef": "C3 [Dòng 1 - Biết]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Hiểu",
+      "stem": "Đun nóng ester HCOOCH3 với dung dịch NaOH vừa đủ thu được sản phẩm gồm:",
+      "options": [
+        "HCOONa và CH3OH",
+        "CH3COONa và CH3OH",
+        "HCOONa và C2H5OH",
+        "CH3COOH và CH3OH"
+      ],
+      "answer": "A",
+      "explanation": "HCOOCH3 + NaOH →(t°) HCOONa (sodium formate) + CH3OH (methanol).",
+      "id": "q_mcq_4",
+      "type": "MCQ",
+      "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+      "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+      "points": 0.25,
+      "matrixRef": "C4 [Dòng 1 - Hiểu]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Biết",
+      "stem": "Carbohydrate nào sau đây thuộc loại monosaccharide?",
+      "options": [
+        "Tinh bột (Starch)",
+        "Glucose",
+        "Cellulose",
+        "Saccharose"
+      ],
+      "answer": "B",
+      "explanation": "Glucose và fructose là monosaccharide (C6H12O6); saccharose là disaccharide; tinh bột và cellulose là polysaccharide.",
+      "id": "q_mcq_5",
+      "type": "MCQ",
+      "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+      "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+      "points": 0.25,
+      "matrixRef": "C5 [Dòng 2 - Biết]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Biết",
+      "stem": "Nhỏ vài giọt dung dịch iodine (I2) vào ống nghiệm đựng hồ tinh bột để nguội thì xuất hiện màu gì?",
+      "options": [
+        "Màu đỏ gạch",
+        "Không màu",
+        "Màu xanh tím",
+        "Màu vàng nhạt"
+      ],
+      "answer": "C",
+      "explanation": "Phản ứng đặc trưng nhận biết hồ tinh bột bằng dung dịch I2 tạo hợp chất bọc có màu xanh tím.",
+      "id": "q_mcq_6",
+      "type": "MCQ",
+      "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+      "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+      "points": 0.25,
+      "matrixRef": "C6 [Dòng 2 - Biết]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Biết",
+      "stem": "Công thức phân tử của saccharose là:",
+      "options": [
+        "C2H4O2",
+        "C6H12O6",
+        "C12H22O11",
+        "(C6H10O5)n"
+      ],
+      "answer": "C",
+      "explanation": "Saccharose (đường mía) có công thức phân tử là C12H22O11.",
+      "id": "q_mcq_7",
+      "type": "MCQ",
+      "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+      "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+      "points": 0.25,
+      "matrixRef": "C7 [Dòng 2 - Biết]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Hiểu",
+      "stem": "Khi đun nóng dung dịch chứa 1 mol glucose với lượng dư thuốc thử Tollens (AgNO3/NH3), số mol bạc (Ag) tối đa thu được là:",
+      "options": [
+        "3 mol",
+        "4 mol",
+        "2 mol",
+        "1 mol"
+      ],
+      "answer": "C",
+      "explanation": "1 mol glucose (C6H12O6) tráng bạc hoàn toàn tạo ra 2 mol kết tủa Ag.",
+      "mathVerify": {
+        "expression": "1 * 2",
+        "expected": 2
+      },
+      "id": "q_mcq_8",
+      "type": "MCQ",
+      "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+      "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+      "points": 0.25,
+      "matrixRef": "C8 [Dòng 2 - Hiểu]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Biết",
+      "stem": "Amino acid đơn giản nhất là glycine (H2N-CH2-COOH) có phân tử khối bằng:",
+      "options": [
+        "117",
+        "146",
+        "89",
+        "75"
+      ],
+      "answer": "D",
+      "explanation": "M(Glycine, C2H5NO2) = 12×2 + 5 + 14 + 16×2 = 75.",
+      "mathVerify": {
+        "expression": "12*2 + 5 + 14 + 16*2",
+        "expected": 75
+      },
+      "id": "q_mcq_9",
+      "type": "MCQ",
+      "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+      "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+      "points": 0.25,
+      "matrixRef": "C9 [Dòng 3 - Biết]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Biết",
+      "stem": "Dung dịch chất nào sau đây làm quỳ tím chuyển sang màu xanh?",
+      "options": [
+        "Methylamine (CH3NH2)",
+        "Aniline (C6H5NH2)",
+        "Glycine",
+        "Alanine"
+      ],
+      "answer": "A",
+      "explanation": "Methylamine là amine mạch hở có tính base mạnh hơn NH3 nên làm quỳ tím hóa xanh; glycine/alanine không đổi màu quỳ; aniline có tính base rất yếu không làm đổi màu quỳ.",
+      "id": "q_mcq_10",
+      "type": "MCQ",
+      "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+      "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+      "points": 0.25,
+      "matrixRef": "C10 [Dòng 3 - Biết]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Hiểu",
+      "stem": "Tripeptide mạch hở Gly-Ala-Val có chứa bao nhiêu liên kết peptide (-CO-NH-) trong phân tử?",
+      "options": [
+        "4",
+        "1",
+        "3",
+        "2"
+      ],
+      "answer": "D",
+      "explanation": "Peptide mạch hở gồm n gốc α-amino acid có (n - 1) liên kết peptide: 3 - 1 = 2 liên kết peptide.",
+      "mathVerify": {
+        "expression": "3 - 1",
+        "expected": 2
+      },
+      "id": "q_mcq_11",
+      "type": "MCQ",
+      "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+      "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+      "points": 0.25,
+      "matrixRef": "C11 [Dòng 3 - Hiểu]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Hiểu",
+      "stem": "Thuốc thử dùng để phân biệt dipeptide (Gly-Ala) với tripeptide (Gly-Ala-Val) là:",
+      "options": [
+        "Khí H2",
+        "Dung dịch NaCl",
+        "Cu(OH)2 trong môi trường kiềm (phản ứng màu biuret)",
+        "Kim loại Cu"
+      ],
+      "answer": "C",
+      "explanation": "Tripeptide trở lên có từ 2 liên kết peptide nên phản ứng với Cu(OH)2/OH- tạo phức màu tím đặc trưng (phản ứng biuret), còn dipeptide thì không.",
+      "id": "q_mcq_12",
+      "type": "MCQ",
+      "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+      "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+      "points": 0.25,
+      "matrixRef": "C12 [Dòng 3 - Hiểu]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Hiểu",
+      "stem": "Tiến hành thí nghiệm điều chế ethyl acetate bằng cách đun nóng hỗn hợp gồm acetic acid (CH3COOH), ethanol (C2H5OH) và vài giọt dung dịch H2SO4 đặc. Xét tính Đúng (Đ) hoặc Sai (S) của các phát biểu sau:",
+      "statements": [
+        {
+          "text": "Phản ứng điều chế ethyl acetate từ acetic acid và ethanol là phản ứng ester hóa thuận nghịch.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Dung dịch H2SO4 đặc vừa đóng vai trò chất xúc tác, vừa có tác dụng hút nước làm cân bằng chuyển dịch theo chiều tạo ester.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Ethyl acetate tạo thành tan vô hạn trong nước tạo thành dung dịch đồng nhất.",
+          "isTrue": false,
+          "level": "Hiểu",
+          "letter": "c",
+          "answer": "Sai"
+        },
+        {
+          "text": "Nếu đun 6,0 gam CH3COOH (M=60) với lượng dư C2H5OH và hiệu suất phản ứng đạt 80% thì thu được 7,04 gam ethyl acetate (M=88).",
+          "isTrue": true,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "explanation": "a) Đúng; b) Đúng; c) Sai vì ethyl acetate rất ít tan trong nước và nhẹ hơn nước nên tách lớp nổi lên trên; d) Đúng vì n(CH3COOH) = 0,1 mol ⇒ m(ester) = 0,1 × 0,8 × 88 = 7,04 gam.",
+      "mathVerify": {
+        "expression": "(6 / 60) * 0.8 * 88",
+        "expected": 7.04
+      },
+      "items": [
+        {
+          "text": "Phản ứng điều chế ethyl acetate từ acetic acid và ethanol là phản ứng ester hóa thuận nghịch.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Dung dịch H2SO4 đặc vừa đóng vai trò chất xúc tác, vừa có tác dụng hút nước làm cân bằng chuyển dịch theo chiều tạo ester.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Ethyl acetate tạo thành tan vô hạn trong nước tạo thành dung dịch đồng nhất.",
+          "isTrue": false,
+          "level": "Hiểu",
+          "letter": "c",
+          "answer": "Sai"
+        },
+        {
+          "text": "Nếu đun 6,0 gam CH3COOH (M=60) với lượng dư C2H5OH và hiệu suất phản ứng đạt 80% thì thu được 7,04 gam ethyl acetate (M=88).",
+          "isTrue": true,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+      "isZeroHallucination": true,
+      "id": "q_tf_1",
+      "type": "TF",
+      "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+      "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+      "points": 1,
+      "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Biết",
+      "stem": "Cho các chất thuộc nhóm Carbohydrate: Glucose, Fructose, Saccharose và Cellulose. Xét tính Đúng (Đ) hoặc Sai (S) của các phát biểu sau:",
+      "statements": [
+        {
+          "text": "Glucose và fructose là hai đồng phân cấu tạo của nhau, cùng có công thức phân tử C6H12O6.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Saccharose không có nhóm -CHO tự do nên không tham gia phản ứng tráng bạc với thuốc thử Tollens.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Thủy phân hoàn toàn saccharose trong môi trường acid chỉ thu được duy nhất glucose.",
+          "isTrue": false,
+          "level": "Biết",
+          "letter": "c",
+          "answer": "Sai"
+        },
+        {
+          "text": "Trong y học, dung dịch glucose 5% được dùng làm dịch truyền tĩnh mạch để bổ sung năng lượng cho bệnh nhân.",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "explanation": "a) Đúng; b) Đúng; c) Sai vì thủy phân saccharose thu được cả glucose và fructose theo tỉ lệ mol 1:1; d) Đúng.",
+      "items": [
+        {
+          "text": "Glucose và fructose là hai đồng phân cấu tạo của nhau, cùng có công thức phân tử C6H12O6.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Saccharose không có nhóm -CHO tự do nên không tham gia phản ứng tráng bạc với thuốc thử Tollens.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Thủy phân hoàn toàn saccharose trong môi trường acid chỉ thu được duy nhất glucose.",
+          "isTrue": false,
+          "level": "Biết",
+          "letter": "c",
+          "answer": "Sai"
+        },
+        {
+          "text": "Trong y học, dung dịch glucose 5% được dùng làm dịch truyền tĩnh mạch để bổ sung năng lượng cho bệnh nhân.",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+      "isZeroHallucination": true,
+      "id": "q_tf_2",
+      "type": "TF",
+      "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+      "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+      "points": 1,
+      "matrixRef": "ĐS2(a,b,c,d) [Dòng 2: Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)]"
+    },
+    {
+      "id": "q_tf_3",
+      "type": "TF",
+      "rowId": "row_2",
+      "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+      "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+      "level": "Vận dụng",
+      "points": 1,
+      "matrixRef": "ĐS3(a,b,c,d) [Dòng 2: Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)]",
+      "stem": "Cho tình huống và kiến thức trọng tâm thuộc bài \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" (Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+      "statements": [
+        {
+          "text": "Khái niệm và tính chất cơ bản của \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" được xác định đúng theo tài liệu giáo khoa.",
+          "isTrue": true,
+          "level": "Biết"
+        },
+        {
+          "text": "Mọi trường hợp áp dụng \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" luôn tuân theo điều kiện ràng buộc của bài học.",
+          "isTrue": true,
+          "level": "Biết"
+        },
+        {
+          "text": "Khi áp dụng quy tắc trong \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\", kết quả suy luận dẫn đến kết quả trái ngược với lý thuyết chuẩn.",
+          "isTrue": false,
+          "level": "Hiểu"
+        },
+        {
+          "text": "Có thể vận dụng trực tiếp kiến thức bài \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" để giải quyết bài toán thực tiễn nêu trong kế hoạch dạy học.",
+          "isTrue": true,
+          "level": "Vận dụng"
+        }
+      ],
+      "explanation": "Đối chiếu Bản đặc tả mục \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\": a) Đúng; b) Đúng; c) Sai; d) Đúng."
+    },
+    {
+      "rowId": "row_3",
+      "level": "Hiểu",
+      "stem": "Cho hai amino acid thông dụng là Glycine (H2N-CH2-COOH, M=75) và Glutamic acid (HOOC-CH2-CH2-CH(NH2)-COOH, M=147). Xét tính Đúng (Đ) hoặc Sai (S) của các phát biểu sau:",
+      "statements": [
+        {
+          "text": "Cả glycine và glutamic acid đều là chất rắn kết tinh ở điều kiện thường và dễ tan trong nước.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Dung dịch glutamic acid làm quỳ tím chuyển sang màu hồng do có 2 nhóm -COOH và 1 nhóm -NH2.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Amino acid là hợp chất hữu cơ tạp chức có tính chất lưỡng tính (vừa tác dụng với acid mạnh, vừa tác dụng với base mạnh).",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "c",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Muối monosodium glutamate (mì chính / bột ngọt) được điều chế từ phản ứng giữa glutamic acid với NaOH theo tỉ lệ mol 1 : 2.",
+          "isTrue": false,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Sai"
+        }
+      ],
+      "explanation": "a) Đúng; b) Đúng; c) Đúng; d) Sai vì monosodium glutamate chỉ thế 1 nguyên tử Na nên phản ứng theo tỉ lệ mol 1 : 1.",
+      "items": [
+        {
+          "text": "Cả glycine và glutamic acid đều là chất rắn kết tinh ở điều kiện thường và dễ tan trong nước.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Dung dịch glutamic acid làm quỳ tím chuyển sang màu hồng do có 2 nhóm -COOH và 1 nhóm -NH2.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Amino acid là hợp chất hữu cơ tạp chức có tính chất lưỡng tính (vừa tác dụng với acid mạnh, vừa tác dụng với base mạnh).",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "c",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Muối monosodium glutamate (mì chính / bột ngọt) được điều chế từ phản ứng giữa glutamic acid với NaOH theo tỉ lệ mol 1 : 2.",
+          "isTrue": false,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Sai"
+        }
+      ],
+      "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+      "isZeroHallucination": true,
+      "id": "q_tf_4",
+      "type": "TF",
+      "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+      "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+      "points": 1,
+      "matrixRef": "ĐS4(a,b,c,d) [Dòng 3: Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Hiểu",
+      "stem": "Thủy phân hoàn toàn 0,2 mol ethyl acetate (CH3COOC2H5) trong dung dịch NaOH dư đun nóng, thu được bao nhiêu gam muối sodium acetate (CH3COONa, M=82)?",
+      "answer": "16.4",
+      "explanation": "n(CH3COONa) = n(ester) = 0,2 mol ⇒ m(muối) = 0,2 × 82 = 16,4 (gam).",
+      "mathVerify": {
+        "expression": "0.2 * 82",
+        "expected": 16.4
+      },
+      "id": "q_sa_1",
+      "type": "SA",
+      "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+      "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+      "points": 0.5,
+      "matrixRef": "TLN1 [Dòng 1 - Hiểu]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Vận dụng",
+      "stem": "Xà phòng hóa hoàn toàn 89 gam chất béo tristearin ((C17H35COO)3C3H5, M=890) bằng dung dịch NaOH vừa đủ, thu được bao nhiêu gam glycerol (C3H5(OH)3, M=92)?",
+      "answer": "9.2",
+      "explanation": "n(tristearin) = 89 / 890 = 0,1 mol ⇒ n(glycerol) = 0,1 mol ⇒ m(glycerol) = 0,1 × 92 = 9,2 (gam).",
+      "mathVerify": {
+        "expression": "(89 / 890) * 92",
+        "expected": 9.2
+      },
+      "id": "q_sa_2",
+      "type": "SA",
+      "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+      "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+      "points": 0.5,
+      "matrixRef": "TLN2 [Dòng 1 - Vận dụng]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Hiểu",
+      "stem": "Phân tử khối của glucose (C6H12O6) bằng bao nhiêu (cho C=12, H=1, O=16)?",
+      "answer": "180",
+      "explanation": "M(C6H12O6) = 12×6 + 1×12 + 16×6 = 180.",
+      "mathVerify": {
+        "expression": "12*6 + 1*12 + 16*6",
+        "expected": 180
+      },
+      "id": "q_sa_3",
+      "type": "SA",
+      "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+      "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+      "points": 0.5,
+      "matrixRef": "TLN3 [Dòng 2 - Hiểu]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Vận dụng",
+      "stem": "Lên men m gam glucose (M=180) thành ethanol (C2H5OH, M=46) theo sơ đồ C6H12O6 → 2C2H5OH + 2CO2 với hiệu suất H = 80%, thu được 36,8 gam ethanol. Tính giá trị của m (gam).",
+      "answer": "90",
+      "explanation": "n(C2H5OH) = 36,8 / 46 = 0,8 mol ⇒ n(glucose phản ứng) = 0,8 / 2 = 0,4 mol ⇒ n(glucose ban đầu) = 0,4 / 0,8 = 0,5 mol ⇒ m = 0,5 × 180 = 90 (gam).",
+      "mathVerify": {
+        "expression": "(((36.8 / 46) / 2) / 0.8) * 180",
+        "expected": 90
+      },
+      "id": "q_sa_4",
+      "type": "SA",
+      "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+      "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+      "points": 0.5,
+      "matrixRef": "TLN4 [Dòng 2 - Vận dụng]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Hiểu",
+      "stem": "Trong phân tử tetrapeptide mạch hở Gly-Ala-Val-Gly có tất cả bao nhiêu nguyên tử nitrogen (N)?",
+      "answer": "4",
+      "explanation": "Mỗi gốc α-amino acid Gly, Ala, Val chỉ có 1 nguyên tử N, nên tetrapeptide có 4 nguyên tử N.",
+      "id": "q_sa_5",
+      "type": "SA",
+      "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+      "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+      "points": 0.5,
+      "matrixRef": "TLN5 [Dòng 3 - Hiểu]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Vận dụng",
+      "stem": "Cho 15 gam glycine (H2N-CH2-COOH, M=75) tác dụng hết với dung dịch NaOH dư, sau phản ứng thu được bao nhiêu gam muối khan H2N-CH2-COONa (M=97)?",
+      "answer": "19.4",
+      "explanation": "n(Gly) = 15 / 75 = 0,2 mol ⇒ n(muối) = 0,2 mol ⇒ m(muối) = 0,2 × 97 = 19,4 (gam).",
+      "mathVerify": {
+        "expression": "(15 / 75) * 97",
+        "expected": 19.4
+      },
+      "id": "q_sa_6",
+      "type": "SA",
+      "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+      "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+      "points": 0.5,
+      "matrixRef": "TLN6 [Dòng 3 - Vận dụng]"
+    }
+  ],
+  "variants": [
+    {
+      "code": "101",
+      "questions": [
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Hợp chất CH3COOC2H5 có tên gọi theo danh pháp IUPAC là:",
+          "options": [
+            "ethyl formate",
+            "ethyl acetate",
+            "methyl propionate",
+            "methyl acetate"
+          ],
+          "answer": "B",
+          "explanation": "CH3COOC2H5 là ester của acetic acid và ethyl alcohol nên có tên là ethyl acetate.",
+          "id": "q_mcq_1",
+          "type": "MCQ",
+          "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+          "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+          "points": 0.25,
+          "matrixRef": "C1 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Công thức phân tử của chất béo tristearin (glycerol tristearate) là:",
+          "options": [
+            "(C17H33COO)3C3H5",
+            "CH3COOC2H5",
+            "(C17H35COO)3C3H5",
+            "(C15H31COO)3C3H5"
+          ],
+          "answer": "C",
+          "explanation": "Stearic acid là C17H35COOH nên tristearin có công thức là (C17H35COO)3C3H5.",
+          "id": "q_mcq_2",
+          "type": "MCQ",
+          "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+          "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+          "points": 0.25,
+          "matrixRef": "C2 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Phản ứng thủy phân ester trong môi trường kiềm (NaOH hoặc KOH) đun nóng được gọi là phản ứng:",
+          "options": [
+            "Tráng bạc",
+            "Trùng hợp",
+            "Xà phòng hóa",
+            "Ester hóa"
+          ],
+          "answer": "C",
+          "explanation": "Thủy phân ester hoặc chất béo trong dung dịch kiềm đun nóng là phản ứng xà phòng hóa.",
+          "id": "q_mcq_3",
+          "type": "MCQ",
+          "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+          "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+          "points": 0.25,
+          "matrixRef": "C3 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Đun nóng ester HCOOCH3 với dung dịch NaOH vừa đủ thu được sản phẩm gồm:",
+          "options": [
+            "HCOONa và CH3OH",
+            "CH3COONa và CH3OH",
+            "HCOONa và C2H5OH",
+            "CH3COOH và CH3OH"
+          ],
+          "answer": "A",
+          "explanation": "HCOOCH3 + NaOH →(t°) HCOONa (sodium formate) + CH3OH (methanol).",
+          "id": "q_mcq_4",
+          "type": "MCQ",
+          "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+          "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+          "points": 0.25,
+          "matrixRef": "C4 [Dòng 1 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Carbohydrate nào sau đây thuộc loại monosaccharide?",
+          "options": [
+            "Tinh bột (Starch)",
+            "Glucose",
+            "Cellulose",
+            "Saccharose"
+          ],
+          "answer": "B",
+          "explanation": "Glucose và fructose là monosaccharide (C6H12O6); saccharose là disaccharide; tinh bột và cellulose là polysaccharide.",
+          "id": "q_mcq_5",
+          "type": "MCQ",
+          "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+          "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+          "points": 0.25,
+          "matrixRef": "C5 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Nhỏ vài giọt dung dịch iodine (I2) vào ống nghiệm đựng hồ tinh bột để nguội thì xuất hiện màu gì?",
+          "options": [
+            "Màu đỏ gạch",
+            "Không màu",
+            "Màu xanh tím",
+            "Màu vàng nhạt"
+          ],
+          "answer": "C",
+          "explanation": "Phản ứng đặc trưng nhận biết hồ tinh bột bằng dung dịch I2 tạo hợp chất bọc có màu xanh tím.",
+          "id": "q_mcq_6",
+          "type": "MCQ",
+          "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+          "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+          "points": 0.25,
+          "matrixRef": "C6 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Công thức phân tử của saccharose là:",
+          "options": [
+            "C2H4O2",
+            "C6H12O6",
+            "C12H22O11",
+            "(C6H10O5)n"
+          ],
+          "answer": "C",
+          "explanation": "Saccharose (đường mía) có công thức phân tử là C12H22O11.",
+          "id": "q_mcq_7",
+          "type": "MCQ",
+          "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+          "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+          "points": 0.25,
+          "matrixRef": "C7 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Khi đun nóng dung dịch chứa 1 mol glucose với lượng dư thuốc thử Tollens (AgNO3/NH3), số mol bạc (Ag) tối đa thu được là:",
+          "options": [
+            "3 mol",
+            "4 mol",
+            "2 mol",
+            "1 mol"
+          ],
+          "answer": "C",
+          "explanation": "1 mol glucose (C6H12O6) tráng bạc hoàn toàn tạo ra 2 mol kết tủa Ag.",
+          "mathVerify": {
+            "expression": "1 * 2",
+            "expected": 2
+          },
+          "id": "q_mcq_8",
+          "type": "MCQ",
+          "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+          "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+          "points": 0.25,
+          "matrixRef": "C8 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Biết",
+          "stem": "Amino acid đơn giản nhất là glycine (H2N-CH2-COOH) có phân tử khối bằng:",
+          "options": [
+            "117",
+            "146",
+            "89",
+            "75"
+          ],
+          "answer": "D",
+          "explanation": "M(Glycine, C2H5NO2) = 12×2 + 5 + 14 + 16×2 = 75.",
+          "mathVerify": {
+            "expression": "12*2 + 5 + 14 + 16*2",
+            "expected": 75
+          },
+          "id": "q_mcq_9",
+          "type": "MCQ",
+          "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+          "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+          "points": 0.25,
+          "matrixRef": "C9 [Dòng 3 - Biết]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Biết",
+          "stem": "Dung dịch chất nào sau đây làm quỳ tím chuyển sang màu xanh?",
+          "options": [
+            "Methylamine (CH3NH2)",
+            "Aniline (C6H5NH2)",
+            "Glycine",
+            "Alanine"
+          ],
+          "answer": "A",
+          "explanation": "Methylamine là amine mạch hở có tính base mạnh hơn NH3 nên làm quỳ tím hóa xanh; glycine/alanine không đổi màu quỳ; aniline có tính base rất yếu không làm đổi màu quỳ.",
+          "id": "q_mcq_10",
+          "type": "MCQ",
+          "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+          "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+          "points": 0.25,
+          "matrixRef": "C10 [Dòng 3 - Biết]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Tripeptide mạch hở Gly-Ala-Val có chứa bao nhiêu liên kết peptide (-CO-NH-) trong phân tử?",
+          "options": [
+            "4",
+            "1",
+            "3",
+            "2"
+          ],
+          "answer": "D",
+          "explanation": "Peptide mạch hở gồm n gốc α-amino acid có (n - 1) liên kết peptide: 3 - 1 = 2 liên kết peptide.",
+          "mathVerify": {
+            "expression": "3 - 1",
+            "expected": 2
+          },
+          "id": "q_mcq_11",
+          "type": "MCQ",
+          "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+          "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+          "points": 0.25,
+          "matrixRef": "C11 [Dòng 3 - Hiểu]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Thuốc thử dùng để phân biệt dipeptide (Gly-Ala) với tripeptide (Gly-Ala-Val) là:",
+          "options": [
+            "Khí H2",
+            "Dung dịch NaCl",
+            "Cu(OH)2 trong môi trường kiềm (phản ứng màu biuret)",
+            "Kim loại Cu"
+          ],
+          "answer": "C",
+          "explanation": "Tripeptide trở lên có từ 2 liên kết peptide nên phản ứng với Cu(OH)2/OH- tạo phức màu tím đặc trưng (phản ứng biuret), còn dipeptide thì không.",
+          "id": "q_mcq_12",
+          "type": "MCQ",
+          "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+          "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+          "points": 0.25,
+          "matrixRef": "C12 [Dòng 3 - Hiểu]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Tiến hành thí nghiệm điều chế ethyl acetate bằng cách đun nóng hỗn hợp gồm acetic acid (CH3COOH), ethanol (C2H5OH) và vài giọt dung dịch H2SO4 đặc. Xét tính Đúng (Đ) hoặc Sai (S) của các phát biểu sau:",
+          "statements": [
+            {
+              "text": "Phản ứng điều chế ethyl acetate từ acetic acid và ethanol là phản ứng ester hóa thuận nghịch.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Dung dịch H2SO4 đặc vừa đóng vai trò chất xúc tác, vừa có tác dụng hút nước làm cân bằng chuyển dịch theo chiều tạo ester.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Ethyl acetate tạo thành tan vô hạn trong nước tạo thành dung dịch đồng nhất.",
+              "isTrue": false,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Nếu đun 6,0 gam CH3COOH (M=60) với lượng dư C2H5OH và hiệu suất phản ứng đạt 80% thì thu được 7,04 gam ethyl acetate (M=88).",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) Đúng; b) Đúng; c) Sai vì ethyl acetate rất ít tan trong nước và nhẹ hơn nước nên tách lớp nổi lên trên; d) Đúng vì n(CH3COOH) = 0,1 mol ⇒ m(ester) = 0,1 × 0,8 × 88 = 7,04 gam.",
+          "mathVerify": {
+            "expression": "(6 / 60) * 0.8 * 88",
+            "expected": 7.04
+          },
+          "items": [
+            {
+              "text": "Phản ứng điều chế ethyl acetate từ acetic acid và ethanol là phản ứng ester hóa thuận nghịch.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Dung dịch H2SO4 đặc vừa đóng vai trò chất xúc tác, vừa có tác dụng hút nước làm cân bằng chuyển dịch theo chiều tạo ester.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Ethyl acetate tạo thành tan vô hạn trong nước tạo thành dung dịch đồng nhất.",
+              "isTrue": false,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Nếu đun 6,0 gam CH3COOH (M=60) với lượng dư C2H5OH và hiệu suất phản ứng đạt 80% thì thu được 7,04 gam ethyl acetate (M=88).",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_1",
+          "type": "TF",
+          "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+          "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+          "points": 1,
+          "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Cho các chất thuộc nhóm Carbohydrate: Glucose, Fructose, Saccharose và Cellulose. Xét tính Đúng (Đ) hoặc Sai (S) của các phát biểu sau:",
+          "statements": [
+            {
+              "text": "Glucose và fructose là hai đồng phân cấu tạo của nhau, cùng có công thức phân tử C6H12O6.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Saccharose không có nhóm -CHO tự do nên không tham gia phản ứng tráng bạc với thuốc thử Tollens.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Thủy phân hoàn toàn saccharose trong môi trường acid chỉ thu được duy nhất glucose.",
+              "isTrue": false,
+              "level": "Biết",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Trong y học, dung dịch glucose 5% được dùng làm dịch truyền tĩnh mạch để bổ sung năng lượng cho bệnh nhân.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) Đúng; b) Đúng; c) Sai vì thủy phân saccharose thu được cả glucose và fructose theo tỉ lệ mol 1:1; d) Đúng.",
+          "items": [
+            {
+              "text": "Glucose và fructose là hai đồng phân cấu tạo của nhau, cùng có công thức phân tử C6H12O6.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Saccharose không có nhóm -CHO tự do nên không tham gia phản ứng tráng bạc với thuốc thử Tollens.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Thủy phân hoàn toàn saccharose trong môi trường acid chỉ thu được duy nhất glucose.",
+              "isTrue": false,
+              "level": "Biết",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Trong y học, dung dịch glucose 5% được dùng làm dịch truyền tĩnh mạch để bổ sung năng lượng cho bệnh nhân.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_2",
+          "type": "TF",
+          "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+          "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+          "points": 1,
+          "matrixRef": "ĐS2(a,b,c,d) [Dòng 2: Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)]"
+        },
+        {
+          "id": "q_tf_3",
+          "type": "TF",
+          "rowId": "row_2",
+          "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+          "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+          "level": "Vận dụng",
+          "points": 1,
+          "matrixRef": "ĐS3(a,b,c,d) [Dòng 2: Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)]",
+          "stem": "Cho tình huống và kiến thức trọng tâm thuộc bài \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" (Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "statements": [
+            {
+              "text": "Khái niệm và tính chất cơ bản của \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" được xác định đúng theo tài liệu giáo khoa.",
+              "isTrue": true,
+              "level": "Biết"
+            },
+            {
+              "text": "Mọi trường hợp áp dụng \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" luôn tuân theo điều kiện ràng buộc của bài học.",
+              "isTrue": true,
+              "level": "Biết"
+            },
+            {
+              "text": "Khi áp dụng quy tắc trong \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\", kết quả suy luận dẫn đến kết quả trái ngược với lý thuyết chuẩn.",
+              "isTrue": false,
+              "level": "Hiểu"
+            },
+            {
+              "text": "Có thể vận dụng trực tiếp kiến thức bài \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" để giải quyết bài toán thực tiễn nêu trong kế hoạch dạy học.",
+              "isTrue": true,
+              "level": "Vận dụng"
+            }
+          ],
+          "explanation": "Đối chiếu Bản đặc tả mục \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\": a) Đúng; b) Đúng; c) Sai; d) Đúng."
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Cho hai amino acid thông dụng là Glycine (H2N-CH2-COOH, M=75) và Glutamic acid (HOOC-CH2-CH2-CH(NH2)-COOH, M=147). Xét tính Đúng (Đ) hoặc Sai (S) của các phát biểu sau:",
+          "statements": [
+            {
+              "text": "Cả glycine và glutamic acid đều là chất rắn kết tinh ở điều kiện thường và dễ tan trong nước.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Dung dịch glutamic acid làm quỳ tím chuyển sang màu hồng do có 2 nhóm -COOH và 1 nhóm -NH2.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Amino acid là hợp chất hữu cơ tạp chức có tính chất lưỡng tính (vừa tác dụng với acid mạnh, vừa tác dụng với base mạnh).",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Muối monosodium glutamate (mì chính / bột ngọt) được điều chế từ phản ứng giữa glutamic acid với NaOH theo tỉ lệ mol 1 : 2.",
+              "isTrue": false,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Sai"
+            }
+          ],
+          "explanation": "a) Đúng; b) Đúng; c) Đúng; d) Sai vì monosodium glutamate chỉ thế 1 nguyên tử Na nên phản ứng theo tỉ lệ mol 1 : 1.",
+          "items": [
+            {
+              "text": "Cả glycine và glutamic acid đều là chất rắn kết tinh ở điều kiện thường và dễ tan trong nước.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Dung dịch glutamic acid làm quỳ tím chuyển sang màu hồng do có 2 nhóm -COOH và 1 nhóm -NH2.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Amino acid là hợp chất hữu cơ tạp chức có tính chất lưỡng tính (vừa tác dụng với acid mạnh, vừa tác dụng với base mạnh).",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Muối monosodium glutamate (mì chính / bột ngọt) được điều chế từ phản ứng giữa glutamic acid với NaOH theo tỉ lệ mol 1 : 2.",
+              "isTrue": false,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Sai"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_4",
+          "type": "TF",
+          "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+          "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+          "points": 1,
+          "matrixRef": "ĐS4(a,b,c,d) [Dòng 3: Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Thủy phân hoàn toàn 0,2 mol ethyl acetate (CH3COOC2H5) trong dung dịch NaOH dư đun nóng, thu được bao nhiêu gam muối sodium acetate (CH3COONa, M=82)?",
+          "answer": "16.4",
+          "explanation": "n(CH3COONa) = n(ester) = 0,2 mol ⇒ m(muối) = 0,2 × 82 = 16,4 (gam).",
+          "mathVerify": {
+            "expression": "0.2 * 82",
+            "expected": 16.4
+          },
+          "id": "q_sa_1",
+          "type": "SA",
+          "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+          "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+          "points": 0.5,
+          "matrixRef": "TLN1 [Dòng 1 - Hiểu]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Vận dụng",
+          "stem": "Xà phòng hóa hoàn toàn 89 gam chất béo tristearin ((C17H35COO)3C3H5, M=890) bằng dung dịch NaOH vừa đủ, thu được bao nhiêu gam glycerol (C3H5(OH)3, M=92)?",
+          "answer": "9.2",
+          "explanation": "n(tristearin) = 89 / 890 = 0,1 mol ⇒ n(glycerol) = 0,1 mol ⇒ m(glycerol) = 0,1 × 92 = 9,2 (gam).",
+          "mathVerify": {
+            "expression": "(89 / 890) * 92",
+            "expected": 9.2
+          },
+          "id": "q_sa_2",
+          "type": "SA",
+          "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+          "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+          "points": 0.5,
+          "matrixRef": "TLN2 [Dòng 1 - Vận dụng]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Phân tử khối của glucose (C6H12O6) bằng bao nhiêu (cho C=12, H=1, O=16)?",
+          "answer": "180",
+          "explanation": "M(C6H12O6) = 12×6 + 1×12 + 16×6 = 180.",
+          "mathVerify": {
+            "expression": "12*6 + 1*12 + 16*6",
+            "expected": 180
+          },
+          "id": "q_sa_3",
+          "type": "SA",
+          "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+          "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+          "points": 0.5,
+          "matrixRef": "TLN3 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Vận dụng",
+          "stem": "Lên men m gam glucose (M=180) thành ethanol (C2H5OH, M=46) theo sơ đồ C6H12O6 → 2C2H5OH + 2CO2 với hiệu suất H = 80%, thu được 36,8 gam ethanol. Tính giá trị của m (gam).",
+          "answer": "90",
+          "explanation": "n(C2H5OH) = 36,8 / 46 = 0,8 mol ⇒ n(glucose phản ứng) = 0,8 / 2 = 0,4 mol ⇒ n(glucose ban đầu) = 0,4 / 0,8 = 0,5 mol ⇒ m = 0,5 × 180 = 90 (gam).",
+          "mathVerify": {
+            "expression": "(((36.8 / 46) / 2) / 0.8) * 180",
+            "expected": 90
+          },
+          "id": "q_sa_4",
+          "type": "SA",
+          "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+          "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+          "points": 0.5,
+          "matrixRef": "TLN4 [Dòng 2 - Vận dụng]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Trong phân tử tetrapeptide mạch hở Gly-Ala-Val-Gly có tất cả bao nhiêu nguyên tử nitrogen (N)?",
+          "answer": "4",
+          "explanation": "Mỗi gốc α-amino acid Gly, Ala, Val chỉ có 1 nguyên tử N, nên tetrapeptide có 4 nguyên tử N.",
+          "id": "q_sa_5",
+          "type": "SA",
+          "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+          "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+          "points": 0.5,
+          "matrixRef": "TLN5 [Dòng 3 - Hiểu]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Vận dụng",
+          "stem": "Cho 15 gam glycine (H2N-CH2-COOH, M=75) tác dụng hết với dung dịch NaOH dư, sau phản ứng thu được bao nhiêu gam muối khan H2N-CH2-COONa (M=97)?",
+          "answer": "19.4",
+          "explanation": "n(Gly) = 15 / 75 = 0,2 mol ⇒ n(muối) = 0,2 mol ⇒ m(muối) = 0,2 × 97 = 19,4 (gam).",
+          "mathVerify": {
+            "expression": "(15 / 75) * 97",
+            "expected": 19.4
+          },
+          "id": "q_sa_6",
+          "type": "SA",
+          "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+          "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+          "points": 0.5,
+          "matrixRef": "TLN6 [Dòng 3 - Vận dụng]"
+        }
+      ]
+    },
+    {
+      "code": "102",
+      "questions": [
+        {
+          "rowId": "row_3",
+          "level": "Biết",
+          "stem": "Amino acid đơn giản nhất là glycine (H2N-CH2-COOH) có phân tử khối bằng:",
+          "options": [
+            "117",
+            "75",
+            "146",
+            "89"
+          ],
+          "answer": "B",
+          "explanation": "M(Glycine, C2H5NO2) = 12×2 + 5 + 14 + 16×2 = 75.",
+          "mathVerify": {
+            "expression": "12*2 + 5 + 14 + 16*2",
+            "expected": 75
+          },
+          "id": "q_mcq_9",
+          "type": "MCQ",
+          "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+          "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+          "points": 0.25,
+          "matrixRef": "C9 [Dòng 3 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Hợp chất CH3COOC2H5 có tên gọi theo danh pháp IUPAC là:",
+          "options": [
+            "ethyl acetate",
+            "methyl propionate",
+            "ethyl formate",
+            "methyl acetate"
+          ],
+          "answer": "A",
+          "explanation": "CH3COOC2H5 là ester của acetic acid và ethyl alcohol nên có tên là ethyl acetate.",
+          "id": "q_mcq_1",
+          "type": "MCQ",
+          "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+          "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+          "points": 0.25,
+          "matrixRef": "C1 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Thuốc thử dùng để phân biệt dipeptide (Gly-Ala) với tripeptide (Gly-Ala-Val) là:",
+          "options": [
+            "Cu(OH)2 trong môi trường kiềm (phản ứng màu biuret)",
+            "Dung dịch NaCl",
+            "Khí H2",
+            "Kim loại Cu"
+          ],
+          "answer": "A",
+          "explanation": "Tripeptide trở lên có từ 2 liên kết peptide nên phản ứng với Cu(OH)2/OH- tạo phức màu tím đặc trưng (phản ứng biuret), còn dipeptide thì không.",
+          "id": "q_mcq_12",
+          "type": "MCQ",
+          "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+          "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+          "points": 0.25,
+          "matrixRef": "C12 [Dòng 3 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Nhỏ vài giọt dung dịch iodine (I2) vào ống nghiệm đựng hồ tinh bột để nguội thì xuất hiện màu gì?",
+          "options": [
+            "Màu vàng nhạt",
+            "Màu xanh tím",
+            "Màu đỏ gạch",
+            "Không màu"
+          ],
+          "answer": "B",
+          "explanation": "Phản ứng đặc trưng nhận biết hồ tinh bột bằng dung dịch I2 tạo hợp chất bọc có màu xanh tím.",
+          "id": "q_mcq_6",
+          "type": "MCQ",
+          "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+          "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+          "points": 0.25,
+          "matrixRef": "C6 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Công thức phân tử của chất béo tristearin (glycerol tristearate) là:",
+          "options": [
+            "(C15H31COO)3C3H5",
+            "(C17H35COO)3C3H5",
+            "(C17H33COO)3C3H5",
+            "CH3COOC2H5"
+          ],
+          "answer": "B",
+          "explanation": "Stearic acid là C17H35COOH nên tristearin có công thức là (C17H35COO)3C3H5.",
+          "id": "q_mcq_2",
+          "type": "MCQ",
+          "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+          "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+          "points": 0.25,
+          "matrixRef": "C2 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Tripeptide mạch hở Gly-Ala-Val có chứa bao nhiêu liên kết peptide (-CO-NH-) trong phân tử?",
+          "options": [
+            "4",
+            "3",
+            "1",
+            "2"
+          ],
+          "answer": "D",
+          "explanation": "Peptide mạch hở gồm n gốc α-amino acid có (n - 1) liên kết peptide: 3 - 1 = 2 liên kết peptide.",
+          "mathVerify": {
+            "expression": "3 - 1",
+            "expected": 2
+          },
+          "id": "q_mcq_11",
+          "type": "MCQ",
+          "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+          "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+          "points": 0.25,
+          "matrixRef": "C11 [Dòng 3 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Công thức phân tử của saccharose là:",
+          "options": [
+            "(C6H10O5)n",
+            "C12H22O11",
+            "C2H4O2",
+            "C6H12O6"
+          ],
+          "answer": "B",
+          "explanation": "Saccharose (đường mía) có công thức phân tử là C12H22O11.",
+          "id": "q_mcq_7",
+          "type": "MCQ",
+          "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+          "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+          "points": 0.25,
+          "matrixRef": "C7 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Đun nóng ester HCOOCH3 với dung dịch NaOH vừa đủ thu được sản phẩm gồm:",
+          "options": [
+            "CH3COONa và CH3OH",
+            "CH3COOH và CH3OH",
+            "HCOONa và CH3OH",
+            "HCOONa và C2H5OH"
+          ],
+          "answer": "C",
+          "explanation": "HCOOCH3 + NaOH →(t°) HCOONa (sodium formate) + CH3OH (methanol).",
+          "id": "q_mcq_4",
+          "type": "MCQ",
+          "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+          "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+          "points": 0.25,
+          "matrixRef": "C4 [Dòng 1 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Khi đun nóng dung dịch chứa 1 mol glucose với lượng dư thuốc thử Tollens (AgNO3/NH3), số mol bạc (Ag) tối đa thu được là:",
+          "options": [
+            "4 mol",
+            "2 mol",
+            "1 mol",
+            "3 mol"
+          ],
+          "answer": "B",
+          "explanation": "1 mol glucose (C6H12O6) tráng bạc hoàn toàn tạo ra 2 mol kết tủa Ag.",
+          "mathVerify": {
+            "expression": "1 * 2",
+            "expected": 2
+          },
+          "id": "q_mcq_8",
+          "type": "MCQ",
+          "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+          "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+          "points": 0.25,
+          "matrixRef": "C8 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Phản ứng thủy phân ester trong môi trường kiềm (NaOH hoặc KOH) đun nóng được gọi là phản ứng:",
+          "options": [
+            "Tráng bạc",
+            "Xà phòng hóa",
+            "Trùng hợp",
+            "Ester hóa"
+          ],
+          "answer": "B",
+          "explanation": "Thủy phân ester hoặc chất béo trong dung dịch kiềm đun nóng là phản ứng xà phòng hóa.",
+          "id": "q_mcq_3",
+          "type": "MCQ",
+          "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+          "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+          "points": 0.25,
+          "matrixRef": "C3 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Biết",
+          "stem": "Dung dịch chất nào sau đây làm quỳ tím chuyển sang màu xanh?",
+          "options": [
+            "Aniline (C6H5NH2)",
+            "Alanine",
+            "Methylamine (CH3NH2)",
+            "Glycine"
+          ],
+          "answer": "C",
+          "explanation": "Methylamine là amine mạch hở có tính base mạnh hơn NH3 nên làm quỳ tím hóa xanh; glycine/alanine không đổi màu quỳ; aniline có tính base rất yếu không làm đổi màu quỳ.",
+          "id": "q_mcq_10",
+          "type": "MCQ",
+          "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+          "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+          "points": 0.25,
+          "matrixRef": "C10 [Dòng 3 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Carbohydrate nào sau đây thuộc loại monosaccharide?",
+          "options": [
+            "Glucose",
+            "Tinh bột (Starch)",
+            "Cellulose",
+            "Saccharose"
+          ],
+          "answer": "A",
+          "explanation": "Glucose và fructose là monosaccharide (C6H12O6); saccharose là disaccharide; tinh bột và cellulose là polysaccharide.",
+          "id": "q_mcq_5",
+          "type": "MCQ",
+          "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+          "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+          "points": 0.25,
+          "matrixRef": "C5 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Tiến hành thí nghiệm điều chế ethyl acetate bằng cách đun nóng hỗn hợp gồm acetic acid (CH3COOH), ethanol (C2H5OH) và vài giọt dung dịch H2SO4 đặc. Xét tính Đúng (Đ) hoặc Sai (S) của các phát biểu sau:",
+          "statements": [
+            {
+              "text": "Phản ứng điều chế ethyl acetate từ acetic acid và ethanol là phản ứng ester hóa thuận nghịch.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Dung dịch H2SO4 đặc vừa đóng vai trò chất xúc tác, vừa có tác dụng hút nước làm cân bằng chuyển dịch theo chiều tạo ester.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Ethyl acetate tạo thành tan vô hạn trong nước tạo thành dung dịch đồng nhất.",
+              "isTrue": false,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Nếu đun 6,0 gam CH3COOH (M=60) với lượng dư C2H5OH và hiệu suất phản ứng đạt 80% thì thu được 7,04 gam ethyl acetate (M=88).",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) Đúng; b) Đúng; c) Sai vì ethyl acetate rất ít tan trong nước và nhẹ hơn nước nên tách lớp nổi lên trên; d) Đúng vì n(CH3COOH) = 0,1 mol ⇒ m(ester) = 0,1 × 0,8 × 88 = 7,04 gam.",
+          "mathVerify": {
+            "expression": "(6 / 60) * 0.8 * 88",
+            "expected": 7.04
+          },
+          "items": [
+            {
+              "text": "Phản ứng điều chế ethyl acetate từ acetic acid và ethanol là phản ứng ester hóa thuận nghịch.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Dung dịch H2SO4 đặc vừa đóng vai trò chất xúc tác, vừa có tác dụng hút nước làm cân bằng chuyển dịch theo chiều tạo ester.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Ethyl acetate tạo thành tan vô hạn trong nước tạo thành dung dịch đồng nhất.",
+              "isTrue": false,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Nếu đun 6,0 gam CH3COOH (M=60) với lượng dư C2H5OH và hiệu suất phản ứng đạt 80% thì thu được 7,04 gam ethyl acetate (M=88).",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_1",
+          "type": "TF",
+          "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+          "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+          "points": 1,
+          "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Cho các chất thuộc nhóm Carbohydrate: Glucose, Fructose, Saccharose và Cellulose. Xét tính Đúng (Đ) hoặc Sai (S) của các phát biểu sau:",
+          "statements": [
+            {
+              "text": "Glucose và fructose là hai đồng phân cấu tạo của nhau, cùng có công thức phân tử C6H12O6.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Saccharose không có nhóm -CHO tự do nên không tham gia phản ứng tráng bạc với thuốc thử Tollens.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Thủy phân hoàn toàn saccharose trong môi trường acid chỉ thu được duy nhất glucose.",
+              "isTrue": false,
+              "level": "Biết",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Trong y học, dung dịch glucose 5% được dùng làm dịch truyền tĩnh mạch để bổ sung năng lượng cho bệnh nhân.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) Đúng; b) Đúng; c) Sai vì thủy phân saccharose thu được cả glucose và fructose theo tỉ lệ mol 1:1; d) Đúng.",
+          "items": [
+            {
+              "text": "Glucose và fructose là hai đồng phân cấu tạo của nhau, cùng có công thức phân tử C6H12O6.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Saccharose không có nhóm -CHO tự do nên không tham gia phản ứng tráng bạc với thuốc thử Tollens.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Thủy phân hoàn toàn saccharose trong môi trường acid chỉ thu được duy nhất glucose.",
+              "isTrue": false,
+              "level": "Biết",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Trong y học, dung dịch glucose 5% được dùng làm dịch truyền tĩnh mạch để bổ sung năng lượng cho bệnh nhân.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_2",
+          "type": "TF",
+          "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+          "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+          "points": 1,
+          "matrixRef": "ĐS2(a,b,c,d) [Dòng 2: Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)]"
+        },
+        {
+          "id": "q_tf_3",
+          "type": "TF",
+          "rowId": "row_2",
+          "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+          "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+          "level": "Vận dụng",
+          "points": 1,
+          "matrixRef": "ĐS3(a,b,c,d) [Dòng 2: Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)]",
+          "stem": "Cho tình huống và kiến thức trọng tâm thuộc bài \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" (Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "statements": [
+            {
+              "text": "Khái niệm và tính chất cơ bản của \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" được xác định đúng theo tài liệu giáo khoa.",
+              "isTrue": true,
+              "level": "Biết"
+            },
+            {
+              "text": "Mọi trường hợp áp dụng \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" luôn tuân theo điều kiện ràng buộc của bài học.",
+              "isTrue": true,
+              "level": "Biết"
+            },
+            {
+              "text": "Khi áp dụng quy tắc trong \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\", kết quả suy luận dẫn đến kết quả trái ngược với lý thuyết chuẩn.",
+              "isTrue": false,
+              "level": "Hiểu"
+            },
+            {
+              "text": "Có thể vận dụng trực tiếp kiến thức bài \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\" để giải quyết bài toán thực tiễn nêu trong kế hoạch dạy học.",
+              "isTrue": true,
+              "level": "Vận dụng"
+            }
+          ],
+          "explanation": "Đối chiếu Bản đặc tả mục \"Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)\": a) Đúng; b) Đúng; c) Sai; d) Đúng."
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Cho hai amino acid thông dụng là Glycine (H2N-CH2-COOH, M=75) và Glutamic acid (HOOC-CH2-CH2-CH(NH2)-COOH, M=147). Xét tính Đúng (Đ) hoặc Sai (S) của các phát biểu sau:",
+          "statements": [
+            {
+              "text": "Cả glycine và glutamic acid đều là chất rắn kết tinh ở điều kiện thường và dễ tan trong nước.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Dung dịch glutamic acid làm quỳ tím chuyển sang màu hồng do có 2 nhóm -COOH và 1 nhóm -NH2.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Amino acid là hợp chất hữu cơ tạp chức có tính chất lưỡng tính (vừa tác dụng với acid mạnh, vừa tác dụng với base mạnh).",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Muối monosodium glutamate (mì chính / bột ngọt) được điều chế từ phản ứng giữa glutamic acid với NaOH theo tỉ lệ mol 1 : 2.",
+              "isTrue": false,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Sai"
+            }
+          ],
+          "explanation": "a) Đúng; b) Đúng; c) Đúng; d) Sai vì monosodium glutamate chỉ thế 1 nguyên tử Na nên phản ứng theo tỉ lệ mol 1 : 1.",
+          "items": [
+            {
+              "text": "Cả glycine và glutamic acid đều là chất rắn kết tinh ở điều kiện thường và dễ tan trong nước.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Dung dịch glutamic acid làm quỳ tím chuyển sang màu hồng do có 2 nhóm -COOH và 1 nhóm -NH2.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Amino acid là hợp chất hữu cơ tạp chức có tính chất lưỡng tính (vừa tác dụng với acid mạnh, vừa tác dụng với base mạnh).",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Muối monosodium glutamate (mì chính / bột ngọt) được điều chế từ phản ứng giữa glutamic acid với NaOH theo tỉ lệ mol 1 : 2.",
+              "isTrue": false,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Sai"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_4",
+          "type": "TF",
+          "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+          "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+          "points": 1,
+          "matrixRef": "ĐS4(a,b,c,d) [Dòng 3: Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Vận dụng",
+          "stem": "Cho 15 gam glycine (H2N-CH2-COOH, M=75) tác dụng hết với dung dịch NaOH dư, sau phản ứng thu được bao nhiêu gam muối khan H2N-CH2-COONa (M=97)?",
+          "answer": "19.4",
+          "explanation": "n(Gly) = 15 / 75 = 0,2 mol ⇒ n(muối) = 0,2 mol ⇒ m(muối) = 0,2 × 97 = 19,4 (gam).",
+          "mathVerify": {
+            "expression": "(15 / 75) * 97",
+            "expected": 19.4
+          },
+          "id": "q_sa_6",
+          "type": "SA",
+          "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+          "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+          "points": 0.5,
+          "matrixRef": "TLN6 [Dòng 3 - Vận dụng]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Vận dụng",
+          "stem": "Xà phòng hóa hoàn toàn 89 gam chất béo tristearin ((C17H35COO)3C3H5, M=890) bằng dung dịch NaOH vừa đủ, thu được bao nhiêu gam glycerol (C3H5(OH)3, M=92)?",
+          "answer": "9.2",
+          "explanation": "n(tristearin) = 89 / 890 = 0,1 mol ⇒ n(glycerol) = 0,1 mol ⇒ m(glycerol) = 0,1 × 92 = 9,2 (gam).",
+          "mathVerify": {
+            "expression": "(89 / 890) * 92",
+            "expected": 9.2
+          },
+          "id": "q_sa_2",
+          "type": "SA",
+          "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+          "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+          "points": 0.5,
+          "matrixRef": "TLN2 [Dòng 1 - Vận dụng]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Thủy phân hoàn toàn 0,2 mol ethyl acetate (CH3COOC2H5) trong dung dịch NaOH dư đun nóng, thu được bao nhiêu gam muối sodium acetate (CH3COONa, M=82)?",
+          "answer": "16.4",
+          "explanation": "n(CH3COONa) = n(ester) = 0,2 mol ⇒ m(muối) = 0,2 × 82 = 16,4 (gam).",
+          "mathVerify": {
+            "expression": "0.2 * 82",
+            "expected": 16.4
+          },
+          "id": "q_sa_1",
+          "type": "SA",
+          "topic": "Chương 1: Ester - Lipid - Xà phòng và chất giặt rửa",
+          "unit": "Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)",
+          "points": 0.5,
+          "matrixRef": "TLN1 [Dòng 1 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Phân tử khối của glucose (C6H12O6) bằng bao nhiêu (cho C=12, H=1, O=16)?",
+          "answer": "180",
+          "explanation": "M(C6H12O6) = 12×6 + 1×12 + 16×6 = 180.",
+          "mathVerify": {
+            "expression": "12*6 + 1*12 + 16*6",
+            "expected": 180
+          },
+          "id": "q_sa_3",
+          "type": "SA",
+          "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+          "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+          "points": 0.5,
+          "matrixRef": "TLN3 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Vận dụng",
+          "stem": "Lên men m gam glucose (M=180) thành ethanol (C2H5OH, M=46) theo sơ đồ C6H12O6 → 2C2H5OH + 2CO2 với hiệu suất H = 80%, thu được 36,8 gam ethanol. Tính giá trị của m (gam).",
+          "answer": "90",
+          "explanation": "n(C2H5OH) = 36,8 / 46 = 0,8 mol ⇒ n(glucose phản ứng) = 0,8 / 2 = 0,4 mol ⇒ n(glucose ban đầu) = 0,4 / 0,8 = 0,5 mol ⇒ m = 0,5 × 180 = 90 (gam).",
+          "mathVerify": {
+            "expression": "(((36.8 / 46) / 2) / 0.8) * 180",
+            "expected": 90
+          },
+          "id": "q_sa_4",
+          "type": "SA",
+          "topic": "Chương 2: Carbohydrate (Glucose, Fructose, Saccharose, Maltose, Tinh bột và Cellulose)",
+          "unit": "Bài 2: Cấu tạo phân tử, tính chất hóa học đặc trưng (phản ứng tráng bạc Tollens, Cu(OH)2, thủy phân, lên men)",
+          "points": 0.5,
+          "matrixRef": "TLN4 [Dòng 2 - Vận dụng]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Trong phân tử tetrapeptide mạch hở Gly-Ala-Val-Gly có tất cả bao nhiêu nguyên tử nitrogen (N)?",
+          "answer": "4",
+          "explanation": "Mỗi gốc α-amino acid Gly, Ala, Val chỉ có 1 nguyên tử N, nên tetrapeptide có 4 nguyên tử N.",
+          "id": "q_sa_5",
+          "type": "SA",
+          "topic": "Chương 3: Hợp chất chứa Nitrogen (Amine, Amino acid, Peptide và Protein)",
+          "unit": "Bài 3: Tính base của Amine, tính lưỡng tính của Amino acid và phản ứng màu biuret của Peptide/Protein",
+          "points": 0.5,
+          "matrixRef": "TLN5 [Dòng 3 - Hiểu]"
+        }
+      ]
+    }
+  ],
+  "readingPassage": "",
+  "listeningTranscript": "",
+  "qaReport": {
+    "isValid": true,
+    "score": 100,
+    "stats": {
+      "levels": [
+        "Biết",
+        "Hiểu",
+        "Vận dụng"
+      ],
+      "qTypes": [
+        "MCQ",
+        "TF",
+        "SA",
+        "ESSAY"
+      ],
+      "pointRules": {
+        "MCQ": 0.25,
+        "TF": 0.25,
+        "SA": 0.5,
+        "ESSAY": 1
+      },
+      "byLevel": {
+        "Biết": 15,
+        "Hiểu": 12,
+        "Vận dụng": 7
+      },
+      "pointsByLevel": {
+        "Biết": 3.75,
+        "Hiểu": 3.75,
+        "Vận dụng": 2.5
+      },
+      "levelPercentages": {
+        "Biết": 38,
+        "Hiểu": 38,
+        "Vận dụng": 25
+      },
+      "byType": {
+        "MCQ": 12,
+        "TF": 16,
+        "SA": 6,
+        "ESSAY": 0
+      },
+      "pointsByType": {
+        "MCQ": 3,
+        "TF": 4,
+        "SA": 3,
+        "ESSAY": 0
+      },
+      "tfQuestionsCount": 4,
+      "totalItems": 34,
+      "totalQuestions": 22,
+      "totalPoints": 10
+    },
+    "passedChecks": [
+      "Đúng quy định cấp THPT (Thông tư 22/2021/TT-BGDĐT & Công văn 7991/BGDĐT-GDTrH) với các mức độ: Biết, Hiểu, Vận dụng.",
+      "Tổng điểm Ma trận chính xác: 10.0 / 10.0 điểm.",
+      "Bản đặc tả khớp 1-1 với Ma trận (3/3 đơn vị kiến thức).",
+      "Số lượng câu hỏi/lệnh hỏi từng dạng thức trong Đề khớp tuyệt đối với Ma trận (MCQ: 12, Đúng/Sai: 16 ý, Trả lời ngắn: 6, Tự luận: 0).",
+      "Tổng điểm các câu hỏi trong Đề kiểm tra (10.0đ) khớp tuyệt đối với Ma trận (10.0đ).",
+      "100% câu hỏi (22/22) có mã liên kết trực tiếp với Ma trận và Bản đặc tả.",
+      "100% câu hỏi (22/22) có đầy đủ đáp án và hướng dẫn chấm chi tiết.",
+      "Đã kiểm chứng độc lập 9 phép tính Toán/Khoa học: 100% kết quả trùng khớp tuyệt đối với đáp án.",
+      "Đã khởi tạo 2 mã đề (101, 102) đồng bộ số câu và bảng đáp án riêng."
+    ],
+    "warnings": [],
+    "issues": [],
+    "mathVerifications": [
+      {
+        "questionIndex": 8,
+        "matrixRef": "C8 [Dòng 2 - Hiểu]",
+        "expression": "1 * 2",
+        "computedValue": 2,
+        "expectedValue": 2,
+        "passed": true
+      },
+      {
+        "questionIndex": 9,
+        "matrixRef": "C9 [Dòng 3 - Biết]",
+        "expression": "12*2 + 5 + 14 + 16*2",
+        "computedValue": 75,
+        "expectedValue": 75,
+        "passed": true
+      },
+      {
+        "questionIndex": 11,
+        "matrixRef": "C11 [Dòng 3 - Hiểu]",
+        "expression": "3 - 1",
+        "computedValue": 2,
+        "expectedValue": 2,
+        "passed": true
+      },
+      {
+        "questionIndex": 13,
+        "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Khái niệm, danh pháp IUPAC, phản ứng thủy phân Ester và phản ứng xà phòng hóa chất béo (Triglyceride)]",
+        "expression": "(6 / 60) * 0.8 * 88",
+        "computedValue": 7.04,
+        "expectedValue": 7.04,
+        "passed": true
+      },
+      {
+        "questionIndex": 17,
+        "matrixRef": "TLN1 [Dòng 1 - Hiểu]",
+        "expression": "0.2 * 82",
+        "computedValue": 16.4,
+        "expectedValue": 16.4,
+        "passed": true
+      },
+      {
+        "questionIndex": 18,
+        "matrixRef": "TLN2 [Dòng 1 - Vận dụng]",
+        "expression": "(89 / 890) * 92",
+        "computedValue": 9.2,
+        "expectedValue": 9.2,
+        "passed": true
+      },
+      {
+        "questionIndex": 19,
+        "matrixRef": "TLN3 [Dòng 2 - Hiểu]",
+        "expression": "12*6 + 1*12 + 16*6",
+        "computedValue": 180,
+        "expectedValue": 180,
+        "passed": true
+      },
+      {
+        "questionIndex": 20,
+        "matrixRef": "TLN4 [Dòng 2 - Vận dụng]",
+        "expression": "(((36.8 / 46) / 2) / 0.8) * 180",
+        "computedValue": 90,
+        "expectedValue": 90,
+        "passed": true
+      },
+      {
+        "questionIndex": 22,
+        "matrixRef": "TLN6 [Dòng 3 - Vận dụng]",
+        "expression": "(15 / 75) * 97",
+        "computedValue": 19.4,
+        "expectedValue": 19.4,
+        "passed": true
+      }
+    ]
+  }
+}

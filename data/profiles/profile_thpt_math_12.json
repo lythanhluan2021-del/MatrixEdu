@@ -1,0 +1,2335 @@
+{
+  "id": "profile_thpt_math_12",
+  "title": "Cuối học kỳ I - Toán Lớp 12 (THPT)",
+  "updatedAt": "2026-11-08T14:27:50.053Z",
+  "metadata": {
+    "schoolName": "TRƯỜNG THPT CHUYÊN CHU VĂN AN",
+    "departmentName": "TỔ TOÁN - TIN HỌC",
+    "schoolYear": "2026 - 2027",
+    "level": "THPT",
+    "grade": "12",
+    "subject": "Toán",
+    "textbook": "Kết nối tri thức với cuộc sống",
+    "examPeriod": "Cuối học kỳ I",
+    "duration": 90,
+    "numVariants": 2,
+    "regulation": "CV7991_TT22",
+    "localGuidelines": "Cấu trúc đề Toán 12 theo Công văn 7991/BGDĐT-GDTrH và định hướng THPT 2025: Phần I gồm 12 câu Trắc nghiệm nhiều lựa chọn (3,0 điểm - 0,25đ/câu); Phần II gồm 4 câu Trắc nghiệm Đúng/Sai (4,0 điểm - mỗi câu 4 ý a,b,c,d); Phần III gồm 6 câu Trắc nghiệm Trả lời ngắn (3,0 điểm - 0,5đ/câu). Tổng điểm = 10,0 điểm."
+  },
+  "units": [
+    {
+      "id": "unit_1",
+      "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+      "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+      "outcomes": {
+        "Biết": "Nhận biết khoảng đồng biến, nghịch biến, điểm cực đại, cực tiểu, tiệm cận đứng và tiệm cận ngang từ bảng biến thiên hoặc công thức hàm số.",
+        "Hiểu": "Tìm giá trị lớn nhất, giá trị nhỏ nhất của hàm số trên một đoạn; khảo sát sự biến thiên của hàm đa thức bậc ba và hàm phân thức.",
+        "Vận dụng": "Giải quyết bài toán tối ưu chi phí/lợi nhuận trong thực tiễn sản xuất kinh doanh bằng đạo hàm."
+      },
+      "keyFacts": [
+        "Biết: Nhận biết khoảng đồng biến, nghịch biến, điểm cực đại, cực tiểu, tiệm cận đứng và tiệm cận ngang từ bảng biến thiên hoặc công thức hàm số.",
+        "Hiểu: Tìm giá trị lớn nhất, giá trị nhỏ nhất của hàm số trên một đoạn; khảo sát sự biến thiên của hàm đa thức bậc ba và hàm phân thức.",
+        "Vận dụng: Giải quyết bài toán tối ưu chi phí/lợi nhuận trong thực tiễn sản xuất kinh doanh bằng đạo hàm."
+      ]
+    },
+    {
+      "id": "unit_2",
+      "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+      "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+      "outcomes": {
+        "Biết": "Xác định tọa độ điểm, tọa độ vectơ, hình chiếu của điểm lên các trục và mặt phẳng tọa độ trong không gian Oxyz.",
+        "Hiểu": "Tính độ dài đoạn thẳng, tọa độ trọng tâm tam giác, tích vô hướng và góc giữa hai vectơ trong không gian Oxyz.",
+        "Vận dụng": "Ứng dụng tọa độ vectơ trong không gian Oxyz để tính khoảng cách thực tế (định vị flycam/máy bay, cân bằng lực)."
+      },
+      "keyFacts": [
+        "Biết: Xác định tọa độ điểm, tọa độ vectơ, hình chiếu của điểm lên các trục và mặt phẳng tọa độ trong không gian Oxyz.",
+        "Hiểu: Tính độ dài đoạn thẳng, tọa độ trọng tâm tam giác, tích vô hướng và góc giữa hai vectơ trong không gian Oxyz.",
+        "Vận dụng: Ứng dụng tọa độ vectơ trong không gian Oxyz để tính khoảng cách thực tế (định vị flycam/máy bay, cân bằng lực)."
+      ]
+    },
+    {
+      "id": "unit_3",
+      "topic": "Chương III: Các số đặc trưng đo mức độ phân tán của mẫu số liệu ghép nhóm",
+      "unit": "Bài 3: Khoảng biến thiên, khoảng tứ phân vị, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm",
+      "outcomes": {
+        "Biết": "Xác định khoảng biến thiên R, nhóm chứa tứ phân vị của mẫu số liệu ghép nhóm.",
+        "Hiểu": "Tính số trung bình cộng, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm.",
+        "Vận dụng": "So sánh mức độ ổn định/phân tán giữa hai mẫu số liệu thực tiễn dựa vào độ lệch chuẩn."
+      },
+      "keyFacts": [
+        "Biết: Xác định khoảng biến thiên R, nhóm chứa tứ phân vị của mẫu số liệu ghép nhóm.",
+        "Hiểu: Tính số trung bình cộng, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm.",
+        "Vận dụng: So sánh mức độ ổn định/phân tán giữa hai mẫu số liệu thực tiễn dựa vào độ lệch chuẩn."
+      ]
+    }
+  ],
+  "matrix": {
+    "levels": [
+      "Biết",
+      "Hiểu",
+      "Vận dụng"
+    ],
+    "questionTypes": [
+      "MCQ",
+      "TF",
+      "SA",
+      "ESSAY"
+    ],
+    "pointRules": {
+      "MCQ": 0.25,
+      "TF": 0.25,
+      "SA": 0.5,
+      "ESSAY": 1
+    },
+    "rows": [
+      {
+        "id": "row_1",
+        "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+        "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+        "counts": {
+          "MCQ": {
+            "Biết": 4,
+            "Hiểu": 2,
+            "Vận dụng": 0
+          },
+          "TF": {
+            "Biết": 3,
+            "Hiểu": 3,
+            "Vận dụng": 2
+          },
+          "SA": {
+            "Biết": 0,
+            "Hiểu": 1,
+            "Vận dụng": 2
+          },
+          "ESSAY": {
+            "Biết": 0,
+            "Hiểu": 0,
+            "Vận dụng": 0
+          }
+        },
+        "points": 5
+      },
+      {
+        "id": "row_2",
+        "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+        "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+        "counts": {
+          "MCQ": {
+            "Biết": 3,
+            "Hiểu": 1,
+            "Vận dụng": 0
+          },
+          "TF": {
+            "Biết": 2,
+            "Hiểu": 1,
+            "Vận dụng": 1
+          },
+          "SA": {
+            "Biết": 0,
+            "Hiểu": 1,
+            "Vận dụng": 1
+          },
+          "ESSAY": {
+            "Biết": 0,
+            "Hiểu": 0,
+            "Vận dụng": 0
+          }
+        },
+        "points": 3
+      },
+      {
+        "id": "row_3",
+        "topic": "Chương III: Các số đặc trưng đo mức độ phân tán của mẫu số liệu ghép nhóm",
+        "unit": "Bài 3: Khoảng biến thiên, khoảng tứ phân vị, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm",
+        "counts": {
+          "MCQ": {
+            "Biết": 1,
+            "Hiểu": 1,
+            "Vận dụng": 0
+          },
+          "TF": {
+            "Biết": 2,
+            "Hiểu": 1,
+            "Vận dụng": 1
+          },
+          "SA": {
+            "Biết": 0,
+            "Hiểu": 1,
+            "Vận dụng": 0
+          },
+          "ESSAY": {
+            "Biết": 0,
+            "Hiểu": 0,
+            "Vận dụng": 0
+          }
+        },
+        "points": 2
+      }
+    ]
+  },
+  "specification": [
+    {
+      "rowId": "row_1",
+      "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+      "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+      "outcomes": {
+        "Biết": "Nhận biết khoảng đồng biến, nghịch biến, điểm cực đại, cực tiểu, tiệm cận đứng và tiệm cận ngang từ bảng biến thiên hoặc công thức hàm số.",
+        "Hiểu": "Tìm giá trị lớn nhất, giá trị nhỏ nhất của hàm số trên một đoạn; khảo sát sự biến thiên của hàm đa thức bậc ba và hàm phân thức.",
+        "Vận dụng": "Giải quyết bài toán tối ưu chi phí/lợi nhuận trong thực tiễn sản xuất kinh doanh bằng đạo hàm."
+      },
+      "questionRefs": {
+        "MCQ": [
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "C5",
+          "C6"
+        ],
+        "TF": [
+          "ĐS1a",
+          "ĐS1b",
+          "ĐS1c",
+          "ĐS1d",
+          "ĐS2a",
+          "ĐS2b",
+          "ĐS2c",
+          "ĐS2d"
+        ],
+        "SA": [
+          "TLN1",
+          "TLN2",
+          "TLN3"
+        ],
+        "ESSAY": []
+      }
+    },
+    {
+      "rowId": "row_2",
+      "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+      "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+      "outcomes": {
+        "Biết": "Xác định tọa độ điểm, tọa độ vectơ, hình chiếu của điểm lên các trục và mặt phẳng tọa độ trong không gian Oxyz.",
+        "Hiểu": "Tính độ dài đoạn thẳng, tọa độ trọng tâm tam giác, tích vô hướng và góc giữa hai vectơ trong không gian Oxyz.",
+        "Vận dụng": "Ứng dụng tọa độ vectơ trong không gian Oxyz để tính khoảng cách thực tế (định vị flycam/máy bay, cân bằng lực)."
+      },
+      "questionRefs": {
+        "MCQ": [
+          "C7",
+          "C8",
+          "C9",
+          "C10"
+        ],
+        "TF": [
+          "ĐS3a",
+          "ĐS3b",
+          "ĐS3c",
+          "ĐS3d"
+        ],
+        "SA": [
+          "TLN4",
+          "TLN5"
+        ],
+        "ESSAY": []
+      }
+    },
+    {
+      "rowId": "row_3",
+      "topic": "Chương III: Các số đặc trưng đo mức độ phân tán của mẫu số liệu ghép nhóm",
+      "unit": "Bài 3: Khoảng biến thiên, khoảng tứ phân vị, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm",
+      "outcomes": {
+        "Biết": "Xác định khoảng biến thiên R, nhóm chứa tứ phân vị của mẫu số liệu ghép nhóm.",
+        "Hiểu": "Tính số trung bình cộng, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm.",
+        "Vận dụng": "So sánh mức độ ổn định/phân tán giữa hai mẫu số liệu thực tiễn dựa vào độ lệch chuẩn."
+      },
+      "questionRefs": {
+        "MCQ": [
+          "C11",
+          "C12"
+        ],
+        "TF": [
+          "ĐS4a",
+          "ĐS4b",
+          "ĐS4c",
+          "ĐS4d"
+        ],
+        "SA": [
+          "TLN6"
+        ],
+        "ESSAY": []
+      }
+    }
+  ],
+  "questions": [
+    {
+      "rowId": "row_1",
+      "level": "Biết",
+      "stem": "Cho hàm số y = f(x) = x^3 - 3x^2 + 2. Đạo hàm f'(x) của hàm số đã cho là:",
+      "options": [
+        "x^2 - 6x",
+        "3x^2 - 6x",
+        "3x^2 + 6x",
+        "3x^2 - 3x"
+      ],
+      "answer": "B",
+      "explanation": "Ta có f'(x) = (x^3 - 3x^2 + 2)' = 3x^2 - 6x.",
+      "id": "q_mcq_1",
+      "type": "MCQ",
+      "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+      "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+      "points": 0.25,
+      "matrixRef": "C1 [Dòng 1 - Biết]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Biết",
+      "stem": "Hàm số y = -x^3 + 3x + 1 đồng biến trên khoảng nào dưới đây?",
+      "options": [
+        "(-∞; -1)",
+        "(-1; +∞)",
+        "(-1; 1)",
+        "(1; +∞)"
+      ],
+      "answer": "C",
+      "explanation": "y' = -3x^2 + 3 > 0 ⇔ -1 < x < 1. Vậy hàm số đồng biến trên khoảng (-1; 1).",
+      "id": "q_mcq_2",
+      "type": "MCQ",
+      "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+      "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+      "points": 0.25,
+      "matrixRef": "C2 [Dòng 1 - Biết]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Biết",
+      "stem": "Đồ thị của hàm số y = (2x - 1)/(x + 3) có đường tiệm cận ngang là:",
+      "options": [
+        "x = 2",
+        "x = -3",
+        "y = 2",
+        "y = -1/3"
+      ],
+      "answer": "C",
+      "explanation": "lim(x→±∞) (2x - 1)/(x + 3) = 2 nên đường tiệm cận ngang là y = 2.",
+      "mathVerify": {
+        "expression": "2 / 1",
+        "expected": 2
+      },
+      "id": "q_mcq_3",
+      "type": "MCQ",
+      "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+      "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+      "points": 0.25,
+      "matrixRef": "C3 [Dòng 1 - Biết]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Biết",
+      "stem": "Đồ thị của hàm số y = (x + 2)/(x - 4) có đường tiệm cận đứng là:",
+      "options": [
+        "x = 4",
+        "x = -2",
+        "y = 1",
+        "y = 4"
+      ],
+      "answer": "A",
+      "explanation": "Mẫu số x - 4 = 0 ⇔ x = 4 và tử số khác 0 tại x = 4 nên tiệm cận đứng là x = 4.",
+      "id": "q_mcq_4",
+      "type": "MCQ",
+      "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+      "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+      "points": 0.25,
+      "matrixRef": "C4 [Dòng 1 - Biết]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Hiểu",
+      "stem": "Giá trị lớn nhất của hàm số f(x) = x^3 - 3x + 5 trên đoạn [0; 2] bằng:",
+      "options": [
+        "5",
+        "7",
+        "9",
+        "3"
+      ],
+      "answer": "B",
+      "explanation": "f'(x) = 3x^2 - 3 = 0 ⇔ x = 1 ∈ [0; 2]. Ta có f(0) = 5, f(1) = 3, f(2) = 8 - 6 + 5 = 7. Vậy max f(x) trên [0; 2] bằng 7.",
+      "mathVerify": {
+        "expression": "2^3 - 3*2 + 5",
+        "expected": 7
+      },
+      "id": "q_mcq_5",
+      "type": "MCQ",
+      "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+      "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+      "points": 0.25,
+      "matrixRef": "C5 [Dòng 1 - Hiểu]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Hiểu",
+      "stem": "Cho hàm số y = x^3 - 3x^2 + 4. Tổng giá trị cực đại và giá trị cực tiểu của hàm số bằng:",
+      "options": [
+        "2",
+        "6",
+        "4",
+        "0"
+      ],
+      "answer": "C",
+      "explanation": "y' = 3x^2 - 6x = 0 ⇔ x = 0 (y_CĐ = 4) hoặc x = 2 (y_CT = 0). Tổng y_CĐ + y_CT = 4 + 0 = 4.",
+      "mathVerify": {
+        "expression": "4 + (2^3 - 3*(2^2) + 4)",
+        "expected": 4
+      },
+      "id": "q_mcq_6",
+      "type": "MCQ",
+      "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+      "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+      "points": 0.25,
+      "matrixRef": "C6 [Dòng 1 - Hiểu]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Biết",
+      "stem": "Trong không gian Oxyz, cho hai điểm A(1; 2; -3) và B(3; -2; 1). Tọa độ của vectơ AB là:",
+      "options": [
+        "(2; 0; -2)",
+        "(-2; 4; -4)",
+        "(2; -4; 4)",
+        "(4; 0; -2)"
+      ],
+      "answer": "C",
+      "explanation": "vectơ(AB) = (3 - 1; -2 - 2; 1 - (-3)) = (2; -4; 4).",
+      "id": "q_mcq_7",
+      "type": "MCQ",
+      "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+      "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+      "points": 0.25,
+      "matrixRef": "C7 [Dòng 2 - Biết]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Biết",
+      "stem": "Trong không gian Oxyz, hình chiếu vuông góc của điểm M(4; -5; 7) trên mặt phẳng (Oxy) có tọa độ là:",
+      "options": [
+        "(0; 0; 7)",
+        "(4; 0; 7)",
+        "(4; -5; 0)",
+        "(0; -5; 7)"
+      ],
+      "answer": "C",
+      "explanation": "Hình chiếu của M(x; y; z) lên mặt phẳng (Oxy) có cao độ z = 0, tức là (4; -5; 0).",
+      "id": "q_mcq_8",
+      "type": "MCQ",
+      "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+      "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+      "points": 0.25,
+      "matrixRef": "C8 [Dòng 2 - Biết]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Biết",
+      "stem": "Trong không gian Oxyz, cho vectơ u = 2i - 3j + 5k. Tọa độ của vectơ u là:",
+      "options": [
+        "(-2; 3; -5)",
+        "(5; -3; 2)",
+        "(2; 3; 5)",
+        "(2; -3; 5)"
+      ],
+      "answer": "D",
+      "explanation": "Theo định nghĩa tọa độ vectơ theo các vectơ đơn vị i, j, k: u = (2; -3; 5).",
+      "id": "q_mcq_9",
+      "type": "MCQ",
+      "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+      "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+      "points": 0.25,
+      "matrixRef": "C9 [Dòng 2 - Biết]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Hiểu",
+      "stem": "Trong không gian Oxyz, cho hai vectơ a = (2; 1; -2) và b = (1; 2; 2). Tích vô hướng a · b bằng:",
+      "options": [
+        "0",
+        "-4",
+        "4",
+        "8"
+      ],
+      "answer": "A",
+      "explanation": "a · b = 2×1 + 1×2 + (-2)×2 = 2 + 2 - 4 = 0.",
+      "mathVerify": {
+        "expression": "2*1 + 1*2 + (-2)*2",
+        "expected": 0
+      },
+      "id": "q_mcq_10",
+      "type": "MCQ",
+      "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+      "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+      "points": 0.25,
+      "matrixRef": "C10 [Dòng 2 - Hiểu]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Biết",
+      "stem": "Một mẫu số liệu ghép nhóm có bảng tần số với các nhóm [10; 20), [20; 30), [30; 40), [40; 50). Khoảng biến thiên R của mẫu số liệu ghép nhóm trên là:",
+      "options": [
+        "10",
+        "50",
+        "30",
+        "40"
+      ],
+      "answer": "D",
+      "explanation": "Khoảng biến thiên R = đầu mút phải nhóm cuối - đầu mút trái nhóm đầu = 50 - 10 = 40.",
+      "mathVerify": {
+        "expression": "50 - 10",
+        "expected": 40
+      },
+      "id": "q_mcq_11",
+      "type": "MCQ",
+      "topic": "Chương III: Các số đặc trưng đo mức độ phân tán của mẫu số liệu ghép nhóm",
+      "unit": "Bài 3: Khoảng biến thiên, khoảng tứ phân vị, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm",
+      "points": 0.25,
+      "matrixRef": "C11 [Dòng 3 - Biết]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Hiểu",
+      "stem": "Nếu phương sai của một mẫu số liệu ghép nhóm bằng s^2 = 16 thì độ lệch chuẩn s của mẫu số liệu đó bằng:",
+      "options": [
+        "256",
+        "8",
+        "4",
+        "2"
+      ],
+      "answer": "C",
+      "explanation": "Độ lệch chuẩn s = √(s^2) = √16 = 4.",
+      "mathVerify": {
+        "expression": "sqrt(16)",
+        "expected": 4
+      },
+      "id": "q_mcq_12",
+      "type": "MCQ",
+      "topic": "Chương III: Các số đặc trưng đo mức độ phân tán của mẫu số liệu ghép nhóm",
+      "unit": "Bài 3: Khoảng biến thiên, khoảng tứ phân vị, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm",
+      "points": 0.25,
+      "matrixRef": "C12 [Dòng 3 - Hiểu]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Biết",
+      "stem": "Cho hàm số f(x) = x^3 - 3x^2 + 2 có đồ thị (C). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+      "statements": [
+        {
+          "text": "Đạo hàm của hàm số là f'(x) = 3x^2 - 6x.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Hàm số đạt cực đại tại điểm x = 2.",
+          "isTrue": false,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Sai"
+        },
+        {
+          "text": "Giá trị nhỏ nhất của hàm số trên đoạn [0; 3] bằng -2.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "c",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Đường thẳng y = 2 cắt đồ thị (C) tại đúng 2 điểm phân biệt.",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "explanation": "a) Đúng; b) Sai vì tại x=0 hàm đạt cực đại và tại x=2 hàm đạt cực tiểu; c) Đúng vì f(2) = 8 - 12 + 2 = -2; d) Đúng vì x^3 - 3x^2 + 2 = 2 ⇔ x^2(x - 3) = 0 có 2 nghiệm x = 0 và x = 3.",
+      "mathVerify": {
+        "expression": "2^3 - 3*(2^2) + 2",
+        "expected": -2
+      },
+      "items": [
+        {
+          "text": "Đạo hàm của hàm số là f'(x) = 3x^2 - 6x.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Hàm số đạt cực đại tại điểm x = 2.",
+          "isTrue": false,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Sai"
+        },
+        {
+          "text": "Giá trị nhỏ nhất của hàm số trên đoạn [0; 3] bằng -2.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "c",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Đường thẳng y = 2 cắt đồ thị (C) tại đúng 2 điểm phân biệt.",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+      "isZeroHallucination": true,
+      "id": "q_tf_1",
+      "type": "TF",
+      "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+      "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+      "points": 1,
+      "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số]"
+    },
+    {
+      "id": "q_tf_2",
+      "type": "TF",
+      "rowId": "row_1",
+      "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+      "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+      "level": "Vận dụng",
+      "points": 1,
+      "matrixRef": "ĐS2(a,b,c,d) [Dòng 1: Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số]",
+      "stem": "Cho tình huống và kiến thức trọng tâm thuộc bài \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" (Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+      "statements": [
+        {
+          "text": "Khái niệm và tính chất cơ bản của \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" bị áp dụng sai điều kiện xác định ban đầu.",
+          "isTrue": false,
+          "level": "Biết"
+        },
+        {
+          "text": "Mọi trường hợp áp dụng \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" luôn tuân theo điều kiện ràng buộc của bài học.",
+          "isTrue": true,
+          "level": "Biết"
+        },
+        {
+          "text": "Khi áp dụng quy tắc trong \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\", kết quả suy luận luôn tuân theo hệ thức chuẩn của bài học.",
+          "isTrue": true,
+          "level": "Hiểu"
+        },
+        {
+          "text": "Có thể vận dụng trực tiếp kiến thức bài \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" trong mọi tình huống mà không cần xem xét giả thiết.",
+          "isTrue": false,
+          "level": "Vận dụng"
+        }
+      ],
+      "explanation": "Đối chiếu Bản đặc tả mục \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\": a) Sai; b) Đúng; c) Đúng; d) Sai."
+    },
+    {
+      "rowId": "row_2",
+      "level": "Hiểu",
+      "stem": "Trong không gian Oxyz, cho ba điểm A(1; 0; 0), B(0; 2; 0), C(0; 0; 3). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+      "statements": [
+        {
+          "text": "Tọa độ của vectơ AB là (-1; 2; 0).",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Độ dài đoạn thẳng AB bằng √5.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Trọng tâm G của tam giác ABC có tọa độ là (1/3; 2/3; 1).",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "c",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Tam giác ABC là tam giác vuông tại A.",
+          "isTrue": false,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Sai"
+        }
+      ],
+      "explanation": "a) Đúng; b) Đúng vì AB = √((-1)^2 + 2^2 + 0^2) = √5; c) Đúng vì G((1+0+0)/3; (0+2+0)/3; (0+0+3)/3) = (1/3; 2/3; 1); d) Sai vì AB · AC = (-1)(-1) + 2·0 + 0·3 = 1 ≠ 0.",
+      "mathVerify": {
+        "expression": "(-1)*(-1) + 2*0 + 0*3",
+        "expected": 1
+      },
+      "items": [
+        {
+          "text": "Tọa độ của vectơ AB là (-1; 2; 0).",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Độ dài đoạn thẳng AB bằng √5.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Trọng tâm G của tam giác ABC có tọa độ là (1/3; 2/3; 1).",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "c",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Tam giác ABC là tam giác vuông tại A.",
+          "isTrue": false,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Sai"
+        }
+      ],
+      "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+      "isZeroHallucination": true,
+      "id": "q_tf_3",
+      "type": "TF",
+      "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+      "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+      "points": 1,
+      "matrixRef": "ĐS3(a,b,c,d) [Dòng 2: Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Hiểu",
+      "stem": "Khảo sát thời gian tự học mỗi ngày (đơn vị: phút) của 20 học sinh lớp 12A thu được mẫu số liệu ghép nhóm: nhóm [30; 50) có 5 học sinh; nhóm [50; 70) có 10 học sinh; nhóm [70; 90) có 5 học sinh. Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+      "statements": [
+        {
+          "text": "Cỡ mẫu của mẫu số liệu ghép nhóm là n = 20.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Giá trị đại diện của nhóm [50; 70) là 60.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Thời gian tự học trung bình của mẫu số liệu ghép nhóm là 60 phút.",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "c",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Phương sai của mẫu số liệu ghép nhóm trên bằng 250.",
+          "isTrue": false,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Sai"
+        }
+      ],
+      "explanation": "a) Đúng (5+10+5=20); b) Đúng ((50+70)/2=60); c) Đúng vì x_tb = (5×40 + 10×60 + 5×80)/20 = 60; d) Sai vì phương sai s^2 = [5×(40-60)^2 + 10×(60-60)^2 + 5×(80-60)^2]/20 = 4000/20 = 200 ≠ 250.",
+      "mathVerify": {
+        "expression": "(5*40 + 10*60 + 5*80) / 20",
+        "expected": 60
+      },
+      "items": [
+        {
+          "text": "Cỡ mẫu của mẫu số liệu ghép nhóm là n = 20.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Giá trị đại diện của nhóm [50; 70) là 60.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Thời gian tự học trung bình của mẫu số liệu ghép nhóm là 60 phút.",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "c",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Phương sai của mẫu số liệu ghép nhóm trên bằng 250.",
+          "isTrue": false,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Sai"
+        }
+      ],
+      "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+      "isZeroHallucination": true,
+      "id": "q_tf_4",
+      "type": "TF",
+      "topic": "Chương III: Các số đặc trưng đo mức độ phân tán của mẫu số liệu ghép nhóm",
+      "unit": "Bài 3: Khoảng biến thiên, khoảng tứ phân vị, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm",
+      "points": 1,
+      "matrixRef": "ĐS4(a,b,c,d) [Dòng 3: Bài 3: Khoảng biến thiên, khoảng tứ phân vị, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Hiểu",
+      "stem": "Tìm giá trị cực đại của hàm số y = -x^3 + 3x^2 + 5.",
+      "answer": "9",
+      "explanation": "y' = -3x^2 + 6x = 0 ⇔ x = 0 hoặc x = 2. Hàm số đạt cực đại tại x = 2 với y_CĐ = -8 + 12 + 5 = 9.",
+      "mathVerify": {
+        "expression": "-(2^3) + 3*(2^2) + 5",
+        "expected": 9
+      },
+      "id": "q_sa_1",
+      "type": "SA",
+      "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+      "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+      "points": 0.5,
+      "matrixRef": "TLN1 [Dòng 1 - Hiểu]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Vận dụng",
+      "stem": "Một xưởng sản xuất mỗi ngày làm ra x sản phẩm (1 ≤ x ≤ 20). Tổng lợi nhuận thu được (đơn vị: triệu đồng) được tính theo hàm số P(x) = -x^3 + 12x^2 + 60. Hỏi xưởng cần sản xuất bao nhiêu sản phẩm mỗi ngày để lợi nhuận đạt giá trị lớn nhất?",
+      "answer": "8",
+      "explanation": "P'(x) = -3x^2 + 24x = 0 ⇔ x = 8 (vì x ≥ 1). Lập bảng biến thiên trên [1; 20], P(x) đạt GTLN tại x = 8 sản phẩm.",
+      "mathVerify": {
+        "expression": "24 / 3",
+        "expected": 8
+      },
+      "id": "q_sa_2",
+      "type": "SA",
+      "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+      "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+      "points": 0.5,
+      "matrixRef": "TLN2 [Dòng 1 - Vận dụng]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Vận dụng",
+      "stem": "Chi phí nhiên liệu C(v) cho một tàu thủy chạy trên sông với vận tốc v (km/h, v > 0) được mô hình hóa bởi hàm số C(v) = v + 144/v (đơn vị: trăm nghìn đồng/giờ). Tìm vận tốc v (km/h) để chi phí C(v) đạt giá trị nhỏ nhất.",
+      "answer": "12",
+      "explanation": "C'(v) = 1 - 144/v^2 = 0 ⇔ v^2 = 144 ⇔ v = 12 (km/h) (do v > 0).",
+      "mathVerify": {
+        "expression": "sqrt(144)",
+        "expected": 12
+      },
+      "id": "q_sa_3",
+      "type": "SA",
+      "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+      "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+      "points": 0.5,
+      "matrixRef": "TLN3 [Dòng 1 - Vận dụng]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Hiểu",
+      "stem": "Trong không gian Oxyz, tính khoảng cách giữa hai điểm A(1; 2; 2) và B(4; 6; 2).",
+      "answer": "5",
+      "explanation": "AB = √((4 - 1)^2 + (6 - 2)^2 + (2 - 2)^2) = √(9 + 16 + 0) = 5.",
+      "mathVerify": {
+        "expression": "sqrt((4-1)^2 + (6-2)^2 + (2-2)^2)",
+        "expected": 5
+      },
+      "id": "q_sa_4",
+      "type": "SA",
+      "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+      "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+      "points": 0.5,
+      "matrixRef": "TLN4 [Dòng 2 - Hiểu]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Vận dụng",
+      "stem": "Trong không gian Oxyz (đơn vị trên mỗi trục là mét), một thiết bị bay không người lái (flycam) di chuyển thẳng từ vị trí M(2; 3; 10) đến vị trí N(8; 11; 10). Quãng đường flycam đã bay bằng bao nhiêu mét?",
+      "answer": "10",
+      "explanation": "Quãng đường MN = √((8 - 2)^2 + (11 - 3)^2 + (10 - 10)^2) = √(36 + 64) = 10 (m).",
+      "mathVerify": {
+        "expression": "sqrt((8-2)^2 + (11-3)^2)",
+        "expected": 10
+      },
+      "id": "q_sa_5",
+      "type": "SA",
+      "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+      "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+      "points": 0.5,
+      "matrixRef": "TLN5 [Dòng 2 - Vận dụng]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Hiểu",
+      "stem": "Một mẫu số liệu ghép nhóm có phương sai s^2 = 25. Độ lệch chuẩn s của mẫu số liệu ghép nhóm đó bằng bao nhiêu?",
+      "answer": "5",
+      "explanation": "Độ lệch chuẩn s = √(s^2) = √25 = 5.",
+      "mathVerify": {
+        "expression": "sqrt(25)",
+        "expected": 5
+      },
+      "id": "q_sa_6",
+      "type": "SA",
+      "topic": "Chương III: Các số đặc trưng đo mức độ phân tán của mẫu số liệu ghép nhóm",
+      "unit": "Bài 3: Khoảng biến thiên, khoảng tứ phân vị, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm",
+      "points": 0.5,
+      "matrixRef": "TLN6 [Dòng 3 - Hiểu]"
+    }
+  ],
+  "variants": [
+    {
+      "code": "101",
+      "questions": [
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Cho hàm số y = f(x) = x^3 - 3x^2 + 2. Đạo hàm f'(x) của hàm số đã cho là:",
+          "options": [
+            "x^2 - 6x",
+            "3x^2 - 6x",
+            "3x^2 + 6x",
+            "3x^2 - 3x"
+          ],
+          "answer": "B",
+          "explanation": "Ta có f'(x) = (x^3 - 3x^2 + 2)' = 3x^2 - 6x.",
+          "id": "q_mcq_1",
+          "type": "MCQ",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 0.25,
+          "matrixRef": "C1 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Hàm số y = -x^3 + 3x + 1 đồng biến trên khoảng nào dưới đây?",
+          "options": [
+            "(-∞; -1)",
+            "(-1; +∞)",
+            "(-1; 1)",
+            "(1; +∞)"
+          ],
+          "answer": "C",
+          "explanation": "y' = -3x^2 + 3 > 0 ⇔ -1 < x < 1. Vậy hàm số đồng biến trên khoảng (-1; 1).",
+          "id": "q_mcq_2",
+          "type": "MCQ",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 0.25,
+          "matrixRef": "C2 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Đồ thị của hàm số y = (2x - 1)/(x + 3) có đường tiệm cận ngang là:",
+          "options": [
+            "x = 2",
+            "x = -3",
+            "y = 2",
+            "y = -1/3"
+          ],
+          "answer": "C",
+          "explanation": "lim(x→±∞) (2x - 1)/(x + 3) = 2 nên đường tiệm cận ngang là y = 2.",
+          "mathVerify": {
+            "expression": "2 / 1",
+            "expected": 2
+          },
+          "id": "q_mcq_3",
+          "type": "MCQ",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 0.25,
+          "matrixRef": "C3 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Đồ thị của hàm số y = (x + 2)/(x - 4) có đường tiệm cận đứng là:",
+          "options": [
+            "x = 4",
+            "x = -2",
+            "y = 1",
+            "y = 4"
+          ],
+          "answer": "A",
+          "explanation": "Mẫu số x - 4 = 0 ⇔ x = 4 và tử số khác 0 tại x = 4 nên tiệm cận đứng là x = 4.",
+          "id": "q_mcq_4",
+          "type": "MCQ",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 0.25,
+          "matrixRef": "C4 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Giá trị lớn nhất của hàm số f(x) = x^3 - 3x + 5 trên đoạn [0; 2] bằng:",
+          "options": [
+            "5",
+            "7",
+            "9",
+            "3"
+          ],
+          "answer": "B",
+          "explanation": "f'(x) = 3x^2 - 3 = 0 ⇔ x = 1 ∈ [0; 2]. Ta có f(0) = 5, f(1) = 3, f(2) = 8 - 6 + 5 = 7. Vậy max f(x) trên [0; 2] bằng 7.",
+          "mathVerify": {
+            "expression": "2^3 - 3*2 + 5",
+            "expected": 7
+          },
+          "id": "q_mcq_5",
+          "type": "MCQ",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 0.25,
+          "matrixRef": "C5 [Dòng 1 - Hiểu]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Cho hàm số y = x^3 - 3x^2 + 4. Tổng giá trị cực đại và giá trị cực tiểu của hàm số bằng:",
+          "options": [
+            "2",
+            "6",
+            "4",
+            "0"
+          ],
+          "answer": "C",
+          "explanation": "y' = 3x^2 - 6x = 0 ⇔ x = 0 (y_CĐ = 4) hoặc x = 2 (y_CT = 0). Tổng y_CĐ + y_CT = 4 + 0 = 4.",
+          "mathVerify": {
+            "expression": "4 + (2^3 - 3*(2^2) + 4)",
+            "expected": 4
+          },
+          "id": "q_mcq_6",
+          "type": "MCQ",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 0.25,
+          "matrixRef": "C6 [Dòng 1 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Trong không gian Oxyz, cho hai điểm A(1; 2; -3) và B(3; -2; 1). Tọa độ của vectơ AB là:",
+          "options": [
+            "(2; 0; -2)",
+            "(-2; 4; -4)",
+            "(2; -4; 4)",
+            "(4; 0; -2)"
+          ],
+          "answer": "C",
+          "explanation": "vectơ(AB) = (3 - 1; -2 - 2; 1 - (-3)) = (2; -4; 4).",
+          "id": "q_mcq_7",
+          "type": "MCQ",
+          "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+          "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+          "points": 0.25,
+          "matrixRef": "C7 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Trong không gian Oxyz, hình chiếu vuông góc của điểm M(4; -5; 7) trên mặt phẳng (Oxy) có tọa độ là:",
+          "options": [
+            "(0; 0; 7)",
+            "(4; 0; 7)",
+            "(4; -5; 0)",
+            "(0; -5; 7)"
+          ],
+          "answer": "C",
+          "explanation": "Hình chiếu của M(x; y; z) lên mặt phẳng (Oxy) có cao độ z = 0, tức là (4; -5; 0).",
+          "id": "q_mcq_8",
+          "type": "MCQ",
+          "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+          "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+          "points": 0.25,
+          "matrixRef": "C8 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Trong không gian Oxyz, cho vectơ u = 2i - 3j + 5k. Tọa độ của vectơ u là:",
+          "options": [
+            "(-2; 3; -5)",
+            "(5; -3; 2)",
+            "(2; 3; 5)",
+            "(2; -3; 5)"
+          ],
+          "answer": "D",
+          "explanation": "Theo định nghĩa tọa độ vectơ theo các vectơ đơn vị i, j, k: u = (2; -3; 5).",
+          "id": "q_mcq_9",
+          "type": "MCQ",
+          "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+          "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+          "points": 0.25,
+          "matrixRef": "C9 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Trong không gian Oxyz, cho hai vectơ a = (2; 1; -2) và b = (1; 2; 2). Tích vô hướng a · b bằng:",
+          "options": [
+            "0",
+            "-4",
+            "4",
+            "8"
+          ],
+          "answer": "A",
+          "explanation": "a · b = 2×1 + 1×2 + (-2)×2 = 2 + 2 - 4 = 0.",
+          "mathVerify": {
+            "expression": "2*1 + 1*2 + (-2)*2",
+            "expected": 0
+          },
+          "id": "q_mcq_10",
+          "type": "MCQ",
+          "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+          "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+          "points": 0.25,
+          "matrixRef": "C10 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Biết",
+          "stem": "Một mẫu số liệu ghép nhóm có bảng tần số với các nhóm [10; 20), [20; 30), [30; 40), [40; 50). Khoảng biến thiên R của mẫu số liệu ghép nhóm trên là:",
+          "options": [
+            "10",
+            "50",
+            "30",
+            "40"
+          ],
+          "answer": "D",
+          "explanation": "Khoảng biến thiên R = đầu mút phải nhóm cuối - đầu mút trái nhóm đầu = 50 - 10 = 40.",
+          "mathVerify": {
+            "expression": "50 - 10",
+            "expected": 40
+          },
+          "id": "q_mcq_11",
+          "type": "MCQ",
+          "topic": "Chương III: Các số đặc trưng đo mức độ phân tán của mẫu số liệu ghép nhóm",
+          "unit": "Bài 3: Khoảng biến thiên, khoảng tứ phân vị, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm",
+          "points": 0.25,
+          "matrixRef": "C11 [Dòng 3 - Biết]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Nếu phương sai của một mẫu số liệu ghép nhóm bằng s^2 = 16 thì độ lệch chuẩn s của mẫu số liệu đó bằng:",
+          "options": [
+            "256",
+            "8",
+            "4",
+            "2"
+          ],
+          "answer": "C",
+          "explanation": "Độ lệch chuẩn s = √(s^2) = √16 = 4.",
+          "mathVerify": {
+            "expression": "sqrt(16)",
+            "expected": 4
+          },
+          "id": "q_mcq_12",
+          "type": "MCQ",
+          "topic": "Chương III: Các số đặc trưng đo mức độ phân tán của mẫu số liệu ghép nhóm",
+          "unit": "Bài 3: Khoảng biến thiên, khoảng tứ phân vị, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm",
+          "points": 0.25,
+          "matrixRef": "C12 [Dòng 3 - Hiểu]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Cho hàm số f(x) = x^3 - 3x^2 + 2 có đồ thị (C). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "statements": [
+            {
+              "text": "Đạo hàm của hàm số là f'(x) = 3x^2 - 6x.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Hàm số đạt cực đại tại điểm x = 2.",
+              "isTrue": false,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Sai"
+            },
+            {
+              "text": "Giá trị nhỏ nhất của hàm số trên đoạn [0; 3] bằng -2.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Đường thẳng y = 2 cắt đồ thị (C) tại đúng 2 điểm phân biệt.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) Đúng; b) Sai vì tại x=0 hàm đạt cực đại và tại x=2 hàm đạt cực tiểu; c) Đúng vì f(2) = 8 - 12 + 2 = -2; d) Đúng vì x^3 - 3x^2 + 2 = 2 ⇔ x^2(x - 3) = 0 có 2 nghiệm x = 0 và x = 3.",
+          "mathVerify": {
+            "expression": "2^3 - 3*(2^2) + 2",
+            "expected": -2
+          },
+          "items": [
+            {
+              "text": "Đạo hàm của hàm số là f'(x) = 3x^2 - 6x.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Hàm số đạt cực đại tại điểm x = 2.",
+              "isTrue": false,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Sai"
+            },
+            {
+              "text": "Giá trị nhỏ nhất của hàm số trên đoạn [0; 3] bằng -2.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Đường thẳng y = 2 cắt đồ thị (C) tại đúng 2 điểm phân biệt.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_1",
+          "type": "TF",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 1,
+          "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số]"
+        },
+        {
+          "id": "q_tf_2",
+          "type": "TF",
+          "rowId": "row_1",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "level": "Vận dụng",
+          "points": 1,
+          "matrixRef": "ĐS2(a,b,c,d) [Dòng 1: Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số]",
+          "stem": "Cho tình huống và kiến thức trọng tâm thuộc bài \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" (Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "statements": [
+            {
+              "text": "Khái niệm và tính chất cơ bản của \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" bị áp dụng sai điều kiện xác định ban đầu.",
+              "isTrue": false,
+              "level": "Biết"
+            },
+            {
+              "text": "Mọi trường hợp áp dụng \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" luôn tuân theo điều kiện ràng buộc của bài học.",
+              "isTrue": true,
+              "level": "Biết"
+            },
+            {
+              "text": "Khi áp dụng quy tắc trong \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\", kết quả suy luận luôn tuân theo hệ thức chuẩn của bài học.",
+              "isTrue": true,
+              "level": "Hiểu"
+            },
+            {
+              "text": "Có thể vận dụng trực tiếp kiến thức bài \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" trong mọi tình huống mà không cần xem xét giả thiết.",
+              "isTrue": false,
+              "level": "Vận dụng"
+            }
+          ],
+          "explanation": "Đối chiếu Bản đặc tả mục \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\": a) Sai; b) Đúng; c) Đúng; d) Sai."
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Trong không gian Oxyz, cho ba điểm A(1; 0; 0), B(0; 2; 0), C(0; 0; 3). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "statements": [
+            {
+              "text": "Tọa độ của vectơ AB là (-1; 2; 0).",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Độ dài đoạn thẳng AB bằng √5.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Trọng tâm G của tam giác ABC có tọa độ là (1/3; 2/3; 1).",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Tam giác ABC là tam giác vuông tại A.",
+              "isTrue": false,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Sai"
+            }
+          ],
+          "explanation": "a) Đúng; b) Đúng vì AB = √((-1)^2 + 2^2 + 0^2) = √5; c) Đúng vì G((1+0+0)/3; (0+2+0)/3; (0+0+3)/3) = (1/3; 2/3; 1); d) Sai vì AB · AC = (-1)(-1) + 2·0 + 0·3 = 1 ≠ 0.",
+          "mathVerify": {
+            "expression": "(-1)*(-1) + 2*0 + 0*3",
+            "expected": 1
+          },
+          "items": [
+            {
+              "text": "Tọa độ của vectơ AB là (-1; 2; 0).",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Độ dài đoạn thẳng AB bằng √5.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Trọng tâm G của tam giác ABC có tọa độ là (1/3; 2/3; 1).",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Tam giác ABC là tam giác vuông tại A.",
+              "isTrue": false,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Sai"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_3",
+          "type": "TF",
+          "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+          "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+          "points": 1,
+          "matrixRef": "ĐS3(a,b,c,d) [Dòng 2: Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Khảo sát thời gian tự học mỗi ngày (đơn vị: phút) của 20 học sinh lớp 12A thu được mẫu số liệu ghép nhóm: nhóm [30; 50) có 5 học sinh; nhóm [50; 70) có 10 học sinh; nhóm [70; 90) có 5 học sinh. Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "statements": [
+            {
+              "text": "Cỡ mẫu của mẫu số liệu ghép nhóm là n = 20.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Giá trị đại diện của nhóm [50; 70) là 60.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Thời gian tự học trung bình của mẫu số liệu ghép nhóm là 60 phút.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Phương sai của mẫu số liệu ghép nhóm trên bằng 250.",
+              "isTrue": false,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Sai"
+            }
+          ],
+          "explanation": "a) Đúng (5+10+5=20); b) Đúng ((50+70)/2=60); c) Đúng vì x_tb = (5×40 + 10×60 + 5×80)/20 = 60; d) Sai vì phương sai s^2 = [5×(40-60)^2 + 10×(60-60)^2 + 5×(80-60)^2]/20 = 4000/20 = 200 ≠ 250.",
+          "mathVerify": {
+            "expression": "(5*40 + 10*60 + 5*80) / 20",
+            "expected": 60
+          },
+          "items": [
+            {
+              "text": "Cỡ mẫu của mẫu số liệu ghép nhóm là n = 20.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Giá trị đại diện của nhóm [50; 70) là 60.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Thời gian tự học trung bình của mẫu số liệu ghép nhóm là 60 phút.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Phương sai của mẫu số liệu ghép nhóm trên bằng 250.",
+              "isTrue": false,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Sai"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_4",
+          "type": "TF",
+          "topic": "Chương III: Các số đặc trưng đo mức độ phân tán của mẫu số liệu ghép nhóm",
+          "unit": "Bài 3: Khoảng biến thiên, khoảng tứ phân vị, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm",
+          "points": 1,
+          "matrixRef": "ĐS4(a,b,c,d) [Dòng 3: Bài 3: Khoảng biến thiên, khoảng tứ phân vị, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Tìm giá trị cực đại của hàm số y = -x^3 + 3x^2 + 5.",
+          "answer": "9",
+          "explanation": "y' = -3x^2 + 6x = 0 ⇔ x = 0 hoặc x = 2. Hàm số đạt cực đại tại x = 2 với y_CĐ = -8 + 12 + 5 = 9.",
+          "mathVerify": {
+            "expression": "-(2^3) + 3*(2^2) + 5",
+            "expected": 9
+          },
+          "id": "q_sa_1",
+          "type": "SA",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 0.5,
+          "matrixRef": "TLN1 [Dòng 1 - Hiểu]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Vận dụng",
+          "stem": "Một xưởng sản xuất mỗi ngày làm ra x sản phẩm (1 ≤ x ≤ 20). Tổng lợi nhuận thu được (đơn vị: triệu đồng) được tính theo hàm số P(x) = -x^3 + 12x^2 + 60. Hỏi xưởng cần sản xuất bao nhiêu sản phẩm mỗi ngày để lợi nhuận đạt giá trị lớn nhất?",
+          "answer": "8",
+          "explanation": "P'(x) = -3x^2 + 24x = 0 ⇔ x = 8 (vì x ≥ 1). Lập bảng biến thiên trên [1; 20], P(x) đạt GTLN tại x = 8 sản phẩm.",
+          "mathVerify": {
+            "expression": "24 / 3",
+            "expected": 8
+          },
+          "id": "q_sa_2",
+          "type": "SA",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 0.5,
+          "matrixRef": "TLN2 [Dòng 1 - Vận dụng]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Vận dụng",
+          "stem": "Chi phí nhiên liệu C(v) cho một tàu thủy chạy trên sông với vận tốc v (km/h, v > 0) được mô hình hóa bởi hàm số C(v) = v + 144/v (đơn vị: trăm nghìn đồng/giờ). Tìm vận tốc v (km/h) để chi phí C(v) đạt giá trị nhỏ nhất.",
+          "answer": "12",
+          "explanation": "C'(v) = 1 - 144/v^2 = 0 ⇔ v^2 = 144 ⇔ v = 12 (km/h) (do v > 0).",
+          "mathVerify": {
+            "expression": "sqrt(144)",
+            "expected": 12
+          },
+          "id": "q_sa_3",
+          "type": "SA",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 0.5,
+          "matrixRef": "TLN3 [Dòng 1 - Vận dụng]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Trong không gian Oxyz, tính khoảng cách giữa hai điểm A(1; 2; 2) và B(4; 6; 2).",
+          "answer": "5",
+          "explanation": "AB = √((4 - 1)^2 + (6 - 2)^2 + (2 - 2)^2) = √(9 + 16 + 0) = 5.",
+          "mathVerify": {
+            "expression": "sqrt((4-1)^2 + (6-2)^2 + (2-2)^2)",
+            "expected": 5
+          },
+          "id": "q_sa_4",
+          "type": "SA",
+          "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+          "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+          "points": 0.5,
+          "matrixRef": "TLN4 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Vận dụng",
+          "stem": "Trong không gian Oxyz (đơn vị trên mỗi trục là mét), một thiết bị bay không người lái (flycam) di chuyển thẳng từ vị trí M(2; 3; 10) đến vị trí N(8; 11; 10). Quãng đường flycam đã bay bằng bao nhiêu mét?",
+          "answer": "10",
+          "explanation": "Quãng đường MN = √((8 - 2)^2 + (11 - 3)^2 + (10 - 10)^2) = √(36 + 64) = 10 (m).",
+          "mathVerify": {
+            "expression": "sqrt((8-2)^2 + (11-3)^2)",
+            "expected": 10
+          },
+          "id": "q_sa_5",
+          "type": "SA",
+          "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+          "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+          "points": 0.5,
+          "matrixRef": "TLN5 [Dòng 2 - Vận dụng]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Một mẫu số liệu ghép nhóm có phương sai s^2 = 25. Độ lệch chuẩn s của mẫu số liệu ghép nhóm đó bằng bao nhiêu?",
+          "answer": "5",
+          "explanation": "Độ lệch chuẩn s = √(s^2) = √25 = 5.",
+          "mathVerify": {
+            "expression": "sqrt(25)",
+            "expected": 5
+          },
+          "id": "q_sa_6",
+          "type": "SA",
+          "topic": "Chương III: Các số đặc trưng đo mức độ phân tán của mẫu số liệu ghép nhóm",
+          "unit": "Bài 3: Khoảng biến thiên, khoảng tứ phân vị, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm",
+          "points": 0.5,
+          "matrixRef": "TLN6 [Dòng 3 - Hiểu]"
+        }
+      ]
+    },
+    {
+      "code": "102",
+      "questions": [
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Trong không gian Oxyz, cho vectơ u = 2i - 3j + 5k. Tọa độ của vectơ u là:",
+          "options": [
+            "(-2; 3; -5)",
+            "(2; -3; 5)",
+            "(5; -3; 2)",
+            "(2; 3; 5)"
+          ],
+          "answer": "B",
+          "explanation": "Theo định nghĩa tọa độ vectơ theo các vectơ đơn vị i, j, k: u = (2; -3; 5).",
+          "id": "q_mcq_9",
+          "type": "MCQ",
+          "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+          "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+          "points": 0.25,
+          "matrixRef": "C9 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Cho hàm số y = f(x) = x^3 - 3x^2 + 2. Đạo hàm f'(x) của hàm số đã cho là:",
+          "options": [
+            "3x^2 - 6x",
+            "3x^2 + 6x",
+            "x^2 - 6x",
+            "3x^2 - 3x"
+          ],
+          "answer": "A",
+          "explanation": "Ta có f'(x) = (x^3 - 3x^2 + 2)' = 3x^2 - 6x.",
+          "id": "q_mcq_1",
+          "type": "MCQ",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 0.25,
+          "matrixRef": "C1 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Nếu phương sai của một mẫu số liệu ghép nhóm bằng s^2 = 16 thì độ lệch chuẩn s của mẫu số liệu đó bằng:",
+          "options": [
+            "4",
+            "8",
+            "256",
+            "2"
+          ],
+          "answer": "A",
+          "explanation": "Độ lệch chuẩn s = √(s^2) = √16 = 4.",
+          "mathVerify": {
+            "expression": "sqrt(16)",
+            "expected": 4
+          },
+          "id": "q_mcq_12",
+          "type": "MCQ",
+          "topic": "Chương III: Các số đặc trưng đo mức độ phân tán của mẫu số liệu ghép nhóm",
+          "unit": "Bài 3: Khoảng biến thiên, khoảng tứ phân vị, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm",
+          "points": 0.25,
+          "matrixRef": "C12 [Dòng 3 - Hiểu]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Cho hàm số y = x^3 - 3x^2 + 4. Tổng giá trị cực đại và giá trị cực tiểu của hàm số bằng:",
+          "options": [
+            "0",
+            "4",
+            "2",
+            "6"
+          ],
+          "answer": "B",
+          "explanation": "y' = 3x^2 - 6x = 0 ⇔ x = 0 (y_CĐ = 4) hoặc x = 2 (y_CT = 0). Tổng y_CĐ + y_CT = 4 + 0 = 4.",
+          "mathVerify": {
+            "expression": "4 + (2^3 - 3*(2^2) + 4)",
+            "expected": 4
+          },
+          "id": "q_mcq_6",
+          "type": "MCQ",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 0.25,
+          "matrixRef": "C6 [Dòng 1 - Hiểu]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Hàm số y = -x^3 + 3x + 1 đồng biến trên khoảng nào dưới đây?",
+          "options": [
+            "(1; +∞)",
+            "(-1; 1)",
+            "(-∞; -1)",
+            "(-1; +∞)"
+          ],
+          "answer": "B",
+          "explanation": "y' = -3x^2 + 3 > 0 ⇔ -1 < x < 1. Vậy hàm số đồng biến trên khoảng (-1; 1).",
+          "id": "q_mcq_2",
+          "type": "MCQ",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 0.25,
+          "matrixRef": "C2 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Biết",
+          "stem": "Một mẫu số liệu ghép nhóm có bảng tần số với các nhóm [10; 20), [20; 30), [30; 40), [40; 50). Khoảng biến thiên R của mẫu số liệu ghép nhóm trên là:",
+          "options": [
+            "10",
+            "30",
+            "50",
+            "40"
+          ],
+          "answer": "D",
+          "explanation": "Khoảng biến thiên R = đầu mút phải nhóm cuối - đầu mút trái nhóm đầu = 50 - 10 = 40.",
+          "mathVerify": {
+            "expression": "50 - 10",
+            "expected": 40
+          },
+          "id": "q_mcq_11",
+          "type": "MCQ",
+          "topic": "Chương III: Các số đặc trưng đo mức độ phân tán của mẫu số liệu ghép nhóm",
+          "unit": "Bài 3: Khoảng biến thiên, khoảng tứ phân vị, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm",
+          "points": 0.25,
+          "matrixRef": "C11 [Dòng 3 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Trong không gian Oxyz, cho hai điểm A(1; 2; -3) và B(3; -2; 1). Tọa độ của vectơ AB là:",
+          "options": [
+            "(4; 0; -2)",
+            "(2; -4; 4)",
+            "(2; 0; -2)",
+            "(-2; 4; -4)"
+          ],
+          "answer": "B",
+          "explanation": "vectơ(AB) = (3 - 1; -2 - 2; 1 - (-3)) = (2; -4; 4).",
+          "id": "q_mcq_7",
+          "type": "MCQ",
+          "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+          "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+          "points": 0.25,
+          "matrixRef": "C7 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Đồ thị của hàm số y = (x + 2)/(x - 4) có đường tiệm cận đứng là:",
+          "options": [
+            "x = -2",
+            "y = 4",
+            "x = 4",
+            "y = 1"
+          ],
+          "answer": "C",
+          "explanation": "Mẫu số x - 4 = 0 ⇔ x = 4 và tử số khác 0 tại x = 4 nên tiệm cận đứng là x = 4.",
+          "id": "q_mcq_4",
+          "type": "MCQ",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 0.25,
+          "matrixRef": "C4 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Trong không gian Oxyz, hình chiếu vuông góc của điểm M(4; -5; 7) trên mặt phẳng (Oxy) có tọa độ là:",
+          "options": [
+            "(4; 0; 7)",
+            "(4; -5; 0)",
+            "(0; -5; 7)",
+            "(0; 0; 7)"
+          ],
+          "answer": "B",
+          "explanation": "Hình chiếu của M(x; y; z) lên mặt phẳng (Oxy) có cao độ z = 0, tức là (4; -5; 0).",
+          "id": "q_mcq_8",
+          "type": "MCQ",
+          "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+          "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+          "points": 0.25,
+          "matrixRef": "C8 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Đồ thị của hàm số y = (2x - 1)/(x + 3) có đường tiệm cận ngang là:",
+          "options": [
+            "x = 2",
+            "y = 2",
+            "x = -3",
+            "y = -1/3"
+          ],
+          "answer": "B",
+          "explanation": "lim(x→±∞) (2x - 1)/(x + 3) = 2 nên đường tiệm cận ngang là y = 2.",
+          "mathVerify": {
+            "expression": "2 / 1",
+            "expected": 2
+          },
+          "id": "q_mcq_3",
+          "type": "MCQ",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 0.25,
+          "matrixRef": "C3 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Trong không gian Oxyz, cho hai vectơ a = (2; 1; -2) và b = (1; 2; 2). Tích vô hướng a · b bằng:",
+          "options": [
+            "-4",
+            "8",
+            "0",
+            "4"
+          ],
+          "answer": "C",
+          "explanation": "a · b = 2×1 + 1×2 + (-2)×2 = 2 + 2 - 4 = 0.",
+          "mathVerify": {
+            "expression": "2*1 + 1*2 + (-2)*2",
+            "expected": 0
+          },
+          "id": "q_mcq_10",
+          "type": "MCQ",
+          "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+          "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+          "points": 0.25,
+          "matrixRef": "C10 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Giá trị lớn nhất của hàm số f(x) = x^3 - 3x + 5 trên đoạn [0; 2] bằng:",
+          "options": [
+            "7",
+            "5",
+            "9",
+            "3"
+          ],
+          "answer": "A",
+          "explanation": "f'(x) = 3x^2 - 3 = 0 ⇔ x = 1 ∈ [0; 2]. Ta có f(0) = 5, f(1) = 3, f(2) = 8 - 6 + 5 = 7. Vậy max f(x) trên [0; 2] bằng 7.",
+          "mathVerify": {
+            "expression": "2^3 - 3*2 + 5",
+            "expected": 7
+          },
+          "id": "q_mcq_5",
+          "type": "MCQ",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 0.25,
+          "matrixRef": "C5 [Dòng 1 - Hiểu]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Cho hàm số f(x) = x^3 - 3x^2 + 2 có đồ thị (C). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "statements": [
+            {
+              "text": "Đạo hàm của hàm số là f'(x) = 3x^2 - 6x.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Hàm số đạt cực đại tại điểm x = 2.",
+              "isTrue": false,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Sai"
+            },
+            {
+              "text": "Giá trị nhỏ nhất của hàm số trên đoạn [0; 3] bằng -2.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Đường thẳng y = 2 cắt đồ thị (C) tại đúng 2 điểm phân biệt.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) Đúng; b) Sai vì tại x=0 hàm đạt cực đại và tại x=2 hàm đạt cực tiểu; c) Đúng vì f(2) = 8 - 12 + 2 = -2; d) Đúng vì x^3 - 3x^2 + 2 = 2 ⇔ x^2(x - 3) = 0 có 2 nghiệm x = 0 và x = 3.",
+          "mathVerify": {
+            "expression": "2^3 - 3*(2^2) + 2",
+            "expected": -2
+          },
+          "items": [
+            {
+              "text": "Đạo hàm của hàm số là f'(x) = 3x^2 - 6x.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Hàm số đạt cực đại tại điểm x = 2.",
+              "isTrue": false,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Sai"
+            },
+            {
+              "text": "Giá trị nhỏ nhất của hàm số trên đoạn [0; 3] bằng -2.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Đường thẳng y = 2 cắt đồ thị (C) tại đúng 2 điểm phân biệt.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_1",
+          "type": "TF",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 1,
+          "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số]"
+        },
+        {
+          "id": "q_tf_2",
+          "type": "TF",
+          "rowId": "row_1",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "level": "Vận dụng",
+          "points": 1,
+          "matrixRef": "ĐS2(a,b,c,d) [Dòng 1: Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số]",
+          "stem": "Cho tình huống và kiến thức trọng tâm thuộc bài \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" (Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "statements": [
+            {
+              "text": "Khái niệm và tính chất cơ bản của \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" bị áp dụng sai điều kiện xác định ban đầu.",
+              "isTrue": false,
+              "level": "Biết"
+            },
+            {
+              "text": "Mọi trường hợp áp dụng \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" luôn tuân theo điều kiện ràng buộc của bài học.",
+              "isTrue": true,
+              "level": "Biết"
+            },
+            {
+              "text": "Khi áp dụng quy tắc trong \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\", kết quả suy luận luôn tuân theo hệ thức chuẩn của bài học.",
+              "isTrue": true,
+              "level": "Hiểu"
+            },
+            {
+              "text": "Có thể vận dụng trực tiếp kiến thức bài \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\" trong mọi tình huống mà không cần xem xét giả thiết.",
+              "isTrue": false,
+              "level": "Vận dụng"
+            }
+          ],
+          "explanation": "Đối chiếu Bản đặc tả mục \"Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số\": a) Sai; b) Đúng; c) Đúng; d) Sai."
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Trong không gian Oxyz, cho ba điểm A(1; 0; 0), B(0; 2; 0), C(0; 0; 3). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "statements": [
+            {
+              "text": "Tọa độ của vectơ AB là (-1; 2; 0).",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Độ dài đoạn thẳng AB bằng √5.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Trọng tâm G của tam giác ABC có tọa độ là (1/3; 2/3; 1).",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Tam giác ABC là tam giác vuông tại A.",
+              "isTrue": false,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Sai"
+            }
+          ],
+          "explanation": "a) Đúng; b) Đúng vì AB = √((-1)^2 + 2^2 + 0^2) = √5; c) Đúng vì G((1+0+0)/3; (0+2+0)/3; (0+0+3)/3) = (1/3; 2/3; 1); d) Sai vì AB · AC = (-1)(-1) + 2·0 + 0·3 = 1 ≠ 0.",
+          "mathVerify": {
+            "expression": "(-1)*(-1) + 2*0 + 0*3",
+            "expected": 1
+          },
+          "items": [
+            {
+              "text": "Tọa độ của vectơ AB là (-1; 2; 0).",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Độ dài đoạn thẳng AB bằng √5.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Trọng tâm G của tam giác ABC có tọa độ là (1/3; 2/3; 1).",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Tam giác ABC là tam giác vuông tại A.",
+              "isTrue": false,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Sai"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_3",
+          "type": "TF",
+          "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+          "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+          "points": 1,
+          "matrixRef": "ĐS3(a,b,c,d) [Dòng 2: Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Khảo sát thời gian tự học mỗi ngày (đơn vị: phút) của 20 học sinh lớp 12A thu được mẫu số liệu ghép nhóm: nhóm [30; 50) có 5 học sinh; nhóm [50; 70) có 10 học sinh; nhóm [70; 90) có 5 học sinh. Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "statements": [
+            {
+              "text": "Cỡ mẫu của mẫu số liệu ghép nhóm là n = 20.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Giá trị đại diện của nhóm [50; 70) là 60.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Thời gian tự học trung bình của mẫu số liệu ghép nhóm là 60 phút.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Phương sai của mẫu số liệu ghép nhóm trên bằng 250.",
+              "isTrue": false,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Sai"
+            }
+          ],
+          "explanation": "a) Đúng (5+10+5=20); b) Đúng ((50+70)/2=60); c) Đúng vì x_tb = (5×40 + 10×60 + 5×80)/20 = 60; d) Sai vì phương sai s^2 = [5×(40-60)^2 + 10×(60-60)^2 + 5×(80-60)^2]/20 = 4000/20 = 200 ≠ 250.",
+          "mathVerify": {
+            "expression": "(5*40 + 10*60 + 5*80) / 20",
+            "expected": 60
+          },
+          "items": [
+            {
+              "text": "Cỡ mẫu của mẫu số liệu ghép nhóm là n = 20.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Giá trị đại diện của nhóm [50; 70) là 60.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Thời gian tự học trung bình của mẫu số liệu ghép nhóm là 60 phút.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Phương sai của mẫu số liệu ghép nhóm trên bằng 250.",
+              "isTrue": false,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Sai"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_4",
+          "type": "TF",
+          "topic": "Chương III: Các số đặc trưng đo mức độ phân tán của mẫu số liệu ghép nhóm",
+          "unit": "Bài 3: Khoảng biến thiên, khoảng tứ phân vị, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm",
+          "points": 1,
+          "matrixRef": "ĐS4(a,b,c,d) [Dòng 3: Bài 3: Khoảng biến thiên, khoảng tứ phân vị, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Một mẫu số liệu ghép nhóm có phương sai s^2 = 25. Độ lệch chuẩn s của mẫu số liệu ghép nhóm đó bằng bao nhiêu?",
+          "answer": "5",
+          "explanation": "Độ lệch chuẩn s = √(s^2) = √25 = 5.",
+          "mathVerify": {
+            "expression": "sqrt(25)",
+            "expected": 5
+          },
+          "id": "q_sa_6",
+          "type": "SA",
+          "topic": "Chương III: Các số đặc trưng đo mức độ phân tán của mẫu số liệu ghép nhóm",
+          "unit": "Bài 3: Khoảng biến thiên, khoảng tứ phân vị, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm",
+          "points": 0.5,
+          "matrixRef": "TLN6 [Dòng 3 - Hiểu]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Vận dụng",
+          "stem": "Một xưởng sản xuất mỗi ngày làm ra x sản phẩm (1 ≤ x ≤ 20). Tổng lợi nhuận thu được (đơn vị: triệu đồng) được tính theo hàm số P(x) = -x^3 + 12x^2 + 60. Hỏi xưởng cần sản xuất bao nhiêu sản phẩm mỗi ngày để lợi nhuận đạt giá trị lớn nhất?",
+          "answer": "8",
+          "explanation": "P'(x) = -3x^2 + 24x = 0 ⇔ x = 8 (vì x ≥ 1). Lập bảng biến thiên trên [1; 20], P(x) đạt GTLN tại x = 8 sản phẩm.",
+          "mathVerify": {
+            "expression": "24 / 3",
+            "expected": 8
+          },
+          "id": "q_sa_2",
+          "type": "SA",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 0.5,
+          "matrixRef": "TLN2 [Dòng 1 - Vận dụng]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Tìm giá trị cực đại của hàm số y = -x^3 + 3x^2 + 5.",
+          "answer": "9",
+          "explanation": "y' = -3x^2 + 6x = 0 ⇔ x = 0 hoặc x = 2. Hàm số đạt cực đại tại x = 2 với y_CĐ = -8 + 12 + 5 = 9.",
+          "mathVerify": {
+            "expression": "-(2^3) + 3*(2^2) + 5",
+            "expected": 9
+          },
+          "id": "q_sa_1",
+          "type": "SA",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 0.5,
+          "matrixRef": "TLN1 [Dòng 1 - Hiểu]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Vận dụng",
+          "stem": "Chi phí nhiên liệu C(v) cho một tàu thủy chạy trên sông với vận tốc v (km/h, v > 0) được mô hình hóa bởi hàm số C(v) = v + 144/v (đơn vị: trăm nghìn đồng/giờ). Tìm vận tốc v (km/h) để chi phí C(v) đạt giá trị nhỏ nhất.",
+          "answer": "12",
+          "explanation": "C'(v) = 1 - 144/v^2 = 0 ⇔ v^2 = 144 ⇔ v = 12 (km/h) (do v > 0).",
+          "mathVerify": {
+            "expression": "sqrt(144)",
+            "expected": 12
+          },
+          "id": "q_sa_3",
+          "type": "SA",
+          "topic": "Chương I: Ứng dụng đạo hàm để khảo sát và vẽ đồ thị của hàm số",
+          "unit": "Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số",
+          "points": 0.5,
+          "matrixRef": "TLN3 [Dòng 1 - Vận dụng]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Trong không gian Oxyz, tính khoảng cách giữa hai điểm A(1; 2; 2) và B(4; 6; 2).",
+          "answer": "5",
+          "explanation": "AB = √((4 - 1)^2 + (6 - 2)^2 + (2 - 2)^2) = √(9 + 16 + 0) = 5.",
+          "mathVerify": {
+            "expression": "sqrt((4-1)^2 + (6-2)^2 + (2-2)^2)",
+            "expected": 5
+          },
+          "id": "q_sa_4",
+          "type": "SA",
+          "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+          "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+          "points": 0.5,
+          "matrixRef": "TLN4 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Vận dụng",
+          "stem": "Trong không gian Oxyz (đơn vị trên mỗi trục là mét), một thiết bị bay không người lái (flycam) di chuyển thẳng từ vị trí M(2; 3; 10) đến vị trí N(8; 11; 10). Quãng đường flycam đã bay bằng bao nhiêu mét?",
+          "answer": "10",
+          "explanation": "Quãng đường MN = √((8 - 2)^2 + (11 - 3)^2 + (10 - 10)^2) = √(36 + 64) = 10 (m).",
+          "mathVerify": {
+            "expression": "sqrt((8-2)^2 + (11-3)^2)",
+            "expected": 10
+          },
+          "id": "q_sa_5",
+          "type": "SA",
+          "topic": "Chương II: Vectơ và hệ trục tọa độ trong không gian Oxyz",
+          "unit": "Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz",
+          "points": 0.5,
+          "matrixRef": "TLN5 [Dòng 2 - Vận dụng]"
+        }
+      ]
+    }
+  ],
+  "readingPassage": "",
+  "listeningTranscript": "",
+  "qaReport": {
+    "isValid": true,
+    "score": 100,
+    "stats": {
+      "levels": [
+        "Biết",
+        "Hiểu",
+        "Vận dụng"
+      ],
+      "qTypes": [
+        "MCQ",
+        "TF",
+        "SA",
+        "ESSAY"
+      ],
+      "pointRules": {
+        "MCQ": 0.25,
+        "TF": 0.25,
+        "SA": 0.5,
+        "ESSAY": 1
+      },
+      "byLevel": {
+        "Biết": 15,
+        "Hiểu": 12,
+        "Vận dụng": 7
+      },
+      "pointsByLevel": {
+        "Biết": 3.75,
+        "Hiểu": 3.75,
+        "Vận dụng": 2.5
+      },
+      "levelPercentages": {
+        "Biết": 38,
+        "Hiểu": 38,
+        "Vận dụng": 25
+      },
+      "byType": {
+        "MCQ": 12,
+        "TF": 16,
+        "SA": 6,
+        "ESSAY": 0
+      },
+      "pointsByType": {
+        "MCQ": 3,
+        "TF": 4,
+        "SA": 3,
+        "ESSAY": 0
+      },
+      "tfQuestionsCount": 4,
+      "totalItems": 34,
+      "totalQuestions": 22,
+      "totalPoints": 10
+    },
+    "passedChecks": [
+      "Đúng quy định cấp THPT (Thông tư 22/2021/TT-BGDĐT & Công văn 7991/BGDĐT-GDTrH) với các mức độ: Biết, Hiểu, Vận dụng.",
+      "Tổng điểm Ma trận chính xác: 10.0 / 10.0 điểm.",
+      "Bản đặc tả khớp 1-1 với Ma trận (3/3 đơn vị kiến thức).",
+      "Số lượng câu hỏi/lệnh hỏi từng dạng thức trong Đề khớp tuyệt đối với Ma trận (MCQ: 12, Đúng/Sai: 16 ý, Trả lời ngắn: 6, Tự luận: 0).",
+      "Tổng điểm các câu hỏi trong Đề kiểm tra (10.0đ) khớp tuyệt đối với Ma trận (10.0đ).",
+      "100% câu hỏi (22/22) có mã liên kết trực tiếp với Ma trận và Bản đặc tả.",
+      "100% câu hỏi (22/22) có đầy đủ đáp án và hướng dẫn chấm chi tiết.",
+      "Đã kiểm chứng độc lập 15 phép tính Toán/Khoa học: 100% kết quả trùng khớp tuyệt đối với đáp án.",
+      "Đã khởi tạo 2 mã đề (101, 102) đồng bộ số câu và bảng đáp án riêng."
+    ],
+    "warnings": [],
+    "issues": [],
+    "mathVerifications": [
+      {
+        "questionIndex": 3,
+        "matrixRef": "C3 [Dòng 1 - Biết]",
+        "expression": "2 / 1",
+        "computedValue": 2,
+        "expectedValue": 2,
+        "passed": true
+      },
+      {
+        "questionIndex": 5,
+        "matrixRef": "C5 [Dòng 1 - Hiểu]",
+        "expression": "2^3 - 3*2 + 5",
+        "computedValue": 7,
+        "expectedValue": 7,
+        "passed": true
+      },
+      {
+        "questionIndex": 6,
+        "matrixRef": "C6 [Dòng 1 - Hiểu]",
+        "expression": "4 + (2^3 - 3*(2^2) + 4)",
+        "computedValue": 4,
+        "expectedValue": 4,
+        "passed": true
+      },
+      {
+        "questionIndex": 10,
+        "matrixRef": "C10 [Dòng 2 - Hiểu]",
+        "expression": "2*1 + 1*2 + (-2)*2",
+        "computedValue": 0,
+        "expectedValue": 0,
+        "passed": true
+      },
+      {
+        "questionIndex": 11,
+        "matrixRef": "C11 [Dòng 3 - Biết]",
+        "expression": "50 - 10",
+        "computedValue": 40,
+        "expectedValue": 40,
+        "passed": true
+      },
+      {
+        "questionIndex": 12,
+        "matrixRef": "C12 [Dòng 3 - Hiểu]",
+        "expression": "sqrt(16)",
+        "computedValue": 4,
+        "expectedValue": 4,
+        "passed": true
+      },
+      {
+        "questionIndex": 13,
+        "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Tính đơn điệu, cực trị, giá trị lớn nhất - nhỏ nhất và đường tiệm cận của đồ thị hàm số]",
+        "expression": "2^3 - 3*(2^2) + 2",
+        "computedValue": -2,
+        "expectedValue": -2,
+        "passed": true
+      },
+      {
+        "questionIndex": 15,
+        "matrixRef": "ĐS3(a,b,c,d) [Dòng 2: Bài 2: Vectơ trong không gian, tọa độ của điểm và vectơ, tích vô hướng trong hệ trục Oxyz]",
+        "expression": "(-1)*(-1) + 2*0 + 0*3",
+        "computedValue": 1,
+        "expectedValue": 1,
+        "passed": true
+      },
+      {
+        "questionIndex": 16,
+        "matrixRef": "ĐS4(a,b,c,d) [Dòng 3: Bài 3: Khoảng biến thiên, khoảng tứ phân vị, phương sai và độ lệch chuẩn của mẫu số liệu ghép nhóm]",
+        "expression": "(5*40 + 10*60 + 5*80) / 20",
+        "computedValue": 60,
+        "expectedValue": 60,
+        "passed": true
+      },
+      {
+        "questionIndex": 17,
+        "matrixRef": "TLN1 [Dòng 1 - Hiểu]",
+        "expression": "-(2^3) + 3*(2^2) + 5",
+        "computedValue": 9,
+        "expectedValue": 9,
+        "passed": true
+      },
+      {
+        "questionIndex": 18,
+        "matrixRef": "TLN2 [Dòng 1 - Vận dụng]",
+        "expression": "24 / 3",
+        "computedValue": 8,
+        "expectedValue": 8,
+        "passed": true
+      },
+      {
+        "questionIndex": 19,
+        "matrixRef": "TLN3 [Dòng 1 - Vận dụng]",
+        "expression": "sqrt(144)",
+        "computedValue": 12,
+        "expectedValue": 12,
+        "passed": true
+      },
+      {
+        "questionIndex": 20,
+        "matrixRef": "TLN4 [Dòng 2 - Hiểu]",
+        "expression": "sqrt((4-1)^2 + (6-2)^2 + (2-2)^2)",
+        "computedValue": 5,
+        "expectedValue": 5,
+        "passed": true
+      },
+      {
+        "questionIndex": 21,
+        "matrixRef": "TLN5 [Dòng 2 - Vận dụng]",
+        "expression": "sqrt((8-2)^2 + (11-3)^2)",
+        "computedValue": 10,
+        "expectedValue": 10,
+        "passed": true
+      },
+      {
+        "questionIndex": 22,
+        "matrixRef": "TLN6 [Dòng 3 - Hiểu]",
+        "expression": "sqrt(25)",
+        "computedValue": 5,
+        "expectedValue": 5,
+        "passed": true
+      }
+    ]
+  }
+}

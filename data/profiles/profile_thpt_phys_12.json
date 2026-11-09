@@ -1,0 +1,2295 @@
+{
+  "id": "profile_thpt_phys_12",
+  "title": "Cuối học kỳ I - Vật lí Lớp 12 (THPT)",
+  "updatedAt": "2026-11-08T14:27:52.250Z",
+  "metadata": {
+    "schoolName": "TRƯỜNG THPT CHUYÊN TRẦN ĐẠI NGHĨA",
+    "departmentName": "TỔ VẬT LÍ - KỸ THUẬT",
+    "schoolYear": "2026 - 2027",
+    "level": "THPT",
+    "grade": "12",
+    "subject": "Vật lí",
+    "textbook": "Chân trời sáng tạo",
+    "examPeriod": "Cuối học kỳ I",
+    "duration": 50,
+    "numVariants": 2,
+    "regulation": "CV7991_TT22",
+    "localGuidelines": "Cấu trúc đề Vật lí 12 theo Công văn 7991/BGDĐT-GDTrH: Phần I gồm 12 câu Trắc nghiệm nhiều lựa chọn (3,0đ); Phần II gồm 4 câu Trắc nghiệm Đúng/Sai × 4 ý (4,0đ); Phần III gồm 6 câu Trả lời ngắn tính toán Vật lí (3,0đ). Tổng = 10,0 điểm."
+  },
+  "units": [
+    {
+      "id": "unit_1",
+      "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+      "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+      "outcomes": {
+        "Biết": "Nêu được mô hình động học phân tử, công thức chuyển đổi nhiệt độ Celsius và Kelvin, công thức Q = m.c.Δt và Q = λ.m.",
+        "Hiểu": "Xác định dấu của A và Q trong biểu thức ΔU = A + Q; tính nhiệt lượng cần cung cấp để đun nóng hoặc làm nóng chảy vật.",
+        "Vận dụng": "Giải bài toán cân bằng nhiệt và hiệu suất ấm đun nước điện trong thực tế."
+      },
+      "keyFacts": [
+        "Biết: Nêu được mô hình động học phân tử, công thức chuyển đổi nhiệt độ Celsius và Kelvin, công thức Q = m.c.Δt và Q = λ.m.",
+        "Hiểu: Xác định dấu của A và Q trong biểu thức ΔU = A + Q; tính nhiệt lượng cần cung cấp để đun nóng hoặc làm nóng chảy vật.",
+        "Vận dụng: Giải bài toán cân bằng nhiệt và hiệu suất ấm đun nước điện trong thực tế."
+      ]
+    },
+    {
+      "id": "unit_2",
+      "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+      "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+      "outcomes": {
+        "Biết": "Phát biểu được định luật Boyle, định luật Charles và viết được phương trình trạng thái khí lí tưởng pV/T = hằng số.",
+        "Hiểu": "Tính áp suất, thể tích hoặc nhiệt độ tuyệt đối của khối khí khi biến đổi trạng thái.",
+        "Vận dụng": "Giải bài toán thực tiễn về bình khí nén y tế, lốp xe ô tô khi thay đổi nhiệt độ môi trường."
+      },
+      "keyFacts": [
+        "Biết: Phát biểu được định luật Boyle, định luật Charles và viết được phương trình trạng thái khí lí tưởng pV/T = hằng số.",
+        "Hiểu: Tính áp suất, thể tích hoặc nhiệt độ tuyệt đối của khối khí khi biến đổi trạng thái.",
+        "Vận dụng: Giải bài toán thực tiễn về bình khí nén y tế, lốp xe ô tô khi thay đổi nhiệt độ môi trường."
+      ]
+    },
+    {
+      "id": "unit_3",
+      "topic": "Chương 3: Từ trường (Lực từ F = B.I.L.sinα, Cảm ứng từ, Từ thông Φ = B.S.cosα và Cảm ứng điện từ)",
+      "unit": "Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ",
+      "outcomes": {
+        "Biết": "Nhận biết đường sức từ, quy tắc bàn tay trái và công thức lực từ F = B.I.L.sin(α).",
+        "Hiểu": "Tính độ lớn lực từ và từ thông gửi qua khung dây dẫn.",
+        "Vận dụng": "Tính suất điện động cảm ứng trong khung dây máy phát điện xoay chiều."
+      },
+      "keyFacts": [
+        "Biết: Nhận biết đường sức từ, quy tắc bàn tay trái và công thức lực từ F = B.I.L.sin(α).",
+        "Hiểu: Tính độ lớn lực từ và từ thông gửi qua khung dây dẫn.",
+        "Vận dụng: Tính suất điện động cảm ứng trong khung dây máy phát điện xoay chiều."
+      ]
+    }
+  ],
+  "matrix": {
+    "levels": [
+      "Biết",
+      "Hiểu",
+      "Vận dụng"
+    ],
+    "questionTypes": [
+      "MCQ",
+      "TF",
+      "SA",
+      "ESSAY"
+    ],
+    "pointRules": {
+      "MCQ": 0.25,
+      "TF": 0.25,
+      "SA": 0.5,
+      "ESSAY": 1
+    },
+    "rows": [
+      {
+        "id": "row_1",
+        "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+        "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+        "counts": {
+          "MCQ": {
+            "Biết": 4,
+            "Hiểu": 1,
+            "Vận dụng": 0
+          },
+          "TF": {
+            "Biết": 3,
+            "Hiểu": 3,
+            "Vận dụng": 2
+          },
+          "SA": {
+            "Biết": 0,
+            "Hiểu": 1,
+            "Vận dụng": 1
+          },
+          "ESSAY": {
+            "Biết": 0,
+            "Hiểu": 0,
+            "Vận dụng": 0
+          }
+        },
+        "points": 4.25
+      },
+      {
+        "id": "row_2",
+        "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+        "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+        "counts": {
+          "MCQ": {
+            "Biết": 3,
+            "Hiểu": 2,
+            "Vận dụng": 0
+          },
+          "TF": {
+            "Biết": 2,
+            "Hiểu": 1,
+            "Vận dụng": 1
+          },
+          "SA": {
+            "Biết": 0,
+            "Hiểu": 1,
+            "Vận dụng": 1
+          },
+          "ESSAY": {
+            "Biết": 0,
+            "Hiểu": 0,
+            "Vận dụng": 0
+          }
+        },
+        "points": 3.25
+      },
+      {
+        "id": "row_3",
+        "topic": "Chương 3: Từ trường (Lực từ F = B.I.L.sinα, Cảm ứng từ, Từ thông Φ = B.S.cosα và Cảm ứng điện từ)",
+        "unit": "Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ",
+        "counts": {
+          "MCQ": {
+            "Biết": 1,
+            "Hiểu": 1,
+            "Vận dụng": 0
+          },
+          "TF": {
+            "Biết": 2,
+            "Hiểu": 1,
+            "Vận dụng": 1
+          },
+          "SA": {
+            "Biết": 0,
+            "Hiểu": 1,
+            "Vận dụng": 1
+          },
+          "ESSAY": {
+            "Biết": 0,
+            "Hiểu": 0,
+            "Vận dụng": 0
+          }
+        },
+        "points": 2.5
+      }
+    ]
+  },
+  "specification": [
+    {
+      "rowId": "row_1",
+      "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+      "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+      "outcomes": {
+        "Biết": "Nêu được mô hình động học phân tử, công thức chuyển đổi nhiệt độ Celsius và Kelvin, công thức Q = m.c.Δt và Q = λ.m.",
+        "Hiểu": "Xác định dấu của A và Q trong biểu thức ΔU = A + Q; tính nhiệt lượng cần cung cấp để đun nóng hoặc làm nóng chảy vật.",
+        "Vận dụng": "Giải bài toán cân bằng nhiệt và hiệu suất ấm đun nước điện trong thực tế."
+      },
+      "questionRefs": {
+        "MCQ": [
+          "C1",
+          "C2",
+          "C3",
+          "C4",
+          "C5"
+        ],
+        "TF": [
+          "ĐS1a",
+          "ĐS1b",
+          "ĐS1c",
+          "ĐS1d",
+          "ĐS2a",
+          "ĐS2b",
+          "ĐS2c",
+          "ĐS2d"
+        ],
+        "SA": [
+          "TLN1",
+          "TLN2"
+        ],
+        "ESSAY": []
+      }
+    },
+    {
+      "rowId": "row_2",
+      "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+      "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+      "outcomes": {
+        "Biết": "Phát biểu được định luật Boyle, định luật Charles và viết được phương trình trạng thái khí lí tưởng pV/T = hằng số.",
+        "Hiểu": "Tính áp suất, thể tích hoặc nhiệt độ tuyệt đối của khối khí khi biến đổi trạng thái.",
+        "Vận dụng": "Giải bài toán thực tiễn về bình khí nén y tế, lốp xe ô tô khi thay đổi nhiệt độ môi trường."
+      },
+      "questionRefs": {
+        "MCQ": [
+          "C6",
+          "C7",
+          "C8",
+          "C9",
+          "C10"
+        ],
+        "TF": [
+          "ĐS3a",
+          "ĐS3b",
+          "ĐS3c",
+          "ĐS3d"
+        ],
+        "SA": [
+          "TLN3",
+          "TLN4"
+        ],
+        "ESSAY": []
+      }
+    },
+    {
+      "rowId": "row_3",
+      "topic": "Chương 3: Từ trường (Lực từ F = B.I.L.sinα, Cảm ứng từ, Từ thông Φ = B.S.cosα và Cảm ứng điện từ)",
+      "unit": "Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ",
+      "outcomes": {
+        "Biết": "Nhận biết đường sức từ, quy tắc bàn tay trái và công thức lực từ F = B.I.L.sin(α).",
+        "Hiểu": "Tính độ lớn lực từ và từ thông gửi qua khung dây dẫn.",
+        "Vận dụng": "Tính suất điện động cảm ứng trong khung dây máy phát điện xoay chiều."
+      },
+      "questionRefs": {
+        "MCQ": [
+          "C11",
+          "C12"
+        ],
+        "TF": [
+          "ĐS4a",
+          "ĐS4b",
+          "ĐS4c",
+          "ĐS4d"
+        ],
+        "SA": [
+          "TLN5",
+          "TLN6"
+        ],
+        "ESSAY": []
+      }
+    }
+  ],
+  "questions": [
+    {
+      "rowId": "row_1",
+      "level": "Biết",
+      "stem": "Công thức chuyển đổi nhiệt độ từ thang Celsius (°C) sang thang nhiệt độ tuyệt đối Kelvin (K) là:",
+      "options": [
+        "T(K) = 273 × t(°C)",
+        "T(K) = t(°C) + 273",
+        "T(K) = t(°C) / 273",
+        "T(K) = t(°C) - 273"
+      ],
+      "answer": "B",
+      "explanation": "Thang nhiệt độ Kelvin liên hệ với Celsius theo hệ thức chuẩn T(K) = t(°C) + 273.",
+      "id": "q_mcq_1",
+      "type": "MCQ",
+      "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+      "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+      "points": 0.25,
+      "matrixRef": "C1 [Dòng 1 - Biết]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Biết",
+      "stem": "Biểu thức của Định luật I Nhiệt động lực học là:",
+      "options": [
+        "ΔU = A × Q",
+        "U = A - Q",
+        "ΔU = A + Q",
+        "ΔU = A / Q"
+      ],
+      "answer": "C",
+      "explanation": "Độ biến thiên nội năng của vật bằng tổng công A và nhiệt lượng Q mà vật nhận được: ΔU = A + Q.",
+      "id": "q_mcq_2",
+      "type": "MCQ",
+      "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+      "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+      "points": 0.25,
+      "matrixRef": "C2 [Dòng 1 - Biết]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Biết",
+      "stem": "Đơn vị của nhiệt dung riêng c trong hệ SI là:",
+      "options": [
+        "W/m^2",
+        "J·K",
+        "J/(kg·K)",
+        "J/kg"
+      ],
+      "answer": "C",
+      "explanation": "Từ Q = m·c·ΔT ⇒ c = Q/(m·ΔT) có đơn vị là J/(kg·K).",
+      "id": "q_mcq_3",
+      "type": "MCQ",
+      "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+      "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+      "points": 0.25,
+      "matrixRef": "C3 [Dòng 1 - Biết]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Biết",
+      "stem": "Nhiệt lượng Q cần cung cấp để làm nóng chảy hoàn toàn một khối chất rắn kết tinh có khối lượng m ở nhiệt độ nóng chảy được tính bằng công thức:",
+      "options": [
+        "Q = λ·m",
+        "Q = m/λ",
+        "Q = c·m",
+        "Q = λ/m"
+      ],
+      "answer": "A",
+      "explanation": "Q = λ·m, trong đó λ là nhiệt nóng chảy riêng (J/kg).",
+      "id": "q_mcq_4",
+      "type": "MCQ",
+      "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+      "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+      "points": 0.25,
+      "matrixRef": "C4 [Dòng 1 - Biết]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Hiểu",
+      "stem": "Một lượng khí nhận nhiệt lượng Q = 500 J và thực hiện một công có độ lớn 200 J (tức A = -200 J). Độ biến thiên nội năng ΔU của lượng khí bằng:",
+      "options": [
+        "-300 J",
+        "300 J",
+        "100 J",
+        "700 J"
+      ],
+      "answer": "B",
+      "explanation": "Theo Định luật I NĐLH: ΔU = A + Q = -200 + 500 = 300 J.",
+      "mathVerify": {
+        "expression": "-200 + 500",
+        "expected": 300
+      },
+      "id": "q_mcq_5",
+      "type": "MCQ",
+      "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+      "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+      "points": 0.25,
+      "matrixRef": "C5 [Dòng 1 - Hiểu]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Biết",
+      "stem": "Trong quá trình đẳng nhiệt của một lượng khí lí tưởng xác định, hệ thức của định luật Boyle là:",
+      "options": [
+        "p1/V1 = p2/V2",
+        "p1·T1 = p2·T2",
+        "p1·V1 = p2·V2",
+        "V1/T1 = V2/T2"
+      ],
+      "answer": "C",
+      "explanation": "Ở nhiệt độ không đổi (đẳng nhiệt), áp suất tỉ lệ nghịch với thể tích: p1·V1 = p2·V2.",
+      "id": "q_mcq_6",
+      "type": "MCQ",
+      "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+      "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+      "points": 0.25,
+      "matrixRef": "C6 [Dòng 2 - Biết]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Biết",
+      "stem": "Trong quá trình đẳng áp của một lượng khí lí tưởng xác định, thể tích V tỉ lệ thuận với:",
+      "options": [
+        "Bình phương áp suất p^2",
+        "Áp suất p",
+        "Nhiệt độ tuyệt đối T (K)",
+        "Khối lượng mol M"
+      ],
+      "answer": "C",
+      "explanation": "Theo định luật Charles: V/T = hằng số, nên V tỉ lệ thuận với nhiệt độ tuyệt đối T.",
+      "id": "q_mcq_7",
+      "type": "MCQ",
+      "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+      "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+      "points": 0.25,
+      "matrixRef": "C7 [Dòng 2 - Biết]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Biết",
+      "stem": "Phương trình trạng thái của một lượng khí lí tưởng xác định là:",
+      "options": [
+        "p + V + T = hằng số",
+        "V·T / p = hằng số",
+        "p·V / T = hằng số",
+        "p·T / V = hằng số"
+      ],
+      "answer": "C",
+      "explanation": "Phương trình trạng thái khí lí tưởng: p1·V1 / T1 = p2·V2 / T2 = hằng số.",
+      "id": "q_mcq_8",
+      "type": "MCQ",
+      "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+      "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+      "points": 0.25,
+      "matrixRef": "C8 [Dòng 2 - Biết]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Hiểu",
+      "stem": "Một khối khí lí tưởng có thể tích 6 lít ở áp suất 2 atm. Nếu nén đẳng nhiệt khối khí đến khi áp suất bằng 4 atm thì thể tích của nó bằng:",
+      "options": [
+        "4 lít",
+        "8 lít",
+        "12 lít",
+        "3 lít"
+      ],
+      "answer": "D",
+      "explanation": "Áp dụng định luật Boyle: p1·V1 = p2·V2 ⇒ V2 = (2 × 6) / 4 = 3 (lít).",
+      "mathVerify": {
+        "expression": "(2 * 6) / 4",
+        "expected": 3
+      },
+      "id": "q_mcq_9",
+      "type": "MCQ",
+      "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+      "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+      "points": 0.25,
+      "matrixRef": "C9 [Dòng 2 - Hiểu]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Hiểu",
+      "stem": "Ở nhiệt độ 27°C, một lượng khí ở áp suất không đổi có thể tích 3 lít. Khi đun nóng đẳng áp lượng khí đó đến nhiệt độ 327°C thì thể tích khí là:",
+      "options": [
+        "6 lít",
+        "4,5 lít",
+        "1,5 lít",
+        "9 lít"
+      ],
+      "answer": "A",
+      "explanation": "T1 = 27 + 273 = 300 K; T2 = 327 + 273 = 600 K. Đẳng áp: V2 = V1 × (T2/T1) = 3 × (600/300) = 6 (lít).",
+      "mathVerify": {
+        "expression": "3 * ((327 + 273) / (27 + 273))",
+        "expected": 6
+      },
+      "id": "q_mcq_10",
+      "type": "MCQ",
+      "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+      "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+      "points": 0.25,
+      "matrixRef": "C10 [Dòng 2 - Hiểu]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Biết",
+      "stem": "Độ lớn lực từ F tác dụng lên đoạn dây dẫn thẳng chiều dài L mang dòng điện cường độ I đặt trong từ trường đều có cảm ứng từ B (hợp với dây dẫn góc α) được tính bởi:",
+      "options": [
+        "F = B·L / I",
+        "F = B·I / L",
+        "F = B·I·L·cos(α)",
+        "F = B·I·L·sin(α)"
+      ],
+      "answer": "D",
+      "explanation": "Công thức lực từ Ampere: F = B·I·L·sin(α).",
+      "id": "q_mcq_11",
+      "type": "MCQ",
+      "topic": "Chương 3: Từ trường (Lực từ F = B.I.L.sinα, Cảm ứng từ, Từ thông Φ = B.S.cosα và Cảm ứng điện từ)",
+      "unit": "Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ",
+      "points": 0.25,
+      "matrixRef": "C11 [Dòng 3 - Biết]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Hiểu",
+      "stem": "Một đoạn dây dẫn thẳng dài L = 0,5 m mang dòng điện I = 4 A đặt vuông góc với các đường sức từ (α = 90°) của một từ trường đều có cảm ứng từ B = 0,2 T. Độ lớn lực từ tác dụng lên đoạn dây bằng:",
+      "options": [
+        "0,8 N",
+        "0,2 N",
+        "0,4 N",
+        "2,0 N"
+      ],
+      "answer": "C",
+      "explanation": "F = B·I·L·sin(90°) = 0,2 × 4 × 0,5 × 1 = 0,4 N.",
+      "mathVerify": {
+        "expression": "0.2 * 4 * 0.5 * 1",
+        "expected": 0.4
+      },
+      "id": "q_mcq_12",
+      "type": "MCQ",
+      "topic": "Chương 3: Từ trường (Lực từ F = B.I.L.sinα, Cảm ứng từ, Từ thông Φ = B.S.cosα và Cảm ứng điện từ)",
+      "unit": "Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ",
+      "points": 0.25,
+      "matrixRef": "C12 [Dòng 3 - Hiểu]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Biết",
+      "stem": "Đun nóng m = 2 kg nước từ nhiệt độ ban đầu t1 = 20°C đến khi sôi ở t2 = 100°C. Biết nhiệt dung riêng của nước là c = 4 200 J/(kg·K). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+      "statements": [
+        {
+          "text": "Nhiệt độ ban đầu của nước trong thang Kelvin là T1 = 293 K.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Độ tăng nhiệt độ của nước là Δt = 80°C (tương ứng ΔT = 80 K).",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Trong quá trình đun nóng, nội năng của khối nước tăng lên do nhận nhiệt lượng.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "c",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Nhiệt lượng nước đã thu vào để tăng nhiệt độ từ 20°C lên 100°C là 672 kJ.",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "explanation": "a) Đúng (20 + 273 = 293 K); b) Đúng (100 - 20 = 80); c) Đúng; d) Đúng vì Q = m·c·Δt = 2 × 4200 × 80 = 672 000 J = 672 kJ.",
+      "mathVerify": {
+        "expression": "(2 * 4200 * 80) / 1000",
+        "expected": 672
+      },
+      "items": [
+        {
+          "text": "Nhiệt độ ban đầu của nước trong thang Kelvin là T1 = 293 K.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Độ tăng nhiệt độ của nước là Δt = 80°C (tương ứng ΔT = 80 K).",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Trong quá trình đun nóng, nội năng của khối nước tăng lên do nhận nhiệt lượng.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "c",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Nhiệt lượng nước đã thu vào để tăng nhiệt độ từ 20°C lên 100°C là 672 kJ.",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+      "isZeroHallucination": true,
+      "id": "q_tf_1",
+      "type": "TF",
+      "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+      "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+      "points": 1,
+      "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q]"
+    },
+    {
+      "id": "q_tf_2",
+      "type": "TF",
+      "rowId": "row_1",
+      "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+      "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+      "level": "Vận dụng",
+      "points": 1,
+      "matrixRef": "ĐS2(a,b,c,d) [Dòng 1: Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q]",
+      "stem": "Cho tình huống và kiến thức trọng tâm thuộc bài \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" (Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+      "statements": [
+        {
+          "text": "Khái niệm và tính chất cơ bản của \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" bị áp dụng sai điều kiện xác định ban đầu.",
+          "isTrue": false,
+          "level": "Biết"
+        },
+        {
+          "text": "Mọi trường hợp áp dụng \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" luôn tuân theo điều kiện ràng buộc của bài học.",
+          "isTrue": true,
+          "level": "Biết"
+        },
+        {
+          "text": "Khi áp dụng quy tắc trong \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\", kết quả suy luận luôn tuân theo hệ thức chuẩn của bài học.",
+          "isTrue": true,
+          "level": "Hiểu"
+        },
+        {
+          "text": "Có thể vận dụng trực tiếp kiến thức bài \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" trong mọi tình huống mà không cần xem xét giả thiết.",
+          "isTrue": false,
+          "level": "Vận dụng"
+        }
+      ],
+      "explanation": "Đối chiếu Bản đặc tả mục \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\": a) Sai; b) Đúng; c) Đúng; d) Sai."
+    },
+    {
+      "rowId": "row_2",
+      "level": "Hiểu",
+      "stem": "Một bình kín có dung tích không đổi V = 10 lít chứa khí lí tưởng ở nhiệt độ t1 = 27°C và áp suất p1 = 2 atm. Sau đó bình được đun nóng đến nhiệt độ t2 = 177°C. Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+      "statements": [
+        {
+          "text": "Quá trình biến đổi trạng thái của khí trong bình kín dung tích không đổi là quá trình đẳng tích.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Nhiệt độ tuyệt đối ở trạng thái đầu và trạng thái sau lần lượt là T1 = 300 K và T2 = 450 K.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Khi nhiệt độ tăng, động năng tịnh tiến trung bình của các phân tử khí giảm xuống.",
+          "isTrue": false,
+          "level": "Hiểu",
+          "letter": "c",
+          "answer": "Sai"
+        },
+        {
+          "text": "Áp suất của khí trong bình ở nhiệt độ 177°C bằng 3 atm.",
+          "isTrue": true,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "explanation": "a) Đúng; b) Đúng (27+273=300K, 177+273=450K); c) Sai (nhiệt độ tăng thì động năng trung bình E_đ = 3/2 kT tăng); d) Đúng vì đẳng tích p2 = p1 × (T2/T1) = 2 × (450/300) = 3 atm.",
+      "mathVerify": {
+        "expression": "2 * (450 / 300)",
+        "expected": 3
+      },
+      "items": [
+        {
+          "text": "Quá trình biến đổi trạng thái của khí trong bình kín dung tích không đổi là quá trình đẳng tích.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Nhiệt độ tuyệt đối ở trạng thái đầu và trạng thái sau lần lượt là T1 = 300 K và T2 = 450 K.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Khi nhiệt độ tăng, động năng tịnh tiến trung bình của các phân tử khí giảm xuống.",
+          "isTrue": false,
+          "level": "Hiểu",
+          "letter": "c",
+          "answer": "Sai"
+        },
+        {
+          "text": "Áp suất của khí trong bình ở nhiệt độ 177°C bằng 3 atm.",
+          "isTrue": true,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+      "isZeroHallucination": true,
+      "id": "q_tf_3",
+      "type": "TF",
+      "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+      "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+      "points": 1,
+      "matrixRef": "ĐS3(a,b,c,d) [Dòng 2: Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Hiểu",
+      "stem": "Một khung dây dẫn phẳng gồm N = 100 vòng dây, diện tích mỗi vòng S = 0,02 m^2 đặt trong từ trường đều có vectơ cảm ứng từ B vuông góc với mặt phẳng khung dây (α = 0°). Trong khoảng thời gian Δt = 0,2 s, độ lớn cảm ứng từ giảm đều từ B1 = 0,5 T về B2 = 0,1 T. Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+      "statements": [
+        {
+          "text": "Từ thông qua một vòng dây được tính bằng công thức Φ = B·S·cos(α).",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Từ thông ban đầu qua toàn bộ khung dây (N vòng) là Φ1 = N·B1·S = 1,0 Wb.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Từ thông lúc sau qua toàn bộ khung dây là Φ2 = N·B2·S = 0,5 Wb.",
+          "isTrue": false,
+          "level": "Hiểu",
+          "letter": "c",
+          "answer": "Sai"
+        },
+        {
+          "text": "Độ lớn suất điện động cảm ứng xuất hiện trong khung dây trong thời gian Δt = 0,2 s bằng 4 V.",
+          "isTrue": true,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "explanation": "a) Đúng; b) Đúng (100 × 0,5 × 0,02 = 1,0 Wb); c) Sai (100 × 0,1 × 0,02 = 0,2 Wb ≠ 0,5 Wb); d) Đúng vì |e_c| = |ΔΦ/Δt| = (1,0 - 0,2) / 0,2 = 4 V.",
+      "mathVerify": {
+        "expression": "(1.0 - 0.2) / 0.2",
+        "expected": 4
+      },
+      "items": [
+        {
+          "text": "Từ thông qua một vòng dây được tính bằng công thức Φ = B·S·cos(α).",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Từ thông ban đầu qua toàn bộ khung dây (N vòng) là Φ1 = N·B1·S = 1,0 Wb.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Từ thông lúc sau qua toàn bộ khung dây là Φ2 = N·B2·S = 0,5 Wb.",
+          "isTrue": false,
+          "level": "Hiểu",
+          "letter": "c",
+          "answer": "Sai"
+        },
+        {
+          "text": "Độ lớn suất điện động cảm ứng xuất hiện trong khung dây trong thời gian Δt = 0,2 s bằng 4 V.",
+          "isTrue": true,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+      "isZeroHallucination": true,
+      "id": "q_tf_4",
+      "type": "TF",
+      "topic": "Chương 3: Từ trường (Lực từ F = B.I.L.sinα, Cảm ứng từ, Từ thông Φ = B.S.cosα và Cảm ứng điện từ)",
+      "unit": "Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ",
+      "points": 1,
+      "matrixRef": "ĐS4(a,b,c,d) [Dòng 3: Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Hiểu",
+      "stem": "Nhiệt độ của một vật là 37°C thì tương ứng bằng bao nhiêu Kelvin (K) (lấy T(K) = t(°C) + 273)?",
+      "answer": "310",
+      "explanation": "T = 37 + 273 = 310 (K).",
+      "mathVerify": {
+        "expression": "37 + 273",
+        "expected": 310
+      },
+      "id": "q_sa_1",
+      "type": "SA",
+      "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+      "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+      "points": 0.5,
+      "matrixRef": "TLN1 [Dòng 1 - Hiểu]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Vận dụng",
+      "stem": "Một ấm điện có công suất P = 1 000 W đun nước với hiệu suất H = 84%. Biết nhiệt lượng cần thiết để đun sôi lượng nước trong ấm là Q_ích = 336 000 J. Thời gian đun sôi nước bằng bao nhiêu giây (s)?",
+      "answer": "400",
+      "explanation": "Điện năng toàn phần A_tp = Q_ích / H = 336 000 / 0,84 = 400 000 (J). Thời gian t = A_tp / P = 400 000 / 1 000 = 400 (s).",
+      "mathVerify": {
+        "expression": "(336000 / 0.84) / 1000",
+        "expected": 400
+      },
+      "id": "q_sa_2",
+      "type": "SA",
+      "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+      "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+      "points": 0.5,
+      "matrixRef": "TLN2 [Dòng 1 - Vận dụng]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Hiểu",
+      "stem": "Một xilanh chứa 12 lít khí ở áp suất 1,5 atm. Nếu nén đẳng nhiệt để thể tích khí giảm còn 4 lít thì áp suất khí trong xilanh bằng bao nhiêu atm?",
+      "answer": "4.5",
+      "explanation": "Theo định luật Boyle: p2 = (p1 × V1) / V2 = (1,5 × 12) / 4 = 4,5 (atm).",
+      "mathVerify": {
+        "expression": "(1.5 * 12) / 4",
+        "expected": 4.5
+      },
+      "id": "q_sa_3",
+      "type": "SA",
+      "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+      "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+      "points": 0.5,
+      "matrixRef": "TLN3 [Dòng 2 - Hiểu]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Vận dụng",
+      "stem": "Một bình chứa n = 2 mol khí lí tưởng ở nhiệt độ tuyệt đối T = 300 K. Lấy hằng số khí R = 8,31 J/(mol·K). Nếu thể tích bình là V = 0,05 m^3 thì áp suất p của khí trong bình bằng bao nhiêu kPa (làm tròn đến hàng phần mười)?",
+      "answer": "99.7",
+      "explanation": "p = n·R·T / V = (2 × 8,31 × 300) / 0,05 = 99 720 Pa ≈ 99,7 kPa.",
+      "mathVerify": {
+        "expression": "round(((2 * 8.31 * 300) / 0.05) / 100) / 10",
+        "expected": 99.7
+      },
+      "id": "q_sa_4",
+      "type": "SA",
+      "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+      "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+      "points": 0.5,
+      "matrixRef": "TLN4 [Dòng 2 - Vận dụng]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Hiểu",
+      "stem": "Một đoạn dây dẫn dài L = 0,8 m có dòng điện I = 5 A chạy qua, đặt vuông góc với đường sức từ của một từ trường đều có B = 0,5 T. Lực từ tác dụng lên đoạn dây có độ lớn bằng bao nhiêu Newton (N)?",
+      "answer": "2",
+      "explanation": "F = B·I·L = 0,5 × 5 × 0,8 = 2 (N).",
+      "mathVerify": {
+        "expression": "0.5 * 5 * 0.8",
+        "expected": 2
+      },
+      "id": "q_sa_5",
+      "type": "SA",
+      "topic": "Chương 3: Từ trường (Lực từ F = B.I.L.sinα, Cảm ứng từ, Từ thông Φ = B.S.cosα và Cảm ứng điện từ)",
+      "unit": "Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ",
+      "points": 0.5,
+      "matrixRef": "TLN5 [Dòng 3 - Hiểu]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Vận dụng",
+      "stem": "Từ thông qua một mạch kín biến thiên đều một lượng ΔΦ = 0,6 Wb trong khoảng thời gian Δt = 0,15 s. Độ lớn suất điện động cảm ứng trong mạch bằng bao nhiêu Vôn (V)?",
+      "answer": "4",
+      "explanation": "|e_c| = ΔΦ / Δt = 0,6 / 0,15 = 4 (V).",
+      "mathVerify": {
+        "expression": "0.6 / 0.15",
+        "expected": 4
+      },
+      "id": "q_sa_6",
+      "type": "SA",
+      "topic": "Chương 3: Từ trường (Lực từ F = B.I.L.sinα, Cảm ứng từ, Từ thông Φ = B.S.cosα và Cảm ứng điện từ)",
+      "unit": "Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ",
+      "points": 0.5,
+      "matrixRef": "TLN6 [Dòng 3 - Vận dụng]"
+    }
+  ],
+  "variants": [
+    {
+      "code": "101",
+      "questions": [
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Công thức chuyển đổi nhiệt độ từ thang Celsius (°C) sang thang nhiệt độ tuyệt đối Kelvin (K) là:",
+          "options": [
+            "T(K) = 273 × t(°C)",
+            "T(K) = t(°C) + 273",
+            "T(K) = t(°C) / 273",
+            "T(K) = t(°C) - 273"
+          ],
+          "answer": "B",
+          "explanation": "Thang nhiệt độ Kelvin liên hệ với Celsius theo hệ thức chuẩn T(K) = t(°C) + 273.",
+          "id": "q_mcq_1",
+          "type": "MCQ",
+          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+          "points": 0.25,
+          "matrixRef": "C1 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Biểu thức của Định luật I Nhiệt động lực học là:",
+          "options": [
+            "ΔU = A × Q",
+            "U = A - Q",
+            "ΔU = A + Q",
+            "ΔU = A / Q"
+          ],
+          "answer": "C",
+          "explanation": "Độ biến thiên nội năng của vật bằng tổng công A và nhiệt lượng Q mà vật nhận được: ΔU = A + Q.",
+          "id": "q_mcq_2",
+          "type": "MCQ",
+          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+          "points": 0.25,
+          "matrixRef": "C2 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Đơn vị của nhiệt dung riêng c trong hệ SI là:",
+          "options": [
+            "W/m^2",
+            "J·K",
+            "J/(kg·K)",
+            "J/kg"
+          ],
+          "answer": "C",
+          "explanation": "Từ Q = m·c·ΔT ⇒ c = Q/(m·ΔT) có đơn vị là J/(kg·K).",
+          "id": "q_mcq_3",
+          "type": "MCQ",
+          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+          "points": 0.25,
+          "matrixRef": "C3 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Nhiệt lượng Q cần cung cấp để làm nóng chảy hoàn toàn một khối chất rắn kết tinh có khối lượng m ở nhiệt độ nóng chảy được tính bằng công thức:",
+          "options": [
+            "Q = λ·m",
+            "Q = m/λ",
+            "Q = c·m",
+            "Q = λ/m"
+          ],
+          "answer": "A",
+          "explanation": "Q = λ·m, trong đó λ là nhiệt nóng chảy riêng (J/kg).",
+          "id": "q_mcq_4",
+          "type": "MCQ",
+          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+          "points": 0.25,
+          "matrixRef": "C4 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Một lượng khí nhận nhiệt lượng Q = 500 J và thực hiện một công có độ lớn 200 J (tức A = -200 J). Độ biến thiên nội năng ΔU của lượng khí bằng:",
+          "options": [
+            "-300 J",
+            "300 J",
+            "100 J",
+            "700 J"
+          ],
+          "answer": "B",
+          "explanation": "Theo Định luật I NĐLH: ΔU = A + Q = -200 + 500 = 300 J.",
+          "mathVerify": {
+            "expression": "-200 + 500",
+            "expected": 300
+          },
+          "id": "q_mcq_5",
+          "type": "MCQ",
+          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+          "points": 0.25,
+          "matrixRef": "C5 [Dòng 1 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Trong quá trình đẳng nhiệt của một lượng khí lí tưởng xác định, hệ thức của định luật Boyle là:",
+          "options": [
+            "p1/V1 = p2/V2",
+            "p1·T1 = p2·T2",
+            "p1·V1 = p2·V2",
+            "V1/T1 = V2/T2"
+          ],
+          "answer": "C",
+          "explanation": "Ở nhiệt độ không đổi (đẳng nhiệt), áp suất tỉ lệ nghịch với thể tích: p1·V1 = p2·V2.",
+          "id": "q_mcq_6",
+          "type": "MCQ",
+          "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+          "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+          "points": 0.25,
+          "matrixRef": "C6 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Trong quá trình đẳng áp của một lượng khí lí tưởng xác định, thể tích V tỉ lệ thuận với:",
+          "options": [
+            "Bình phương áp suất p^2",
+            "Áp suất p",
+            "Nhiệt độ tuyệt đối T (K)",
+            "Khối lượng mol M"
+          ],
+          "answer": "C",
+          "explanation": "Theo định luật Charles: V/T = hằng số, nên V tỉ lệ thuận với nhiệt độ tuyệt đối T.",
+          "id": "q_mcq_7",
+          "type": "MCQ",
+          "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+          "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+          "points": 0.25,
+          "matrixRef": "C7 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Phương trình trạng thái của một lượng khí lí tưởng xác định là:",
+          "options": [
+            "p + V + T = hằng số",
+            "V·T / p = hằng số",
+            "p·V / T = hằng số",
+            "p·T / V = hằng số"
+          ],
+          "answer": "C",
+          "explanation": "Phương trình trạng thái khí lí tưởng: p1·V1 / T1 = p2·V2 / T2 = hằng số.",
+          "id": "q_mcq_8",
+          "type": "MCQ",
+          "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+          "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+          "points": 0.25,
+          "matrixRef": "C8 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Một khối khí lí tưởng có thể tích 6 lít ở áp suất 2 atm. Nếu nén đẳng nhiệt khối khí đến khi áp suất bằng 4 atm thì thể tích của nó bằng:",
+          "options": [
+            "4 lít",
+            "8 lít",
+            "12 lít",
+            "3 lít"
+          ],
+          "answer": "D",
+          "explanation": "Áp dụng định luật Boyle: p1·V1 = p2·V2 ⇒ V2 = (2 × 6) / 4 = 3 (lít).",
+          "mathVerify": {
+            "expression": "(2 * 6) / 4",
+            "expected": 3
+          },
+          "id": "q_mcq_9",
+          "type": "MCQ",
+          "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+          "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+          "points": 0.25,
+          "matrixRef": "C9 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Ở nhiệt độ 27°C, một lượng khí ở áp suất không đổi có thể tích 3 lít. Khi đun nóng đẳng áp lượng khí đó đến nhiệt độ 327°C thì thể tích khí là:",
+          "options": [
+            "6 lít",
+            "4,5 lít",
+            "1,5 lít",
+            "9 lít"
+          ],
+          "answer": "A",
+          "explanation": "T1 = 27 + 273 = 300 K; T2 = 327 + 273 = 600 K. Đẳng áp: V2 = V1 × (T2/T1) = 3 × (600/300) = 6 (lít).",
+          "mathVerify": {
+            "expression": "3 * ((327 + 273) / (27 + 273))",
+            "expected": 6
+          },
+          "id": "q_mcq_10",
+          "type": "MCQ",
+          "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+          "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+          "points": 0.25,
+          "matrixRef": "C10 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Biết",
+          "stem": "Độ lớn lực từ F tác dụng lên đoạn dây dẫn thẳng chiều dài L mang dòng điện cường độ I đặt trong từ trường đều có cảm ứng từ B (hợp với dây dẫn góc α) được tính bởi:",
+          "options": [
+            "F = B·L / I",
+            "F = B·I / L",
+            "F = B·I·L·cos(α)",
+            "F = B·I·L·sin(α)"
+          ],
+          "answer": "D",
+          "explanation": "Công thức lực từ Ampere: F = B·I·L·sin(α).",
+          "id": "q_mcq_11",
+          "type": "MCQ",
+          "topic": "Chương 3: Từ trường (Lực từ F = B.I.L.sinα, Cảm ứng từ, Từ thông Φ = B.S.cosα và Cảm ứng điện từ)",
+          "unit": "Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ",
+          "points": 0.25,
+          "matrixRef": "C11 [Dòng 3 - Biết]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Một đoạn dây dẫn thẳng dài L = 0,5 m mang dòng điện I = 4 A đặt vuông góc với các đường sức từ (α = 90°) của một từ trường đều có cảm ứng từ B = 0,2 T. Độ lớn lực từ tác dụng lên đoạn dây bằng:",
+          "options": [
+            "0,8 N",
+            "0,2 N",
+            "0,4 N",
+            "2,0 N"
+          ],
+          "answer": "C",
+          "explanation": "F = B·I·L·sin(90°) = 0,2 × 4 × 0,5 × 1 = 0,4 N.",
+          "mathVerify": {
+            "expression": "0.2 * 4 * 0.5 * 1",
+            "expected": 0.4
+          },
+          "id": "q_mcq_12",
+          "type": "MCQ",
+          "topic": "Chương 3: Từ trường (Lực từ F = B.I.L.sinα, Cảm ứng từ, Từ thông Φ = B.S.cosα và Cảm ứng điện từ)",
+          "unit": "Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ",
+          "points": 0.25,
+          "matrixRef": "C12 [Dòng 3 - Hiểu]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Đun nóng m = 2 kg nước từ nhiệt độ ban đầu t1 = 20°C đến khi sôi ở t2 = 100°C. Biết nhiệt dung riêng của nước là c = 4 200 J/(kg·K). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "statements": [
+            {
+              "text": "Nhiệt độ ban đầu của nước trong thang Kelvin là T1 = 293 K.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Độ tăng nhiệt độ của nước là Δt = 80°C (tương ứng ΔT = 80 K).",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Trong quá trình đun nóng, nội năng của khối nước tăng lên do nhận nhiệt lượng.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Nhiệt lượng nước đã thu vào để tăng nhiệt độ từ 20°C lên 100°C là 672 kJ.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) Đúng (20 + 273 = 293 K); b) Đúng (100 - 20 = 80); c) Đúng; d) Đúng vì Q = m·c·Δt = 2 × 4200 × 80 = 672 000 J = 672 kJ.",
+          "mathVerify": {
+            "expression": "(2 * 4200 * 80) / 1000",
+            "expected": 672
+          },
+          "items": [
+            {
+              "text": "Nhiệt độ ban đầu của nước trong thang Kelvin là T1 = 293 K.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Độ tăng nhiệt độ của nước là Δt = 80°C (tương ứng ΔT = 80 K).",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Trong quá trình đun nóng, nội năng của khối nước tăng lên do nhận nhiệt lượng.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Nhiệt lượng nước đã thu vào để tăng nhiệt độ từ 20°C lên 100°C là 672 kJ.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_1",
+          "type": "TF",
+          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+          "points": 1,
+          "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q]"
+        },
+        {
+          "id": "q_tf_2",
+          "type": "TF",
+          "rowId": "row_1",
+          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+          "level": "Vận dụng",
+          "points": 1,
+          "matrixRef": "ĐS2(a,b,c,d) [Dòng 1: Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q]",
+          "stem": "Cho tình huống và kiến thức trọng tâm thuộc bài \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" (Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "statements": [
+            {
+              "text": "Khái niệm và tính chất cơ bản của \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" bị áp dụng sai điều kiện xác định ban đầu.",
+              "isTrue": false,
+              "level": "Biết"
+            },
+            {
+              "text": "Mọi trường hợp áp dụng \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" luôn tuân theo điều kiện ràng buộc của bài học.",
+              "isTrue": true,
+              "level": "Biết"
+            },
+            {
+              "text": "Khi áp dụng quy tắc trong \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\", kết quả suy luận luôn tuân theo hệ thức chuẩn của bài học.",
+              "isTrue": true,
+              "level": "Hiểu"
+            },
+            {
+              "text": "Có thể vận dụng trực tiếp kiến thức bài \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" trong mọi tình huống mà không cần xem xét giả thiết.",
+              "isTrue": false,
+              "level": "Vận dụng"
+            }
+          ],
+          "explanation": "Đối chiếu Bản đặc tả mục \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\": a) Sai; b) Đúng; c) Đúng; d) Sai."
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Một bình kín có dung tích không đổi V = 10 lít chứa khí lí tưởng ở nhiệt độ t1 = 27°C và áp suất p1 = 2 atm. Sau đó bình được đun nóng đến nhiệt độ t2 = 177°C. Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "statements": [
+            {
+              "text": "Quá trình biến đổi trạng thái của khí trong bình kín dung tích không đổi là quá trình đẳng tích.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Nhiệt độ tuyệt đối ở trạng thái đầu và trạng thái sau lần lượt là T1 = 300 K và T2 = 450 K.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Khi nhiệt độ tăng, động năng tịnh tiến trung bình của các phân tử khí giảm xuống.",
+              "isTrue": false,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Áp suất của khí trong bình ở nhiệt độ 177°C bằng 3 atm.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) Đúng; b) Đúng (27+273=300K, 177+273=450K); c) Sai (nhiệt độ tăng thì động năng trung bình E_đ = 3/2 kT tăng); d) Đúng vì đẳng tích p2 = p1 × (T2/T1) = 2 × (450/300) = 3 atm.",
+          "mathVerify": {
+            "expression": "2 * (450 / 300)",
+            "expected": 3
+          },
+          "items": [
+            {
+              "text": "Quá trình biến đổi trạng thái của khí trong bình kín dung tích không đổi là quá trình đẳng tích.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Nhiệt độ tuyệt đối ở trạng thái đầu và trạng thái sau lần lượt là T1 = 300 K và T2 = 450 K.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Khi nhiệt độ tăng, động năng tịnh tiến trung bình của các phân tử khí giảm xuống.",
+              "isTrue": false,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Áp suất của khí trong bình ở nhiệt độ 177°C bằng 3 atm.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_3",
+          "type": "TF",
+          "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+          "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+          "points": 1,
+          "matrixRef": "ĐS3(a,b,c,d) [Dòng 2: Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Một khung dây dẫn phẳng gồm N = 100 vòng dây, diện tích mỗi vòng S = 0,02 m^2 đặt trong từ trường đều có vectơ cảm ứng từ B vuông góc với mặt phẳng khung dây (α = 0°). Trong khoảng thời gian Δt = 0,2 s, độ lớn cảm ứng từ giảm đều từ B1 = 0,5 T về B2 = 0,1 T. Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "statements": [
+            {
+              "text": "Từ thông qua một vòng dây được tính bằng công thức Φ = B·S·cos(α).",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Từ thông ban đầu qua toàn bộ khung dây (N vòng) là Φ1 = N·B1·S = 1,0 Wb.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Từ thông lúc sau qua toàn bộ khung dây là Φ2 = N·B2·S = 0,5 Wb.",
+              "isTrue": false,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Độ lớn suất điện động cảm ứng xuất hiện trong khung dây trong thời gian Δt = 0,2 s bằng 4 V.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) Đúng; b) Đúng (100 × 0,5 × 0,02 = 1,0 Wb); c) Sai (100 × 0,1 × 0,02 = 0,2 Wb ≠ 0,5 Wb); d) Đúng vì |e_c| = |ΔΦ/Δt| = (1,0 - 0,2) / 0,2 = 4 V.",
+          "mathVerify": {
+            "expression": "(1.0 - 0.2) / 0.2",
+            "expected": 4
+          },
+          "items": [
+            {
+              "text": "Từ thông qua một vòng dây được tính bằng công thức Φ = B·S·cos(α).",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Từ thông ban đầu qua toàn bộ khung dây (N vòng) là Φ1 = N·B1·S = 1,0 Wb.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Từ thông lúc sau qua toàn bộ khung dây là Φ2 = N·B2·S = 0,5 Wb.",
+              "isTrue": false,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Độ lớn suất điện động cảm ứng xuất hiện trong khung dây trong thời gian Δt = 0,2 s bằng 4 V.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_4",
+          "type": "TF",
+          "topic": "Chương 3: Từ trường (Lực từ F = B.I.L.sinα, Cảm ứng từ, Từ thông Φ = B.S.cosα và Cảm ứng điện từ)",
+          "unit": "Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ",
+          "points": 1,
+          "matrixRef": "ĐS4(a,b,c,d) [Dòng 3: Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Nhiệt độ của một vật là 37°C thì tương ứng bằng bao nhiêu Kelvin (K) (lấy T(K) = t(°C) + 273)?",
+          "answer": "310",
+          "explanation": "T = 37 + 273 = 310 (K).",
+          "mathVerify": {
+            "expression": "37 + 273",
+            "expected": 310
+          },
+          "id": "q_sa_1",
+          "type": "SA",
+          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+          "points": 0.5,
+          "matrixRef": "TLN1 [Dòng 1 - Hiểu]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Vận dụng",
+          "stem": "Một ấm điện có công suất P = 1 000 W đun nước với hiệu suất H = 84%. Biết nhiệt lượng cần thiết để đun sôi lượng nước trong ấm là Q_ích = 336 000 J. Thời gian đun sôi nước bằng bao nhiêu giây (s)?",
+          "answer": "400",
+          "explanation": "Điện năng toàn phần A_tp = Q_ích / H = 336 000 / 0,84 = 400 000 (J). Thời gian t = A_tp / P = 400 000 / 1 000 = 400 (s).",
+          "mathVerify": {
+            "expression": "(336000 / 0.84) / 1000",
+            "expected": 400
+          },
+          "id": "q_sa_2",
+          "type": "SA",
+          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+          "points": 0.5,
+          "matrixRef": "TLN2 [Dòng 1 - Vận dụng]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Một xilanh chứa 12 lít khí ở áp suất 1,5 atm. Nếu nén đẳng nhiệt để thể tích khí giảm còn 4 lít thì áp suất khí trong xilanh bằng bao nhiêu atm?",
+          "answer": "4.5",
+          "explanation": "Theo định luật Boyle: p2 = (p1 × V1) / V2 = (1,5 × 12) / 4 = 4,5 (atm).",
+          "mathVerify": {
+            "expression": "(1.5 * 12) / 4",
+            "expected": 4.5
+          },
+          "id": "q_sa_3",
+          "type": "SA",
+          "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+          "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+          "points": 0.5,
+          "matrixRef": "TLN3 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Vận dụng",
+          "stem": "Một bình chứa n = 2 mol khí lí tưởng ở nhiệt độ tuyệt đối T = 300 K. Lấy hằng số khí R = 8,31 J/(mol·K). Nếu thể tích bình là V = 0,05 m^3 thì áp suất p của khí trong bình bằng bao nhiêu kPa (làm tròn đến hàng phần mười)?",
+          "answer": "99.7",
+          "explanation": "p = n·R·T / V = (2 × 8,31 × 300) / 0,05 = 99 720 Pa ≈ 99,7 kPa.",
+          "mathVerify": {
+            "expression": "round(((2 * 8.31 * 300) / 0.05) / 100) / 10",
+            "expected": 99.7
+          },
+          "id": "q_sa_4",
+          "type": "SA",
+          "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+          "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+          "points": 0.5,
+          "matrixRef": "TLN4 [Dòng 2 - Vận dụng]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Một đoạn dây dẫn dài L = 0,8 m có dòng điện I = 5 A chạy qua, đặt vuông góc với đường sức từ của một từ trường đều có B = 0,5 T. Lực từ tác dụng lên đoạn dây có độ lớn bằng bao nhiêu Newton (N)?",
+          "answer": "2",
+          "explanation": "F = B·I·L = 0,5 × 5 × 0,8 = 2 (N).",
+          "mathVerify": {
+            "expression": "0.5 * 5 * 0.8",
+            "expected": 2
+          },
+          "id": "q_sa_5",
+          "type": "SA",
+          "topic": "Chương 3: Từ trường (Lực từ F = B.I.L.sinα, Cảm ứng từ, Từ thông Φ = B.S.cosα và Cảm ứng điện từ)",
+          "unit": "Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ",
+          "points": 0.5,
+          "matrixRef": "TLN5 [Dòng 3 - Hiểu]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Vận dụng",
+          "stem": "Từ thông qua một mạch kín biến thiên đều một lượng ΔΦ = 0,6 Wb trong khoảng thời gian Δt = 0,15 s. Độ lớn suất điện động cảm ứng trong mạch bằng bao nhiêu Vôn (V)?",
+          "answer": "4",
+          "explanation": "|e_c| = ΔΦ / Δt = 0,6 / 0,15 = 4 (V).",
+          "mathVerify": {
+            "expression": "0.6 / 0.15",
+            "expected": 4
+          },
+          "id": "q_sa_6",
+          "type": "SA",
+          "topic": "Chương 3: Từ trường (Lực từ F = B.I.L.sinα, Cảm ứng từ, Từ thông Φ = B.S.cosα và Cảm ứng điện từ)",
+          "unit": "Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ",
+          "points": 0.5,
+          "matrixRef": "TLN6 [Dòng 3 - Vận dụng]"
+        }
+      ]
+    },
+    {
+      "code": "102",
+      "questions": [
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Một khối khí lí tưởng có thể tích 6 lít ở áp suất 2 atm. Nếu nén đẳng nhiệt khối khí đến khi áp suất bằng 4 atm thì thể tích của nó bằng:",
+          "options": [
+            "4 lít",
+            "3 lít",
+            "8 lít",
+            "12 lít"
+          ],
+          "answer": "B",
+          "explanation": "Áp dụng định luật Boyle: p1·V1 = p2·V2 ⇒ V2 = (2 × 6) / 4 = 3 (lít).",
+          "mathVerify": {
+            "expression": "(2 * 6) / 4",
+            "expected": 3
+          },
+          "id": "q_mcq_9",
+          "type": "MCQ",
+          "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+          "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+          "points": 0.25,
+          "matrixRef": "C9 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Công thức chuyển đổi nhiệt độ từ thang Celsius (°C) sang thang nhiệt độ tuyệt đối Kelvin (K) là:",
+          "options": [
+            "T(K) = t(°C) + 273",
+            "T(K) = t(°C) / 273",
+            "T(K) = 273 × t(°C)",
+            "T(K) = t(°C) - 273"
+          ],
+          "answer": "A",
+          "explanation": "Thang nhiệt độ Kelvin liên hệ với Celsius theo hệ thức chuẩn T(K) = t(°C) + 273.",
+          "id": "q_mcq_1",
+          "type": "MCQ",
+          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+          "points": 0.25,
+          "matrixRef": "C1 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Một đoạn dây dẫn thẳng dài L = 0,5 m mang dòng điện I = 4 A đặt vuông góc với các đường sức từ (α = 90°) của một từ trường đều có cảm ứng từ B = 0,2 T. Độ lớn lực từ tác dụng lên đoạn dây bằng:",
+          "options": [
+            "0,4 N",
+            "0,2 N",
+            "0,8 N",
+            "2,0 N"
+          ],
+          "answer": "A",
+          "explanation": "F = B·I·L·sin(90°) = 0,2 × 4 × 0,5 × 1 = 0,4 N.",
+          "mathVerify": {
+            "expression": "0.2 * 4 * 0.5 * 1",
+            "expected": 0.4
+          },
+          "id": "q_mcq_12",
+          "type": "MCQ",
+          "topic": "Chương 3: Từ trường (Lực từ F = B.I.L.sinα, Cảm ứng từ, Từ thông Φ = B.S.cosα và Cảm ứng điện từ)",
+          "unit": "Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ",
+          "points": 0.25,
+          "matrixRef": "C12 [Dòng 3 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Trong quá trình đẳng nhiệt của một lượng khí lí tưởng xác định, hệ thức của định luật Boyle là:",
+          "options": [
+            "V1/T1 = V2/T2",
+            "p1·V1 = p2·V2",
+            "p1/V1 = p2/V2",
+            "p1·T1 = p2·T2"
+          ],
+          "answer": "B",
+          "explanation": "Ở nhiệt độ không đổi (đẳng nhiệt), áp suất tỉ lệ nghịch với thể tích: p1·V1 = p2·V2.",
+          "id": "q_mcq_6",
+          "type": "MCQ",
+          "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+          "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+          "points": 0.25,
+          "matrixRef": "C6 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Biểu thức của Định luật I Nhiệt động lực học là:",
+          "options": [
+            "ΔU = A / Q",
+            "ΔU = A + Q",
+            "ΔU = A × Q",
+            "U = A - Q"
+          ],
+          "answer": "B",
+          "explanation": "Độ biến thiên nội năng của vật bằng tổng công A và nhiệt lượng Q mà vật nhận được: ΔU = A + Q.",
+          "id": "q_mcq_2",
+          "type": "MCQ",
+          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+          "points": 0.25,
+          "matrixRef": "C2 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Biết",
+          "stem": "Độ lớn lực từ F tác dụng lên đoạn dây dẫn thẳng chiều dài L mang dòng điện cường độ I đặt trong từ trường đều có cảm ứng từ B (hợp với dây dẫn góc α) được tính bởi:",
+          "options": [
+            "F = B·L / I",
+            "F = B·I·L·cos(α)",
+            "F = B·I / L",
+            "F = B·I·L·sin(α)"
+          ],
+          "answer": "D",
+          "explanation": "Công thức lực từ Ampere: F = B·I·L·sin(α).",
+          "id": "q_mcq_11",
+          "type": "MCQ",
+          "topic": "Chương 3: Từ trường (Lực từ F = B.I.L.sinα, Cảm ứng từ, Từ thông Φ = B.S.cosα và Cảm ứng điện từ)",
+          "unit": "Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ",
+          "points": 0.25,
+          "matrixRef": "C11 [Dòng 3 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Trong quá trình đẳng áp của một lượng khí lí tưởng xác định, thể tích V tỉ lệ thuận với:",
+          "options": [
+            "Khối lượng mol M",
+            "Nhiệt độ tuyệt đối T (K)",
+            "Bình phương áp suất p^2",
+            "Áp suất p"
+          ],
+          "answer": "B",
+          "explanation": "Theo định luật Charles: V/T = hằng số, nên V tỉ lệ thuận với nhiệt độ tuyệt đối T.",
+          "id": "q_mcq_7",
+          "type": "MCQ",
+          "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+          "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+          "points": 0.25,
+          "matrixRef": "C7 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Nhiệt lượng Q cần cung cấp để làm nóng chảy hoàn toàn một khối chất rắn kết tinh có khối lượng m ở nhiệt độ nóng chảy được tính bằng công thức:",
+          "options": [
+            "Q = m/λ",
+            "Q = λ/m",
+            "Q = λ·m",
+            "Q = c·m"
+          ],
+          "answer": "C",
+          "explanation": "Q = λ·m, trong đó λ là nhiệt nóng chảy riêng (J/kg).",
+          "id": "q_mcq_4",
+          "type": "MCQ",
+          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+          "points": 0.25,
+          "matrixRef": "C4 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Phương trình trạng thái của một lượng khí lí tưởng xác định là:",
+          "options": [
+            "V·T / p = hằng số",
+            "p·V / T = hằng số",
+            "p·T / V = hằng số",
+            "p + V + T = hằng số"
+          ],
+          "answer": "B",
+          "explanation": "Phương trình trạng thái khí lí tưởng: p1·V1 / T1 = p2·V2 / T2 = hằng số.",
+          "id": "q_mcq_8",
+          "type": "MCQ",
+          "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+          "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+          "points": 0.25,
+          "matrixRef": "C8 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Đơn vị của nhiệt dung riêng c trong hệ SI là:",
+          "options": [
+            "W/m^2",
+            "J/(kg·K)",
+            "J·K",
+            "J/kg"
+          ],
+          "answer": "B",
+          "explanation": "Từ Q = m·c·ΔT ⇒ c = Q/(m·ΔT) có đơn vị là J/(kg·K).",
+          "id": "q_mcq_3",
+          "type": "MCQ",
+          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+          "points": 0.25,
+          "matrixRef": "C3 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Ở nhiệt độ 27°C, một lượng khí ở áp suất không đổi có thể tích 3 lít. Khi đun nóng đẳng áp lượng khí đó đến nhiệt độ 327°C thì thể tích khí là:",
+          "options": [
+            "4,5 lít",
+            "9 lít",
+            "6 lít",
+            "1,5 lít"
+          ],
+          "answer": "C",
+          "explanation": "T1 = 27 + 273 = 300 K; T2 = 327 + 273 = 600 K. Đẳng áp: V2 = V1 × (T2/T1) = 3 × (600/300) = 6 (lít).",
+          "mathVerify": {
+            "expression": "3 * ((327 + 273) / (27 + 273))",
+            "expected": 6
+          },
+          "id": "q_mcq_10",
+          "type": "MCQ",
+          "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+          "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+          "points": 0.25,
+          "matrixRef": "C10 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Một lượng khí nhận nhiệt lượng Q = 500 J và thực hiện một công có độ lớn 200 J (tức A = -200 J). Độ biến thiên nội năng ΔU của lượng khí bằng:",
+          "options": [
+            "300 J",
+            "-300 J",
+            "100 J",
+            "700 J"
+          ],
+          "answer": "A",
+          "explanation": "Theo Định luật I NĐLH: ΔU = A + Q = -200 + 500 = 300 J.",
+          "mathVerify": {
+            "expression": "-200 + 500",
+            "expected": 300
+          },
+          "id": "q_mcq_5",
+          "type": "MCQ",
+          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+          "points": 0.25,
+          "matrixRef": "C5 [Dòng 1 - Hiểu]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Đun nóng m = 2 kg nước từ nhiệt độ ban đầu t1 = 20°C đến khi sôi ở t2 = 100°C. Biết nhiệt dung riêng của nước là c = 4 200 J/(kg·K). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "statements": [
+            {
+              "text": "Nhiệt độ ban đầu của nước trong thang Kelvin là T1 = 293 K.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Độ tăng nhiệt độ của nước là Δt = 80°C (tương ứng ΔT = 80 K).",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Trong quá trình đun nóng, nội năng của khối nước tăng lên do nhận nhiệt lượng.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Nhiệt lượng nước đã thu vào để tăng nhiệt độ từ 20°C lên 100°C là 672 kJ.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) Đúng (20 + 273 = 293 K); b) Đúng (100 - 20 = 80); c) Đúng; d) Đúng vì Q = m·c·Δt = 2 × 4200 × 80 = 672 000 J = 672 kJ.",
+          "mathVerify": {
+            "expression": "(2 * 4200 * 80) / 1000",
+            "expected": 672
+          },
+          "items": [
+            {
+              "text": "Nhiệt độ ban đầu của nước trong thang Kelvin là T1 = 293 K.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Độ tăng nhiệt độ của nước là Δt = 80°C (tương ứng ΔT = 80 K).",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Trong quá trình đun nóng, nội năng của khối nước tăng lên do nhận nhiệt lượng.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Nhiệt lượng nước đã thu vào để tăng nhiệt độ từ 20°C lên 100°C là 672 kJ.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_1",
+          "type": "TF",
+          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+          "points": 1,
+          "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q]"
+        },
+        {
+          "id": "q_tf_2",
+          "type": "TF",
+          "rowId": "row_1",
+          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+          "level": "Vận dụng",
+          "points": 1,
+          "matrixRef": "ĐS2(a,b,c,d) [Dòng 1: Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q]",
+          "stem": "Cho tình huống và kiến thức trọng tâm thuộc bài \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" (Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "statements": [
+            {
+              "text": "Khái niệm và tính chất cơ bản của \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" bị áp dụng sai điều kiện xác định ban đầu.",
+              "isTrue": false,
+              "level": "Biết"
+            },
+            {
+              "text": "Mọi trường hợp áp dụng \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" luôn tuân theo điều kiện ràng buộc của bài học.",
+              "isTrue": true,
+              "level": "Biết"
+            },
+            {
+              "text": "Khi áp dụng quy tắc trong \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\", kết quả suy luận luôn tuân theo hệ thức chuẩn của bài học.",
+              "isTrue": true,
+              "level": "Hiểu"
+            },
+            {
+              "text": "Có thể vận dụng trực tiếp kiến thức bài \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\" trong mọi tình huống mà không cần xem xét giả thiết.",
+              "isTrue": false,
+              "level": "Vận dụng"
+            }
+          ],
+          "explanation": "Đối chiếu Bản đặc tả mục \"Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q\": a) Sai; b) Đúng; c) Đúng; d) Sai."
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Một bình kín có dung tích không đổi V = 10 lít chứa khí lí tưởng ở nhiệt độ t1 = 27°C và áp suất p1 = 2 atm. Sau đó bình được đun nóng đến nhiệt độ t2 = 177°C. Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "statements": [
+            {
+              "text": "Quá trình biến đổi trạng thái của khí trong bình kín dung tích không đổi là quá trình đẳng tích.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Nhiệt độ tuyệt đối ở trạng thái đầu và trạng thái sau lần lượt là T1 = 300 K và T2 = 450 K.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Khi nhiệt độ tăng, động năng tịnh tiến trung bình của các phân tử khí giảm xuống.",
+              "isTrue": false,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Áp suất của khí trong bình ở nhiệt độ 177°C bằng 3 atm.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) Đúng; b) Đúng (27+273=300K, 177+273=450K); c) Sai (nhiệt độ tăng thì động năng trung bình E_đ = 3/2 kT tăng); d) Đúng vì đẳng tích p2 = p1 × (T2/T1) = 2 × (450/300) = 3 atm.",
+          "mathVerify": {
+            "expression": "2 * (450 / 300)",
+            "expected": 3
+          },
+          "items": [
+            {
+              "text": "Quá trình biến đổi trạng thái của khí trong bình kín dung tích không đổi là quá trình đẳng tích.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Nhiệt độ tuyệt đối ở trạng thái đầu và trạng thái sau lần lượt là T1 = 300 K và T2 = 450 K.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Khi nhiệt độ tăng, động năng tịnh tiến trung bình của các phân tử khí giảm xuống.",
+              "isTrue": false,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Áp suất của khí trong bình ở nhiệt độ 177°C bằng 3 atm.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_3",
+          "type": "TF",
+          "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+          "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+          "points": 1,
+          "matrixRef": "ĐS3(a,b,c,d) [Dòng 2: Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Một khung dây dẫn phẳng gồm N = 100 vòng dây, diện tích mỗi vòng S = 0,02 m^2 đặt trong từ trường đều có vectơ cảm ứng từ B vuông góc với mặt phẳng khung dây (α = 0°). Trong khoảng thời gian Δt = 0,2 s, độ lớn cảm ứng từ giảm đều từ B1 = 0,5 T về B2 = 0,1 T. Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "statements": [
+            {
+              "text": "Từ thông qua một vòng dây được tính bằng công thức Φ = B·S·cos(α).",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Từ thông ban đầu qua toàn bộ khung dây (N vòng) là Φ1 = N·B1·S = 1,0 Wb.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Từ thông lúc sau qua toàn bộ khung dây là Φ2 = N·B2·S = 0,5 Wb.",
+              "isTrue": false,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Độ lớn suất điện động cảm ứng xuất hiện trong khung dây trong thời gian Δt = 0,2 s bằng 4 V.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) Đúng; b) Đúng (100 × 0,5 × 0,02 = 1,0 Wb); c) Sai (100 × 0,1 × 0,02 = 0,2 Wb ≠ 0,5 Wb); d) Đúng vì |e_c| = |ΔΦ/Δt| = (1,0 - 0,2) / 0,2 = 4 V.",
+          "mathVerify": {
+            "expression": "(1.0 - 0.2) / 0.2",
+            "expected": 4
+          },
+          "items": [
+            {
+              "text": "Từ thông qua một vòng dây được tính bằng công thức Φ = B·S·cos(α).",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Từ thông ban đầu qua toàn bộ khung dây (N vòng) là Φ1 = N·B1·S = 1,0 Wb.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Từ thông lúc sau qua toàn bộ khung dây là Φ2 = N·B2·S = 0,5 Wb.",
+              "isTrue": false,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Độ lớn suất điện động cảm ứng xuất hiện trong khung dây trong thời gian Δt = 0,2 s bằng 4 V.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_4",
+          "type": "TF",
+          "topic": "Chương 3: Từ trường (Lực từ F = B.I.L.sinα, Cảm ứng từ, Từ thông Φ = B.S.cosα và Cảm ứng điện từ)",
+          "unit": "Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ",
+          "points": 1,
+          "matrixRef": "ĐS4(a,b,c,d) [Dòng 3: Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Vận dụng",
+          "stem": "Từ thông qua một mạch kín biến thiên đều một lượng ΔΦ = 0,6 Wb trong khoảng thời gian Δt = 0,15 s. Độ lớn suất điện động cảm ứng trong mạch bằng bao nhiêu Vôn (V)?",
+          "answer": "4",
+          "explanation": "|e_c| = ΔΦ / Δt = 0,6 / 0,15 = 4 (V).",
+          "mathVerify": {
+            "expression": "0.6 / 0.15",
+            "expected": 4
+          },
+          "id": "q_sa_6",
+          "type": "SA",
+          "topic": "Chương 3: Từ trường (Lực từ F = B.I.L.sinα, Cảm ứng từ, Từ thông Φ = B.S.cosα và Cảm ứng điện từ)",
+          "unit": "Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ",
+          "points": 0.5,
+          "matrixRef": "TLN6 [Dòng 3 - Vận dụng]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Vận dụng",
+          "stem": "Một ấm điện có công suất P = 1 000 W đun nước với hiệu suất H = 84%. Biết nhiệt lượng cần thiết để đun sôi lượng nước trong ấm là Q_ích = 336 000 J. Thời gian đun sôi nước bằng bao nhiêu giây (s)?",
+          "answer": "400",
+          "explanation": "Điện năng toàn phần A_tp = Q_ích / H = 336 000 / 0,84 = 400 000 (J). Thời gian t = A_tp / P = 400 000 / 1 000 = 400 (s).",
+          "mathVerify": {
+            "expression": "(336000 / 0.84) / 1000",
+            "expected": 400
+          },
+          "id": "q_sa_2",
+          "type": "SA",
+          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+          "points": 0.5,
+          "matrixRef": "TLN2 [Dòng 1 - Vận dụng]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Nhiệt độ của một vật là 37°C thì tương ứng bằng bao nhiêu Kelvin (K) (lấy T(K) = t(°C) + 273)?",
+          "answer": "310",
+          "explanation": "T = 37 + 273 = 310 (K).",
+          "mathVerify": {
+            "expression": "37 + 273",
+            "expected": 310
+          },
+          "id": "q_sa_1",
+          "type": "SA",
+          "topic": "Chương 1: Vật lí nhiệt (Nội năng, Định luật I Nhiệt động lực học, Nhiệt dung riêng, Nhiệt nóng chảy riêng)",
+          "unit": "Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q",
+          "points": 0.5,
+          "matrixRef": "TLN1 [Dòng 1 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Một xilanh chứa 12 lít khí ở áp suất 1,5 atm. Nếu nén đẳng nhiệt để thể tích khí giảm còn 4 lít thì áp suất khí trong xilanh bằng bao nhiêu atm?",
+          "answer": "4.5",
+          "explanation": "Theo định luật Boyle: p2 = (p1 × V1) / V2 = (1,5 × 12) / 4 = 4,5 (atm).",
+          "mathVerify": {
+            "expression": "(1.5 * 12) / 4",
+            "expected": 4.5
+          },
+          "id": "q_sa_3",
+          "type": "SA",
+          "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+          "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+          "points": 0.5,
+          "matrixRef": "TLN3 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Vận dụng",
+          "stem": "Một bình chứa n = 2 mol khí lí tưởng ở nhiệt độ tuyệt đối T = 300 K. Lấy hằng số khí R = 8,31 J/(mol·K). Nếu thể tích bình là V = 0,05 m^3 thì áp suất p của khí trong bình bằng bao nhiêu kPa (làm tròn đến hàng phần mười)?",
+          "answer": "99.7",
+          "explanation": "p = n·R·T / V = (2 × 8,31 × 300) / 0,05 = 99 720 Pa ≈ 99,7 kPa.",
+          "mathVerify": {
+            "expression": "round(((2 * 8.31 * 300) / 0.05) / 100) / 10",
+            "expected": 99.7
+          },
+          "id": "q_sa_4",
+          "type": "SA",
+          "topic": "Chương 2: Khí lí tưởng (Định luật Boyle, Định luật Charles, Phương trình trạng thái khí lí tưởng)",
+          "unit": "Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử",
+          "points": 0.5,
+          "matrixRef": "TLN4 [Dòng 2 - Vận dụng]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Một đoạn dây dẫn dài L = 0,8 m có dòng điện I = 5 A chạy qua, đặt vuông góc với đường sức từ của một từ trường đều có B = 0,5 T. Lực từ tác dụng lên đoạn dây có độ lớn bằng bao nhiêu Newton (N)?",
+          "answer": "2",
+          "explanation": "F = B·I·L = 0,5 × 5 × 0,8 = 2 (N).",
+          "mathVerify": {
+            "expression": "0.5 * 5 * 0.8",
+            "expected": 2
+          },
+          "id": "q_sa_5",
+          "type": "SA",
+          "topic": "Chương 3: Từ trường (Lực từ F = B.I.L.sinα, Cảm ứng từ, Từ thông Φ = B.S.cosα và Cảm ứng điện từ)",
+          "unit": "Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ",
+          "points": 0.5,
+          "matrixRef": "TLN5 [Dòng 3 - Hiểu]"
+        }
+      ]
+    }
+  ],
+  "readingPassage": "",
+  "listeningTranscript": "",
+  "qaReport": {
+    "isValid": true,
+    "score": 100,
+    "stats": {
+      "levels": [
+        "Biết",
+        "Hiểu",
+        "Vận dụng"
+      ],
+      "qTypes": [
+        "MCQ",
+        "TF",
+        "SA",
+        "ESSAY"
+      ],
+      "pointRules": {
+        "MCQ": 0.25,
+        "TF": 0.25,
+        "SA": 0.5,
+        "ESSAY": 1
+      },
+      "byLevel": {
+        "Biết": 15,
+        "Hiểu": 12,
+        "Vận dụng": 7
+      },
+      "pointsByLevel": {
+        "Biết": 3.75,
+        "Hiểu": 3.75,
+        "Vận dụng": 2.5
+      },
+      "levelPercentages": {
+        "Biết": 38,
+        "Hiểu": 38,
+        "Vận dụng": 25
+      },
+      "byType": {
+        "MCQ": 12,
+        "TF": 16,
+        "SA": 6,
+        "ESSAY": 0
+      },
+      "pointsByType": {
+        "MCQ": 3,
+        "TF": 4,
+        "SA": 3,
+        "ESSAY": 0
+      },
+      "tfQuestionsCount": 4,
+      "totalItems": 34,
+      "totalQuestions": 22,
+      "totalPoints": 10
+    },
+    "passedChecks": [
+      "Đúng quy định cấp THPT (Thông tư 22/2021/TT-BGDĐT & Công văn 7991/BGDĐT-GDTrH) với các mức độ: Biết, Hiểu, Vận dụng.",
+      "Tổng điểm Ma trận chính xác: 10.0 / 10.0 điểm.",
+      "Bản đặc tả khớp 1-1 với Ma trận (3/3 đơn vị kiến thức).",
+      "Số lượng câu hỏi/lệnh hỏi từng dạng thức trong Đề khớp tuyệt đối với Ma trận (MCQ: 12, Đúng/Sai: 16 ý, Trả lời ngắn: 6, Tự luận: 0).",
+      "Tổng điểm các câu hỏi trong Đề kiểm tra (10.0đ) khớp tuyệt đối với Ma trận (10.0đ).",
+      "100% câu hỏi (22/22) có mã liên kết trực tiếp với Ma trận và Bản đặc tả.",
+      "100% câu hỏi (22/22) có đầy đủ đáp án và hướng dẫn chấm chi tiết.",
+      "Đã kiểm chứng độc lập 13 phép tính Toán/Khoa học: 100% kết quả trùng khớp tuyệt đối với đáp án.",
+      "Đã khởi tạo 2 mã đề (101, 102) đồng bộ số câu và bảng đáp án riêng."
+    ],
+    "warnings": [],
+    "issues": [],
+    "mathVerifications": [
+      {
+        "questionIndex": 5,
+        "matrixRef": "C5 [Dòng 1 - Hiểu]",
+        "expression": "-200 + 500",
+        "computedValue": 300,
+        "expectedValue": 300,
+        "passed": true
+      },
+      {
+        "questionIndex": 9,
+        "matrixRef": "C9 [Dòng 2 - Hiểu]",
+        "expression": "(2 * 6) / 4",
+        "computedValue": 3,
+        "expectedValue": 3,
+        "passed": true
+      },
+      {
+        "questionIndex": 10,
+        "matrixRef": "C10 [Dòng 2 - Hiểu]",
+        "expression": "3 * ((327 + 273) / (27 + 273))",
+        "computedValue": 6,
+        "expectedValue": 6,
+        "passed": true
+      },
+      {
+        "questionIndex": 12,
+        "matrixRef": "C12 [Dòng 3 - Hiểu]",
+        "expression": "0.2 * 4 * 0.5 * 1",
+        "computedValue": 0.4,
+        "expectedValue": 0.4,
+        "passed": true
+      },
+      {
+        "questionIndex": 13,
+        "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Chuyển thể của các chất, thang nhiệt độ Kelvin T(K) = t(°C) + 273, Định luật I NĐLH ΔU = A + Q]",
+        "expression": "(2 * 4200 * 80) / 1000",
+        "computedValue": 672,
+        "expectedValue": 672,
+        "passed": true
+      },
+      {
+        "questionIndex": 15,
+        "matrixRef": "ĐS3(a,b,c,d) [Dòng 2: Bài 2: Đẳng nhiệt p1.V1 = p2.V2, đẳng áp V1/T1 = V2/T2, phương trình Clapeyron p.V = n.R.T và động năng phân tử]",
+        "expression": "2 * (450 / 300)",
+        "computedValue": 3,
+        "expectedValue": 3,
+        "passed": true
+      },
+      {
+        "questionIndex": 16,
+        "matrixRef": "ĐS4(a,b,c,d) [Dòng 3: Bài 3: Tác dụng của từ trường lên đoạn dây dẫn mang dòng điện và định luật Faraday về cảm ứng điện từ]",
+        "expression": "(1.0 - 0.2) / 0.2",
+        "computedValue": 4,
+        "expectedValue": 4,
+        "passed": true
+      },
+      {
+        "questionIndex": 17,
+        "matrixRef": "TLN1 [Dòng 1 - Hiểu]",
+        "expression": "37 + 273",
+        "computedValue": 310,
+        "expectedValue": 310,
+        "passed": true
+      },
+      {
+        "questionIndex": 18,
+        "matrixRef": "TLN2 [Dòng 1 - Vận dụng]",
+        "expression": "(336000 / 0.84) / 1000",
+        "computedValue": 400,
+        "expectedValue": 400,
+        "passed": true
+      },
+      {
+        "questionIndex": 19,
+        "matrixRef": "TLN3 [Dòng 2 - Hiểu]",
+        "expression": "(1.5 * 12) / 4",
+        "computedValue": 4.5,
+        "expectedValue": 4.5,
+        "passed": true
+      },
+      {
+        "questionIndex": 20,
+        "matrixRef": "TLN4 [Dòng 2 - Vận dụng]",
+        "expression": "round(((2 * 8.31 * 300) / 0.05) / 100) / 10",
+        "computedValue": 99.7,
+        "expectedValue": 99.7,
+        "passed": true
+      },
+      {
+        "questionIndex": 21,
+        "matrixRef": "TLN5 [Dòng 3 - Hiểu]",
+        "expression": "0.5 * 5 * 0.8",
+        "computedValue": 2,
+        "expectedValue": 2,
+        "passed": true
+      },
+      {
+        "questionIndex": 22,
+        "matrixRef": "TLN6 [Dòng 3 - Vận dụng]",
+        "expression": "0.6 / 0.15",
+        "computedValue": 4,
+        "expectedValue": 4,
+        "passed": true
+      }
+    ]
+  }
+}

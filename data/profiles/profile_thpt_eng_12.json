@@ -1,0 +1,1996 @@
+{
+  "id": "profile_thpt_eng_12",
+  "title": "Cuối học kỳ I - Tiếng Anh Lớp 12 (THPT)",
+  "updatedAt": "2026-11-08T14:27:50.747Z",
+  "metadata": {
+    "schoolName": "TRƯỜNG THPT CHUYÊN NGOẠI NGỮ",
+    "departmentName": "TỔ NGOẠI NGỮ",
+    "schoolYear": "2026 - 2027",
+    "level": "THPT",
+    "grade": "12",
+    "subject": "Tiếng Anh",
+    "textbook": "Kết nối tri thức với cuộc sống",
+    "examPeriod": "Cuối học kỳ I",
+    "duration": 60,
+    "numVariants": 2,
+    "regulation": "CV7991_TT22",
+    "localGuidelines": "Đề kiểm tra Tiếng Anh 12 gồm đầy đủ kỹ năng Listening (kèm Tapescript cho giáo viên), Lexico-Grammar, Reading Comprehension và Sentence Transformation/Writing. Phân bổ: 16 câu MCQ (4,0đ), 2 bài Đúng/Sai Listening & Reading (2 câu × 4 ý = 2,0đ), 4 câu Trả lời ngắn/Điền từ (2,0đ), 2 câu Viết lại câu/Đoạn văn ngắn (2,0đ). Tổng = 10,0 điểm."
+  },
+  "units": [
+    {
+      "id": "unit_1",
+      "topic": "Chủ đề 1: Skill 1 - Listening (Green Living & Zero-Waste Campus)",
+      "unit": "Bài 1: Listening for specific details & True/False statements (with Audio Tapescript)",
+      "outcomes": {
+        "Biết": "Nhận diện thông tin chính và từ khóa trong bài nghe về lối sống xanh (Green Living).",
+        "Hiểu": "Xác định tính Đúng/Sai của các nhận định chi tiết trong bài phỏng vấn với chuyên gia môi trường.",
+        "Vận dụng": "Tổng hợp số liệu và thông điệp thực tiễn từ chiến dịch Zero-Waste Campus."
+      },
+      "keyFacts": [
+        "Biết: Nhận diện thông tin chính và từ khóa trong bài nghe về lối sống xanh (Green Living).",
+        "Hiểu: Xác định tính Đúng/Sai của các nhận định chi tiết trong bài phỏng vấn với chuyên gia môi trường.",
+        "Vận dụng: Tổng hợp số liệu và thông điệp thực tiễn từ chiến dịch Zero-Waste Campus."
+      ]
+    },
+    {
+      "id": "unit_2",
+      "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+      "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+      "outcomes": {
+        "Biết": "Nhận diện trọng âm, phát âm, mạo từ a/an/the, giới từ đi kèm động từ và thì quá khứ đơn - quá khứ tiếp diễn.",
+        "Hiểu": "Vận dụng mệnh đề quan hệ qui chiếu cả câu (which), thì hiện tại hoàn thành và cấu trúc so sánh kép.",
+        "Vận dụng": "Điền đúng dạng từ/giới từ trong ngữ cảnh giao tiếp và học thuật."
+      },
+      "keyFacts": [
+        "Biết: Nhận diện trọng âm, phát âm, mạo từ a/an/the, giới từ đi kèm động từ và thì quá khứ đơn - quá khứ tiếp diễn.",
+        "Hiểu: Vận dụng mệnh đề quan hệ qui chiếu cả câu (which), thì hiện tại hoàn thành và cấu trúc so sánh kép.",
+        "Vận dụng: Điền đúng dạng từ/giới từ trong ngữ cảnh giao tiếp và học thuật."
+      ]
+    },
+    {
+      "id": "unit_3",
+      "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+      "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+      "outcomes": {
+        "Biết": "Tìm thông tin trực tiếp và từ vựng cơ bản trong đoạn văn đọc hiểu về đô thị hóa.",
+        "Hiểu": "Suy luận nghĩa từ vựng trong ngữ cảnh (vibrant, infrastructure) và xác định mệnh đề Đúng/Sai.",
+        "Vận dụng": "Trích xuất từ khóa học thuật từ bài đọc và bài nghe để điền vào câu trả lời ngắn."
+      },
+      "keyFacts": [
+        "Biết: Tìm thông tin trực tiếp và từ vựng cơ bản trong đoạn văn đọc hiểu về đô thị hóa.",
+        "Hiểu: Suy luận nghĩa từ vựng trong ngữ cảnh (vibrant, infrastructure) và xác định mệnh đề Đúng/Sai.",
+        "Vận dụng: Trích xuất từ khóa học thuật từ bài đọc và bài nghe để điền vào câu trả lời ngắn."
+      ]
+    },
+    {
+      "id": "unit_4",
+      "topic": "Chủ đề 4: Skill 4 - Writing (Sentence Transformation & Short Paragraph)",
+      "unit": "Bài 4: Rewriting sentences with Double Comparatives & Writing a paragraph about Green Living",
+      "outcomes": {
+        "Biết": "Nắm vững cấu trúc câu so sánh kép và bố cục đoạn văn tiếng Anh.",
+        "Hiểu": "Viết lại câu tương đương nghĩa sử dụng cấu trúc The more..., the more...",
+        "Vận dụng": "Viết đoạn văn ngắn (100-120 từ) đề xuất giải pháp sống xanh tại trường học và gia đình."
+      },
+      "keyFacts": [
+        "Biết: Nắm vững cấu trúc câu so sánh kép và bố cục đoạn văn tiếng Anh.",
+        "Hiểu: Viết lại câu tương đương nghĩa sử dụng cấu trúc The more..., the more...",
+        "Vận dụng: Viết đoạn văn ngắn (100-120 từ) đề xuất giải pháp sống xanh tại trường học và gia đình."
+      ]
+    }
+  ],
+  "matrix": {
+    "levels": [
+      "Biết",
+      "Hiểu",
+      "Vận dụng"
+    ],
+    "questionTypes": [
+      "MCQ",
+      "TF",
+      "SA",
+      "ESSAY"
+    ],
+    "pointRules": {
+      "MCQ": 0.25,
+      "TF": 0.25,
+      "SA": 0.5,
+      "ESSAY": 1
+    },
+    "rows": [
+      {
+        "id": "row_1",
+        "topic": "Chủ đề 1: Skill 1 - Listening (Green Living & Zero-Waste Campus)",
+        "unit": "Bài 1: Listening for specific details & True/False statements (with Audio Tapescript)",
+        "counts": {
+          "MCQ": {
+            "Biết": 2,
+            "Hiểu": 2,
+            "Vận dụng": 0
+          },
+          "TF": {
+            "Biết": 2,
+            "Hiểu": 1,
+            "Vận dụng": 1
+          },
+          "SA": {
+            "Biết": 0,
+            "Hiểu": 0,
+            "Vận dụng": 0
+          },
+          "ESSAY": {
+            "Biết": 0,
+            "Hiểu": 0,
+            "Vận dụng": 0
+          }
+        },
+        "points": 2
+      },
+      {
+        "id": "row_2",
+        "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+        "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+        "counts": {
+          "MCQ": {
+            "Biết": 5,
+            "Hiểu": 3,
+            "Vận dụng": 0
+          },
+          "TF": {
+            "Biết": 0,
+            "Hiểu": 0,
+            "Vận dụng": 0
+          },
+          "SA": {
+            "Biết": 1,
+            "Hiểu": 1,
+            "Vận dụng": 0
+          },
+          "ESSAY": {
+            "Biết": 0,
+            "Hiểu": 0,
+            "Vận dụng": 0
+          }
+        },
+        "points": 3
+      },
+      {
+        "id": "row_3",
+        "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+        "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+        "counts": {
+          "MCQ": {
+            "Biết": 2,
+            "Hiểu": 2,
+            "Vận dụng": 0
+          },
+          "TF": {
+            "Biết": 1,
+            "Hiểu": 2,
+            "Vận dụng": 1
+          },
+          "SA": {
+            "Biết": 0,
+            "Hiểu": 1,
+            "Vận dụng": 1
+          },
+          "ESSAY": {
+            "Biết": 0,
+            "Hiểu": 0,
+            "Vận dụng": 0
+          }
+        },
+        "points": 3
+      },
+      {
+        "id": "row_4",
+        "topic": "Chủ đề 4: Skill 4 - Writing (Sentence Transformation & Short Paragraph)",
+        "unit": "Bài 4: Rewriting sentences with Double Comparatives & Writing a paragraph about Green Living",
+        "counts": {
+          "MCQ": {
+            "Biết": 0,
+            "Hiểu": 0,
+            "Vận dụng": 0
+          },
+          "TF": {
+            "Biết": 0,
+            "Hiểu": 0,
+            "Vận dụng": 0
+          },
+          "SA": {
+            "Biết": 0,
+            "Hiểu": 0,
+            "Vận dụng": 0
+          },
+          "ESSAY": {
+            "Biết": 0,
+            "Hiểu": 1,
+            "Vận dụng": 1
+          }
+        },
+        "essayPoints": {
+          "Biết": 0,
+          "Hiểu": 1,
+          "Vận dụng": 1
+        },
+        "points": 2
+      }
+    ]
+  },
+  "specification": [
+    {
+      "rowId": "row_1",
+      "topic": "Chủ đề 1: Skill 1 - Listening (Green Living & Zero-Waste Campus)",
+      "unit": "Bài 1: Listening for specific details & True/False statements (with Audio Tapescript)",
+      "outcomes": {
+        "Biết": "Nhận diện thông tin chính và từ khóa trong bài nghe về lối sống xanh (Green Living).",
+        "Hiểu": "Xác định tính Đúng/Sai của các nhận định chi tiết trong bài phỏng vấn với chuyên gia môi trường.",
+        "Vận dụng": "Tổng hợp số liệu và thông điệp thực tiễn từ chiến dịch Zero-Waste Campus."
+      },
+      "questionRefs": {
+        "MCQ": [
+          "C1",
+          "C2",
+          "C3",
+          "C4"
+        ],
+        "TF": [
+          "ĐS1a",
+          "ĐS1b",
+          "ĐS1c",
+          "ĐS1d"
+        ],
+        "SA": [],
+        "ESSAY": []
+      }
+    },
+    {
+      "rowId": "row_2",
+      "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+      "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+      "outcomes": {
+        "Biết": "Nhận diện trọng âm, phát âm, mạo từ a/an/the, giới từ đi kèm động từ và thì quá khứ đơn - quá khứ tiếp diễn.",
+        "Hiểu": "Vận dụng mệnh đề quan hệ qui chiếu cả câu (which), thì hiện tại hoàn thành và cấu trúc so sánh kép.",
+        "Vận dụng": "Điền đúng dạng từ/giới từ trong ngữ cảnh giao tiếp và học thuật."
+      },
+      "questionRefs": {
+        "MCQ": [
+          "C5",
+          "C6",
+          "C7",
+          "C8",
+          "C9",
+          "C10",
+          "C11",
+          "C12"
+        ],
+        "TF": [],
+        "SA": [
+          "TLN1",
+          "TLN2"
+        ],
+        "ESSAY": []
+      }
+    },
+    {
+      "rowId": "row_3",
+      "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+      "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+      "outcomes": {
+        "Biết": "Tìm thông tin trực tiếp và từ vựng cơ bản trong đoạn văn đọc hiểu về đô thị hóa.",
+        "Hiểu": "Suy luận nghĩa từ vựng trong ngữ cảnh (vibrant, infrastructure) và xác định mệnh đề Đúng/Sai.",
+        "Vận dụng": "Trích xuất từ khóa học thuật từ bài đọc và bài nghe để điền vào câu trả lời ngắn."
+      },
+      "questionRefs": {
+        "MCQ": [
+          "C13",
+          "C14",
+          "C15",
+          "C16"
+        ],
+        "TF": [
+          "ĐS2a",
+          "ĐS2b",
+          "ĐS2c",
+          "ĐS2d"
+        ],
+        "SA": [
+          "TLN3",
+          "TLN4"
+        ],
+        "ESSAY": []
+      }
+    },
+    {
+      "rowId": "row_4",
+      "topic": "Chủ đề 4: Skill 4 - Writing (Sentence Transformation & Short Paragraph)",
+      "unit": "Bài 4: Rewriting sentences with Double Comparatives & Writing a paragraph about Green Living",
+      "outcomes": {
+        "Biết": "Nắm vững cấu trúc câu so sánh kép và bố cục đoạn văn tiếng Anh.",
+        "Hiểu": "Viết lại câu tương đương nghĩa sử dụng cấu trúc The more..., the more...",
+        "Vận dụng": "Viết đoạn văn ngắn (100-120 từ) đề xuất giải pháp sống xanh tại trường học và gia đình."
+      },
+      "questionRefs": {
+        "MCQ": [],
+        "TF": [],
+        "SA": [],
+        "ESSAY": [
+          "TL1",
+          "TL2"
+        ]
+      }
+    }
+  ],
+  "questions": [
+    {
+      "rowId": "row_1",
+      "level": "Biết",
+      "stem": "[LISTENING] According to the podcast, what is the main topic of the interview with Dr. Sarah Jenkins?",
+      "options": [
+        "Ancient Architecture in Europe",
+        "Green Living and Sustainable Cities",
+        "Marine Wildlife Conservation",
+        "Space Exploration Technologies"
+      ],
+      "answer": "B",
+      "explanation": "In the tapescript, the host introduces: \"Today we are talking with Dr. Sarah Jenkins... about Green Living and Sustainable Cities.\"",
+      "id": "q_mcq_1",
+      "type": "MCQ",
+      "topic": "Chủ đề 1: Skill 1 - Listening (Green Living & Zero-Waste Campus)",
+      "unit": "Bài 1: Listening for specific details & True/False statements (with Audio Tapescript)",
+      "points": 0.25,
+      "matrixRef": "C1 [Dòng 1 - Biết]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Biết",
+      "stem": "[LISTENING] According to Dr. Sarah Jenkins, what are megacities replacing single-use plastics with?",
+      "options": [
+        "Heavy metal containers",
+        "Coal-based products",
+        "Biodegradable materials",
+        "Synthetic nylon bags"
+      ],
+      "answer": "C",
+      "explanation": "Dr. Jenkins states: \"many megacities have started replacing single-use plastics with biodegradable materials\".",
+      "id": "q_mcq_2",
+      "type": "MCQ",
+      "topic": "Chủ đề 1: Skill 1 - Listening (Green Living & Zero-Waste Campus)",
+      "unit": "Bài 1: Listening for specific details & True/False statements (with Audio Tapescript)",
+      "points": 0.25,
+      "matrixRef": "C2 [Dòng 1 - Biết]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Hiểu",
+      "stem": "[LISTENING] By how much can simple daily habits reduce a household's carbon footprint each year?",
+      "options": [
+        "Up to 90 percent",
+        "Up to 75 percent",
+        "Up to 25 percent",
+        "Up to 5 percent"
+      ],
+      "answer": "C",
+      "explanation": "Dr. Jenkins mentions: \"can reduce a household's carbon footprint by up to 25 percent every year.\"",
+      "id": "q_mcq_3",
+      "type": "MCQ",
+      "topic": "Chủ đề 1: Skill 1 - Listening (Green Living & Zero-Waste Campus)",
+      "unit": "Bài 1: Listening for specific details & True/False statements (with Audio Tapescript)",
+      "points": 0.25,
+      "matrixRef": "C3 [Dòng 1 - Hiểu]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Hiểu",
+      "stem": "[LISTENING] How many tons of recyclable paper and plastic were collected in the \"Zero-Waste Campus\" campaign?",
+      "options": [
+        "12 tons",
+        "45 tons",
+        "3 tons",
+        "25 tons"
+      ],
+      "answer": "A",
+      "explanation": "Tapescript: \"collecting 12 tons of recyclable paper and plastic within just three months.\"",
+      "id": "q_mcq_4",
+      "type": "MCQ",
+      "topic": "Chủ đề 1: Skill 1 - Listening (Green Living & Zero-Waste Campus)",
+      "unit": "Bài 1: Listening for specific details & True/False statements (with Audio Tapescript)",
+      "points": 0.25,
+      "matrixRef": "C4 [Dòng 1 - Hiểu]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Biết",
+      "stem": "Choose the word whose underlined part differs from the other three in pronunciation: A. c<u>u</u>lture  B. <u>u</u>rban  C. p<u>u</u>blic  D. c<u>u</u>stom",
+      "options": [
+        "public",
+        "urban",
+        "custom",
+        "culture"
+      ],
+      "answer": "B",
+      "explanation": "\"urban\" is pronounced with /ɜː/, whereas culture, public, and custom are pronounced with /ʌ/.",
+      "id": "q_mcq_5",
+      "type": "MCQ",
+      "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+      "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+      "points": 0.25,
+      "matrixRef": "C5 [Dòng 2 - Biết]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Biết",
+      "stem": "Choose the word that differs from the other three in the position of primary stress:",
+      "options": [
+        "festival",
+        "lifestyle",
+        "admire",
+        "plastic"
+      ],
+      "answer": "C",
+      "explanation": "\"admire\" /ədˈmaɪər/ has stress on the 2nd syllable; the others have stress on the 1st syllable.",
+      "id": "q_mcq_6",
+      "type": "MCQ",
+      "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+      "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+      "points": 0.25,
+      "matrixRef": "C6 [Dòng 2 - Biết]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Biết",
+      "stem": "While my brother ________ a documentary about Steve Jobs, the electricity suddenly went out.",
+      "options": [
+        "has watched",
+        "watched",
+        "was watching",
+        "is watching"
+      ],
+      "answer": "C",
+      "explanation": "Past Continuous (was watching) describes an action in progress interrupted by a shorter action in the past (went out).",
+      "id": "q_mcq_7",
+      "type": "MCQ",
+      "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+      "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+      "points": 0.25,
+      "matrixRef": "C7 [Dòng 2 - Biết]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Biết",
+      "stem": "Playing ______ guitar is one of my favourite hobbies after school.",
+      "options": [
+        "Ø (no article)",
+        "an",
+        "the",
+        "a"
+      ],
+      "answer": "C",
+      "explanation": "Use the definite article \"the\" before names of musical instruments (play the guitar).",
+      "id": "q_mcq_8",
+      "type": "MCQ",
+      "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+      "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+      "points": 0.25,
+      "matrixRef": "C8 [Dòng 2 - Biết]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Biết",
+      "stem": "Young graduates often apply ______ jobs in large metropolitan areas.",
+      "options": [
+        "with",
+        "about",
+        "on",
+        "for"
+      ],
+      "answer": "D",
+      "explanation": "Collocation: \"apply for a job\" (nộp đơn xin việc).",
+      "id": "q_mcq_9",
+      "type": "MCQ",
+      "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+      "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+      "points": 0.25,
+      "matrixRef": "C9 [Dòng 2 - Biết]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Hiểu",
+      "stem": "Many students now bring reusable water bottles to school, ______ helps reduce plastic waste significantly.",
+      "options": [
+        "which",
+        "whose",
+        "who",
+        "whom"
+      ],
+      "answer": "A",
+      "explanation": "Relative pronoun \"which\" refers to the whole preceding clause.",
+      "id": "q_mcq_10",
+      "type": "MCQ",
+      "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+      "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+      "points": 0.25,
+      "matrixRef": "C10 [Dòng 2 - Hiểu]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Hiểu",
+      "stem": "The ______ public transport becomes, the ______ people use their private cars.",
+      "options": [
+        "more convenient / least",
+        "most convenient / fewest",
+        "convenient / less",
+        "more convenient / fewer"
+      ],
+      "answer": "D",
+      "explanation": "Double comparative structure: The + comparative + S + V, the + comparative + S + V.",
+      "id": "q_mcq_11",
+      "type": "MCQ",
+      "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+      "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+      "points": 0.25,
+      "matrixRef": "C11 [Dòng 2 - Hiểu]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Hiểu",
+      "stem": "This is the first time our school ______ an international cultural exchange fair.",
+      "options": [
+        "organises",
+        "organised",
+        "has organised",
+        "was organising"
+      ],
+      "answer": "C",
+      "explanation": "After \"This is the first time...\", we use the Present Perfect tense (has organised).",
+      "id": "q_mcq_12",
+      "type": "MCQ",
+      "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+      "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+      "points": 0.25,
+      "matrixRef": "C12 [Dòng 2 - Hiểu]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Biết",
+      "stem": "[READING] According to the reading passage, what has brought people from diverse cultural backgrounds together into metropolitan areas?",
+      "options": [
+        "Marine fishing",
+        "Rapid urbanisation",
+        "Rural agriculture",
+        "Space tourism"
+      ],
+      "answer": "B",
+      "explanation": "First sentence of the passage: \"rapid urbanisation has brought people from diverse cultural backgrounds together...\"",
+      "id": "q_mcq_13",
+      "type": "MCQ",
+      "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+      "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+      "points": 0.25,
+      "matrixRef": "C13 [Dòng 3 - Biết]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Biết",
+      "stem": "[READING] Which of the following is mentioned as a benefit of moving to big cities?",
+      "options": [
+        "Better job opportunities and modern healthcare",
+        "Less traffic congestion",
+        "Lower housing costs",
+        "Fewer people in public spaces"
+      ],
+      "answer": "A",
+      "explanation": "The passage states: \"moving to big cities offers young workers better job opportunities, modern healthcare, and higher education\".",
+      "id": "q_mcq_14",
+      "type": "MCQ",
+      "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+      "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+      "points": 0.25,
+      "matrixRef": "C14 [Dòng 3 - Biết]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Hiểu",
+      "stem": "[READING] The word \"vibrant\" in the reading passage is closest in meaning to:",
+      "options": [
+        "tiny and isolated",
+        "quiet and empty",
+        "ancient and forgotten",
+        "lively and dynamic"
+      ],
+      "answer": "D",
+      "explanation": "\"vibrant\" means full of energy, lively, and dynamic.",
+      "id": "q_mcq_15",
+      "type": "MCQ",
+      "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+      "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+      "points": 0.25,
+      "matrixRef": "C15 [Dòng 3 - Hiểu]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Hiểu",
+      "stem": "[READING] What helps citizens maintain their cultural identity in a globalised world?",
+      "options": [
+        "Avoiding all communication with neighbours",
+        "Preserving traditional festivals, local cuisine, and community values",
+        "Replacing all traditional customs with foreign habits",
+        "Closing down local cultural centres"
+      ],
+      "answer": "B",
+      "explanation": "Last sentence: \"preserving traditional festivals, local cuisine, and community values helps citizens maintain their cultural identity\".",
+      "id": "q_mcq_16",
+      "type": "MCQ",
+      "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+      "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+      "points": 0.25,
+      "matrixRef": "C16 [Dòng 3 - Hiểu]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Hiểu",
+      "stem": "[LISTENING TRUE/FALSE] Listen to the interview with Dr. Sarah Jenkins and decide whether the following statements are True (Đ) or False (S):",
+      "statements": [
+        {
+          "text": "Dr. Sarah Jenkins is an urban environmentalist.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Dr. Jenkins believes that adopting a green lifestyle is always too expensive for students.",
+          "isTrue": false,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Sai"
+        },
+        {
+          "text": "Unplugging electronic devices when not in use is one of the habits recommended in the podcast.",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "c",
+          "answer": "Đúng"
+        },
+        {
+          "text": "More than 4,500 high school students participated in the \"Zero-Waste Campus\" campaign in Singapore.",
+          "isTrue": true,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "explanation": "a) True; b) False (she says simple daily habits are inexpensive and effective); c) True; d) True (Over 4,500 high school students joined).",
+      "items": [
+        {
+          "text": "Dr. Sarah Jenkins is an urban environmentalist.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Dr. Jenkins believes that adopting a green lifestyle is always too expensive for students.",
+          "isTrue": false,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Sai"
+        },
+        {
+          "text": "Unplugging electronic devices when not in use is one of the habits recommended in the podcast.",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "c",
+          "answer": "Đúng"
+        },
+        {
+          "text": "More than 4,500 high school students participated in the \"Zero-Waste Campus\" campaign in Singapore.",
+          "isTrue": true,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+      "isZeroHallucination": true,
+      "id": "q_tf_1",
+      "type": "TF",
+      "topic": "Chủ đề 1: Skill 1 - Listening (Green Living & Zero-Waste Campus)",
+      "unit": "Bài 1: Listening for specific details & True/False statements (with Audio Tapescript)",
+      "points": 1,
+      "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Listening for specific details & True/False statements (with Audio Tapescript)]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Hiểu",
+      "stem": "[READING TRUE/FALSE] Read the passage on Cultural Diversity and Urbanisation and decide whether the statements are True (Đ) or False (S):",
+      "statements": [
+        {
+          "text": "Urbanisation only happens in small rural villages.",
+          "isTrue": false,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Sai"
+        },
+        {
+          "text": "Big cities offer young people access to higher education and modern healthcare.",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Rapid urbanisation puts pressure on housing and public infrastructure.",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "c",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Maintaining traditional festivals and local cuisine supports cultural identity in a globalised society.",
+          "isTrue": true,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "explanation": "a) False; b) True; c) True; d) True.",
+      "items": [
+        {
+          "text": "Urbanisation only happens in small rural villages.",
+          "isTrue": false,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Sai"
+        },
+        {
+          "text": "Big cities offer young people access to higher education and modern healthcare.",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Rapid urbanisation puts pressure on housing and public infrastructure.",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "c",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Maintaining traditional festivals and local cuisine supports cultural identity in a globalised society.",
+          "isTrue": true,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+      "isZeroHallucination": true,
+      "id": "q_tf_2",
+      "type": "TF",
+      "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+      "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+      "points": 1,
+      "matrixRef": "ĐS2(a,b,c,d) [Dòng 3: Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Biết",
+      "stem": "Fill in the blank with ONE suitable preposition: We should care ________ protecting the environment for future generations.",
+      "answer": "about",
+      "explanation": "Verb + preposition collocation: care about something.",
+      "id": "q_sa_1",
+      "type": "SA",
+      "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+      "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+      "points": 0.5,
+      "matrixRef": "TLN1 [Dòng 2 - Biết]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Hiểu",
+      "stem": "Give the correct form of the verb in brackets: Many green parks (build) ________ in our city since 2022.",
+      "answer": "have been built",
+      "explanation": "Present Perfect Passive with \"since 2022\": have been built.",
+      "id": "q_sa_2",
+      "type": "SA",
+      "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+      "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+      "points": 0.5,
+      "matrixRef": "TLN2 [Dòng 2 - Hiểu]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Hiểu",
+      "stem": "[READING] Find ONE word in the reading passage that means \"the basic physical systems and services of a city (such as transport, housing, and power supplies)\".",
+      "answer": "infrastructure",
+      "explanation": "In the passage: \"pressure on housing and public infrastructure\".",
+      "id": "q_sa_3",
+      "type": "SA",
+      "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+      "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+      "points": 0.5,
+      "matrixRef": "TLN3 [Dòng 3 - Hiểu]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Vận dụng",
+      "stem": "[LISTENING] According to the podcast tapescript, how many months did it take students in Singapore to collect 12 tons of recyclable materials? (Write a number)",
+      "answer": "3",
+      "explanation": "Tapescript: \"collecting 12 tons of recyclable paper and plastic within just three months\" -> 3.",
+      "id": "q_sa_4",
+      "type": "SA",
+      "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+      "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+      "points": 0.5,
+      "matrixRef": "TLN4 [Dòng 3 - Vận dụng]"
+    },
+    {
+      "rowId": "row_4",
+      "level": "Hiểu",
+      "points": 1,
+      "stem": "Rewrite the following sentence using the Double Comparative structure (\"The more..., the more...\"):\n\"If a city plants more trees, its air becomes cleaner.\"",
+      "answer": "The more trees a city plants, the cleaner its air becomes.",
+      "explanation": "Scoring rubric (1.0 point): Correct double comparative structure \"The more trees a city plants, the cleaner its air becomes\" (1.0 pt).",
+      "id": "q_essay_1",
+      "type": "ESSAY",
+      "topic": "Chủ đề 4: Skill 4 - Writing (Sentence Transformation & Short Paragraph)",
+      "unit": "Bài 4: Rewriting sentences with Double Comparatives & Writing a paragraph about Green Living",
+      "matrixRef": "TL1 [Dòng 4 - Hiểu]"
+    },
+    {
+      "rowId": "row_4",
+      "level": "Vận dụng",
+      "points": 1,
+      "stem": "Write a short paragraph (100 – 120 words) about three practical ways high school students can practice Green Living at school and at home.",
+      "answer": "Paragraph (100-120 words) discussing 3 green habits: reducing single-use plastic, saving energy, and sorting waste.",
+      "explanation": "Scoring rubric (1.0 point):\n- Task achievement & 3 clear practical ways (0.4 pt)\n- Coherence, cohesion & connectors (First, Second, Finally...) (0.3 pt)\n- Vocabulary & grammar accuracy on Green Living (0.3 pt).",
+      "id": "q_essay_2",
+      "type": "ESSAY",
+      "topic": "Chủ đề 4: Skill 4 - Writing (Sentence Transformation & Short Paragraph)",
+      "unit": "Bài 4: Rewriting sentences with Double Comparatives & Writing a paragraph about Green Living",
+      "matrixRef": "TL2 [Dòng 4 - Vận dụng]"
+    }
+  ],
+  "variants": [
+    {
+      "code": "101",
+      "questions": [
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "[LISTENING] According to the podcast, what is the main topic of the interview with Dr. Sarah Jenkins?",
+          "options": [
+            "Ancient Architecture in Europe",
+            "Green Living and Sustainable Cities",
+            "Marine Wildlife Conservation",
+            "Space Exploration Technologies"
+          ],
+          "answer": "B",
+          "explanation": "In the tapescript, the host introduces: \"Today we are talking with Dr. Sarah Jenkins... about Green Living and Sustainable Cities.\"",
+          "id": "q_mcq_1",
+          "type": "MCQ",
+          "topic": "Chủ đề 1: Skill 1 - Listening (Green Living & Zero-Waste Campus)",
+          "unit": "Bài 1: Listening for specific details & True/False statements (with Audio Tapescript)",
+          "points": 0.25,
+          "matrixRef": "C1 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "[LISTENING] According to Dr. Sarah Jenkins, what are megacities replacing single-use plastics with?",
+          "options": [
+            "Heavy metal containers",
+            "Coal-based products",
+            "Biodegradable materials",
+            "Synthetic nylon bags"
+          ],
+          "answer": "C",
+          "explanation": "Dr. Jenkins states: \"many megacities have started replacing single-use plastics with biodegradable materials\".",
+          "id": "q_mcq_2",
+          "type": "MCQ",
+          "topic": "Chủ đề 1: Skill 1 - Listening (Green Living & Zero-Waste Campus)",
+          "unit": "Bài 1: Listening for specific details & True/False statements (with Audio Tapescript)",
+          "points": 0.25,
+          "matrixRef": "C2 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "[LISTENING] By how much can simple daily habits reduce a household's carbon footprint each year?",
+          "options": [
+            "Up to 90 percent",
+            "Up to 75 percent",
+            "Up to 25 percent",
+            "Up to 5 percent"
+          ],
+          "answer": "C",
+          "explanation": "Dr. Jenkins mentions: \"can reduce a household's carbon footprint by up to 25 percent every year.\"",
+          "id": "q_mcq_3",
+          "type": "MCQ",
+          "topic": "Chủ đề 1: Skill 1 - Listening (Green Living & Zero-Waste Campus)",
+          "unit": "Bài 1: Listening for specific details & True/False statements (with Audio Tapescript)",
+          "points": 0.25,
+          "matrixRef": "C3 [Dòng 1 - Hiểu]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "[LISTENING] How many tons of recyclable paper and plastic were collected in the \"Zero-Waste Campus\" campaign?",
+          "options": [
+            "12 tons",
+            "45 tons",
+            "3 tons",
+            "25 tons"
+          ],
+          "answer": "A",
+          "explanation": "Tapescript: \"collecting 12 tons of recyclable paper and plastic within just three months.\"",
+          "id": "q_mcq_4",
+          "type": "MCQ",
+          "topic": "Chủ đề 1: Skill 1 - Listening (Green Living & Zero-Waste Campus)",
+          "unit": "Bài 1: Listening for specific details & True/False statements (with Audio Tapescript)",
+          "points": 0.25,
+          "matrixRef": "C4 [Dòng 1 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Choose the word whose underlined part differs from the other three in pronunciation: A. c<u>u</u>lture  B. <u>u</u>rban  C. p<u>u</u>blic  D. c<u>u</u>stom",
+          "options": [
+            "public",
+            "urban",
+            "custom",
+            "culture"
+          ],
+          "answer": "B",
+          "explanation": "\"urban\" is pronounced with /ɜː/, whereas culture, public, and custom are pronounced with /ʌ/.",
+          "id": "q_mcq_5",
+          "type": "MCQ",
+          "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+          "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+          "points": 0.25,
+          "matrixRef": "C5 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Choose the word that differs from the other three in the position of primary stress:",
+          "options": [
+            "festival",
+            "lifestyle",
+            "admire",
+            "plastic"
+          ],
+          "answer": "C",
+          "explanation": "\"admire\" /ədˈmaɪər/ has stress on the 2nd syllable; the others have stress on the 1st syllable.",
+          "id": "q_mcq_6",
+          "type": "MCQ",
+          "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+          "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+          "points": 0.25,
+          "matrixRef": "C6 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "While my brother ________ a documentary about Steve Jobs, the electricity suddenly went out.",
+          "options": [
+            "has watched",
+            "watched",
+            "was watching",
+            "is watching"
+          ],
+          "answer": "C",
+          "explanation": "Past Continuous (was watching) describes an action in progress interrupted by a shorter action in the past (went out).",
+          "id": "q_mcq_7",
+          "type": "MCQ",
+          "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+          "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+          "points": 0.25,
+          "matrixRef": "C7 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Playing ______ guitar is one of my favourite hobbies after school.",
+          "options": [
+            "Ø (no article)",
+            "an",
+            "the",
+            "a"
+          ],
+          "answer": "C",
+          "explanation": "Use the definite article \"the\" before names of musical instruments (play the guitar).",
+          "id": "q_mcq_8",
+          "type": "MCQ",
+          "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+          "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+          "points": 0.25,
+          "matrixRef": "C8 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Young graduates often apply ______ jobs in large metropolitan areas.",
+          "options": [
+            "with",
+            "about",
+            "on",
+            "for"
+          ],
+          "answer": "D",
+          "explanation": "Collocation: \"apply for a job\" (nộp đơn xin việc).",
+          "id": "q_mcq_9",
+          "type": "MCQ",
+          "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+          "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+          "points": 0.25,
+          "matrixRef": "C9 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Many students now bring reusable water bottles to school, ______ helps reduce plastic waste significantly.",
+          "options": [
+            "which",
+            "whose",
+            "who",
+            "whom"
+          ],
+          "answer": "A",
+          "explanation": "Relative pronoun \"which\" refers to the whole preceding clause.",
+          "id": "q_mcq_10",
+          "type": "MCQ",
+          "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+          "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+          "points": 0.25,
+          "matrixRef": "C10 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "The ______ public transport becomes, the ______ people use their private cars.",
+          "options": [
+            "more convenient / least",
+            "most convenient / fewest",
+            "convenient / less",
+            "more convenient / fewer"
+          ],
+          "answer": "D",
+          "explanation": "Double comparative structure: The + comparative + S + V, the + comparative + S + V.",
+          "id": "q_mcq_11",
+          "type": "MCQ",
+          "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+          "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+          "points": 0.25,
+          "matrixRef": "C11 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "This is the first time our school ______ an international cultural exchange fair.",
+          "options": [
+            "organises",
+            "organised",
+            "has organised",
+            "was organising"
+          ],
+          "answer": "C",
+          "explanation": "After \"This is the first time...\", we use the Present Perfect tense (has organised).",
+          "id": "q_mcq_12",
+          "type": "MCQ",
+          "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+          "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+          "points": 0.25,
+          "matrixRef": "C12 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Biết",
+          "stem": "[READING] According to the reading passage, what has brought people from diverse cultural backgrounds together into metropolitan areas?",
+          "options": [
+            "Marine fishing",
+            "Rapid urbanisation",
+            "Rural agriculture",
+            "Space tourism"
+          ],
+          "answer": "B",
+          "explanation": "First sentence of the passage: \"rapid urbanisation has brought people from diverse cultural backgrounds together...\"",
+          "id": "q_mcq_13",
+          "type": "MCQ",
+          "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+          "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+          "points": 0.25,
+          "matrixRef": "C13 [Dòng 3 - Biết]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Biết",
+          "stem": "[READING] Which of the following is mentioned as a benefit of moving to big cities?",
+          "options": [
+            "Better job opportunities and modern healthcare",
+            "Less traffic congestion",
+            "Lower housing costs",
+            "Fewer people in public spaces"
+          ],
+          "answer": "A",
+          "explanation": "The passage states: \"moving to big cities offers young workers better job opportunities, modern healthcare, and higher education\".",
+          "id": "q_mcq_14",
+          "type": "MCQ",
+          "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+          "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+          "points": 0.25,
+          "matrixRef": "C14 [Dòng 3 - Biết]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "[READING] The word \"vibrant\" in the reading passage is closest in meaning to:",
+          "options": [
+            "tiny and isolated",
+            "quiet and empty",
+            "ancient and forgotten",
+            "lively and dynamic"
+          ],
+          "answer": "D",
+          "explanation": "\"vibrant\" means full of energy, lively, and dynamic.",
+          "id": "q_mcq_15",
+          "type": "MCQ",
+          "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+          "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+          "points": 0.25,
+          "matrixRef": "C15 [Dòng 3 - Hiểu]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "[READING] What helps citizens maintain their cultural identity in a globalised world?",
+          "options": [
+            "Avoiding all communication with neighbours",
+            "Preserving traditional festivals, local cuisine, and community values",
+            "Replacing all traditional customs with foreign habits",
+            "Closing down local cultural centres"
+          ],
+          "answer": "B",
+          "explanation": "Last sentence: \"preserving traditional festivals, local cuisine, and community values helps citizens maintain their cultural identity\".",
+          "id": "q_mcq_16",
+          "type": "MCQ",
+          "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+          "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+          "points": 0.25,
+          "matrixRef": "C16 [Dòng 3 - Hiểu]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "[LISTENING TRUE/FALSE] Listen to the interview with Dr. Sarah Jenkins and decide whether the following statements are True (Đ) or False (S):",
+          "statements": [
+            {
+              "text": "Dr. Sarah Jenkins is an urban environmentalist.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Dr. Jenkins believes that adopting a green lifestyle is always too expensive for students.",
+              "isTrue": false,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Sai"
+            },
+            {
+              "text": "Unplugging electronic devices when not in use is one of the habits recommended in the podcast.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "More than 4,500 high school students participated in the \"Zero-Waste Campus\" campaign in Singapore.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) True; b) False (she says simple daily habits are inexpensive and effective); c) True; d) True (Over 4,500 high school students joined).",
+          "items": [
+            {
+              "text": "Dr. Sarah Jenkins is an urban environmentalist.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Dr. Jenkins believes that adopting a green lifestyle is always too expensive for students.",
+              "isTrue": false,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Sai"
+            },
+            {
+              "text": "Unplugging electronic devices when not in use is one of the habits recommended in the podcast.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "More than 4,500 high school students participated in the \"Zero-Waste Campus\" campaign in Singapore.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_1",
+          "type": "TF",
+          "topic": "Chủ đề 1: Skill 1 - Listening (Green Living & Zero-Waste Campus)",
+          "unit": "Bài 1: Listening for specific details & True/False statements (with Audio Tapescript)",
+          "points": 1,
+          "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Listening for specific details & True/False statements (with Audio Tapescript)]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "[READING TRUE/FALSE] Read the passage on Cultural Diversity and Urbanisation and decide whether the statements are True (Đ) or False (S):",
+          "statements": [
+            {
+              "text": "Urbanisation only happens in small rural villages.",
+              "isTrue": false,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Sai"
+            },
+            {
+              "text": "Big cities offer young people access to higher education and modern healthcare.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Rapid urbanisation puts pressure on housing and public infrastructure.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Maintaining traditional festivals and local cuisine supports cultural identity in a globalised society.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) False; b) True; c) True; d) True.",
+          "items": [
+            {
+              "text": "Urbanisation only happens in small rural villages.",
+              "isTrue": false,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Sai"
+            },
+            {
+              "text": "Big cities offer young people access to higher education and modern healthcare.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Rapid urbanisation puts pressure on housing and public infrastructure.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Maintaining traditional festivals and local cuisine supports cultural identity in a globalised society.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_2",
+          "type": "TF",
+          "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+          "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+          "points": 1,
+          "matrixRef": "ĐS2(a,b,c,d) [Dòng 3: Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Fill in the blank with ONE suitable preposition: We should care ________ protecting the environment for future generations.",
+          "answer": "about",
+          "explanation": "Verb + preposition collocation: care about something.",
+          "id": "q_sa_1",
+          "type": "SA",
+          "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+          "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+          "points": 0.5,
+          "matrixRef": "TLN1 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Give the correct form of the verb in brackets: Many green parks (build) ________ in our city since 2022.",
+          "answer": "have been built",
+          "explanation": "Present Perfect Passive with \"since 2022\": have been built.",
+          "id": "q_sa_2",
+          "type": "SA",
+          "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+          "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+          "points": 0.5,
+          "matrixRef": "TLN2 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "[READING] Find ONE word in the reading passage that means \"the basic physical systems and services of a city (such as transport, housing, and power supplies)\".",
+          "answer": "infrastructure",
+          "explanation": "In the passage: \"pressure on housing and public infrastructure\".",
+          "id": "q_sa_3",
+          "type": "SA",
+          "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+          "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+          "points": 0.5,
+          "matrixRef": "TLN3 [Dòng 3 - Hiểu]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Vận dụng",
+          "stem": "[LISTENING] According to the podcast tapescript, how many months did it take students in Singapore to collect 12 tons of recyclable materials? (Write a number)",
+          "answer": "3",
+          "explanation": "Tapescript: \"collecting 12 tons of recyclable paper and plastic within just three months\" -> 3.",
+          "id": "q_sa_4",
+          "type": "SA",
+          "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+          "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+          "points": 0.5,
+          "matrixRef": "TLN4 [Dòng 3 - Vận dụng]"
+        },
+        {
+          "rowId": "row_4",
+          "level": "Hiểu",
+          "points": 1,
+          "stem": "Rewrite the following sentence using the Double Comparative structure (\"The more..., the more...\"):\n\"If a city plants more trees, its air becomes cleaner.\"",
+          "answer": "The more trees a city plants, the cleaner its air becomes.",
+          "explanation": "Scoring rubric (1.0 point): Correct double comparative structure \"The more trees a city plants, the cleaner its air becomes\" (1.0 pt).",
+          "id": "q_essay_1",
+          "type": "ESSAY",
+          "topic": "Chủ đề 4: Skill 4 - Writing (Sentence Transformation & Short Paragraph)",
+          "unit": "Bài 4: Rewriting sentences with Double Comparatives & Writing a paragraph about Green Living",
+          "matrixRef": "TL1 [Dòng 4 - Hiểu]"
+        },
+        {
+          "rowId": "row_4",
+          "level": "Vận dụng",
+          "points": 1,
+          "stem": "Write a short paragraph (100 – 120 words) about three practical ways high school students can practice Green Living at school and at home.",
+          "answer": "Paragraph (100-120 words) discussing 3 green habits: reducing single-use plastic, saving energy, and sorting waste.",
+          "explanation": "Scoring rubric (1.0 point):\n- Task achievement & 3 clear practical ways (0.4 pt)\n- Coherence, cohesion & connectors (First, Second, Finally...) (0.3 pt)\n- Vocabulary & grammar accuracy on Green Living (0.3 pt).",
+          "id": "q_essay_2",
+          "type": "ESSAY",
+          "topic": "Chủ đề 4: Skill 4 - Writing (Sentence Transformation & Short Paragraph)",
+          "unit": "Bài 4: Rewriting sentences with Double Comparatives & Writing a paragraph about Green Living",
+          "matrixRef": "TL2 [Dòng 4 - Vận dụng]"
+        }
+      ]
+    },
+    {
+      "code": "102",
+      "questions": [
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "[LISTENING] According to Dr. Sarah Jenkins, what are megacities replacing single-use plastics with?",
+          "options": [
+            "Biodegradable materials",
+            "Synthetic nylon bags",
+            "Heavy metal containers",
+            "Coal-based products"
+          ],
+          "answer": "A",
+          "explanation": "Dr. Jenkins states: \"many megacities have started replacing single-use plastics with biodegradable materials\".",
+          "id": "q_mcq_2",
+          "type": "MCQ",
+          "topic": "Chủ đề 1: Skill 1 - Listening (Green Living & Zero-Waste Campus)",
+          "unit": "Bài 1: Listening for specific details & True/False statements (with Audio Tapescript)",
+          "points": 0.25,
+          "matrixRef": "C2 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "[READING] What helps citizens maintain their cultural identity in a globalised world?",
+          "options": [
+            "Preserving traditional festivals, local cuisine, and community values",
+            "Replacing all traditional customs with foreign habits",
+            "Closing down local cultural centres",
+            "Avoiding all communication with neighbours"
+          ],
+          "answer": "A",
+          "explanation": "Last sentence: \"preserving traditional festivals, local cuisine, and community values helps citizens maintain their cultural identity\".",
+          "id": "q_mcq_16",
+          "type": "MCQ",
+          "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+          "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+          "points": 0.25,
+          "matrixRef": "C16 [Dòng 3 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Playing ______ guitar is one of my favourite hobbies after school.",
+          "options": [
+            "the",
+            "an",
+            "Ø (no article)",
+            "a"
+          ],
+          "answer": "A",
+          "explanation": "Use the definite article \"the\" before names of musical instruments (play the guitar).",
+          "id": "q_mcq_8",
+          "type": "MCQ",
+          "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+          "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+          "points": 0.25,
+          "matrixRef": "C8 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "This is the first time our school ______ an international cultural exchange fair.",
+          "options": [
+            "was organising",
+            "organises",
+            "has organised",
+            "organised"
+          ],
+          "answer": "C",
+          "explanation": "After \"This is the first time...\", we use the Present Perfect tense (has organised).",
+          "id": "q_mcq_12",
+          "type": "MCQ",
+          "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+          "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+          "points": 0.25,
+          "matrixRef": "C12 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Young graduates often apply ______ jobs in large metropolitan areas.",
+          "options": [
+            "on",
+            "for",
+            "with",
+            "about"
+          ],
+          "answer": "B",
+          "explanation": "Collocation: \"apply for a job\" (nộp đơn xin việc).",
+          "id": "q_mcq_9",
+          "type": "MCQ",
+          "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+          "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+          "points": 0.25,
+          "matrixRef": "C9 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "[LISTENING] According to the podcast, what is the main topic of the interview with Dr. Sarah Jenkins?",
+          "options": [
+            "Marine Wildlife Conservation",
+            "Space Exploration Technologies",
+            "Green Living and Sustainable Cities",
+            "Ancient Architecture in Europe"
+          ],
+          "answer": "C",
+          "explanation": "In the tapescript, the host introduces: \"Today we are talking with Dr. Sarah Jenkins... about Green Living and Sustainable Cities.\"",
+          "id": "q_mcq_1",
+          "type": "MCQ",
+          "topic": "Chủ đề 1: Skill 1 - Listening (Green Living & Zero-Waste Campus)",
+          "unit": "Bài 1: Listening for specific details & True/False statements (with Audio Tapescript)",
+          "points": 0.25,
+          "matrixRef": "C1 [Dòng 1 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Many students now bring reusable water bottles to school, ______ helps reduce plastic waste significantly.",
+          "options": [
+            "whose",
+            "whom",
+            "who",
+            "which"
+          ],
+          "answer": "D",
+          "explanation": "Relative pronoun \"which\" refers to the whole preceding clause.",
+          "id": "q_mcq_10",
+          "type": "MCQ",
+          "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+          "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+          "points": 0.25,
+          "matrixRef": "C10 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Choose the word that differs from the other three in the position of primary stress:",
+          "options": [
+            "festival",
+            "lifestyle",
+            "admire",
+            "plastic"
+          ],
+          "answer": "C",
+          "explanation": "\"admire\" /ədˈmaɪər/ has stress on the 2nd syllable; the others have stress on the 1st syllable.",
+          "id": "q_mcq_6",
+          "type": "MCQ",
+          "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+          "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+          "points": 0.25,
+          "matrixRef": "C6 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "[LISTENING] By how much can simple daily habits reduce a household's carbon footprint each year?",
+          "options": [
+            "Up to 5 percent",
+            "Up to 75 percent",
+            "Up to 25 percent",
+            "Up to 90 percent"
+          ],
+          "answer": "C",
+          "explanation": "Dr. Jenkins mentions: \"can reduce a household's carbon footprint by up to 25 percent every year.\"",
+          "id": "q_mcq_3",
+          "type": "MCQ",
+          "topic": "Chủ đề 1: Skill 1 - Listening (Green Living & Zero-Waste Campus)",
+          "unit": "Bài 1: Listening for specific details & True/False statements (with Audio Tapescript)",
+          "points": 0.25,
+          "matrixRef": "C3 [Dòng 1 - Hiểu]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Biết",
+          "stem": "[READING] Which of the following is mentioned as a benefit of moving to big cities?",
+          "options": [
+            "Less traffic congestion",
+            "Fewer people in public spaces",
+            "Lower housing costs",
+            "Better job opportunities and modern healthcare"
+          ],
+          "answer": "D",
+          "explanation": "The passage states: \"moving to big cities offers young workers better job opportunities, modern healthcare, and higher education\".",
+          "id": "q_mcq_14",
+          "type": "MCQ",
+          "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+          "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+          "points": 0.25,
+          "matrixRef": "C14 [Dòng 3 - Biết]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "[READING] The word \"vibrant\" in the reading passage is closest in meaning to:",
+          "options": [
+            "lively and dynamic",
+            "tiny and isolated",
+            "ancient and forgotten",
+            "quiet and empty"
+          ],
+          "answer": "A",
+          "explanation": "\"vibrant\" means full of energy, lively, and dynamic.",
+          "id": "q_mcq_15",
+          "type": "MCQ",
+          "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+          "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+          "points": 0.25,
+          "matrixRef": "C15 [Dòng 3 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Choose the word whose underlined part differs from the other three in pronunciation: A. c<u>u</u>lture  B. <u>u</u>rban  C. p<u>u</u>blic  D. c<u>u</u>stom",
+          "options": [
+            "urban",
+            "culture",
+            "public",
+            "custom"
+          ],
+          "answer": "A",
+          "explanation": "\"urban\" is pronounced with /ɜː/, whereas culture, public, and custom are pronounced with /ʌ/.",
+          "id": "q_mcq_5",
+          "type": "MCQ",
+          "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+          "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+          "points": 0.25,
+          "matrixRef": "C5 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "The ______ public transport becomes, the ______ people use their private cars.",
+          "options": [
+            "more convenient / least",
+            "more convenient / fewer",
+            "convenient / less",
+            "most convenient / fewest"
+          ],
+          "answer": "B",
+          "explanation": "Double comparative structure: The + comparative + S + V, the + comparative + S + V.",
+          "id": "q_mcq_11",
+          "type": "MCQ",
+          "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+          "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+          "points": 0.25,
+          "matrixRef": "C11 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "[LISTENING] How many tons of recyclable paper and plastic were collected in the \"Zero-Waste Campus\" campaign?",
+          "options": [
+            "12 tons",
+            "45 tons",
+            "3 tons",
+            "25 tons"
+          ],
+          "answer": "A",
+          "explanation": "Tapescript: \"collecting 12 tons of recyclable paper and plastic within just three months.\"",
+          "id": "q_mcq_4",
+          "type": "MCQ",
+          "topic": "Chủ đề 1: Skill 1 - Listening (Green Living & Zero-Waste Campus)",
+          "unit": "Bài 1: Listening for specific details & True/False statements (with Audio Tapescript)",
+          "points": 0.25,
+          "matrixRef": "C4 [Dòng 1 - Hiểu]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Biết",
+          "stem": "[READING] According to the reading passage, what has brought people from diverse cultural backgrounds together into metropolitan areas?",
+          "options": [
+            "Space tourism",
+            "Rural agriculture",
+            "Rapid urbanisation",
+            "Marine fishing"
+          ],
+          "answer": "C",
+          "explanation": "First sentence of the passage: \"rapid urbanisation has brought people from diverse cultural backgrounds together...\"",
+          "id": "q_mcq_13",
+          "type": "MCQ",
+          "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+          "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+          "points": 0.25,
+          "matrixRef": "C13 [Dòng 3 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "While my brother ________ a documentary about Steve Jobs, the electricity suddenly went out.",
+          "options": [
+            "watched",
+            "was watching",
+            "is watching",
+            "has watched"
+          ],
+          "answer": "B",
+          "explanation": "Past Continuous (was watching) describes an action in progress interrupted by a shorter action in the past (went out).",
+          "id": "q_mcq_7",
+          "type": "MCQ",
+          "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+          "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+          "points": 0.25,
+          "matrixRef": "C7 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "[READING TRUE/FALSE] Read the passage on Cultural Diversity and Urbanisation and decide whether the statements are True (Đ) or False (S):",
+          "statements": [
+            {
+              "text": "Urbanisation only happens in small rural villages.",
+              "isTrue": false,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Sai"
+            },
+            {
+              "text": "Big cities offer young people access to higher education and modern healthcare.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Rapid urbanisation puts pressure on housing and public infrastructure.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Maintaining traditional festivals and local cuisine supports cultural identity in a globalised society.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) False; b) True; c) True; d) True.",
+          "items": [
+            {
+              "text": "Urbanisation only happens in small rural villages.",
+              "isTrue": false,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Sai"
+            },
+            {
+              "text": "Big cities offer young people access to higher education and modern healthcare.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Rapid urbanisation puts pressure on housing and public infrastructure.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Maintaining traditional festivals and local cuisine supports cultural identity in a globalised society.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_2",
+          "type": "TF",
+          "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+          "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+          "points": 1,
+          "matrixRef": "ĐS2(a,b,c,d) [Dòng 3: Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "[LISTENING TRUE/FALSE] Listen to the interview with Dr. Sarah Jenkins and decide whether the following statements are True (Đ) or False (S):",
+          "statements": [
+            {
+              "text": "Dr. Sarah Jenkins is an urban environmentalist.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Dr. Jenkins believes that adopting a green lifestyle is always too expensive for students.",
+              "isTrue": false,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Sai"
+            },
+            {
+              "text": "Unplugging electronic devices when not in use is one of the habits recommended in the podcast.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "More than 4,500 high school students participated in the \"Zero-Waste Campus\" campaign in Singapore.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) True; b) False (she says simple daily habits are inexpensive and effective); c) True; d) True (Over 4,500 high school students joined).",
+          "items": [
+            {
+              "text": "Dr. Sarah Jenkins is an urban environmentalist.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Dr. Jenkins believes that adopting a green lifestyle is always too expensive for students.",
+              "isTrue": false,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Sai"
+            },
+            {
+              "text": "Unplugging electronic devices when not in use is one of the habits recommended in the podcast.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Đúng"
+            },
+            {
+              "text": "More than 4,500 high school students participated in the \"Zero-Waste Campus\" campaign in Singapore.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_1",
+          "type": "TF",
+          "topic": "Chủ đề 1: Skill 1 - Listening (Green Living & Zero-Waste Campus)",
+          "unit": "Bài 1: Listening for specific details & True/False statements (with Audio Tapescript)",
+          "points": 1,
+          "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Listening for specific details & True/False statements (with Audio Tapescript)]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "[READING] Find ONE word in the reading passage that means \"the basic physical systems and services of a city (such as transport, housing, and power supplies)\".",
+          "answer": "infrastructure",
+          "explanation": "In the passage: \"pressure on housing and public infrastructure\".",
+          "id": "q_sa_3",
+          "type": "SA",
+          "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+          "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+          "points": 0.5,
+          "matrixRef": "TLN3 [Dòng 3 - Hiểu]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Fill in the blank with ONE suitable preposition: We should care ________ protecting the environment for future generations.",
+          "answer": "about",
+          "explanation": "Verb + preposition collocation: care about something.",
+          "id": "q_sa_1",
+          "type": "SA",
+          "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+          "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+          "points": 0.5,
+          "matrixRef": "TLN1 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Give the correct form of the verb in brackets: Many green parks (build) ________ in our city since 2022.",
+          "answer": "have been built",
+          "explanation": "Present Perfect Passive with \"since 2022\": have been built.",
+          "id": "q_sa_2",
+          "type": "SA",
+          "topic": "Chủ đề 2: Skill 2 - Phonetics & Lexico-Grammar (Units 1 - 4)",
+          "unit": "Bài 2: Past Simple vs Past Continuous, Articles (a/an/the), Verbs with prepositions, Relative clauses (which), Double comparatives",
+          "points": 0.5,
+          "matrixRef": "TLN2 [Dòng 2 - Hiểu]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Vận dụng",
+          "stem": "[LISTENING] According to the podcast tapescript, how many months did it take students in Singapore to collect 12 tons of recyclable materials? (Write a number)",
+          "answer": "3",
+          "explanation": "Tapescript: \"collecting 12 tons of recyclable paper and plastic within just three months\" -> 3.",
+          "id": "q_sa_4",
+          "type": "SA",
+          "topic": "Chủ đề 3: Skill 3 - Reading Comprehension (Multicultural World & Urbanisation)",
+          "unit": "Bài 3: Reading Cloze Text & Reading Comprehension passage about Cultural Diversity and Urbanisation",
+          "points": 0.5,
+          "matrixRef": "TLN4 [Dòng 3 - Vận dụng]"
+        },
+        {
+          "rowId": "row_4",
+          "level": "Hiểu",
+          "points": 1,
+          "stem": "Rewrite the following sentence using the Double Comparative structure (\"The more..., the more...\"):\n\"If a city plants more trees, its air becomes cleaner.\"",
+          "answer": "The more trees a city plants, the cleaner its air becomes.",
+          "explanation": "Scoring rubric (1.0 point): Correct double comparative structure \"The more trees a city plants, the cleaner its air becomes\" (1.0 pt).",
+          "id": "q_essay_1",
+          "type": "ESSAY",
+          "topic": "Chủ đề 4: Skill 4 - Writing (Sentence Transformation & Short Paragraph)",
+          "unit": "Bài 4: Rewriting sentences with Double Comparatives & Writing a paragraph about Green Living",
+          "matrixRef": "TL1 [Dòng 4 - Hiểu]"
+        },
+        {
+          "rowId": "row_4",
+          "level": "Vận dụng",
+          "points": 1,
+          "stem": "Write a short paragraph (100 – 120 words) about three practical ways high school students can practice Green Living at school and at home.",
+          "answer": "Paragraph (100-120 words) discussing 3 green habits: reducing single-use plastic, saving energy, and sorting waste.",
+          "explanation": "Scoring rubric (1.0 point):\n- Task achievement & 3 clear practical ways (0.4 pt)\n- Coherence, cohesion & connectors (First, Second, Finally...) (0.3 pt)\n- Vocabulary & grammar accuracy on Green Living (0.3 pt).",
+          "id": "q_essay_2",
+          "type": "ESSAY",
+          "topic": "Chủ đề 4: Skill 4 - Writing (Sentence Transformation & Short Paragraph)",
+          "unit": "Bài 4: Rewriting sentences with Double Comparatives & Writing a paragraph about Green Living",
+          "matrixRef": "TL2 [Dòng 4 - Vận dụng]"
+        }
+      ]
+    }
+  ],
+  "readingPassage": "Read the following passage about Cultural Diversity and Urbanisation and answer the questions:\nIn the 21st century, rapid urbanisation has brought people from diverse cultural backgrounds together into vibrant metropolitan areas. While moving to big cities offers young workers better job opportunities, modern healthcare, and higher education, it also creates pressure on housing and public infrastructure. At the same time, preserving traditional festivals, local cuisine, and community values helps citizens maintain their cultural identity in a globalised world.",
+  "listeningTranscript": "[TAPESCRIPT FOR LISTENING SECTION - TEACHER'S COPY]\nHost: Welcome to \"Green Future Podcast\". Today we are talking with Dr. Sarah Jenkins, an urban environmentalist, about Green Living and Sustainable Cities.\nDr. Sarah Jenkins: Thank you! Over the past decade, many megacities have started replacing single-use plastics with biodegradable materials and expanding electric public transport networks.\nHost: What is the biggest challenge for young people who want to adopt a green lifestyle?\nDr. Sarah Jenkins: Many students think green living is expensive. However, simple daily habits like bringing a reusable water bottle, unplugging electronic devices when not in use, and sorting household waste can reduce a household's carbon footprint by up to 25 percent every year.\nHost: Did your recent project in Singapore show positive results?\nDr. Sarah Jenkins: Yes! Over 4,500 high school students joined our \"Zero-Waste Campus\" campaign in 2025, collecting 12 tons of recyclable paper and plastic within just three months.",
+  "qaReport": {
+    "isValid": true,
+    "score": 100,
+    "stats": {
+      "levels": [
+        "Biết",
+        "Hiểu",
+        "Vận dụng"
+      ],
+      "qTypes": [
+        "MCQ",
+        "TF",
+        "SA",
+        "ESSAY"
+      ],
+      "pointRules": {
+        "MCQ": 0.25,
+        "TF": 0.25,
+        "SA": 0.5,
+        "ESSAY": 1
+      },
+      "byLevel": {
+        "Biết": 13,
+        "Hiểu": 13,
+        "Vận dụng": 4
+      },
+      "pointsByLevel": {
+        "Biết": 3.5,
+        "Hiểu": 4.5,
+        "Vận dụng": 2
+      },
+      "levelPercentages": {
+        "Biết": 35,
+        "Hiểu": 45,
+        "Vận dụng": 20
+      },
+      "byType": {
+        "MCQ": 16,
+        "TF": 8,
+        "SA": 4,
+        "ESSAY": 2
+      },
+      "pointsByType": {
+        "MCQ": 4,
+        "TF": 2,
+        "SA": 2,
+        "ESSAY": 2
+      },
+      "tfQuestionsCount": 2,
+      "totalItems": 30,
+      "totalQuestions": 24,
+      "totalPoints": 10
+    },
+    "passedChecks": [
+      "Đúng quy định cấp THPT (Thông tư 22/2021/TT-BGDĐT & Công văn 7991/BGDĐT-GDTrH) với các mức độ: Biết, Hiểu, Vận dụng.",
+      "Tổng điểm Ma trận chính xác: 10.0 / 10.0 điểm.",
+      "Bản đặc tả khớp 1-1 với Ma trận (4/4 đơn vị kiến thức).",
+      "Số lượng câu hỏi/lệnh hỏi từng dạng thức trong Đề khớp tuyệt đối với Ma trận (MCQ: 16, Đúng/Sai: 8 ý, Trả lời ngắn: 4, Tự luận: 2).",
+      "Tổng điểm các câu hỏi trong Đề kiểm tra (10.0đ) khớp tuyệt đối với Ma trận (10.0đ).",
+      "100% câu hỏi (24/24) có mã liên kết trực tiếp với Ma trận và Bản đặc tả.",
+      "100% câu hỏi (24/24) có đầy đủ đáp án và hướng dẫn chấm chi tiết.",
+      "Đã khởi tạo 2 mã đề (101, 102) đồng bộ số câu và bảng đáp án riêng."
+    ],
+    "warnings": [],
+    "issues": [],
+    "mathVerifications": []
+  }
+}

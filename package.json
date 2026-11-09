@@ -1,0 +1,14 @@
+{
+  "name": "ai-ra-de-kiem-tra-tu-dong",
+  "version": "1.0.0",
+  "description": "Ứng dụng AI Ra Đề Kiểm Tra Tự Động (Ma trận - Bản đặc tả - Đề kiểm tra - Đáp án - Xuất Word A4) cho Giáo viên Tiểu học, THCS và THPT",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node tests/run-qa-tests.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+

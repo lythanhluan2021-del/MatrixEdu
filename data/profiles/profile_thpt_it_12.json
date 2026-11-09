@@ -1,0 +1,2303 @@
+{
+  "id": "profile_thpt_it_12",
+  "title": "Cuối học kỳ I - Tin học Lớp 12 (THPT)",
+  "updatedAt": "2026-11-08T14:27:51.517Z",
+  "metadata": {
+    "schoolName": "TRƯỜNG THPT LÊ HỒNG PHONG",
+    "departmentName": "TỔ TIN HỌC - CÔNG NGHỆ",
+    "schoolYear": "2026 - 2027",
+    "level": "THPT",
+    "grade": "12",
+    "subject": "Tin học",
+    "textbook": "Kết nối tri thức với cuộc sống",
+    "examPeriod": "Cuối học kỳ I",
+    "duration": 45,
+    "numVariants": 2,
+    "regulation": "CV7991_TT22",
+    "localGuidelines": "Cấu trúc đề Tin học 12 theo định hướng THPT: Phần I gồm 12 câu Trắc nghiệm nhiều lựa chọn (3,0đ); Phần II gồm 4 câu Trắc nghiệm Đúng/Sai × 4 ý a,b,c,d (4,0đ); Phần III gồm 6 câu Trả lời ngắn tính toán địa chỉ IP, CSS specificity, truy vấn dữ liệu và HTML (3,0đ). Tổng = 10,0 điểm."
+  },
+  "units": [
+    {
+      "id": "unit_1",
+      "topic": "Chủ đề A: Máy tính và xã hội tri thức - Trí tuệ nhân tạo (AI)",
+      "unit": "Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI",
+      "outcomes": {
+        "Biết": "Nêu được khái niệm AI, phân biệt AI hẹp và AI rộng, nhận diện các ứng dụng AI như nhận dạng khuôn mặt, trợ lý ảo.",
+        "Hiểu": "Giải thích được lợi ích và nguy cơ về quyền riêng tư, bản quyền, thiên kiến dữ liệu khi ứng dụng AI.",
+        "Vận dụng": "Đánh giá giải pháp ứng dụng AI an toàn trong giáo dục và y tế."
+      },
+      "keyFacts": [
+        "Biết: Nêu được khái niệm AI, phân biệt AI hẹp và AI rộng, nhận diện các ứng dụng AI như nhận dạng khuôn mặt, trợ lý ảo.",
+        "Hiểu: Giải thích được lợi ích và nguy cơ về quyền riêng tư, bản quyền, thiên kiến dữ liệu khi ứng dụng AI.",
+        "Vận dụng: Đánh giá giải pháp ứng dụng AI an toàn trong giáo dục và y tế."
+      ]
+    },
+    {
+      "id": "unit_2",
+      "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+      "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+      "outcomes": {
+        "Biết": "Nhận biết chức năng của Switch, Router, Access Point, Modem và ý nghĩa giao thức TCP, IP, HTTP, DNS.",
+        "Hiểu": "Phân biệt mạng LAN và WAN; xác định số bit của địa chỉ IPv4 (32 bit) và IPv6 (128 bit).",
+        "Vận dụng": "Tính toán số lượng địa chỉ IP khả dụng cho máy trạm (Host) trong mạng con và thiết lập mạng LAN cho phòng máy."
+      },
+      "keyFacts": [
+        "Biết: Nhận biết chức năng của Switch, Router, Access Point, Modem và ý nghĩa giao thức TCP, IP, HTTP, DNS.",
+        "Hiểu: Phân biệt mạng LAN và WAN; xác định số bit của địa chỉ IPv4 (32 bit) và IPv6 (128 bit).",
+        "Vận dụng: Tính toán số lượng địa chỉ IP khả dụng cho máy trạm (Host) trong mạng con và thiết lập mạng LAN cho phòng máy."
+      ]
+    },
+    {
+      "id": "unit_3",
+      "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+      "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+      "outcomes": {
+        "Biết": "Nhận biết các thẻ HTML cơ bản (h1..h6, p, a, img, table, tr, td, form, input) và cú pháp quy tắc CSS.",
+        "Hiểu": "Phân biệt bộ chọn CSS theo thẻ, lớp (.class) và định danh (#id); giải thích mô hình hộp (Box Model: content, padding, border, margin).",
+        "Vận dụng": "Tính tổng chiều rộng hiển thị thực tế của phần tử theo CSS Box Model và viết/sửa đoạn mã HTML-CSS chuẩn."
+      },
+      "keyFacts": [
+        "Biết: Nhận biết các thẻ HTML cơ bản (h1..h6, p, a, img, table, tr, td, form, input) và cú pháp quy tắc CSS.",
+        "Hiểu: Phân biệt bộ chọn CSS theo thẻ, lớp (.class) và định danh (#id); giải thích mô hình hộp (Box Model: content, padding, border, margin).",
+        "Vận dụng: Tính tổng chiều rộng hiển thị thực tế của phần tử theo CSS Box Model và viết/sửa đoạn mã HTML-CSS chuẩn."
+      ]
+    }
+  ],
+  "matrix": {
+    "levels": [
+      "Biết",
+      "Hiểu",
+      "Vận dụng"
+    ],
+    "questionTypes": [
+      "MCQ",
+      "TF",
+      "SA",
+      "ESSAY"
+    ],
+    "pointRules": {
+      "MCQ": 0.25,
+      "TF": 0.25,
+      "SA": 0.5,
+      "ESSAY": 1
+    },
+    "rows": [
+      {
+        "id": "row_1",
+        "topic": "Chủ đề A: Máy tính và xã hội tri thức - Trí tuệ nhân tạo (AI)",
+        "unit": "Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI",
+        "counts": {
+          "MCQ": {
+            "Biết": 3,
+            "Hiểu": 1,
+            "Vận dụng": 0
+          },
+          "TF": {
+            "Biết": 2,
+            "Hiểu": 1,
+            "Vận dụng": 1
+          },
+          "SA": {
+            "Biết": 0,
+            "Hiểu": 1,
+            "Vận dụng": 0
+          },
+          "ESSAY": {
+            "Biết": 0,
+            "Hiểu": 0,
+            "Vận dụng": 0
+          }
+        },
+        "points": 2.5
+      },
+      {
+        "id": "row_2",
+        "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+        "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+        "counts": {
+          "MCQ": {
+            "Biết": 3,
+            "Hiểu": 1,
+            "Vận dụng": 0
+          },
+          "TF": {
+            "Biết": 2,
+            "Hiểu": 1,
+            "Vận dụng": 1
+          },
+          "SA": {
+            "Biết": 0,
+            "Hiểu": 1,
+            "Vận dụng": 1
+          },
+          "ESSAY": {
+            "Biết": 0,
+            "Hiểu": 0,
+            "Vận dụng": 0
+          }
+        },
+        "points": 3
+      },
+      {
+        "id": "row_3",
+        "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+        "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+        "counts": {
+          "MCQ": {
+            "Biết": 2,
+            "Hiểu": 2,
+            "Vận dụng": 0
+          },
+          "TF": {
+            "Biết": 3,
+            "Hiểu": 3,
+            "Vận dụng": 2
+          },
+          "SA": {
+            "Biết": 0,
+            "Hiểu": 1,
+            "Vận dụng": 2
+          },
+          "ESSAY": {
+            "Biết": 0,
+            "Hiểu": 0,
+            "Vận dụng": 0
+          }
+        },
+        "points": 4.5
+      }
+    ]
+  },
+  "specification": [
+    {
+      "rowId": "row_1",
+      "topic": "Chủ đề A: Máy tính và xã hội tri thức - Trí tuệ nhân tạo (AI)",
+      "unit": "Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI",
+      "outcomes": {
+        "Biết": "Nêu được khái niệm AI, phân biệt AI hẹp và AI rộng, nhận diện các ứng dụng AI như nhận dạng khuôn mặt, trợ lý ảo.",
+        "Hiểu": "Giải thích được lợi ích và nguy cơ về quyền riêng tư, bản quyền, thiên kiến dữ liệu khi ứng dụng AI.",
+        "Vận dụng": "Đánh giá giải pháp ứng dụng AI an toàn trong giáo dục và y tế."
+      },
+      "questionRefs": {
+        "MCQ": [
+          "C1",
+          "C2",
+          "C3",
+          "C4"
+        ],
+        "TF": [
+          "ĐS1a",
+          "ĐS1b",
+          "ĐS1c",
+          "ĐS1d"
+        ],
+        "SA": [
+          "TLN1"
+        ],
+        "ESSAY": []
+      }
+    },
+    {
+      "rowId": "row_2",
+      "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+      "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+      "outcomes": {
+        "Biết": "Nhận biết chức năng của Switch, Router, Access Point, Modem và ý nghĩa giao thức TCP, IP, HTTP, DNS.",
+        "Hiểu": "Phân biệt mạng LAN và WAN; xác định số bit của địa chỉ IPv4 (32 bit) và IPv6 (128 bit).",
+        "Vận dụng": "Tính toán số lượng địa chỉ IP khả dụng cho máy trạm (Host) trong mạng con và thiết lập mạng LAN cho phòng máy."
+      },
+      "questionRefs": {
+        "MCQ": [
+          "C5",
+          "C6",
+          "C7",
+          "C8"
+        ],
+        "TF": [
+          "ĐS2a",
+          "ĐS2b",
+          "ĐS2c",
+          "ĐS2d"
+        ],
+        "SA": [
+          "TLN2",
+          "TLN3"
+        ],
+        "ESSAY": []
+      }
+    },
+    {
+      "rowId": "row_3",
+      "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+      "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+      "outcomes": {
+        "Biết": "Nhận biết các thẻ HTML cơ bản (h1..h6, p, a, img, table, tr, td, form, input) và cú pháp quy tắc CSS.",
+        "Hiểu": "Phân biệt bộ chọn CSS theo thẻ, lớp (.class) và định danh (#id); giải thích mô hình hộp (Box Model: content, padding, border, margin).",
+        "Vận dụng": "Tính tổng chiều rộng hiển thị thực tế của phần tử theo CSS Box Model và viết/sửa đoạn mã HTML-CSS chuẩn."
+      },
+      "questionRefs": {
+        "MCQ": [
+          "C9",
+          "C10",
+          "C11",
+          "C12"
+        ],
+        "TF": [
+          "ĐS3a",
+          "ĐS3b",
+          "ĐS3c",
+          "ĐS3d",
+          "ĐS4a",
+          "ĐS4b",
+          "ĐS4c",
+          "ĐS4d"
+        ],
+        "SA": [
+          "TLN4",
+          "TLN5",
+          "TLN6"
+        ],
+        "ESSAY": []
+      }
+    }
+  ],
+  "questions": [
+    {
+      "qCode": "C1",
+      "rowId": "row_1",
+      "level": "Biết",
+      "stem": "Phương án nào sau đây liệt kê hai phân loại chính của Trí tuệ nhân tạo (AI)?",
+      "options": [
+        "AI tổng quát (AGI) và AI Tự học (ALI).",
+        "AI hẹp (ANI) và AI siêu thông minh (ASI).",
+        "AI tổng quát (AGI) và AI siêu thông minh (ASI).",
+        "AI hẹp (ANI) và AI tổng quát (AGI)."
+      ],
+      "answer": "D",
+      "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx\" trong Ngân hàng câu hỏi Google Drive.",
+      "sourceFile": "Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx",
+      "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx)",
+      "isZeroHallucination": true,
+      "driveQuestionId": "MCQ_Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx_Q33",
+      "id": "q_mcq_1",
+      "type": "MCQ",
+      "topic": "Chủ đề A: Máy tính và xã hội tri thức - Trí tuệ nhân tạo (AI)",
+      "unit": "Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI",
+      "points": 0.25,
+      "matrixRef": "C1 [Dòng 1 - Biết]"
+    },
+    {
+      "qCode": "C2",
+      "rowId": "row_1",
+      "level": "Biết",
+      "stem": "Sự kiện nào đánh dấu sự khởi đầu của lịch sử trí tuệ nhân tạo?",
+      "options": [
+        "Hội thảo tại Stanford vào năm 1955.",
+        "Sự phát triển của hệ thống MYCIN vào những năm 1970.",
+        "Hội thảo tại MIT vào năm 1960.",
+        "Hội thảo Dartmouth năm 1956."
+      ],
+      "answer": "D",
+      "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx\" trong Ngân hàng câu hỏi Google Drive.",
+      "sourceFile": "Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx",
+      "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx)",
+      "isZeroHallucination": true,
+      "driveQuestionId": "MCQ_Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx_Q2",
+      "id": "q_mcq_2",
+      "type": "MCQ",
+      "topic": "Chủ đề A: Máy tính và xã hội tri thức - Trí tuệ nhân tạo (AI)",
+      "unit": "Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI",
+      "points": 0.25,
+      "matrixRef": "C2 [Dòng 1 - Biết]"
+    },
+    {
+      "qCode": "C3",
+      "rowId": "row_1",
+      "level": "Biết",
+      "stem": "Hội thảo nào được coi là điểm mốc ghi nhận sự ra đời của thuật ngữ AI, đánh dấu sự khởi đầu của lĩnh vực AI, thúc đẩy sự phát triển của lĩnh vực này trong các năm tiếp theo?",
+      "options": [
+        "Hội thảo Jenesys.",
+        "Hội thảo Dartmouth.",
+        "Hội thảo Hampshire.",
+        "Hội thảo Bletchley."
+      ],
+      "answer": "B",
+      "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx\" trong Ngân hàng câu hỏi Google Drive.",
+      "sourceFile": "Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx",
+      "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx)",
+      "isZeroHallucination": true,
+      "driveQuestionId": "MCQ_Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx_Q20",
+      "id": "q_mcq_3",
+      "type": "MCQ",
+      "topic": "Chủ đề A: Máy tính và xã hội tri thức - Trí tuệ nhân tạo (AI)",
+      "unit": "Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI",
+      "points": 0.25,
+      "matrixRef": "C3 [Dòng 1 - Biết]"
+    },
+    {
+      "qCode": "C4",
+      "rowId": "row_1",
+      "level": "Hiểu",
+      "stem": "Phương án nào dưới đây là đúng khi giải thích về sự phát triển của trí tuệ nhân tạo (AI) lại có thể trở thành mối đe dọa tiềm ẩn đối với an ninh và an toàn?",
+      "options": [
+        "AI có thể bị sử dụng để tạo ra các cuộc tấn công mạng tinh vi hơn, khó phát hiện hơn.",
+        "AI có khả năng thay thế hoàn toàn con người trong mọi công việc, khiến cho nhân lực trở nên không còn cần thiết.",
+        "AI chỉ có thể áp dụng trong các lĩnh vực giải trí và không ảnh hưởng đến các lĩnh vực quan trọng khác.",
+        "Sự phát triển của AI chỉ làm tăng hiệu suất công việc mà không có tác động tiêu cực nào."
+      ],
+      "answer": "A",
+      "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx\" trong Ngân hàng câu hỏi Google Drive.",
+      "sourceFile": "Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx",
+      "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx)",
+      "isZeroHallucination": true,
+      "driveQuestionId": "MCQ_Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx_Q8",
+      "id": "q_mcq_4",
+      "type": "MCQ",
+      "topic": "Chủ đề A: Máy tính và xã hội tri thức - Trí tuệ nhân tạo (AI)",
+      "unit": "Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI",
+      "points": 0.25,
+      "matrixRef": "C4 [Dòng 1 - Hiểu]"
+    },
+    {
+      "qCode": "C5",
+      "rowId": "row_2",
+      "level": "Biết",
+      "stem": "Trong mô hình TCP/IP, Router hoạt động chủ yếu ở tầng nào?",
+      "options": [
+        "Tầng Internet",
+        "Tầng ứng dụng",
+        "Tầng truy cập mạng",
+        "Tầng giao vận"
+      ],
+      "answer": "A",
+      "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+      "sourceFile": "Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx",
+      "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx)",
+      "isZeroHallucination": true,
+      "driveQuestionId": "MCQ_Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx_Q78",
+      "id": "q_mcq_5",
+      "type": "MCQ",
+      "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+      "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+      "points": 0.25,
+      "matrixRef": "C5 [Dòng 2 - Biết]"
+    },
+    {
+      "qCode": "C6",
+      "rowId": "row_2",
+      "level": "Biết",
+      "stem": "Lý do chính khiến IPv6 được triển khai thay thế IPv4 là gì?",
+      "options": [
+        "IPv6 bảo mật tuyệt đối",
+        "IPv6 dễ nhớ hơn IPv4",
+        "IPv6 truyền dữ liệu nhanh hơn",
+        "Không gian địa chỉ IPv4 bị cạn kiệt"
+      ],
+      "answer": "D",
+      "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+      "sourceFile": "Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx",
+      "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx)",
+      "isZeroHallucination": true,
+      "driveQuestionId": "MCQ_Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx_Q80",
+      "id": "q_mcq_6",
+      "type": "MCQ",
+      "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+      "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+      "points": 0.25,
+      "matrixRef": "C6 [Dòng 2 - Biết]"
+    },
+    {
+      "qCode": "C7",
+      "rowId": "row_2",
+      "level": "Biết",
+      "stem": "Router khác switch ở đặc điểm:",
+      "options": [
+        "Chỉ phát Wi-Fi",
+        "Định tuyến giữa các mạng",
+        "Có nhiều cổng hơn",
+        "Chỉ dùng trong LAN"
+      ],
+      "answer": "B",
+      "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+      "sourceFile": "Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx",
+      "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx)",
+      "isZeroHallucination": true,
+      "driveQuestionId": "MCQ_Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx_Q23",
+      "id": "q_mcq_7",
+      "type": "MCQ",
+      "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+      "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+      "points": 0.25,
+      "matrixRef": "C7 [Dòng 2 - Biết]"
+    },
+    {
+      "qCode": "C8",
+      "rowId": "row_2",
+      "level": "Hiểu",
+      "stem": "Phát biểu nào sau đây là đúng khi so sánh IPv4 và IPv6?",
+      "options": [
+        "IPv6 không hỗ trợ bảo mật",
+        "IPv6 giúp giảm nguy cơ cạn kiệt địa chỉ IP",
+        "IPv4 có không gian địa chỉ lớn hơn IPv6",
+        "IPv6 được biểu diễn bằng 4 cụm số thập phân"
+      ],
+      "answer": "B",
+      "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+      "sourceFile": "Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx",
+      "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx)",
+      "isZeroHallucination": true,
+      "driveQuestionId": "MCQ_Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx_Q71",
+      "id": "q_mcq_8",
+      "type": "MCQ",
+      "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+      "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+      "points": 0.25,
+      "matrixRef": "C8 [Dòng 2 - Hiểu]"
+    },
+    {
+      "qCode": "C9",
+      "rowId": "row_3",
+      "level": "Biết",
+      "stem": "Wi-Fi là một bộ tiêu chuẩn kĩ thuật truyền dữ liệu bằng … được sử dụng rộng rãi trong các mạng cục bộ. Điền cụm từ còn thiếu vào dấu ba chấm.",
+      "options": [
+        "Cáp đồng trục",
+        "Đường dây điện thoại",
+        "Sóng vô tuyến điện",
+        "Cáp xoắn đôi"
+      ],
+      "answer": "C",
+      "explanation": "Căn cứ theo tài liệu \"CD3-Một số thiết bị Mạng thông dụng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+      "sourceFile": "CD3-Một số thiết bị Mạng thông dụng.docx",
+      "sourceBadge": "Ngân hàng Google Drive (CD3-Một số thiết bị Mạng thông dụng.docx)",
+      "isZeroHallucination": true,
+      "driveQuestionId": "MCQ_CD3-Một số thiết bị Mạng thông dụng.docx_Q74",
+      "id": "q_mcq_9",
+      "type": "MCQ",
+      "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+      "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+      "points": 0.25,
+      "matrixRef": "C9 [Dòng 3 - Biết]"
+    },
+    {
+      "qCode": "C10",
+      "rowId": "row_3",
+      "level": "Biết",
+      "stem": "Em sẽ làm gì trong các trường hợp sau: “Được một nhóm bạn truyền cho một địa chỉ website nhưng dặn là phải bí mật, không để người lớn biết”.",
+      "options": [
+        "Bí mật bấm vào xem địa chỉ website để xem.",
+        "Không bấm vào và báo cáo với người lớn.",
+        "Nhờ người lớn hướng dẫn mở website để xem.",
+        "Bấm vào xem và gửi địa chỉ website cho các bạn khác."
+      ],
+      "answer": "B",
+      "explanation": "Căn cứ theo tài liệu \"CD3-Một số thiết bị Mạng thông dụng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+      "sourceFile": "CD3-Một số thiết bị Mạng thông dụng.docx",
+      "sourceBadge": "Ngân hàng Google Drive (CD3-Một số thiết bị Mạng thông dụng.docx)",
+      "isZeroHallucination": true,
+      "driveQuestionId": "MCQ_CD3-Một số thiết bị Mạng thông dụng.docx_Q40",
+      "id": "q_mcq_10",
+      "type": "MCQ",
+      "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+      "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+      "points": 0.25,
+      "matrixRef": "C10 [Dòng 3 - Biết]"
+    },
+    {
+      "qCode": "C11",
+      "rowId": "row_3",
+      "level": "Hiểu",
+      "stem": "Địa chỉ trang Web https://igiaoduc.vn/ chữ “vn” trên địa chỉ trang web có ý nghĩa gì?",
+      "options": [
+        "Địa chỉ gmail",
+        "Chữ viết tắt tiếng Anh",
+        "Ký hiệu tên nước",
+        "Một kí hiệu nào đó"
+      ],
+      "answer": "C",
+      "explanation": "Căn cứ theo tài liệu \"CD3-Một số thiết bị Mạng thông dụng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+      "sourceFile": "CD3-Một số thiết bị Mạng thông dụng.docx",
+      "sourceBadge": "Ngân hàng Google Drive (CD3-Một số thiết bị Mạng thông dụng.docx)",
+      "isZeroHallucination": true,
+      "driveQuestionId": "MCQ_CD3-Một số thiết bị Mạng thông dụng.docx_Q67",
+      "id": "q_mcq_11",
+      "type": "MCQ",
+      "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+      "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+      "points": 0.25,
+      "matrixRef": "C11 [Dòng 3 - Hiểu]"
+    },
+    {
+      "qCode": "C12",
+      "rowId": "row_3",
+      "level": "Hiểu",
+      "stem": "Phát biểu nào sau đây đúng?",
+      "options": [
+        "Khi dùng hub thì tín hiệu đi từ máy gửi đến máy nhận sẽ không gây xung đột với tín hiệu của các cuộc truyền ở cổng khác.",
+        "Thông thường LAN kết nối có dây các máy tính qua các thiết bị như switch hay hub trong một phạm vi địa lí nhất định.",
+        "Mạng viễn thông sử dụng các modem để chuyển tiếp dữ liệu.",
+        "Switch có chi phí rẻ hơn rất nhiều so với một hub có cùng số cổng."
+      ],
+      "answer": "B",
+      "explanation": "Căn cứ theo tài liệu \"CD3-Một số thiết bị Mạng thông dụng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+      "sourceFile": "CD3-Một số thiết bị Mạng thông dụng.docx",
+      "sourceBadge": "Ngân hàng Google Drive (CD3-Một số thiết bị Mạng thông dụng.docx)",
+      "isZeroHallucination": true,
+      "driveQuestionId": "MCQ_CD3-Một số thiết bị Mạng thông dụng.docx_Q2",
+      "id": "q_mcq_12",
+      "type": "MCQ",
+      "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+      "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+      "points": 0.25,
+      "matrixRef": "C12 [Dòng 3 - Hiểu]"
+    },
+    {
+      "rowId": "row_1",
+      "level": "Hiểu",
+      "stem": "Một bệnh viện triển khai hệ thống AI hỗ trợ bác sĩ đọc ảnh chụp X-quang phổi và quản lý hồ sơ bệnh án. Xét tính Đúng (Đ) hoặc Sai (S) của các nhận định sau:",
+      "statements": [
+        {
+          "text": "Hệ thống AI phân tích ảnh X-quang thuộc lĩnh vực Thị giác máy tính (Computer Vision).",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Hệ thống này thuộc loại AI hẹp (ANI) vì chuyên giải quyết bài toán chẩn đoán hình ảnh y khoa.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Dữ liệu bệnh án của bệnh nhân có thể công khai tự do lên mạng xã hội để huấn luyện AI mà không cần xin phép hay ẩn danh.",
+          "isTrue": false,
+          "level": "Hiểu",
+          "letter": "c",
+          "answer": "Sai"
+        },
+        {
+          "text": "Kết quả gợi ý của AI đóng vai trò hỗ trợ chuyên môn, quyết định điều trị cuối cùng vẫn cần bác sĩ thẩm định và chịu trách nhiệm.",
+          "isTrue": true,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "explanation": "a) Đúng; b) Đúng; c) Sai vì vi phạm nghiêm trọng quyền riêng tư và bảo mật dữ liệu y tế; d) Đúng.",
+      "items": [
+        {
+          "text": "Hệ thống AI phân tích ảnh X-quang thuộc lĩnh vực Thị giác máy tính (Computer Vision).",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Hệ thống này thuộc loại AI hẹp (ANI) vì chuyên giải quyết bài toán chẩn đoán hình ảnh y khoa.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Dữ liệu bệnh án của bệnh nhân có thể công khai tự do lên mạng xã hội để huấn luyện AI mà không cần xin phép hay ẩn danh.",
+          "isTrue": false,
+          "level": "Hiểu",
+          "letter": "c",
+          "answer": "Sai"
+        },
+        {
+          "text": "Kết quả gợi ý của AI đóng vai trò hỗ trợ chuyên môn, quyết định điều trị cuối cùng vẫn cần bác sĩ thẩm định và chịu trách nhiệm.",
+          "isTrue": true,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+      "isZeroHallucination": true,
+      "id": "q_tf_1",
+      "type": "TF",
+      "topic": "Chủ đề A: Máy tính và xã hội tri thức - Trí tuệ nhân tạo (AI)",
+      "unit": "Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI",
+      "points": 1,
+      "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI]"
+    },
+    {
+      "rowId": "row_2",
+      "level": "Hiểu",
+      "stem": "Một phòng máy tính của trường THPT gồm 40 máy tính để bàn được kết nối mạng LAN và truy cập Internet. Xét tính Đúng (Đ) hoặc Sai (S) của các nhận định sau:",
+      "statements": [
+        {
+          "text": "Thiết bị Switch dùng để kết nối các máy tính trong cùng mạng nội bộ LAN của phòng máy.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Giao thức TCP đảm bảo truyền dữ liệu tin cậy, có kiểm soát lỗi và thứ tự gói tin.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Địa chỉ IPv4 `192.168.1.300` là một địa chỉ IPv4 hợp lệ.",
+          "isTrue": false,
+          "level": "Hiểu",
+          "letter": "c",
+          "answer": "Sai"
+        },
+        {
+          "text": "Khi hai máy tính trong phòng máy có cùng địa chỉ IP tĩnh giống hệt nhau, mạng sẽ xảy ra xung đột địa chỉ IP (IP Conflict).",
+          "isTrue": true,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "explanation": "a) Đúng; b) Đúng; c) Sai vì mỗi octet của IPv4 chỉ có giá trị từ 0 đến 255 (300 > 255); d) Đúng.",
+      "items": [
+        {
+          "text": "Thiết bị Switch dùng để kết nối các máy tính trong cùng mạng nội bộ LAN của phòng máy.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Giao thức TCP đảm bảo truyền dữ liệu tin cậy, có kiểm soát lỗi và thứ tự gói tin.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Địa chỉ IPv4 `192.168.1.300` là một địa chỉ IPv4 hợp lệ.",
+          "isTrue": false,
+          "level": "Hiểu",
+          "letter": "c",
+          "answer": "Sai"
+        },
+        {
+          "text": "Khi hai máy tính trong phòng máy có cùng địa chỉ IP tĩnh giống hệt nhau, mạng sẽ xảy ra xung đột địa chỉ IP (IP Conflict).",
+          "isTrue": true,
+          "level": "Vận dụng",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+      "isZeroHallucination": true,
+      "id": "q_tf_2",
+      "type": "TF",
+      "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+      "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+      "points": 1,
+      "matrixRef": "ĐS2(a,b,c,d) [Dòng 2: Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6]"
+    },
+    {
+      "rowId": "row_3",
+      "level": "Biết",
+      "stem": "Cho đoạn mã HTML tạo biểu mẫu đăng ký câu lạc bộ Tin học: `<form action=\"/submit\" method=\"post\"><input type=\"text\" name=\"fullname\"><input type=\"password\" name=\"pwd\"><input type=\"submit\" value=\"Gửi\"></form>`. Xét tính Đúng (Đ) hoặc Sai (S) của các nhận định sau:",
+      "statements": [
+        {
+          "text": "Thẻ `<form>` dùng để tạo biểu mẫu thu thập dữ liệu từ người dùng trên trang web.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Phần tử `<input type=\"password\">` sẽ hiển thị các ký tự nhập vào dưới dạng dấu chấm/ẩn để bảo mật mật khẩu.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Thuộc tính `method=\"post\"` đính kèm toàn bộ mật khẩu hiển thị công khai trên thanh địa chỉ URL của trình duyệt.",
+          "isTrue": false,
+          "level": "Biết",
+          "letter": "c",
+          "answer": "Sai"
+        },
+        {
+          "text": "Nếu muốn người dùng chỉ được chọn duy nhất 1 khối lớp (10, 11 hoặc 12), ta sử dụng các thẻ `<input type=\"radio\">` có cùng thuộc tính `name=\"grade\"`.",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "explanation": "a) Đúng; b) Đúng; c) Sai (đó là đặc điểm của GET, còn POST gửi dữ liệu trong phần thân HTTP request); d) Đúng.",
+      "items": [
+        {
+          "text": "Thẻ `<form>` dùng để tạo biểu mẫu thu thập dữ liệu từ người dùng trên trang web.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "a",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Phần tử `<input type=\"password\">` sẽ hiển thị các ký tự nhập vào dưới dạng dấu chấm/ẩn để bảo mật mật khẩu.",
+          "isTrue": true,
+          "level": "Biết",
+          "letter": "b",
+          "answer": "Đúng"
+        },
+        {
+          "text": "Thuộc tính `method=\"post\"` đính kèm toàn bộ mật khẩu hiển thị công khai trên thanh địa chỉ URL của trình duyệt.",
+          "isTrue": false,
+          "level": "Biết",
+          "letter": "c",
+          "answer": "Sai"
+        },
+        {
+          "text": "Nếu muốn người dùng chỉ được chọn duy nhất 1 khối lớp (10, 11 hoặc 12), ta sử dụng các thẻ `<input type=\"radio\">` có cùng thuộc tính `name=\"grade\"`.",
+          "isTrue": true,
+          "level": "Hiểu",
+          "letter": "d",
+          "answer": "Đúng"
+        }
+      ],
+      "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+      "isZeroHallucination": true,
+      "id": "q_tf_3",
+      "type": "TF",
+      "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+      "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+      "points": 1,
+      "matrixRef": "ĐS3(a,b,c,d) [Dòng 3: Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)]"
+    },
+    {
+      "id": "q_tf_4",
+      "type": "TF",
+      "rowId": "row_3",
+      "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+      "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+      "level": "Vận dụng",
+      "points": 1,
+      "matrixRef": "ĐS4(a,b,c,d) [Dòng 3: Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)]",
+      "stem": "Cho tình huống và kiến thức trọng tâm thuộc bài \"Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)\" (Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+      "statements": [
+        {
+          "text": "Khái niệm và tính chất cơ bản của \"Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)\" bị áp dụng sai điều kiện xác định ban đầu.",
+          "isTrue": false,
+          "level": "Biết"
+        },
+        {
+          "text": "Mọi trường hợp áp dụng \"Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)\" đều không phụ thuộc vào điều kiện xác định ban đầu.",
+          "isTrue": false,
+          "level": "Biết"
+        },
+        {
+          "text": "Khi áp dụng quy tắc trong \"Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)\", kết quả suy luận luôn tuân theo hệ thức chuẩn của bài học.",
+          "isTrue": true,
+          "level": "Hiểu"
+        },
+        {
+          "text": "Có thể vận dụng trực tiếp kiến thức bài \"Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)\" để giải quyết bài toán thực tiễn nêu trong kế hoạch dạy học.",
+          "isTrue": true,
+          "level": "Vận dụng"
+        }
+      ],
+      "explanation": "Đối chiếu Bản đặc tả mục \"Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)\": a) Sai; b) Sai; c) Đúng; d) Đúng."
+    },
+    {
+      "qCode": "TLN1",
+      "rowId": "row_1",
+      "level": "Hiểu",
+      "stem": "Phát biểu nào sau đây nêu đúng khái niệm trí tuệ nhân tạo?",
+      "answer": "Đáp án theo SGK và tài liệu chuyên môn.",
+      "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx\" trong Ngân hàng câu hỏi Google Drive.",
+      "sourceFile": "Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx",
+      "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx)",
+      "isZeroHallucination": true,
+      "driveQuestionId": "SA_Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx_Q4",
+      "id": "q_sa_1",
+      "type": "SA",
+      "topic": "Chủ đề A: Máy tính và xã hội tri thức - Trí tuệ nhân tạo (AI)",
+      "unit": "Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI",
+      "points": 0.5,
+      "matrixRef": "TLN1 [Dòng 1 - Hiểu]"
+    },
+    {
+      "qCode": "TLN2",
+      "rowId": "row_2",
+      "level": "Hiểu",
+      "stem": "Những nhận định dưới đây là Đúng hay Sai khi nói về địa chỉ MAC và IP?a. Địa chỉ MAC được gán cho thiết bị mạng bởi nhà sản xuất.b. Địa chỉ IP là duy nhất tuyệt đối cho mỗi thiết bị trên toàn thế giới.c. Switch sử dụng địa chỉ MAC để chuyển tiếp dữ liệu trong mạng LAN.d. Địa chỉ MAC được sử dụng để định tuyến dữ liệu trên Internet.",
+      "answer": "Đáp án theo SGK và tài liệu chuyên môn.",
+      "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+      "sourceFile": "Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx",
+      "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx)",
+      "isZeroHallucination": true,
+      "driveQuestionId": "SA_Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx_Q24",
+      "id": "q_sa_2",
+      "type": "SA",
+      "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+      "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+      "points": 0.5,
+      "matrixRef": "TLN2 [Dòng 2 - Hiểu]"
+    },
+    {
+      "qCode": "TLN3",
+      "rowId": "row_2",
+      "level": "Vận dụng",
+      "stem": "Sơ đồ cách bố trí máy tính và thiết bị mạng trong một trường học như sau. Trường có 6 phòng, mỗi phòng được lắp đặt 2 máy tính để bàn và 1 máy in được kết nối với 1 cổng Hub. Các Hub này được kết nối với nhau thông qua Switch trung tâm. Một nhóm học sinh khi quan sát sơ đồ này thì có nhận xét.a) Có thể dùng cáp mạng để kết nối giữa máy tính và Hub.b) Nên sử dụng Switch thay thế cho Hub để tiết kiệm chi phí hơn.c) Cấu trúc mạng trong mỗi phòng là cấu trúc hình sao.d) Máy tính ở trong phòng này không thể chia sẻ thư mục với máy tính ở phòng khác.",
+      "answer": "Đáp án theo SGK và tài liệu chuyên môn.",
+      "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+      "sourceFile": "Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx",
+      "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx)",
+      "isZeroHallucination": true,
+      "driveQuestionId": "SA_Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx_Q8",
+      "id": "q_sa_3",
+      "type": "SA",
+      "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+      "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+      "points": 0.5,
+      "matrixRef": "TLN3 [Dòng 2 - Vận dụng]"
+    },
+    {
+      "qCode": "TLN4",
+      "rowId": "row_3",
+      "level": "Hiểu",
+      "stem": "Cho các phát biểu sau:",
+      "answer": "Đáp án theo SGK và tài liệu chuyên môn.",
+      "explanation": "Căn cứ theo tài liệu \"CD3-Một số thiết bị Mạng thông dụng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+      "sourceFile": "CD3-Một số thiết bị Mạng thông dụng.docx",
+      "sourceBadge": "Ngân hàng Google Drive (CD3-Một số thiết bị Mạng thông dụng.docx)",
+      "isZeroHallucination": true,
+      "driveQuestionId": "SA_CD3-Một số thiết bị Mạng thông dụng.docx_Q2",
+      "id": "q_sa_4",
+      "type": "SA",
+      "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+      "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+      "points": 0.5,
+      "matrixRef": "TLN4 [Dòng 3 - Hiểu]"
+    },
+    {
+      "qCode": "TLN5",
+      "rowId": "row_3",
+      "level": "Vận dụng",
+      "stem": "Bước đầu tiên bạn cần làm để kết nối một thiết bị di động vào mạng Wi-Fi là gì?",
+      "answer": "Đáp án theo SGK và tài liệu chuyên môn.",
+      "explanation": "Căn cứ theo tài liệu \"CD3-Một số thiết bị Mạng thông dụng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+      "sourceFile": "CD3-Một số thiết bị Mạng thông dụng.docx",
+      "sourceBadge": "Ngân hàng Google Drive (CD3-Một số thiết bị Mạng thông dụng.docx)",
+      "isZeroHallucination": true,
+      "driveQuestionId": "SA_CD3-Một số thiết bị Mạng thông dụng.docx_Q21",
+      "id": "q_sa_5",
+      "type": "SA",
+      "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+      "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+      "points": 0.5,
+      "matrixRef": "TLN5 [Dòng 3 - Vận dụng]"
+    },
+    {
+      "qCode": "TLN6",
+      "rowId": "row_3",
+      "level": "Vận dụng",
+      "stem": "Trong một trường học có 03 phòng máy, mỗi phòng máy sẽ có 30 máy tính được thiết kế mạng theo mô hình như sau:",
+      "answer": "Đáp án theo SGK và tài liệu chuyên môn.",
+      "explanation": "Căn cứ theo tài liệu \"CD3-Một số thiết bị Mạng thông dụng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+      "sourceFile": "CD3-Một số thiết bị Mạng thông dụng.docx",
+      "sourceBadge": "Ngân hàng Google Drive (CD3-Một số thiết bị Mạng thông dụng.docx)",
+      "isZeroHallucination": true,
+      "driveQuestionId": "SA_CD3-Một số thiết bị Mạng thông dụng.docx_Q48",
+      "id": "q_sa_6",
+      "type": "SA",
+      "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+      "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+      "points": 0.5,
+      "matrixRef": "TLN6 [Dòng 3 - Vận dụng]"
+    }
+  ],
+  "variants": [
+    {
+      "code": "101",
+      "questions": [
+        {
+          "qCode": "C1",
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Phương án nào sau đây liệt kê hai phân loại chính của Trí tuệ nhân tạo (AI)?",
+          "options": [
+            "AI tổng quát (AGI) và AI Tự học (ALI).",
+            "AI hẹp (ANI) và AI siêu thông minh (ASI).",
+            "AI tổng quát (AGI) và AI siêu thông minh (ASI).",
+            "AI hẹp (ANI) và AI tổng quát (AGI)."
+          ],
+          "answer": "D",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx_Q33",
+          "id": "q_mcq_1",
+          "type": "MCQ",
+          "topic": "Chủ đề A: Máy tính và xã hội tri thức - Trí tuệ nhân tạo (AI)",
+          "unit": "Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI",
+          "points": 0.25,
+          "matrixRef": "C1 [Dòng 1 - Biết]"
+        },
+        {
+          "qCode": "C2",
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Sự kiện nào đánh dấu sự khởi đầu của lịch sử trí tuệ nhân tạo?",
+          "options": [
+            "Hội thảo tại Stanford vào năm 1955.",
+            "Sự phát triển của hệ thống MYCIN vào những năm 1970.",
+            "Hội thảo tại MIT vào năm 1960.",
+            "Hội thảo Dartmouth năm 1956."
+          ],
+          "answer": "D",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx_Q2",
+          "id": "q_mcq_2",
+          "type": "MCQ",
+          "topic": "Chủ đề A: Máy tính và xã hội tri thức - Trí tuệ nhân tạo (AI)",
+          "unit": "Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI",
+          "points": 0.25,
+          "matrixRef": "C2 [Dòng 1 - Biết]"
+        },
+        {
+          "qCode": "C3",
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Hội thảo nào được coi là điểm mốc ghi nhận sự ra đời của thuật ngữ AI, đánh dấu sự khởi đầu của lĩnh vực AI, thúc đẩy sự phát triển của lĩnh vực này trong các năm tiếp theo?",
+          "options": [
+            "Hội thảo Jenesys.",
+            "Hội thảo Dartmouth.",
+            "Hội thảo Hampshire.",
+            "Hội thảo Bletchley."
+          ],
+          "answer": "B",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx_Q20",
+          "id": "q_mcq_3",
+          "type": "MCQ",
+          "topic": "Chủ đề A: Máy tính và xã hội tri thức - Trí tuệ nhân tạo (AI)",
+          "unit": "Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI",
+          "points": 0.25,
+          "matrixRef": "C3 [Dòng 1 - Biết]"
+        },
+        {
+          "qCode": "C4",
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Phương án nào dưới đây là đúng khi giải thích về sự phát triển của trí tuệ nhân tạo (AI) lại có thể trở thành mối đe dọa tiềm ẩn đối với an ninh và an toàn?",
+          "options": [
+            "AI có thể bị sử dụng để tạo ra các cuộc tấn công mạng tinh vi hơn, khó phát hiện hơn.",
+            "AI có khả năng thay thế hoàn toàn con người trong mọi công việc, khiến cho nhân lực trở nên không còn cần thiết.",
+            "AI chỉ có thể áp dụng trong các lĩnh vực giải trí và không ảnh hưởng đến các lĩnh vực quan trọng khác.",
+            "Sự phát triển của AI chỉ làm tăng hiệu suất công việc mà không có tác động tiêu cực nào."
+          ],
+          "answer": "A",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx_Q8",
+          "id": "q_mcq_4",
+          "type": "MCQ",
+          "topic": "Chủ đề A: Máy tính và xã hội tri thức - Trí tuệ nhân tạo (AI)",
+          "unit": "Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI",
+          "points": 0.25,
+          "matrixRef": "C4 [Dòng 1 - Hiểu]"
+        },
+        {
+          "qCode": "C5",
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Trong mô hình TCP/IP, Router hoạt động chủ yếu ở tầng nào?",
+          "options": [
+            "Tầng Internet",
+            "Tầng ứng dụng",
+            "Tầng truy cập mạng",
+            "Tầng giao vận"
+          ],
+          "answer": "A",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx_Q78",
+          "id": "q_mcq_5",
+          "type": "MCQ",
+          "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+          "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+          "points": 0.25,
+          "matrixRef": "C5 [Dòng 2 - Biết]"
+        },
+        {
+          "qCode": "C6",
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Lý do chính khiến IPv6 được triển khai thay thế IPv4 là gì?",
+          "options": [
+            "IPv6 bảo mật tuyệt đối",
+            "IPv6 dễ nhớ hơn IPv4",
+            "IPv6 truyền dữ liệu nhanh hơn",
+            "Không gian địa chỉ IPv4 bị cạn kiệt"
+          ],
+          "answer": "D",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx_Q80",
+          "id": "q_mcq_6",
+          "type": "MCQ",
+          "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+          "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+          "points": 0.25,
+          "matrixRef": "C6 [Dòng 2 - Biết]"
+        },
+        {
+          "qCode": "C7",
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Router khác switch ở đặc điểm:",
+          "options": [
+            "Chỉ phát Wi-Fi",
+            "Định tuyến giữa các mạng",
+            "Có nhiều cổng hơn",
+            "Chỉ dùng trong LAN"
+          ],
+          "answer": "B",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx_Q23",
+          "id": "q_mcq_7",
+          "type": "MCQ",
+          "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+          "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+          "points": 0.25,
+          "matrixRef": "C7 [Dòng 2 - Biết]"
+        },
+        {
+          "qCode": "C8",
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Phát biểu nào sau đây là đúng khi so sánh IPv4 và IPv6?",
+          "options": [
+            "IPv6 không hỗ trợ bảo mật",
+            "IPv6 giúp giảm nguy cơ cạn kiệt địa chỉ IP",
+            "IPv4 có không gian địa chỉ lớn hơn IPv6",
+            "IPv6 được biểu diễn bằng 4 cụm số thập phân"
+          ],
+          "answer": "B",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx_Q71",
+          "id": "q_mcq_8",
+          "type": "MCQ",
+          "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+          "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+          "points": 0.25,
+          "matrixRef": "C8 [Dòng 2 - Hiểu]"
+        },
+        {
+          "qCode": "C9",
+          "rowId": "row_3",
+          "level": "Biết",
+          "stem": "Wi-Fi là một bộ tiêu chuẩn kĩ thuật truyền dữ liệu bằng … được sử dụng rộng rãi trong các mạng cục bộ. Điền cụm từ còn thiếu vào dấu ba chấm.",
+          "options": [
+            "Cáp đồng trục",
+            "Đường dây điện thoại",
+            "Sóng vô tuyến điện",
+            "Cáp xoắn đôi"
+          ],
+          "answer": "C",
+          "explanation": "Căn cứ theo tài liệu \"CD3-Một số thiết bị Mạng thông dụng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "CD3-Một số thiết bị Mạng thông dụng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (CD3-Một số thiết bị Mạng thông dụng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_CD3-Một số thiết bị Mạng thông dụng.docx_Q74",
+          "id": "q_mcq_9",
+          "type": "MCQ",
+          "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+          "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+          "points": 0.25,
+          "matrixRef": "C9 [Dòng 3 - Biết]"
+        },
+        {
+          "qCode": "C10",
+          "rowId": "row_3",
+          "level": "Biết",
+          "stem": "Em sẽ làm gì trong các trường hợp sau: “Được một nhóm bạn truyền cho một địa chỉ website nhưng dặn là phải bí mật, không để người lớn biết”.",
+          "options": [
+            "Bí mật bấm vào xem địa chỉ website để xem.",
+            "Không bấm vào và báo cáo với người lớn.",
+            "Nhờ người lớn hướng dẫn mở website để xem.",
+            "Bấm vào xem và gửi địa chỉ website cho các bạn khác."
+          ],
+          "answer": "B",
+          "explanation": "Căn cứ theo tài liệu \"CD3-Một số thiết bị Mạng thông dụng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "CD3-Một số thiết bị Mạng thông dụng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (CD3-Một số thiết bị Mạng thông dụng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_CD3-Một số thiết bị Mạng thông dụng.docx_Q40",
+          "id": "q_mcq_10",
+          "type": "MCQ",
+          "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+          "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+          "points": 0.25,
+          "matrixRef": "C10 [Dòng 3 - Biết]"
+        },
+        {
+          "qCode": "C11",
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Địa chỉ trang Web https://igiaoduc.vn/ chữ “vn” trên địa chỉ trang web có ý nghĩa gì?",
+          "options": [
+            "Địa chỉ gmail",
+            "Chữ viết tắt tiếng Anh",
+            "Ký hiệu tên nước",
+            "Một kí hiệu nào đó"
+          ],
+          "answer": "C",
+          "explanation": "Căn cứ theo tài liệu \"CD3-Một số thiết bị Mạng thông dụng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "CD3-Một số thiết bị Mạng thông dụng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (CD3-Một số thiết bị Mạng thông dụng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_CD3-Một số thiết bị Mạng thông dụng.docx_Q67",
+          "id": "q_mcq_11",
+          "type": "MCQ",
+          "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+          "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+          "points": 0.25,
+          "matrixRef": "C11 [Dòng 3 - Hiểu]"
+        },
+        {
+          "qCode": "C12",
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Phát biểu nào sau đây đúng?",
+          "options": [
+            "Khi dùng hub thì tín hiệu đi từ máy gửi đến máy nhận sẽ không gây xung đột với tín hiệu của các cuộc truyền ở cổng khác.",
+            "Thông thường LAN kết nối có dây các máy tính qua các thiết bị như switch hay hub trong một phạm vi địa lí nhất định.",
+            "Mạng viễn thông sử dụng các modem để chuyển tiếp dữ liệu.",
+            "Switch có chi phí rẻ hơn rất nhiều so với một hub có cùng số cổng."
+          ],
+          "answer": "B",
+          "explanation": "Căn cứ theo tài liệu \"CD3-Một số thiết bị Mạng thông dụng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "CD3-Một số thiết bị Mạng thông dụng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (CD3-Một số thiết bị Mạng thông dụng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_CD3-Một số thiết bị Mạng thông dụng.docx_Q2",
+          "id": "q_mcq_12",
+          "type": "MCQ",
+          "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+          "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+          "points": 0.25,
+          "matrixRef": "C12 [Dòng 3 - Hiểu]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Một bệnh viện triển khai hệ thống AI hỗ trợ bác sĩ đọc ảnh chụp X-quang phổi và quản lý hồ sơ bệnh án. Xét tính Đúng (Đ) hoặc Sai (S) của các nhận định sau:",
+          "statements": [
+            {
+              "text": "Hệ thống AI phân tích ảnh X-quang thuộc lĩnh vực Thị giác máy tính (Computer Vision).",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Hệ thống này thuộc loại AI hẹp (ANI) vì chuyên giải quyết bài toán chẩn đoán hình ảnh y khoa.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Dữ liệu bệnh án của bệnh nhân có thể công khai tự do lên mạng xã hội để huấn luyện AI mà không cần xin phép hay ẩn danh.",
+              "isTrue": false,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Kết quả gợi ý của AI đóng vai trò hỗ trợ chuyên môn, quyết định điều trị cuối cùng vẫn cần bác sĩ thẩm định và chịu trách nhiệm.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) Đúng; b) Đúng; c) Sai vì vi phạm nghiêm trọng quyền riêng tư và bảo mật dữ liệu y tế; d) Đúng.",
+          "items": [
+            {
+              "text": "Hệ thống AI phân tích ảnh X-quang thuộc lĩnh vực Thị giác máy tính (Computer Vision).",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Hệ thống này thuộc loại AI hẹp (ANI) vì chuyên giải quyết bài toán chẩn đoán hình ảnh y khoa.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Dữ liệu bệnh án của bệnh nhân có thể công khai tự do lên mạng xã hội để huấn luyện AI mà không cần xin phép hay ẩn danh.",
+              "isTrue": false,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Kết quả gợi ý của AI đóng vai trò hỗ trợ chuyên môn, quyết định điều trị cuối cùng vẫn cần bác sĩ thẩm định và chịu trách nhiệm.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_1",
+          "type": "TF",
+          "topic": "Chủ đề A: Máy tính và xã hội tri thức - Trí tuệ nhân tạo (AI)",
+          "unit": "Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI",
+          "points": 1,
+          "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Một phòng máy tính của trường THPT gồm 40 máy tính để bàn được kết nối mạng LAN và truy cập Internet. Xét tính Đúng (Đ) hoặc Sai (S) của các nhận định sau:",
+          "statements": [
+            {
+              "text": "Thiết bị Switch dùng để kết nối các máy tính trong cùng mạng nội bộ LAN của phòng máy.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Giao thức TCP đảm bảo truyền dữ liệu tin cậy, có kiểm soát lỗi và thứ tự gói tin.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Địa chỉ IPv4 `192.168.1.300` là một địa chỉ IPv4 hợp lệ.",
+              "isTrue": false,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Khi hai máy tính trong phòng máy có cùng địa chỉ IP tĩnh giống hệt nhau, mạng sẽ xảy ra xung đột địa chỉ IP (IP Conflict).",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) Đúng; b) Đúng; c) Sai vì mỗi octet của IPv4 chỉ có giá trị từ 0 đến 255 (300 > 255); d) Đúng.",
+          "items": [
+            {
+              "text": "Thiết bị Switch dùng để kết nối các máy tính trong cùng mạng nội bộ LAN của phòng máy.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Giao thức TCP đảm bảo truyền dữ liệu tin cậy, có kiểm soát lỗi và thứ tự gói tin.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Địa chỉ IPv4 `192.168.1.300` là một địa chỉ IPv4 hợp lệ.",
+              "isTrue": false,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Khi hai máy tính trong phòng máy có cùng địa chỉ IP tĩnh giống hệt nhau, mạng sẽ xảy ra xung đột địa chỉ IP (IP Conflict).",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_2",
+          "type": "TF",
+          "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+          "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+          "points": 1,
+          "matrixRef": "ĐS2(a,b,c,d) [Dòng 2: Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Biết",
+          "stem": "Cho đoạn mã HTML tạo biểu mẫu đăng ký câu lạc bộ Tin học: `<form action=\"/submit\" method=\"post\"><input type=\"text\" name=\"fullname\"><input type=\"password\" name=\"pwd\"><input type=\"submit\" value=\"Gửi\"></form>`. Xét tính Đúng (Đ) hoặc Sai (S) của các nhận định sau:",
+          "statements": [
+            {
+              "text": "Thẻ `<form>` dùng để tạo biểu mẫu thu thập dữ liệu từ người dùng trên trang web.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Phần tử `<input type=\"password\">` sẽ hiển thị các ký tự nhập vào dưới dạng dấu chấm/ẩn để bảo mật mật khẩu.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Thuộc tính `method=\"post\"` đính kèm toàn bộ mật khẩu hiển thị công khai trên thanh địa chỉ URL của trình duyệt.",
+              "isTrue": false,
+              "level": "Biết",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Nếu muốn người dùng chỉ được chọn duy nhất 1 khối lớp (10, 11 hoặc 12), ta sử dụng các thẻ `<input type=\"radio\">` có cùng thuộc tính `name=\"grade\"`.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) Đúng; b) Đúng; c) Sai (đó là đặc điểm của GET, còn POST gửi dữ liệu trong phần thân HTTP request); d) Đúng.",
+          "items": [
+            {
+              "text": "Thẻ `<form>` dùng để tạo biểu mẫu thu thập dữ liệu từ người dùng trên trang web.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Phần tử `<input type=\"password\">` sẽ hiển thị các ký tự nhập vào dưới dạng dấu chấm/ẩn để bảo mật mật khẩu.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Thuộc tính `method=\"post\"` đính kèm toàn bộ mật khẩu hiển thị công khai trên thanh địa chỉ URL của trình duyệt.",
+              "isTrue": false,
+              "level": "Biết",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Nếu muốn người dùng chỉ được chọn duy nhất 1 khối lớp (10, 11 hoặc 12), ta sử dụng các thẻ `<input type=\"radio\">` có cùng thuộc tính `name=\"grade\"`.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_3",
+          "type": "TF",
+          "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+          "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+          "points": 1,
+          "matrixRef": "ĐS3(a,b,c,d) [Dòng 3: Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)]"
+        },
+        {
+          "id": "q_tf_4",
+          "type": "TF",
+          "rowId": "row_3",
+          "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+          "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+          "level": "Vận dụng",
+          "points": 1,
+          "matrixRef": "ĐS4(a,b,c,d) [Dòng 3: Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)]",
+          "stem": "Cho tình huống và kiến thức trọng tâm thuộc bài \"Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)\" (Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "statements": [
+            {
+              "text": "Khái niệm và tính chất cơ bản của \"Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)\" bị áp dụng sai điều kiện xác định ban đầu.",
+              "isTrue": false,
+              "level": "Biết"
+            },
+            {
+              "text": "Mọi trường hợp áp dụng \"Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)\" đều không phụ thuộc vào điều kiện xác định ban đầu.",
+              "isTrue": false,
+              "level": "Biết"
+            },
+            {
+              "text": "Khi áp dụng quy tắc trong \"Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)\", kết quả suy luận luôn tuân theo hệ thức chuẩn của bài học.",
+              "isTrue": true,
+              "level": "Hiểu"
+            },
+            {
+              "text": "Có thể vận dụng trực tiếp kiến thức bài \"Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)\" để giải quyết bài toán thực tiễn nêu trong kế hoạch dạy học.",
+              "isTrue": true,
+              "level": "Vận dụng"
+            }
+          ],
+          "explanation": "Đối chiếu Bản đặc tả mục \"Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)\": a) Sai; b) Sai; c) Đúng; d) Đúng."
+        },
+        {
+          "qCode": "TLN1",
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Phát biểu nào sau đây nêu đúng khái niệm trí tuệ nhân tạo?",
+          "answer": "Đáp án theo SGK và tài liệu chuyên môn.",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "SA_Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx_Q4",
+          "id": "q_sa_1",
+          "type": "SA",
+          "topic": "Chủ đề A: Máy tính và xã hội tri thức - Trí tuệ nhân tạo (AI)",
+          "unit": "Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI",
+          "points": 0.5,
+          "matrixRef": "TLN1 [Dòng 1 - Hiểu]"
+        },
+        {
+          "qCode": "TLN2",
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Những nhận định dưới đây là Đúng hay Sai khi nói về địa chỉ MAC và IP?a. Địa chỉ MAC được gán cho thiết bị mạng bởi nhà sản xuất.b. Địa chỉ IP là duy nhất tuyệt đối cho mỗi thiết bị trên toàn thế giới.c. Switch sử dụng địa chỉ MAC để chuyển tiếp dữ liệu trong mạng LAN.d. Địa chỉ MAC được sử dụng để định tuyến dữ liệu trên Internet.",
+          "answer": "Đáp án theo SGK và tài liệu chuyên môn.",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "SA_Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx_Q24",
+          "id": "q_sa_2",
+          "type": "SA",
+          "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+          "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+          "points": 0.5,
+          "matrixRef": "TLN2 [Dòng 2 - Hiểu]"
+        },
+        {
+          "qCode": "TLN3",
+          "rowId": "row_2",
+          "level": "Vận dụng",
+          "stem": "Sơ đồ cách bố trí máy tính và thiết bị mạng trong một trường học như sau. Trường có 6 phòng, mỗi phòng được lắp đặt 2 máy tính để bàn và 1 máy in được kết nối với 1 cổng Hub. Các Hub này được kết nối với nhau thông qua Switch trung tâm. Một nhóm học sinh khi quan sát sơ đồ này thì có nhận xét.a) Có thể dùng cáp mạng để kết nối giữa máy tính và Hub.b) Nên sử dụng Switch thay thế cho Hub để tiết kiệm chi phí hơn.c) Cấu trúc mạng trong mỗi phòng là cấu trúc hình sao.d) Máy tính ở trong phòng này không thể chia sẻ thư mục với máy tính ở phòng khác.",
+          "answer": "Đáp án theo SGK và tài liệu chuyên môn.",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "SA_Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx_Q8",
+          "id": "q_sa_3",
+          "type": "SA",
+          "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+          "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+          "points": 0.5,
+          "matrixRef": "TLN3 [Dòng 2 - Vận dụng]"
+        },
+        {
+          "qCode": "TLN4",
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Cho các phát biểu sau:",
+          "answer": "Đáp án theo SGK và tài liệu chuyên môn.",
+          "explanation": "Căn cứ theo tài liệu \"CD3-Một số thiết bị Mạng thông dụng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "CD3-Một số thiết bị Mạng thông dụng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (CD3-Một số thiết bị Mạng thông dụng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "SA_CD3-Một số thiết bị Mạng thông dụng.docx_Q2",
+          "id": "q_sa_4",
+          "type": "SA",
+          "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+          "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+          "points": 0.5,
+          "matrixRef": "TLN4 [Dòng 3 - Hiểu]"
+        },
+        {
+          "qCode": "TLN5",
+          "rowId": "row_3",
+          "level": "Vận dụng",
+          "stem": "Bước đầu tiên bạn cần làm để kết nối một thiết bị di động vào mạng Wi-Fi là gì?",
+          "answer": "Đáp án theo SGK và tài liệu chuyên môn.",
+          "explanation": "Căn cứ theo tài liệu \"CD3-Một số thiết bị Mạng thông dụng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "CD3-Một số thiết bị Mạng thông dụng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (CD3-Một số thiết bị Mạng thông dụng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "SA_CD3-Một số thiết bị Mạng thông dụng.docx_Q21",
+          "id": "q_sa_5",
+          "type": "SA",
+          "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+          "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+          "points": 0.5,
+          "matrixRef": "TLN5 [Dòng 3 - Vận dụng]"
+        },
+        {
+          "qCode": "TLN6",
+          "rowId": "row_3",
+          "level": "Vận dụng",
+          "stem": "Trong một trường học có 03 phòng máy, mỗi phòng máy sẽ có 30 máy tính được thiết kế mạng theo mô hình như sau:",
+          "answer": "Đáp án theo SGK và tài liệu chuyên môn.",
+          "explanation": "Căn cứ theo tài liệu \"CD3-Một số thiết bị Mạng thông dụng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "CD3-Một số thiết bị Mạng thông dụng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (CD3-Một số thiết bị Mạng thông dụng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "SA_CD3-Một số thiết bị Mạng thông dụng.docx_Q48",
+          "id": "q_sa_6",
+          "type": "SA",
+          "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+          "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+          "points": 0.5,
+          "matrixRef": "TLN6 [Dòng 3 - Vận dụng]"
+        }
+      ]
+    },
+    {
+      "code": "102",
+      "questions": [
+        {
+          "qCode": "C9",
+          "rowId": "row_3",
+          "level": "Biết",
+          "stem": "Wi-Fi là một bộ tiêu chuẩn kĩ thuật truyền dữ liệu bằng … được sử dụng rộng rãi trong các mạng cục bộ. Điền cụm từ còn thiếu vào dấu ba chấm.",
+          "options": [
+            "Cáp đồng trục",
+            "Cáp xoắn đôi",
+            "Đường dây điện thoại",
+            "Sóng vô tuyến điện"
+          ],
+          "answer": "D",
+          "explanation": "Căn cứ theo tài liệu \"CD3-Một số thiết bị Mạng thông dụng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "CD3-Một số thiết bị Mạng thông dụng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (CD3-Một số thiết bị Mạng thông dụng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_CD3-Một số thiết bị Mạng thông dụng.docx_Q74",
+          "id": "q_mcq_9",
+          "type": "MCQ",
+          "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+          "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+          "points": 0.25,
+          "matrixRef": "C9 [Dòng 3 - Biết]"
+        },
+        {
+          "qCode": "C1",
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Phương án nào sau đây liệt kê hai phân loại chính của Trí tuệ nhân tạo (AI)?",
+          "options": [
+            "AI hẹp (ANI) và AI siêu thông minh (ASI).",
+            "AI tổng quát (AGI) và AI siêu thông minh (ASI).",
+            "AI tổng quát (AGI) và AI Tự học (ALI).",
+            "AI hẹp (ANI) và AI tổng quát (AGI)."
+          ],
+          "answer": "D",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx_Q33",
+          "id": "q_mcq_1",
+          "type": "MCQ",
+          "topic": "Chủ đề A: Máy tính và xã hội tri thức - Trí tuệ nhân tạo (AI)",
+          "unit": "Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI",
+          "points": 0.25,
+          "matrixRef": "C1 [Dòng 1 - Biết]"
+        },
+        {
+          "qCode": "C12",
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Phát biểu nào sau đây đúng?",
+          "options": [
+            "Mạng viễn thông sử dụng các modem để chuyển tiếp dữ liệu.",
+            "Thông thường LAN kết nối có dây các máy tính qua các thiết bị như switch hay hub trong một phạm vi địa lí nhất định.",
+            "Khi dùng hub thì tín hiệu đi từ máy gửi đến máy nhận sẽ không gây xung đột với tín hiệu của các cuộc truyền ở cổng khác.",
+            "Switch có chi phí rẻ hơn rất nhiều so với một hub có cùng số cổng."
+          ],
+          "answer": "B",
+          "explanation": "Căn cứ theo tài liệu \"CD3-Một số thiết bị Mạng thông dụng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "CD3-Một số thiết bị Mạng thông dụng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (CD3-Một số thiết bị Mạng thông dụng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_CD3-Một số thiết bị Mạng thông dụng.docx_Q2",
+          "id": "q_mcq_12",
+          "type": "MCQ",
+          "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+          "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+          "points": 0.25,
+          "matrixRef": "C12 [Dòng 3 - Hiểu]"
+        },
+        {
+          "qCode": "C6",
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Lý do chính khiến IPv6 được triển khai thay thế IPv4 là gì?",
+          "options": [
+            "Không gian địa chỉ IPv4 bị cạn kiệt",
+            "IPv6 truyền dữ liệu nhanh hơn",
+            "IPv6 bảo mật tuyệt đối",
+            "IPv6 dễ nhớ hơn IPv4"
+          ],
+          "answer": "A",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx_Q80",
+          "id": "q_mcq_6",
+          "type": "MCQ",
+          "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+          "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+          "points": 0.25,
+          "matrixRef": "C6 [Dòng 2 - Biết]"
+        },
+        {
+          "qCode": "C2",
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Sự kiện nào đánh dấu sự khởi đầu của lịch sử trí tuệ nhân tạo?",
+          "options": [
+            "Hội thảo Dartmouth năm 1956.",
+            "Hội thảo tại MIT vào năm 1960.",
+            "Hội thảo tại Stanford vào năm 1955.",
+            "Sự phát triển của hệ thống MYCIN vào những năm 1970."
+          ],
+          "answer": "A",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx_Q2",
+          "id": "q_mcq_2",
+          "type": "MCQ",
+          "topic": "Chủ đề A: Máy tính và xã hội tri thức - Trí tuệ nhân tạo (AI)",
+          "unit": "Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI",
+          "points": 0.25,
+          "matrixRef": "C2 [Dòng 1 - Biết]"
+        },
+        {
+          "qCode": "C11",
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Địa chỉ trang Web https://igiaoduc.vn/ chữ “vn” trên địa chỉ trang web có ý nghĩa gì?",
+          "options": [
+            "Địa chỉ gmail",
+            "Ký hiệu tên nước",
+            "Chữ viết tắt tiếng Anh",
+            "Một kí hiệu nào đó"
+          ],
+          "answer": "B",
+          "explanation": "Căn cứ theo tài liệu \"CD3-Một số thiết bị Mạng thông dụng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "CD3-Một số thiết bị Mạng thông dụng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (CD3-Một số thiết bị Mạng thông dụng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_CD3-Một số thiết bị Mạng thông dụng.docx_Q67",
+          "id": "q_mcq_11",
+          "type": "MCQ",
+          "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+          "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+          "points": 0.25,
+          "matrixRef": "C11 [Dòng 3 - Hiểu]"
+        },
+        {
+          "qCode": "C7",
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Router khác switch ở đặc điểm:",
+          "options": [
+            "Chỉ dùng trong LAN",
+            "Có nhiều cổng hơn",
+            "Chỉ phát Wi-Fi",
+            "Định tuyến giữa các mạng"
+          ],
+          "answer": "D",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx_Q23",
+          "id": "q_mcq_7",
+          "type": "MCQ",
+          "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+          "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+          "points": 0.25,
+          "matrixRef": "C7 [Dòng 2 - Biết]"
+        },
+        {
+          "qCode": "C4",
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Phương án nào dưới đây là đúng khi giải thích về sự phát triển của trí tuệ nhân tạo (AI) lại có thể trở thành mối đe dọa tiềm ẩn đối với an ninh và an toàn?",
+          "options": [
+            "AI có khả năng thay thế hoàn toàn con người trong mọi công việc, khiến cho nhân lực trở nên không còn cần thiết.",
+            "Sự phát triển của AI chỉ làm tăng hiệu suất công việc mà không có tác động tiêu cực nào.",
+            "AI có thể bị sử dụng để tạo ra các cuộc tấn công mạng tinh vi hơn, khó phát hiện hơn.",
+            "AI chỉ có thể áp dụng trong các lĩnh vực giải trí và không ảnh hưởng đến các lĩnh vực quan trọng khác."
+          ],
+          "answer": "C",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx_Q8",
+          "id": "q_mcq_4",
+          "type": "MCQ",
+          "topic": "Chủ đề A: Máy tính và xã hội tri thức - Trí tuệ nhân tạo (AI)",
+          "unit": "Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI",
+          "points": 0.25,
+          "matrixRef": "C4 [Dòng 1 - Hiểu]"
+        },
+        {
+          "qCode": "C8",
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Phát biểu nào sau đây là đúng khi so sánh IPv4 và IPv6?",
+          "options": [
+            "IPv6 giúp giảm nguy cơ cạn kiệt địa chỉ IP",
+            "IPv4 có không gian địa chỉ lớn hơn IPv6",
+            "IPv6 được biểu diễn bằng 4 cụm số thập phân",
+            "IPv6 không hỗ trợ bảo mật"
+          ],
+          "answer": "A",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx_Q71",
+          "id": "q_mcq_8",
+          "type": "MCQ",
+          "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+          "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+          "points": 0.25,
+          "matrixRef": "C8 [Dòng 2 - Hiểu]"
+        },
+        {
+          "qCode": "C3",
+          "rowId": "row_1",
+          "level": "Biết",
+          "stem": "Hội thảo nào được coi là điểm mốc ghi nhận sự ra đời của thuật ngữ AI, đánh dấu sự khởi đầu của lĩnh vực AI, thúc đẩy sự phát triển của lĩnh vực này trong các năm tiếp theo?",
+          "options": [
+            "Hội thảo Jenesys.",
+            "Hội thảo Hampshire.",
+            "Hội thảo Dartmouth.",
+            "Hội thảo Bletchley."
+          ],
+          "answer": "C",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx_Q20",
+          "id": "q_mcq_3",
+          "type": "MCQ",
+          "topic": "Chủ đề A: Máy tính và xã hội tri thức - Trí tuệ nhân tạo (AI)",
+          "unit": "Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI",
+          "points": 0.25,
+          "matrixRef": "C3 [Dòng 1 - Biết]"
+        },
+        {
+          "qCode": "C10",
+          "rowId": "row_3",
+          "level": "Biết",
+          "stem": "Em sẽ làm gì trong các trường hợp sau: “Được một nhóm bạn truyền cho một địa chỉ website nhưng dặn là phải bí mật, không để người lớn biết”.",
+          "options": [
+            "Không bấm vào và báo cáo với người lớn.",
+            "Bấm vào xem và gửi địa chỉ website cho các bạn khác.",
+            "Bí mật bấm vào xem địa chỉ website để xem.",
+            "Nhờ người lớn hướng dẫn mở website để xem."
+          ],
+          "answer": "A",
+          "explanation": "Căn cứ theo tài liệu \"CD3-Một số thiết bị Mạng thông dụng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "CD3-Một số thiết bị Mạng thông dụng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (CD3-Một số thiết bị Mạng thông dụng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_CD3-Một số thiết bị Mạng thông dụng.docx_Q40",
+          "id": "q_mcq_10",
+          "type": "MCQ",
+          "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+          "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+          "points": 0.25,
+          "matrixRef": "C10 [Dòng 3 - Biết]"
+        },
+        {
+          "qCode": "C5",
+          "rowId": "row_2",
+          "level": "Biết",
+          "stem": "Trong mô hình TCP/IP, Router hoạt động chủ yếu ở tầng nào?",
+          "options": [
+            "Tầng ứng dụng",
+            "Tầng Internet",
+            "Tầng truy cập mạng",
+            "Tầng giao vận"
+          ],
+          "answer": "B",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "MCQ_Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx_Q78",
+          "id": "q_mcq_5",
+          "type": "MCQ",
+          "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+          "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+          "points": 0.25,
+          "matrixRef": "C5 [Dòng 2 - Biết]"
+        },
+        {
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Một bệnh viện triển khai hệ thống AI hỗ trợ bác sĩ đọc ảnh chụp X-quang phổi và quản lý hồ sơ bệnh án. Xét tính Đúng (Đ) hoặc Sai (S) của các nhận định sau:",
+          "statements": [
+            {
+              "text": "Hệ thống AI phân tích ảnh X-quang thuộc lĩnh vực Thị giác máy tính (Computer Vision).",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Hệ thống này thuộc loại AI hẹp (ANI) vì chuyên giải quyết bài toán chẩn đoán hình ảnh y khoa.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Dữ liệu bệnh án của bệnh nhân có thể công khai tự do lên mạng xã hội để huấn luyện AI mà không cần xin phép hay ẩn danh.",
+              "isTrue": false,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Kết quả gợi ý của AI đóng vai trò hỗ trợ chuyên môn, quyết định điều trị cuối cùng vẫn cần bác sĩ thẩm định và chịu trách nhiệm.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) Đúng; b) Đúng; c) Sai vì vi phạm nghiêm trọng quyền riêng tư và bảo mật dữ liệu y tế; d) Đúng.",
+          "items": [
+            {
+              "text": "Hệ thống AI phân tích ảnh X-quang thuộc lĩnh vực Thị giác máy tính (Computer Vision).",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Hệ thống này thuộc loại AI hẹp (ANI) vì chuyên giải quyết bài toán chẩn đoán hình ảnh y khoa.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Dữ liệu bệnh án của bệnh nhân có thể công khai tự do lên mạng xã hội để huấn luyện AI mà không cần xin phép hay ẩn danh.",
+              "isTrue": false,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Kết quả gợi ý của AI đóng vai trò hỗ trợ chuyên môn, quyết định điều trị cuối cùng vẫn cần bác sĩ thẩm định và chịu trách nhiệm.",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_1",
+          "type": "TF",
+          "topic": "Chủ đề A: Máy tính và xã hội tri thức - Trí tuệ nhân tạo (AI)",
+          "unit": "Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI",
+          "points": 1,
+          "matrixRef": "ĐS1(a,b,c,d) [Dòng 1: Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI]"
+        },
+        {
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Một phòng máy tính của trường THPT gồm 40 máy tính để bàn được kết nối mạng LAN và truy cập Internet. Xét tính Đúng (Đ) hoặc Sai (S) của các nhận định sau:",
+          "statements": [
+            {
+              "text": "Thiết bị Switch dùng để kết nối các máy tính trong cùng mạng nội bộ LAN của phòng máy.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Giao thức TCP đảm bảo truyền dữ liệu tin cậy, có kiểm soát lỗi và thứ tự gói tin.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Địa chỉ IPv4 `192.168.1.300` là một địa chỉ IPv4 hợp lệ.",
+              "isTrue": false,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Khi hai máy tính trong phòng máy có cùng địa chỉ IP tĩnh giống hệt nhau, mạng sẽ xảy ra xung đột địa chỉ IP (IP Conflict).",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) Đúng; b) Đúng; c) Sai vì mỗi octet của IPv4 chỉ có giá trị từ 0 đến 255 (300 > 255); d) Đúng.",
+          "items": [
+            {
+              "text": "Thiết bị Switch dùng để kết nối các máy tính trong cùng mạng nội bộ LAN của phòng máy.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Giao thức TCP đảm bảo truyền dữ liệu tin cậy, có kiểm soát lỗi và thứ tự gói tin.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Địa chỉ IPv4 `192.168.1.300` là một địa chỉ IPv4 hợp lệ.",
+              "isTrue": false,
+              "level": "Hiểu",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Khi hai máy tính trong phòng máy có cùng địa chỉ IP tĩnh giống hệt nhau, mạng sẽ xảy ra xung đột địa chỉ IP (IP Conflict).",
+              "isTrue": true,
+              "level": "Vận dụng",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_2",
+          "type": "TF",
+          "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+          "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+          "points": 1,
+          "matrixRef": "ĐS2(a,b,c,d) [Dòng 2: Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6]"
+        },
+        {
+          "rowId": "row_3",
+          "level": "Biết",
+          "stem": "Cho đoạn mã HTML tạo biểu mẫu đăng ký câu lạc bộ Tin học: `<form action=\"/submit\" method=\"post\"><input type=\"text\" name=\"fullname\"><input type=\"password\" name=\"pwd\"><input type=\"submit\" value=\"Gửi\"></form>`. Xét tính Đúng (Đ) hoặc Sai (S) của các nhận định sau:",
+          "statements": [
+            {
+              "text": "Thẻ `<form>` dùng để tạo biểu mẫu thu thập dữ liệu từ người dùng trên trang web.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Phần tử `<input type=\"password\">` sẽ hiển thị các ký tự nhập vào dưới dạng dấu chấm/ẩn để bảo mật mật khẩu.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Thuộc tính `method=\"post\"` đính kèm toàn bộ mật khẩu hiển thị công khai trên thanh địa chỉ URL của trình duyệt.",
+              "isTrue": false,
+              "level": "Biết",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Nếu muốn người dùng chỉ được chọn duy nhất 1 khối lớp (10, 11 hoặc 12), ta sử dụng các thẻ `<input type=\"radio\">` có cùng thuộc tính `name=\"grade\"`.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "explanation": "a) Đúng; b) Đúng; c) Sai (đó là đặc điểm của GET, còn POST gửi dữ liệu trong phần thân HTTP request); d) Đúng.",
+          "items": [
+            {
+              "text": "Thẻ `<form>` dùng để tạo biểu mẫu thu thập dữ liệu từ người dùng trên trang web.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "a",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Phần tử `<input type=\"password\">` sẽ hiển thị các ký tự nhập vào dưới dạng dấu chấm/ẩn để bảo mật mật khẩu.",
+              "isTrue": true,
+              "level": "Biết",
+              "letter": "b",
+              "answer": "Đúng"
+            },
+            {
+              "text": "Thuộc tính `method=\"post\"` đính kèm toàn bộ mật khẩu hiển thị công khai trên thanh địa chỉ URL của trình duyệt.",
+              "isTrue": false,
+              "level": "Biết",
+              "letter": "c",
+              "answer": "Sai"
+            },
+            {
+              "text": "Nếu muốn người dùng chỉ được chọn duy nhất 1 khối lớp (10, 11 hoặc 12), ta sử dụng các thẻ `<input type=\"radio\">` có cùng thuộc tính `name=\"grade\"`.",
+              "isTrue": true,
+              "level": "Hiểu",
+              "letter": "d",
+              "answer": "Đúng"
+            }
+          ],
+          "sourceBadge": "Ngân hàng Google Drive & SGK Căn bản",
+          "isZeroHallucination": true,
+          "id": "q_tf_3",
+          "type": "TF",
+          "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+          "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+          "points": 1,
+          "matrixRef": "ĐS3(a,b,c,d) [Dòng 3: Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)]"
+        },
+        {
+          "id": "q_tf_4",
+          "type": "TF",
+          "rowId": "row_3",
+          "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+          "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+          "level": "Vận dụng",
+          "points": 1,
+          "matrixRef": "ĐS4(a,b,c,d) [Dòng 3: Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)]",
+          "stem": "Cho tình huống và kiến thức trọng tâm thuộc bài \"Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)\" (Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)). Xét tính Đúng (Đ) hoặc Sai (S) của các mệnh đề sau:",
+          "statements": [
+            {
+              "text": "Khái niệm và tính chất cơ bản của \"Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)\" bị áp dụng sai điều kiện xác định ban đầu.",
+              "isTrue": false,
+              "level": "Biết"
+            },
+            {
+              "text": "Mọi trường hợp áp dụng \"Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)\" đều không phụ thuộc vào điều kiện xác định ban đầu.",
+              "isTrue": false,
+              "level": "Biết"
+            },
+            {
+              "text": "Khi áp dụng quy tắc trong \"Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)\", kết quả suy luận luôn tuân theo hệ thức chuẩn của bài học.",
+              "isTrue": true,
+              "level": "Hiểu"
+            },
+            {
+              "text": "Có thể vận dụng trực tiếp kiến thức bài \"Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)\" để giải quyết bài toán thực tiễn nêu trong kế hoạch dạy học.",
+              "isTrue": true,
+              "level": "Vận dụng"
+            }
+          ],
+          "explanation": "Đối chiếu Bản đặc tả mục \"Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)\": a) Sai; b) Sai; c) Đúng; d) Đúng."
+        },
+        {
+          "qCode": "TLN6",
+          "rowId": "row_3",
+          "level": "Vận dụng",
+          "stem": "Trong một trường học có 03 phòng máy, mỗi phòng máy sẽ có 30 máy tính được thiết kế mạng theo mô hình như sau:",
+          "answer": "Đáp án theo SGK và tài liệu chuyên môn.",
+          "explanation": "Căn cứ theo tài liệu \"CD3-Một số thiết bị Mạng thông dụng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "CD3-Một số thiết bị Mạng thông dụng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (CD3-Một số thiết bị Mạng thông dụng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "SA_CD3-Một số thiết bị Mạng thông dụng.docx_Q48",
+          "id": "q_sa_6",
+          "type": "SA",
+          "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+          "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+          "points": 0.5,
+          "matrixRef": "TLN6 [Dòng 3 - Vận dụng]"
+        },
+        {
+          "qCode": "TLN2",
+          "rowId": "row_2",
+          "level": "Hiểu",
+          "stem": "Những nhận định dưới đây là Đúng hay Sai khi nói về địa chỉ MAC và IP?a. Địa chỉ MAC được gán cho thiết bị mạng bởi nhà sản xuất.b. Địa chỉ IP là duy nhất tuyệt đối cho mỗi thiết bị trên toàn thế giới.c. Switch sử dụng địa chỉ MAC để chuyển tiếp dữ liệu trong mạng LAN.d. Địa chỉ MAC được sử dụng để định tuyến dữ liệu trên Internet.",
+          "answer": "Đáp án theo SGK và tài liệu chuyên môn.",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "SA_Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx_Q24",
+          "id": "q_sa_2",
+          "type": "SA",
+          "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+          "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+          "points": 0.5,
+          "matrixRef": "TLN2 [Dòng 2 - Hiểu]"
+        },
+        {
+          "qCode": "TLN1",
+          "rowId": "row_1",
+          "level": "Hiểu",
+          "stem": "Phát biểu nào sau đây nêu đúng khái niệm trí tuệ nhân tạo?",
+          "answer": "Đáp án theo SGK và tài liệu chuyên môn.",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "SA_Chuyên đề 12A. Giới thiệu trí tuệ nhân tạo-2.docx_Q4",
+          "id": "q_sa_1",
+          "type": "SA",
+          "topic": "Chủ đề A: Máy tính và xã hội tri thức - Trí tuệ nhân tạo (AI)",
+          "unit": "Bài 1: Khái niệm Trí tuệ nhân tạo (AI), AI hẹp (ANI), AI tổng quát (AGI) và ứng dụng cảnh báo đạo đức AI",
+          "points": 0.5,
+          "matrixRef": "TLN1 [Dòng 1 - Hiểu]"
+        },
+        {
+          "qCode": "TLN3",
+          "rowId": "row_2",
+          "level": "Vận dụng",
+          "stem": "Sơ đồ cách bố trí máy tính và thiết bị mạng trong một trường học như sau. Trường có 6 phòng, mỗi phòng được lắp đặt 2 máy tính để bàn và 1 máy in được kết nối với 1 cổng Hub. Các Hub này được kết nối với nhau thông qua Switch trung tâm. Một nhóm học sinh khi quan sát sơ đồ này thì có nhận xét.a) Có thể dùng cáp mạng để kết nối giữa máy tính và Hub.b) Nên sử dụng Switch thay thế cho Hub để tiết kiệm chi phí hơn.c) Cấu trúc mạng trong mỗi phòng là cấu trúc hình sao.d) Máy tính ở trong phòng này không thể chia sẻ thư mục với máy tính ở phòng khác.",
+          "answer": "Đáp án theo SGK và tài liệu chuyên môn.",
+          "explanation": "Căn cứ theo tài liệu \"Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "SA_Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx_Q8",
+          "id": "q_sa_3",
+          "type": "SA",
+          "topic": "Chủ đề B: Mạng máy tính và Internet (Giao thức mạng TCP/IP và thiết bị mạng)",
+          "unit": "Bài 2: Thiết bị mạng (Switch, Router, Access Point, Modem) và bộ giao thức TCP/IP, địa chỉ IPv4/IPv6",
+          "points": 0.5,
+          "matrixRef": "TLN3 [Dòng 2 - Vận dụng]"
+        },
+        {
+          "qCode": "TLN4",
+          "rowId": "row_3",
+          "level": "Hiểu",
+          "stem": "Cho các phát biểu sau:",
+          "answer": "Đáp án theo SGK và tài liệu chuyên môn.",
+          "explanation": "Căn cứ theo tài liệu \"CD3-Một số thiết bị Mạng thông dụng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "CD3-Một số thiết bị Mạng thông dụng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (CD3-Một số thiết bị Mạng thông dụng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "SA_CD3-Một số thiết bị Mạng thông dụng.docx_Q2",
+          "id": "q_sa_4",
+          "type": "SA",
+          "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+          "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+          "points": 0.5,
+          "matrixRef": "TLN4 [Dòng 3 - Hiểu]"
+        },
+        {
+          "qCode": "TLN5",
+          "rowId": "row_3",
+          "level": "Vận dụng",
+          "stem": "Bước đầu tiên bạn cần làm để kết nối một thiết bị di động vào mạng Wi-Fi là gì?",
+          "answer": "Đáp án theo SGK và tài liệu chuyên môn.",
+          "explanation": "Căn cứ theo tài liệu \"CD3-Một số thiết bị Mạng thông dụng.docx\" trong Ngân hàng câu hỏi Google Drive.",
+          "sourceFile": "CD3-Một số thiết bị Mạng thông dụng.docx",
+          "sourceBadge": "Ngân hàng Google Drive (CD3-Một số thiết bị Mạng thông dụng.docx)",
+          "isZeroHallucination": true,
+          "driveQuestionId": "SA_CD3-Một số thiết bị Mạng thông dụng.docx_Q21",
+          "id": "q_sa_5",
+          "type": "SA",
+          "topic": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính (Tạo trang web bằng HTML5 và CSS3)",
+          "unit": "Bài 3: Cấu trúc văn bản HTML, danh sách, bảng biểu, biểu mẫu (Form) và định dạng bằng CSS (Box Model, Selector)",
+          "points": 0.5,
+          "matrixRef": "TLN5 [Dòng 3 - Vận dụng]"
+        }
+      ]
+    }
+  ],
+  "readingPassage": "",
+  "listeningTranscript": "",
+  "qaReport": {
+    "isValid": true,
+    "score": 100,
+    "stats": {
+      "levels": [
+        "Biết",
+        "Hiểu",
+        "Vận dụng"
+      ],
+      "qTypes": [
+        "MCQ",
+        "TF",
+        "SA",
+        "ESSAY"
+      ],
+      "pointRules": {
+        "MCQ": 0.25,
+        "TF": 0.25,
+        "SA": 0.5,
+        "ESSAY": 1
+      },
+      "byLevel": {
+        "Biết": 15,
+        "Hiểu": 12,
+        "Vận dụng": 7
+      },
+      "pointsByLevel": {
+        "Biết": 3.75,
+        "Hiểu": 3.75,
+        "Vận dụng": 2.5
+      },
+      "levelPercentages": {
+        "Biết": 38,
+        "Hiểu": 38,
+        "Vận dụng": 25
+      },
+      "byType": {
+        "MCQ": 12,
+        "TF": 16,
+        "SA": 6,
+        "ESSAY": 0
+      },
+      "pointsByType": {
+        "MCQ": 3,
+        "TF": 4,
+        "SA": 3,
+        "ESSAY": 0
+      },
+      "tfQuestionsCount": 4,
+      "totalItems": 34,
+      "totalQuestions": 22,
+      "totalPoints": 10
+    },
+    "passedChecks": [
+      "Đúng quy định cấp THPT (Thông tư 22/2021/TT-BGDĐT & Công văn 7991/BGDĐT-GDTrH) với các mức độ: Biết, Hiểu, Vận dụng.",
+      "Tổng điểm Ma trận chính xác: 10.0 / 10.0 điểm.",
+      "Bản đặc tả khớp 1-1 với Ma trận (3/3 đơn vị kiến thức).",
+      "Số lượng câu hỏi/lệnh hỏi từng dạng thức trong Đề khớp tuyệt đối với Ma trận (MCQ: 12, Đúng/Sai: 16 ý, Trả lời ngắn: 6, Tự luận: 0).",
+      "Tổng điểm các câu hỏi trong Đề kiểm tra (10.0đ) khớp tuyệt đối với Ma trận (10.0đ).",
+      "100% câu hỏi (22/22) có mã liên kết trực tiếp với Ma trận và Bản đặc tả.",
+      "100% câu hỏi (22/22) có đầy đủ đáp án và hướng dẫn chấm chi tiết.",
+      "Đã khởi tạo 2 mã đề (101, 102) đồng bộ số câu và bảng đáp án riêng."
+    ],
+    "warnings": [],
+    "issues": [],
+    "mathVerifications": []
+  }
+}

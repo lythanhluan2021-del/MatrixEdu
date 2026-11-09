@@ -1,0 +1,24 @@
+# Dependencies & Environment
+node_modules/
+.env
+.env.*
+
+# Secret API configuration (never commit API keys)
+data/ai_config.json
+
+# Backup & temporary files
+*.bak
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Runtime generated exports & logs
+data/exports/
+data/omr_database/
+data/BANG_DIEM_*.csv
+data/CSDL_CHAM_THI_*.json
+data/NHAT_KY_LUU_VET_*.csv
+data/omr_audit_logs.json
+data/omr_database.json
+data/profiles/exam_*.json
+scripts/*.txt
