@@ -10237,6 +10237,24 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
                 message: `Câu ${c}${sub} (Phần II) tô đúp cả hai ô [Đ] và [S]. Cần kiểm tra phiếu gốc!`
               });
             }
+          } else if (c <= maxP2) {
+            // CƠ CHẾ BÙ VẾT TÔ MỜ / BÚT CHÌ HB-2B CHO PHẦN II (Tránh bỏ sót ý học sinh có làm)
+            const faintThreshold = effectiveThreshold * 0.55;
+            const faintMinD = minDarknessThreshold * 0.65;
+            const faintD = effD >= faintThreshold && dDung >= faintMinD;
+            const faintS = effS >= faintThreshold && dSai >= faintMinD;
+
+            if (faintD && !faintS) {
+              if (!answers.part2[c]) answers.part2[c] = {};
+              answers.part2[c][sub] = 'Đ';
+              confidences.part2[`${c}_${sub}`] = Math.round(faintThreshold * 100);
+              totalFilledBubbles++;
+            } else if (faintS && !faintD) {
+              if (!answers.part2[c]) answers.part2[c] = {};
+              answers.part2[c][sub] = 'S';
+              confidences.part2[`${c}_${sub}`] = Math.round(faintThreshold * 100);
+              totalFilledBubbles++;
+            }
           }
         });
       }
