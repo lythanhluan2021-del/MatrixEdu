@@ -173,7 +173,7 @@ const requestHandler = async (req, res) => {
     const pathname = resolveRequestPathname(req, parsedUrl);
 
     // 1. Phục vụ trang chủ index.html & Bộ Favicon MatrixEdu (ICO, PNG, SVG)
-    if (req.method === 'GET' && (
+    if ((req.method === 'GET' || req.method === 'HEAD') && (
       pathname === '/favicon.ico' ||
       pathname.startsWith('/favicon') ||
       pathname === '/apple-touch-icon.png' ||
@@ -187,10 +187,16 @@ const requestHandler = async (req, res) => {
         let contentType = 'image/png';
         if (fileName.endsWith('.ico')) contentType = 'image/x-icon';
         else if (fileName.endsWith('.svg')) contentType = 'image/svg+xml';
+        const stat = fs.statSync(filePath);
         res.writeHead(200, {
           'Content-Type': contentType,
+          'Content-Length': stat.size,
           'Cache-Control': 'public, max-age=86400'
         });
+        if (req.method === 'HEAD') {
+          res.end();
+          return;
+        }
         fs.createReadStream(filePath).pipe(res);
         return;
       }
@@ -761,7 +767,7 @@ const requestHandler = async (req, res) => {
     }
 
     // 14.1b. Phục vụ ảnh Mẫu phiếu TLTN theo templateId (Hỗ trợ 4 mẫu: BGD 4 số, BGD 3 số, Tổng hợp, Rọc phách)
-    if (req.method === 'GET' && (pathname === '/api/omr/template-image' || pathname === '/api/omr/template-sheet-image')) {
+    if ((req.method === 'GET' || req.method === 'HEAD') && (pathname === '/api/omr/template-image' || pathname === '/api/omr/template-sheet-image')) {
       const templateId = parsedUrl.searchParams.get('templateId') || 'bgd_2025_4code';
       const template = getTemplateById(templateId);
 
@@ -783,10 +789,16 @@ const requestHandler = async (req, res) => {
 
       if (targetPath) {
         const isPng = targetPath.toLowerCase().endsWith('.png');
+        const stat = fs.statSync(targetPath);
         res.writeHead(200, {
           'Content-Type': isPng ? 'image/png' : 'image/jpeg',
+          'Content-Length': stat.size,
           'Cache-Control': 'public, max-age=86400'
         });
+        if (req.method === 'HEAD') {
+          res.end();
+          return;
+        }
         fs.createReadStream(targetPath).pipe(res);
         return;
       }
@@ -796,7 +808,7 @@ const requestHandler = async (req, res) => {
     }
 
     // 14.1d. Tải file Phôi Phiếu Trắng in ấn (PDF / Docx) theo templateId
-    if (req.method === 'GET' && (pathname === '/api/omr/download-blank-template' || pathname === '/api/omr/template-pdf')) {
+    if ((req.method === 'GET' || req.method === 'HEAD') && (pathname === '/api/omr/download-blank-template' || pathname === '/api/omr/template-pdf')) {
       const templateId = parsedUrl.searchParams.get('templateId') || 'bgd_2025_4code';
       const template = getTemplateById(templateId);
 
@@ -833,6 +845,10 @@ const requestHandler = async (req, res) => {
         'Content-Disposition': `attachment; filename="${asciiFilename}"; filename*=UTF-8''${encodedFilename}`,
         'Content-Length': fileBuf.length
       });
+      if (req.method === 'HEAD') {
+        res.end();
+        return;
+      }
       res.end(fileBuf);
       return;
     }
