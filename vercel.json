@@ -7,6 +7,14 @@
   },
   "rewrites": [
     {
+      "source": "/favicon:slug*",
+      "destination": "/api/[...slug]"
+    },
+    {
+      "source": "/apple-touch-icon:slug*",
+      "destination": "/api/[...slug]"
+    },
+    {
       "source": "/api/:slug*",
       "destination": "/api/[...slug]"
     }

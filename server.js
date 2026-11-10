@@ -137,6 +137,9 @@ function resolveRequestPathname(req, parsedUrl) {
   if (req.query) {
     if (req.query.slug) {
       const s = Array.isArray(req.query.slug) ? req.query.slug.join('/') : String(req.query.slug);
+      if (s.startsWith('favicon') || s.startsWith('apple-touch-icon')) {
+        return `/${s.replace(/^\/+/, '')}`;
+      }
       return `/api/${s.replace(/^\/+/, '')}`;
     }
     if (req.query.__pathname) {
@@ -170,7 +173,14 @@ const requestHandler = async (req, res) => {
     const pathname = resolveRequestPathname(req, parsedUrl);
 
     // 1. Phục vụ trang chủ index.html & Bộ Favicon MatrixEdu (ICO, PNG, SVG)
-    if (req.method === 'GET' && (pathname === '/favicon.ico' || pathname.startsWith('/favicon') || pathname === '/apple-touch-icon.png')) {
+    if (req.method === 'GET' && (
+      pathname === '/favicon.ico' ||
+      pathname.startsWith('/favicon') ||
+      pathname === '/apple-touch-icon.png' ||
+      pathname === '/api/favicon.ico' ||
+      pathname.startsWith('/api/favicon') ||
+      pathname === '/api/apple-touch-icon.png'
+    )) {
       const fileName = path.basename(pathname);
       const filePath = path.join(__dirname, fileName);
       if (fs.existsSync(filePath)) {

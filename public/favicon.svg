@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a" />
+      <stop offset="55%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#0d9488" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+  </defs>
+
+  <!-- Nền Squircle MatrixEdu -->
+  <rect x="2" y="2" width="60" height="60" rx="15" fill="url(#bgGrad)" stroke="#60a5fa" stroke-width="1.5" stroke-opacity="0.45" />
+
+  <!-- Dấu ngoặc Ma trận [ ] hai bên -->
+  <path d="M15 16 H10 V48 H15" fill="none" stroke="#38bdf8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M49 16 H54 V48 H49" fill="none" stroke="#38bdf8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Mũ cử nhân Giáo dục (Edu) phía trên -->
+  <polygon points="32,8 46,14.5 32,21 18,14.5" fill="url(#goldGrad)" />
+  <path d="M43,16 V22.5" stroke="#fde047" stroke-width="2.2" stroke-linecap="round" />
+  <circle cx="43" cy="23.5" r="1.8" fill="#f59e0b" />
+
+  <!-- Chữ M (Matrix) kết hợp lưới nút ma trận -->
+  <path d="M19 46 V25 L32 37 L45 25 V46" fill="none" stroke="#ffffff" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- 3 điểm nút Ma trận / OMR ở chân và tâm chữ M -->
+  <circle cx="19" cy="46" r="3.2" fill="#38bdf8" />
+  <circle cx="32" cy="37" r="3.2" fill="#facc15" />
+  <circle cx="45" cy="46" r="3.2" fill="#4ade80" />
+</svg>
+
