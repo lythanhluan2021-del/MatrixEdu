@@ -2680,20 +2680,20 @@
                 <div style="background:#091325; padding:6px 16px; border-bottom:1px solid #1e293b; display:flex; align-items:center; gap:16px; flex-wrap:wrap; font-size:0.73rem;">
                   <span style="color:#94a3b8; font-weight:700;">🎯 Quy ước màu:</span>
                   <span style="display:flex; align-items:center; gap:5px; color:#4ade80;">
-                    <span style="width:11px; height:11px; border-radius:50%; background:#16a34a; border:1px solid #15803d; display:inline-block;"></span>
-                    <b>Xanh lá:</b> Học sinh chọn ĐÚNG (+điểm)
+                    <span style="width:13px; height:13px; border-radius:50%; background:#16a34a; border:1px solid #15803d; display:inline-flex; align-items:center; justify-content:center; color:#fff; font-size:9px; font-weight:bold; line-height:1;">✓</span>
+                    <b>Xanh lá + Tick (✔):</b> Học sinh chọn ĐÚNG (+điểm)
                   </span>
                   <span style="display:flex; align-items:center; gap:5px; color:#f87171;">
-                    <span style="width:11px; height:11px; border-radius:50%; background:#dc2626; border:1px solid #991b1b; display:inline-block;"></span>
+                    <span style="width:13px; height:13px; border-radius:50%; background:#dc2626; border:1px solid #991b1b; display:inline-flex; align-items:center; justify-content:center; color:#fff; font-size:9px; font-weight:bold; line-height:1;">✕</span>
                     <b>Đỏ:</b> Học sinh chọn SAI (0 điểm)
                   </span>
-                  <span style="display:flex; align-items:center; gap:5px; color:#fde047;">
-                    <span style="width:12px; height:12px; border-radius:50%; background:rgba(250,204,21,0.22); border:2px solid #eab308; display:inline-block;"></span>
-                    <b>Vòng viền vàng:</b> ĐÁP ÁN ĐÚNG CỦA ĐỀ (khi học sinh làm sai / bỏ sót)
+                  <span style="display:flex; align-items:center; gap:5px; color:#86efac;">
+                    <span style="width:13px; height:13px; border-radius:50%; background:rgba(34,197,94,0.25); border:2px solid #16a34a; display:inline-flex; align-items:center; justify-content:center; color:#15803d; font-size:10px; font-weight:bold; line-height:1;">✔</span>
+                    <b>Dấu Tick Xanh (✔):</b> ĐÁP ÁN ĐÚNG CỦA ĐỀ (Hiện tại ô chuẩn khi học sinh làm sai / bỏ sót)
                   </span>
                   <span style="display:flex; align-items:center; gap:5px; color:#fbbf24;">
                     <span style="width:11px; height:11px; border:2px solid #f59e0b; display:inline-block;"></span>
-                    <b>Khung cam:</b> Vết chì mờ / tẩy xóa (đã tạm nhận diện, Thầy/Cô click để xem)
+                    <b>Khung cam:</b> Vết chì mờ / tẩy xóa (click để xem)
                   </span>
                 </div>
 
@@ -8189,6 +8189,89 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
     }
 
     /**
+     * VẼ DẤU TICK XANH (GREEN CHECKMARK) CHUẨN ĐỒ HỌA VECTOR TRÊN CANVAS
+     * Với hiệu ứng Halo trắng bảo chứng nét vẽ siêu sắc nét trên mọi nền ảnh scan hoặc phôi in
+     */
+    function drawCanvasCheckmark(ctx, cx, cy, size, strokeColor = '#15803d', haloColor = '#ffffff') {
+      ctx.save();
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      // 1. Vòng hào quang trắng (Halo) giúp dấu tick nổi bật sắc nét 100%
+      if (haloColor) {
+        ctx.strokeStyle = haloColor;
+        ctx.lineWidth = Math.max(3.2, size * 0.38);
+        ctx.beginPath();
+        ctx.moveTo(cx - size * 0.42, cy - size * 0.02);
+        ctx.lineTo(cx - size * 0.12, cy + size * 0.36);
+        ctx.lineTo(cx + size * 0.44, cy - size * 0.38);
+        ctx.stroke();
+      }
+
+      // 2. Nét chính màu xanh lá đậm
+      ctx.strokeStyle = strokeColor;
+      ctx.lineWidth = Math.max(2.2, size * 0.22);
+      ctx.beginPath();
+      ctx.moveTo(cx - size * 0.42, cy - size * 0.02);
+      ctx.lineTo(cx - size * 0.12, cy + size * 0.36);
+      ctx.lineTo(cx + size * 0.44, cy - size * 0.38);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    /**
+     * VẼ HUY HIỆU DẤU TICK XANH TRÒN (VERIFIED BADGE) Ở GÓC BONG BÓNG
+     */
+    function drawCheckmarkBadge(ctx, badgeX, badgeY, radius) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(badgeX, badgeY, radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#16a34a';
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = Math.max(1.4, radius * 0.28);
+      ctx.stroke();
+
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = Math.max(1.5, radius * 0.32);
+      const s = radius * 0.95;
+      ctx.beginPath();
+      ctx.moveTo(badgeX - s * 0.42, badgeY - s * 0.02);
+      ctx.lineTo(badgeX - s * 0.12, badgeY + s * 0.36);
+      ctx.lineTo(badgeX + s * 0.44, badgeY - s * 0.38);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    /**
+     * VẼ HUY HIỆU DẤU X ĐỎ Ở GÓC BONG BÓNG HỌC SINH TÔ SAI
+     */
+    function drawCrossBadge(ctx, badgeX, badgeY, radius) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(badgeX, badgeY, radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#dc2626';
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = Math.max(1.4, radius * 0.28);
+      ctx.stroke();
+
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = Math.max(1.5, radius * 0.3);
+      const s = radius * 0.45;
+      ctx.beginPath();
+      ctx.moveTo(badgeX - s, badgeY - s);
+      ctx.lineTo(badgeX + s, badgeY + s);
+      ctx.moveTo(badgeX + s, badgeY - s);
+      ctx.lineTo(badgeX - s, badgeY + s);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    /**
      * VẼ PHIẾU TRẢ LỜI TRẮC NGHIỆM LÊN CANVAS (KHỚP 100% PHIẾU GỐC BỘ GD&ĐT 2025)
      */
     function drawOmrCanvas(paper) {
@@ -8475,6 +8558,10 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
                 ctx.strokeStyle = '#1d4ed8';
                 ctx.lineWidth = Math.max(1, 2 * scaleX);
                 ctx.stroke();
+                ctx.fillStyle = '#ffffff';
+                ctx.font = `bold ${Math.round(Math.max(9, r * 1.05))}px Arial, sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.fillText(opt, bX, bY + (r * 0.35));
               } else if (isMatch) {
                 // XANH LÁ: Học sinh làm đúng
                 ctx.fillStyle = '#16a34a';
@@ -8482,6 +8569,14 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
                 ctx.strokeStyle = '#15803d';
                 ctx.lineWidth = Math.max(1, 2 * scaleX);
                 ctx.stroke();
+                ctx.fillStyle = '#ffffff';
+                ctx.font = `bold ${Math.round(Math.max(9, r * 1.05))}px Arial, sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.fillText(opt, bX, bY + (r * 0.35));
+
+                // Huy hiệu Dấu Tick Xanh bảo chứng ĐÚNG ở góc trên phải ô
+                const badgeR = r * 0.52;
+                drawCheckmarkBadge(ctx, bX + r * 0.72, bY - r * 0.68, badgeR);
               } else {
                 // ĐỎ: Học sinh làm sai
                 ctx.fillStyle = '#dc2626';
@@ -8489,18 +8584,37 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
                 ctx.strokeStyle = '#991b1b';
                 ctx.lineWidth = Math.max(1, 2 * scaleX);
                 ctx.stroke();
+                ctx.fillStyle = '#ffffff';
+                ctx.font = `bold ${Math.round(Math.max(9, r * 1.05))}px Arial, sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.fillText(opt, bX, bY + (r * 0.35));
+
+                // Huy hiệu Dấu X đỏ ở góc trên phải ô
+                const badgeR = r * 0.52;
+                drawCrossBadge(ctx, bX + r * 0.72, bY - r * 0.68, badgeR);
               }
-              ctx.fillStyle = '#ffffff';
-              ctx.font = `bold ${Math.round(Math.max(9, r * 1.05))}px Arial, sans-serif`;
-              ctx.textAlign = 'center';
-              ctx.fillText(opt, bX, bY + (r * 0.35));
             } else if (isCorrect && q <= p1KeyList.length) {
-              // VÒNG VÀNG: Đáp án chuẩn học sinh bỏ sót hoặc chọn sai
-              ctx.fillStyle = 'rgba(250, 204, 21, 0.22)';
+              // ĐÁP ÁN ĐÚNG CỦA ĐỀ THI (Học sinh làm sai hoặc bỏ sót)
+              // 1. Nền xanh lá nhạt + Viền xanh lá đậm
+              ctx.fillStyle = 'rgba(34, 197, 94, 0.22)';
               ctx.fill();
-              ctx.strokeStyle = '#eab308';
-              ctx.lineWidth = Math.max(2, 3.8 * scaleX);
+              ctx.strokeStyle = '#16a34a';
+              ctx.lineWidth = Math.max(2.5, 3.8 * scaleX);
               ctx.stroke();
+
+              // 2. Viền ngoài phụ vàng hổ phách
+              ctx.strokeStyle = '#f59e0b';
+              ctx.lineWidth = Math.max(1, 1.8 * scaleX);
+              ctx.beginPath();
+              ctx.arc(bX, bY, r + Math.max(2, 2.8 * scaleX), 0, Math.PI * 2);
+              ctx.stroke();
+
+              // 3. DẤU TICK XANH (GREEN CHECKMARK) TO RÕ NÉT NGAY TẠI Ô ĐÁP ÁN ĐÚNG
+              drawCanvasCheckmark(ctx, bX, bY, r * 1.35, '#15803d', '#ffffff');
+
+              // 4. Huy hiệu Tick Xanh ở góc trên bên phải
+              const badgeR = r * 0.55;
+              drawCheckmarkBadge(ctx, bX + r * 0.72, bY - r * 0.68, badgeR);
             }
 
             if (isAmbiguous && (Array.isArray(isAmbiguous) ? isAmbiguous.includes(opt) : (opt === 'B' || opt === 'C'))) {
@@ -8552,23 +8666,63 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
                 if (!hasValidKey) {
                   ctx.fillStyle = '#2563eb';
                   ctx.strokeStyle = '#1d4ed8';
+                  ctx.fill();
+                  ctx.lineWidth = Math.max(1, 2 * scaleX);
+                  ctx.stroke();
+                  ctx.fillStyle = '#ffffff';
+                  ctx.font = `bold ${Math.round(Math.max(9, r * 1.05))}px Arial, sans-serif`;
+                  ctx.textAlign = 'center';
+                  ctx.fillText(opt, bX, bY + (r * 0.35));
+                } else if (isMatch) {
+                  ctx.fillStyle = '#16a34a';
+                  ctx.strokeStyle = '#15803d';
+                  ctx.fill();
+                  ctx.lineWidth = Math.max(1, 2 * scaleX);
+                  ctx.stroke();
+                  ctx.fillStyle = '#ffffff';
+                  ctx.font = `bold ${Math.round(Math.max(9, r * 1.05))}px Arial, sans-serif`;
+                  ctx.textAlign = 'center';
+                  ctx.fillText(opt, bX, bY + (r * 0.35));
+
+                  // Dấu Tick Xanh bảo chứng ĐÚNG
+                  const badgeR = r * 0.52;
+                  drawCheckmarkBadge(ctx, bX + r * 0.72, bY - r * 0.68, badgeR);
                 } else {
-                  ctx.fillStyle = isMatch ? '#16a34a' : '#dc2626';
-                  ctx.strokeStyle = isMatch ? '#15803d' : '#991b1b';
+                  ctx.fillStyle = '#dc2626';
+                  ctx.strokeStyle = '#991b1b';
+                  ctx.fill();
+                  ctx.lineWidth = Math.max(1, 2 * scaleX);
+                  ctx.stroke();
+                  ctx.fillStyle = '#ffffff';
+                  ctx.font = `bold ${Math.round(Math.max(9, r * 1.05))}px Arial, sans-serif`;
+                  ctx.textAlign = 'center';
+                  ctx.fillText(opt, bX, bY + (r * 0.35));
+
+                  // Dấu X đỏ
+                  const badgeR = r * 0.52;
+                  drawCrossBadge(ctx, bX + r * 0.72, bY - r * 0.68, badgeR);
                 }
-                ctx.fill();
-                ctx.lineWidth = Math.max(1, 2 * scaleX);
-                ctx.stroke();
-                ctx.fillStyle = '#ffffff';
-                ctx.font = `bold ${Math.round(Math.max(9, r * 1.05))}px Arial, sans-serif`;
-                ctx.textAlign = 'center';
-                ctx.fillText(opt, bX, bY + (r * 0.35));
               } else if (isCorrect) {
-                ctx.fillStyle = 'rgba(250, 204, 21, 0.22)';
+                // ĐÁP ÁN ĐÚNG CỦA ĐỀ THI TRONG PHẦN II
+                ctx.fillStyle = 'rgba(34, 197, 94, 0.22)';
                 ctx.fill();
-                ctx.strokeStyle = '#eab308';
-                ctx.lineWidth = Math.max(2, 3.8 * scaleX);
+                ctx.strokeStyle = '#16a34a';
+                ctx.lineWidth = Math.max(2.5, 3.8 * scaleX);
                 ctx.stroke();
+
+                // Viền ngoài phụ vàng
+                ctx.strokeStyle = '#f59e0b';
+                ctx.lineWidth = Math.max(1, 1.8 * scaleX);
+                ctx.beginPath();
+                ctx.arc(bX, bY, r + Math.max(2, 2.8 * scaleX), 0, Math.PI * 2);
+                ctx.stroke();
+
+                // DẤU TICK XANH (GREEN CHECKMARK)
+                drawCanvasCheckmark(ctx, bX, bY, r * 1.35, '#15803d', '#ffffff');
+
+                // Huy hiệu Tick Xanh ở góc trên bên phải
+                const badgeR = r * 0.55;
+                drawCheckmarkBadge(ctx, bX + r * 0.72, bY - r * 0.68, badgeR);
               }
 
               activeCanvasBubbles.push({
@@ -8662,12 +8816,36 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
                   ctx.font = `bold ${Math.round(Math.max(9, r * 1.05))}px Arial, sans-serif`;
                   ctx.textAlign = 'center';
                   ctx.fillText(cand.ch, bX, bY + (r * 0.35));
+
+                  if (hasValidKey) {
+                    const badgeR = r * 0.50;
+                    if (okColor) {
+                      drawCheckmarkBadge(ctx, bX + r * 0.72, bY - r * 0.68, badgeR);
+                    } else {
+                      drawCrossBadge(ctx, bX + r * 0.72, bY - r * 0.68, badgeR);
+                    }
+                  }
                 } else if (isCor) {
-                  ctx.fillStyle = 'rgba(250, 204, 21, 0.22)';
+                  // ĐÁP ÁN ĐÚNG CỦA ĐỀ THI TRONG PHẦN III
+                  ctx.fillStyle = 'rgba(34, 197, 94, 0.22)';
                   ctx.fill();
-                  ctx.strokeStyle = '#eab308';
-                  ctx.lineWidth = Math.max(2, 3.5 * scaleX);
+                  ctx.strokeStyle = '#16a34a';
+                  ctx.lineWidth = Math.max(2.5, 3.5 * scaleX);
                   ctx.stroke();
+
+                  // Viền ngoài phụ vàng
+                  ctx.strokeStyle = '#f59e0b';
+                  ctx.lineWidth = Math.max(1, 1.8 * scaleX);
+                  ctx.beginPath();
+                  ctx.arc(bX, bY, r + Math.max(2, 2.8 * scaleX), 0, Math.PI * 2);
+                  ctx.stroke();
+
+                  // DẤU TICK XANH (GREEN CHECKMARK)
+                  drawCanvasCheckmark(ctx, bX, bY, r * 1.35, '#15803d', '#ffffff');
+
+                  // Huy hiệu Tick Xanh ở góc trên bên phải
+                  const badgeR = r * 0.52;
+                  drawCheckmarkBadge(ctx, bX + r * 0.72, bY - r * 0.68, badgeR);
                 }
 
                 activeCanvasBubbles.push({
