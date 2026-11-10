@@ -30,6 +30,11 @@ const {
   exportAuditLogsToCsv,
   syncOmrDatabaseToGoogleDrive
 } = require('./src/omr-engine');
+const {
+  OMR_TEMPLATES,
+  getAllTemplates,
+  getTemplateById
+} = require('./src/omr-templates');
 const { extractDocumentContent } = require('./src/doc-parser');
 const { computeMatrixStatistics, validateExamProfile, generateShuffledVariants } = require('./src/qa-validator');
 const { SAMPLE_DOCUMENTS } = require('./src/sample-materials');
@@ -164,16 +169,19 @@ const requestHandler = async (req, res) => {
     const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
     const pathname = resolveRequestPathname(req, parsedUrl);
 
-    // 1. Phục vụ trang chủ index.html & Favicon MatrixEdu
-    if (req.method === 'GET' && (pathname === '/favicon.svg' || pathname === '/favicon.ico')) {
-      const favPath = path.join(__dirname, 'favicon.svg');
-      if (fs.existsSync(favPath)) {
-        const svg = fs.readFileSync(favPath);
+    // 1. Phục vụ trang chủ index.html & Bộ Favicon MatrixEdu (ICO, PNG, SVG)
+    if (req.method === 'GET' && (pathname === '/favicon.ico' || pathname.startsWith('/favicon') || pathname === '/apple-touch-icon.png')) {
+      const fileName = path.basename(pathname);
+      const filePath = path.join(__dirname, fileName);
+      if (fs.existsSync(filePath)) {
+        let contentType = 'image/png';
+        if (fileName.endsWith('.ico')) contentType = 'image/x-icon';
+        else if (fileName.endsWith('.svg')) contentType = 'image/svg+xml';
         res.writeHead(200, {
-          'Content-Type': 'image/svg+xml',
+          'Content-Type': contentType,
           'Cache-Control': 'public, max-age=86400'
         });
-        res.end(svg);
+        fs.createReadStream(filePath).pipe(res);
         return;
       }
     }
@@ -619,16 +627,29 @@ const requestHandler = async (req, res) => {
     // CHỨC NĂNG 7: CHẤM BÀI TRẮC NGHIỆM (PHIẾU TLTN 2025 BGD) & THỐNG KÊ - BÁO CÁO
     // ========================================================================
 
-    // 14.1. Thông tin Phiếu TLTN 2025 chuẩn Bộ GD&ĐT
-    if (req.method === 'GET' && pathname === '/api/omr/template-info') {
-      const pdfPath = path.join(__dirname, 'Phiếu TLTN 2025 mã đề 4 số đen trắng.pdf');
-      const exists = fs.existsSync(pdfPath);
+    // 14.0. Danh sách tất cả các Mẫu Phiếu Trả lời trắc nghiệm hỗ trợ
+    if (req.method === 'GET' && pathname === '/api/omr/templates') {
       sendJson(res, 200, {
         ok: true,
-        fileName: 'Phiếu TLTN 2025 mã đề 4 số đen trắng.pdf',
-        pdfUrl: '/api/omr/template-pdf',
-        fileSize: exists ? fs.statSync(pdfPath).size : 0,
-        description: 'Mẫu Phiếu trả lời trắc nghiệm chuẩn Bộ GD&ĐT 2025 (Mã đề 4 số, Số báo danh 6 số, Phần I, Phần II Đúng/Sai, Phần III Trả lời ngắn)',
+        templates: getAllTemplates()
+      });
+      return;
+    }
+
+    // 14.1. Thông tin Phiếu TLTN chuẩn Bộ GD&ĐT và thông tin mẫu
+    if (req.method === 'GET' && pathname === '/api/omr/template-info') {
+      const templateId = parsedUrl.searchParams.get('templateId') || 'bgd_2025_4code';
+      const template = getTemplateById(templateId);
+      const blankFilePath = path.join(__dirname, template.blankFileName);
+      const exists = fs.existsSync(blankFilePath);
+      sendJson(res, 200, {
+        ok: true,
+        currentTemplate: template,
+        templates: getAllTemplates(),
+        fileName: template.blankFileName,
+        pdfUrl: `/api/omr/download-blank-template?templateId=${template.id}`,
+        fileSize: exists ? fs.statSync(blankFilePath).size : 0,
+        description: template.description,
         defaultRoster: getActiveRoster()
       });
       return;
@@ -729,39 +750,80 @@ const requestHandler = async (req, res) => {
       return;
     }
 
-    // 14.1b. Phục vụ ảnh Mẫu phiếu TLTN gốc chuẩn Bộ GD&ĐT 2025 (Từ file PDF gốc)
+    // 14.1b. Phục vụ ảnh Mẫu phiếu TLTN theo templateId (Hỗ trợ 4 mẫu: BGD 4 số, BGD 3 số, Tổng hợp, Rọc phách)
     if (req.method === 'GET' && (pathname === '/api/omr/template-image' || pathname === '/api/omr/template-sheet-image')) {
-      const imgPath = path.join(BUNDLED_DATA_DIR, 'omr_template_sheet.jpg');
-      const fallbackPath = path.join(__dirname, 'extracted_sheet_0.jpg');
-      const targetPath = fs.existsSync(imgPath) ? imgPath : (fs.existsSync(fallbackPath) ? fallbackPath : null);
+      const templateId = parsedUrl.searchParams.get('templateId') || 'bgd_2025_4code';
+      const template = getTemplateById(templateId);
+
+      // Tìm file ảnh theo template: kiểm tra thư mục data/omr_templates/, sau đó thư mục data, rồi thư mục gốc
+      const candidatePaths = [
+        path.join(__dirname, template.imageRelPath),
+        path.join(BUNDLED_DATA_DIR, 'omr_templates', path.basename(template.imageRelPath)),
+        path.join(BUNDLED_DATA_DIR, 'omr_template_sheet.jpg'),
+        path.join(__dirname, 'extracted_sheet_0.jpg')
+      ];
+
+      let targetPath = null;
+      for (const p of candidatePaths) {
+        if (p && fs.existsSync(p)) {
+          targetPath = p;
+          break;
+        }
+      }
+
       if (targetPath) {
+        const isPng = targetPath.toLowerCase().endsWith('.png');
         res.writeHead(200, {
-          'Content-Type': 'image/jpeg',
+          'Content-Type': isPng ? 'image/png' : 'image/jpeg',
           'Cache-Control': 'public, max-age=86400'
         });
         fs.createReadStream(targetPath).pipe(res);
         return;
       }
       res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
-      res.end('Không tìm thấy ảnh mẫu phiếu 2025!');
+      res.end(`Không tìm thấy ảnh mẫu phiếu cho id ${templateId}!`);
       return;
     }
 
-    // 14.2. Xem / Tải file PDF Phiếu TLTN 2025 trực tiếp
-    if (req.method === 'GET' && (pathname === '/api/omr/template-pdf' || decodeURIComponent(pathname).includes('Phiếu TLTN 2025'))) {
-      const pdfPath = path.join(__dirname, 'Phiếu TLTN 2025 mã đề 4 số đen trắng.pdf');
-      if (!fs.existsSync(pdfPath)) {
+    // 14.1d. Tải file Phôi Phiếu Trắng in ấn (PDF / Docx) theo templateId
+    if (req.method === 'GET' && (pathname === '/api/omr/download-blank-template' || pathname === '/api/omr/template-pdf')) {
+      const templateId = parsedUrl.searchParams.get('templateId') || 'bgd_2025_4code';
+      const template = getTemplateById(templateId);
+
+      const candidateFiles = [
+        path.join(BUNDLED_DATA_DIR, 'omr_templates', 'blank_files', template.blankFileName),
+        path.join(__dirname, template.blankFileName),
+        path.join(BUNDLED_DATA_DIR, 'omr_templates', template.blankFileName)
+      ];
+
+      let targetBlankPath = null;
+      for (const p of candidateFiles) {
+        if (p && fs.existsSync(p)) {
+          targetBlankPath = p;
+          break;
+        }
+      }
+
+      if (!targetBlankPath) {
         res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
-        res.end('Không tìm thấy file Phiếu TLTN 2025');
+        res.end(`Không tìm thấy file phôi mẫu in cho template: ${templateId}`);
         return;
       }
-      const pdfBuffer = fs.readFileSync(pdfPath);
+
+      const fileBuf = fs.readFileSync(targetBlankPath);
+      const asciiFilename = template.blankFileName
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd')
+        .replace(/Đ/g, 'D')
+        .replace(/[^a-zA-Z0-9._-]/g, '_');
+      const encodedFilename = encodeURIComponent(template.blankFileName);
       res.writeHead(200, {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': 'inline; filename="Phieu_TLTN_2025_BGD_MaDe4So.pdf"',
-        'Content-Length': pdfBuffer.length
+        'Content-Type': template.blankMime || 'application/octet-stream',
+        'Content-Disposition': `attachment; filename="${asciiFilename}"; filename*=UTF-8''${encodedFilename}`,
+        'Content-Length': fileBuf.length
       });
-      res.end(pdfBuffer);
+      res.end(fileBuf);
       return;
     }
 

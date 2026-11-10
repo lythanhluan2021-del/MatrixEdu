@@ -2,7 +2,7 @@
   "version": 2,
   "functions": {
     "api/**/*.js": {
-      "includeFiles": "{index.html,favicon.svg,*.docx,*.pdf,*.jpg,src/**,data/**}"
+      "includeFiles": "{index.html,favicon.svg,favicon.ico,favicon*.png,apple-touch-icon.png,*.docx,*.pdf,*.jpg,*.png,src/**,data/**}"
     }
   },
   "rewrites": [
