@@ -2709,7 +2709,11 @@
                   </span>
                   <span style="display:flex; align-items:center; gap:5px; color:#86efac;">
                     <span style="width:13px; height:13px; border-radius:50%; background:rgba(34,197,94,0.25); border:2px solid #16a34a; display:inline-flex; align-items:center; justify-content:center; color:#15803d; font-size:10px; font-weight:bold; line-height:1;">✔</span>
-                    <b>Dấu Tick Xanh (✔):</b> ĐÁP ÁN ĐÚNG CỦA ĐỀ (Hiện tại ô chuẩn khi học sinh làm sai / bỏ sót)
+                    <b>Dấu Tick Xanh (✔):</b> ĐÁP ÁN ĐÚNG CỦA ĐỀ (Chỉ hiện khi học sinh làm SAI)
+                  </span>
+                  <span style="display:flex; align-items:center; gap:5px; color:#fde047;">
+                    <span style="width:12px; height:12px; border-radius:50%; border:1.5px dashed rgba(234,179,8,0.85); display:inline-block;"></span>
+                    <b>Viền đứt vàng:</b> Học sinh BỎ TRỐNG (0 điểm)
                   </span>
                   <span style="display:flex; align-items:center; gap:5px; color:#fbbf24;">
                     <span style="width:11px; height:11px; border:2px solid #f59e0b; display:inline-block;"></span>
@@ -8697,27 +8701,35 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
                 drawCrossBadge(ctx, bX + r * 0.72, bY - r * 0.68, badgeR);
               }
             } else if (isCorrect && q <= p1KeyList.length) {
-              // ĐÁP ÁN ĐÚNG CỦA ĐỀ THI (Học sinh làm sai hoặc bỏ sót)
-              // 1. Nền xanh lá nhạt + Viền xanh lá đậm
-              ctx.fillStyle = 'rgba(34, 197, 94, 0.22)';
-              ctx.fill();
-              ctx.strokeStyle = '#16a34a';
-              ctx.lineWidth = Math.max(2.5, 3.8 * scaleX);
-              ctx.stroke();
+              if (studentAns) {
+                // HỌC SINH CÓ LÀM NHƯNG CHỌN SAI: Vẽ viền xanh + DẤU TICK XANH ✔ để Thầy/Cô đối chiếu
+                ctx.fillStyle = 'rgba(34, 197, 94, 0.22)';
+                ctx.fill();
+                ctx.strokeStyle = '#16a34a';
+                ctx.lineWidth = Math.max(2.5, 3.8 * scaleX);
+                ctx.stroke();
 
-              // 2. Viền ngoài phụ vàng hổ phách
-              ctx.strokeStyle = '#f59e0b';
-              ctx.lineWidth = Math.max(1, 1.8 * scaleX);
-              ctx.beginPath();
-              ctx.arc(bX, bY, r + Math.max(2, 2.8 * scaleX), 0, Math.PI * 2);
-              ctx.stroke();
+                ctx.strokeStyle = '#f59e0b';
+                ctx.lineWidth = Math.max(1, 1.8 * scaleX);
+                ctx.beginPath();
+                ctx.arc(bX, bY, r + Math.max(2, 2.8 * scaleX), 0, Math.PI * 2);
+                ctx.stroke();
 
-              // 3. DẤU TICK XANH (GREEN CHECKMARK) TO RÕ NÉT NGAY TẠI Ô ĐÁP ÁN ĐÚNG
-              drawCanvasCheckmark(ctx, bX, bY, r * 1.35, '#15803d', '#ffffff');
+                // DẤU TICK XANH (GREEN CHECKMARK) TO RÕ NÉT NGAY TẠI Ô ĐÁP ÁN ĐÚNG
+                drawCanvasCheckmark(ctx, bX, bY, r * 1.35, '#15803d', '#ffffff');
 
-              // 4. Huy hiệu Tick Xanh ở góc trên bên phải
-              const badgeR = r * 0.55;
-              drawCheckmarkBadge(ctx, bX + r * 0.72, bY - r * 0.68, badgeR);
+                // Huy hiệu Tick Xanh ở góc trên bên phải
+                const badgeR = r * 0.55;
+                drawCheckmarkBadge(ctx, bX + r * 0.72, bY - r * 0.68, badgeR);
+              } else {
+                // HỌC SINH BỎ TRỐNG CÂU NÀY: Viền nét đứt màu vàng nhạt (tránh nhầm lẫn là học sinh làm đúng)
+                ctx.save();
+                ctx.setLineDash([3 * scaleX, 3 * scaleX]);
+                ctx.strokeStyle = 'rgba(234, 179, 8, 0.65)';
+                ctx.lineWidth = Math.max(1.2, 1.8 * scaleX);
+                ctx.stroke();
+                ctx.restore();
+              }
             }
 
             if (isAmbiguous && (Array.isArray(isAmbiguous) ? isAmbiguous.includes(opt) : (opt === 'B' || opt === 'C'))) {
@@ -8806,26 +8818,36 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
                   drawCrossBadge(ctx, bX + r * 0.72, bY - r * 0.68, badgeR);
                 }
               } else if (isCorrect) {
-                // ĐÁP ÁN ĐÚNG CỦA ĐỀ THI TRONG PHẦN II
-                ctx.fillStyle = 'rgba(34, 197, 94, 0.22)';
-                ctx.fill();
-                ctx.strokeStyle = '#16a34a';
-                ctx.lineWidth = Math.max(2.5, 3.8 * scaleX);
-                ctx.stroke();
+                if (studentVal) {
+                  // HỌC SINH CÓ CHỌN NHƯNG CHỌN SAI: Vẽ viền xanh + DẤU TICK XANH ✔ để Thầy/Cô đối chiếu
+                  ctx.fillStyle = 'rgba(34, 197, 94, 0.22)';
+                  ctx.fill();
+                  ctx.strokeStyle = '#16a34a';
+                  ctx.lineWidth = Math.max(2.5, 3.8 * scaleX);
+                  ctx.stroke();
 
-                // Viền ngoài phụ vàng
-                ctx.strokeStyle = '#f59e0b';
-                ctx.lineWidth = Math.max(1, 1.8 * scaleX);
-                ctx.beginPath();
-                ctx.arc(bX, bY, r + Math.max(2, 2.8 * scaleX), 0, Math.PI * 2);
-                ctx.stroke();
+                  // Viền ngoài phụ vàng
+                  ctx.strokeStyle = '#f59e0b';
+                  ctx.lineWidth = Math.max(1, 1.8 * scaleX);
+                  ctx.beginPath();
+                  ctx.arc(bX, bY, r + Math.max(2, 2.8 * scaleX), 0, Math.PI * 2);
+                  ctx.stroke();
 
-                // DẤU TICK XANH (GREEN CHECKMARK)
-                drawCanvasCheckmark(ctx, bX, bY, r * 1.35, '#15803d', '#ffffff');
+                  // DẤU TICK XANH (GREEN CHECKMARK)
+                  drawCanvasCheckmark(ctx, bX, bY, r * 1.35, '#15803d', '#ffffff');
 
-                // Huy hiệu Tick Xanh ở góc trên bên phải
-                const badgeR = r * 0.55;
-                drawCheckmarkBadge(ctx, bX + r * 0.72, bY - r * 0.68, badgeR);
+                  // Huy hiệu Tick Xanh ở góc trên bên phải
+                  const badgeR = r * 0.55;
+                  drawCheckmarkBadge(ctx, bX + r * 0.72, bY - r * 0.68, badgeR);
+                } else {
+                  // HỌC SINH BỎ TRỐNG Ý NÀY: Viền nét đứt màu vàng nhạt (tránh nhầm lẫn là học sinh làm đúng)
+                  ctx.save();
+                  ctx.setLineDash([3 * scaleX, 3 * scaleX]);
+                  ctx.strokeStyle = 'rgba(234, 179, 8, 0.65)';
+                  ctx.lineWidth = Math.max(1.2, 1.8 * scaleX);
+                  ctx.stroke();
+                  ctx.restore();
+                }
               }
 
               activeCanvasBubbles.push({
@@ -8929,26 +8951,36 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
                     }
                   }
                 } else if (isCor) {
-                  // ĐÁP ÁN ĐÚNG CỦA ĐỀ THI TRONG PHẦN III
-                  ctx.fillStyle = 'rgba(34, 197, 94, 0.22)';
-                  ctx.fill();
-                  ctx.strokeStyle = '#16a34a';
-                  ctx.lineWidth = Math.max(2.5, 3.5 * scaleX);
-                  ctx.stroke();
+                  if (stuChar) {
+                    // HỌC SINH CÓ TÔ KÝ TỰ NHƯNG TÔ SAI: Hiện dấu tick xanh ở ô đúng để đối chiếu
+                    ctx.fillStyle = 'rgba(34, 197, 94, 0.22)';
+                    ctx.fill();
+                    ctx.strokeStyle = '#16a34a';
+                    ctx.lineWidth = Math.max(2.5, 3.5 * scaleX);
+                    ctx.stroke();
 
-                  // Viền ngoài phụ vàng
-                  ctx.strokeStyle = '#f59e0b';
-                  ctx.lineWidth = Math.max(1, 1.8 * scaleX);
-                  ctx.beginPath();
-                  ctx.arc(bX, bY, r + Math.max(2, 2.8 * scaleX), 0, Math.PI * 2);
-                  ctx.stroke();
+                    // Viền ngoài phụ vàng
+                    ctx.strokeStyle = '#f59e0b';
+                    ctx.lineWidth = Math.max(1, 1.8 * scaleX);
+                    ctx.beginPath();
+                    ctx.arc(bX, bY, r + Math.max(2, 2.8 * scaleX), 0, Math.PI * 2);
+                    ctx.stroke();
 
-                  // DẤU TICK XANH (GREEN CHECKMARK)
-                  drawCanvasCheckmark(ctx, bX, bY, r * 1.35, '#15803d', '#ffffff');
+                    // DẤU TICK XANH (GREEN CHECKMARK)
+                    drawCanvasCheckmark(ctx, bX, bY, r * 1.35, '#15803d', '#ffffff');
 
-                  // Huy hiệu Tick Xanh ở góc trên bên phải
-                  const badgeR = r * 0.52;
-                  drawCheckmarkBadge(ctx, bX + r * 0.72, bY - r * 0.68, badgeR);
+                    // Huy hiệu Tick Xanh ở góc trên bên phải
+                    const badgeR = r * 0.52;
+                    drawCheckmarkBadge(ctx, bX + r * 0.72, bY - r * 0.68, badgeR);
+                  } else {
+                    // HỌC SINH BỎ TRỐNG CỘT NÀY: Viền nét đứt màu vàng nhạt
+                    ctx.save();
+                    ctx.setLineDash([3 * scaleX, 3 * scaleX]);
+                    ctx.strokeStyle = 'rgba(234, 179, 8, 0.65)';
+                    ctx.lineWidth = Math.max(1.2, 1.5 * scaleX);
+                    ctx.stroke();
+                    ctx.restore();
+                  }
                 }
 
                 activeCanvasBubbles.push({
