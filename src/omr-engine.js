@@ -183,7 +183,7 @@ function isShortAnswerMatch(studentVal, expectedVal) {
  */
 function gradeSinglePaper(paper, answerKey, pointRules = {}) {
   const p1Rule = pointRules.mcq || 0.25;
-  const p2Style = pointRules.tfStyle || 'moet2025'; // 'moet2025' lũy tiến hoặc 'fixed025' (0.25/ý)
+  const p2Style = pointRules.tfStyle || 'fixed025'; // 'fixed025' chia đều (0.25đ/ý) hoặc 'moet2025' lũy tiến (0.1 - 0.25 - 0.5 - 1.0đ)
 
   // 1. Chấm Phần I (MCQ) — hỗ trợ cả dạng Mảng ['A', 'B'] và dạng Object { '1': 'A', '2': 'B' }
   let p1CorrectCount = 0;

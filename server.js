@@ -896,7 +896,7 @@ const requestHandler = async (req, res) => {
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
       let answerKeysByCode = body.answerKeysByCode || {};
-      let pointRules = body.pointRules || { mcq: 0.25, tfStyle: 'moet2025' };
+      let pointRules = body.pointRules || { mcq: 0.25, tfStyle: 'fixed025' };
       const roster = Array.isArray(body.roster) && body.roster.length > 0 ? body.roster : getActiveRoster();
 
       let papers = body.papers;

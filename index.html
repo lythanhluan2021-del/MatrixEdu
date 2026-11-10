@@ -2413,6 +2413,15 @@
                           <option value="thpt_roc_phach">Mẫu 4: Rọc phách THPT 2025-2026</option>
                         </select>
                       </div>
+                      <div style="grid-column:span 2;">
+                        <label style="font-weight:700; color:#475569; display:block; margin-bottom:2px;">Thang điểm Phần II (Đúng/Sai):</label>
+                        <select id="omr-tf-style-drawer-selector" class="form-control"
+                          style="height:26px; padding:1px 4px; font-size:0.74rem; font-weight:600;"
+                          onchange="onOmrTfStyleChanged(this.value)">
+                          <option value="fixed025" selected>Chia đều 0.25đ / mỗi ý đúng (Không điểm lẻ .10, .35, .60)</option>
+                          <option value="moet2025">Lũy tiến Bộ GD&ĐT 2025 (Đúng 1 ý=0.1đ, 2 ý=0.25đ, 3 ý=0.5đ, 4 ý=1.0đ)</option>
+                        </select>
+                      </div>
                     </div>
                     <div style="margin-bottom:6px;">
                       <label style="font-weight:700; color:#475569; display:block; margin-bottom:2px;">Thư mục CSDL lưu
@@ -2656,6 +2665,17 @@
                         <option value="bgd_2025_3code">Mẫu 2: Chuẩn Bộ GD&ĐT 2025 (Mã 3 số)</option>
                         <option value="thpt_tong_hop">Mẫu 3: Phiếu Học Kỳ Tổng Hợp (Mã 3 số - PDF)</option>
                         <option value="thpt_roc_phach">Mẫu 4: Phiếu Rọc Phách THPT (Docx)</option>
+                      </select>
+                    </div>
+
+                    <!-- BỘ CHỌN THANG ĐIỂM PHẦN II (ĐÚNG/SAI) -->
+                    <div style="display:flex; align-items:center; gap:5px; background:rgba(255,255,255,0.08); padding:3px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.18);">
+                      <label for="omr-tf-style-selector" style="font-size:0.74rem; color:#fde047; font-weight:700; white-space:nowrap;">⚖️ Thang P.II:</label>
+                      <select id="omr-tf-style-selector" onchange="onOmrTfStyleChanged(this.value)"
+                        style="background:#0f172a; color:#fef08a; border:1px solid #eab308; font-size:0.75rem; padding:3px 6px; border-radius:4px; font-weight:600; cursor:pointer;"
+                        title="Chọn cách tính điểm cho Phần II Đúng/Sai">
+                        <option value="fixed025" selected>Chia đều 0.25đ / ý (Không điểm lẻ)</option>
+                        <option value="moet2025">Lũy tiến Bộ GD 2025 (0.1 - 0.25 - 0.5 - 1.0đ)</option>
                       </select>
                     </div>
                     <button class="btn btn-sm" onclick="downloadSelectedBlankTemplate()"
@@ -7230,6 +7250,13 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       const sel2 = document.getElementById('omr-sheet-model-select');
       if (sel2) sel2.value = curTplId;
 
+      // 1c. Đồng bộ giá trị chọn Thang điểm Phần II (Đúng/Sai)
+      const curTfStyle = appState.omr.pointRules?.tfStyle || localStorage.getItem('matrixedu_omr_tfStyle') || 'fixed025';
+      const selTf1 = document.getElementById('omr-tf-style-selector');
+      if (selTf1) selTf1.value = curTfStyle;
+      const selTf2 = document.getElementById('omr-tf-style-drawer-selector');
+      if (selTf2) selTf2.value = curTfStyle;
+
       // 2. Cập nhật thang điểm chia điểm từ Ma trận Bước 2
       updateOmrPointRulesFromMatrix();
 
@@ -7298,11 +7325,87 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       const el = document.getElementById('omr-point-rule-text');
       if (el) el.value = ruleText;
 
+      const curTfStyle = appState.omr.pointRules?.tfStyle || localStorage.getItem('matrixedu_omr_tfStyle') || 'fixed025';
       appState.omr.pointRules = {
         mcq: mcqRule,
-        tfStyle: 'moet2025',
+        tfStyle: curTfStyle,
         sa: saRule
       };
+    }
+
+    /**
+     * Chuyển đổi Thang điểm Phần II (Đúng/Sai) giữa:
+     * - 'fixed025': Chia đều 0.25đ / mỗi ý đúng (Không sinh điểm lẻ .10, .35, .60)
+     * - 'moet2025': Thang điểm lũy tiến Bộ GD&ĐT 2025 (0.1 - 0.25 - 0.5 - 1.0đ)
+     */
+    async function onOmrTfStyleChanged(val) {
+      if (!appState.omr.pointRules) appState.omr.pointRules = {};
+      appState.omr.pointRules.tfStyle = val;
+      localStorage.setItem('matrixedu_omr_tfStyle', val);
+
+      const sel1 = document.getElementById('omr-tf-style-selector');
+      if (sel1) sel1.value = val;
+      const sel2 = document.getElementById('omr-tf-style-drawer-selector');
+      if (sel2) sel2.value = val;
+
+      const styleLabel = val === 'fixed025' ? 'Chia đều 0.25đ / mỗi ý đúng (Không điểm lẻ)' : 'Lũy tiến chuẩn Bộ GD&ĐT 2025';
+      showToast(`⚖️ Đã chuyển thang điểm Phần II sang: ${styleLabel}`, 'info');
+
+      await regradeCurrentPapersBatch();
+    }
+
+    /**
+     * Tự động chấm lại toàn bộ bài thi đã nạp theo thang điểm mới ngay lập tức
+     */
+    async function regradeCurrentPapersBatch() {
+      if (!appState.omr.gradedPapers || appState.omr.gradedPapers.length === 0) return;
+      showToast('Đang chấm lại toàn bộ bài thi theo thang điểm mới...', 'info');
+
+      const cleanPapers = appState.omr.gradedPapers.map(p => {
+        const copy = { ...p };
+        delete copy.imageElement;
+        delete copy.imageUrl;
+        return copy;
+      });
+
+      try {
+        const threshold = parseFloat(document.getElementById('omr-threshold-val')?.value || '0.35');
+        const res = await fetch('/api/omr/grade-batch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            threshold,
+            answerKeysByCode: appState.omr.answerKeysByCode,
+            pointRules: appState.omr.pointRules,
+            roster: appState.omr.roster || [],
+            metadata: appState.metadata || {},
+            papers: cleanPapers
+          })
+        });
+        const data = await res.json();
+        if (data.ok && Array.isArray(data.gradedPapers)) {
+          const clientPapersMap = new Map((appState.omr.gradedPapers || []).map(p => [p.id, p]));
+          data.gradedPapers.forEach(gp => {
+            const orig = clientPapersMap.get(gp.id);
+            if (orig) {
+              gp.fileName = orig.fileName;
+              gp.imageUrl = orig.imageUrl;
+              gp.imageElement = orig.imageElement;
+              gp.folderName = orig.folderName;
+              gp.isBlankPaper = orig.isBlankPaper;
+              gp.detectedFiducials = orig.detectedFiducials;
+            }
+          });
+          appState.omr.gradedPapers = data.gradedPapers;
+          if (data.statistics) appState.omr.statistics = data.statistics;
+          renderOmrPapersTable();
+          const activeP = appState.omr.gradedPapers.find(p => p.id === appState.omr.activePaperId) || appState.omr.gradedPapers[0];
+          if (activeP) selectOmrPaper(activeP.id);
+          showToast(`✅ Đã chấm xong cả lớp! Điểm số mới đã cập nhật!`, 'success');
+        }
+      } catch (err) {
+        console.error(err);
+      }
     }
 
     /**
