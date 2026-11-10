@@ -8584,101 +8584,113 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
           });
         }
 
-        // E. PHẦN III: CÂU HỎI TRẢ LỜI NGẮN (6 CÂU × 4 CỘT THEO TỌA ĐỘ MẪU)
+        // E. PHẦN III: CÂU HỎI TRẢ LỜI NGẮN (CHỈ VẼ & CHẤM KHI ĐỀ THI THỰC TẾ CÓ PHẦN III)
         const p3Coords = tpl.coords.part3;
-        const p3ColBases = p3Coords.colBases;
+        const p3ColBases = p3Coords ? p3Coords.colBases : [];
+        const maxP3 = Math.min(6, Object.keys(p3Key || {}).length);
 
-        const normalizeShortStr = (val) => {
-          if (val === undefined || val === null) return '';
-          return String(val).trim().replace(/\./g, ',');
-        };
-        const isClientShortMatch = (stu, exp) => {
-          const s = normalizeShortStr(stu);
-          const e = normalizeShortStr(exp);
-          if (!s || !e) return false;
-          if (s.toLowerCase() === e.toLowerCase()) return true;
-          const n1 = Number(s.replace(/,/g, '.'));
-          const n2 = Number(e.replace(/,/g, '.'));
-          return !Number.isNaN(n1) && !Number.isNaN(n2) && Math.abs(n1 - n2) <= 1e-4;
-        };
+        if (maxP3 > 0 && p3ColBases.length > 0) {
+          const normalizeShortStr = (val) => {
+            if (val === undefined || val === null) return '';
+            return String(val).trim().replace(/\./g, ',');
+          };
+          const isClientShortMatch = (stu, exp) => {
+            const s = normalizeShortStr(stu);
+            const e = normalizeShortStr(exp);
+            if (!s || !e) return false;
+            if (s.toLowerCase() === e.toLowerCase()) return true;
+            const n1 = Number(s.replace(/,/g, '.'));
+            const n2 = Number(e.replace(/,/g, '.'));
+            return !Number.isNaN(n1) && !Number.isNaN(n2) && Math.abs(n1 - n2) <= 1e-4;
+          };
 
-        for (let q = 1; q <= 6; q++) {
-          const qBaseX = p3ColBases[q - 1];
-          const rawStudentStr = normalizeShortStr((paper.answers?.part3 || {})[q]);
-          const rawCorrectStr = hasValidKey ? normalizeShortStr(p3Key[q]) : '';
-          const hasCorrectKey = rawCorrectStr.length > 0;
-          const isWholeQCorrect = hasCorrectKey && isClientShortMatch(rawStudentStr, rawCorrectStr);
+          for (let q = 1; q <= maxP3; q++) {
+            const qBaseX = p3ColBases[q - 1];
+            const rawStudentStr = normalizeShortStr((paper.answers?.part3 || {})[q]);
+            const rawCorrectStr = hasValidKey ? normalizeShortStr(p3Key[q]) : '';
+            const hasCorrectKey = rawCorrectStr.length > 0;
+            const isWholeQCorrect = hasCorrectKey && isClientShortMatch(rawStudentStr, rawCorrectStr);
 
-          // Nếu làm sai hoặc bỏ trống câu có đáp án chuẩn, in nhắc ĐA chuẩn
-          if (hasCorrectKey && !isWholeQCorrect && (tpl.id === 'bgd_2025_4code' || tpl.id === 'bgd_2025_3code')) {
-            ctx.fillStyle = '#b45309';
-            ctx.font = `bold ${Math.round(20 * scaleY)}px Arial, sans-serif`;
-            ctx.textAlign = 'left';
-            ctx.fillText(`ĐA: ${rawCorrectStr}`, (qBaseX + 95) * scaleX, 2406 * scaleY);
-          }
-
-          for (let cIdx = 0; cIdx < 4; cIdx++) {
-            const colX = (qBaseX + cIdx * p3Coords.charStepX);
-            const stuChar = rawStudentStr[cIdx] || '';
-            const corChar = rawCorrectStr[cIdx] || '';
-
-            // In từng ký tự học sinh tô vào ô chữ nhật trên đầu câu Phần III
-            const ptBox = mapCanvasCoord(colX, p3Coords.boxY);
-            if (stuChar) {
-              ctx.fillStyle = !hasValidKey ? '#2563eb' : (isWholeQCorrect ? '#15803d' : '#dc2626');
-              ctx.font = `bold ${Math.round(Math.max(10, p3Coords.radius * 1.5 * scaleX))}px "Courier New", monospace`;
-              ctx.textAlign = 'center';
-              ctx.fillText(stuChar, ptBox.x, ptBox.y);
+            // Nếu làm sai hoặc bỏ trống câu có đáp án chuẩn, in nhắc ĐA chuẩn
+            if (hasCorrectKey && !isWholeQCorrect && (tpl.id === 'bgd_2025_4code' || tpl.id === 'bgd_2025_3code')) {
+              ctx.fillStyle = '#b45309';
+              ctx.font = `bold ${Math.round(20 * scaleY)}px Arial, sans-serif`;
+              ctx.textAlign = 'left';
+              ctx.fillText(`ĐA: ${rawCorrectStr}`, (qBaseX + 95) * scaleX, 2406 * scaleY);
             }
 
-            const charCandidates = [];
-            if (cIdx === 0) charCandidates.push({ ch: '-', origY: p3Coords.yMinus });
-            if (cIdx === 1 || cIdx === 2) charCandidates.push({ ch: ',', origY: p3Coords.yComma });
-            for (let d = 0; d <= 9; d++) {
-              charCandidates.push({ ch: String(d), origY: p3Coords.rowBaseDigitY + d * p3Coords.rowStepDigitY });
-            }
+            for (let cIdx = 0; cIdx < 4; cIdx++) {
+              const colX = (qBaseX + cIdx * p3Coords.charStepX);
+              const stuChar = rawStudentStr[cIdx] || '';
+              const corChar = rawCorrectStr[cIdx] || '';
 
-            charCandidates.forEach(cand => {
-              const pt = mapCanvasCoord(colX, cand.origY);
-              const bX = pt.x;
-              const bY = pt.y;
-              const r = p3Coords.radius * scaleX;
-              const isStu = stuChar === cand.ch;
-              const isCor = hasCorrectKey && corChar === cand.ch;
-
-              ctx.beginPath();
-              ctx.arc(bX, bY, r, 0, Math.PI * 2);
-
-              if (isStu) {
-                const okColor = isWholeQCorrect || isCor;
-                ctx.fillStyle = !hasValidKey ? '#2563eb' : (okColor ? '#16a34a' : '#dc2626');
-                ctx.fill();
-                ctx.strokeStyle = !hasValidKey ? '#1d4ed8' : (okColor ? '#15803d' : '#991b1b');
-                ctx.lineWidth = Math.max(1, 1.8 * scaleX);
-                ctx.stroke();
-                ctx.fillStyle = '#ffffff';
-                ctx.font = `bold ${Math.round(Math.max(9, r * 1.05))}px Arial, sans-serif`;
+              // In từng ký tự học sinh tô vào ô chữ nhật trên đầu câu Phần III
+              const ptBox = mapCanvasCoord(colX, p3Coords.boxY);
+              if (stuChar) {
+                ctx.fillStyle = !hasValidKey ? '#2563eb' : (isWholeQCorrect ? '#15803d' : '#dc2626');
+                ctx.font = `bold ${Math.round(Math.max(10, p3Coords.radius * 1.5 * scaleX))}px "Courier New", monospace`;
                 ctx.textAlign = 'center';
-                ctx.fillText(cand.ch, bX, bY + (r * 0.35));
-              } else if (isCor) {
-                ctx.fillStyle = 'rgba(250, 204, 21, 0.22)';
-                ctx.fill();
-                ctx.strokeStyle = '#eab308';
-                ctx.lineWidth = Math.max(2, 3.5 * scaleX);
-                ctx.stroke();
+                ctx.fillText(stuChar, ptBox.x, ptBox.y);
               }
 
-              activeCanvasBubbles.push({
-                part: 'p3',
-                qNum: q,
-                colIdx: cIdx,
-                opt: cand.ch,
-                x: bX,
-                y: bY,
-                radius: r
+              const charCandidates = [];
+              if (cIdx === 0) charCandidates.push({ ch: '-', origY: p3Coords.yMinus });
+              if (cIdx === 1 || cIdx === 2) charCandidates.push({ ch: ',', origY: p3Coords.yComma });
+              for (let d = 0; d <= 9; d++) {
+                charCandidates.push({ ch: String(d), origY: p3Coords.rowBaseDigitY + d * p3Coords.rowStepDigitY });
+              }
+
+              charCandidates.forEach(cand => {
+                const pt = mapCanvasCoord(colX, cand.origY);
+                const bX = pt.x;
+                const bY = pt.y;
+                const r = p3Coords.radius * scaleX;
+                const isStu = stuChar === cand.ch;
+                const isCor = hasCorrectKey && corChar === cand.ch;
+
+                ctx.beginPath();
+                ctx.arc(bX, bY, r, 0, Math.PI * 2);
+
+                if (isStu) {
+                  const okColor = isWholeQCorrect || isCor;
+                  ctx.fillStyle = !hasValidKey ? '#2563eb' : (okColor ? '#16a34a' : '#dc2626');
+                  ctx.fill();
+                  ctx.strokeStyle = !hasValidKey ? '#1d4ed8' : (okColor ? '#15803d' : '#991b1b');
+                  ctx.lineWidth = Math.max(1, 1.8 * scaleX);
+                  ctx.stroke();
+                  ctx.fillStyle = '#ffffff';
+                  ctx.font = `bold ${Math.round(Math.max(9, r * 1.05))}px Arial, sans-serif`;
+                  ctx.textAlign = 'center';
+                  ctx.fillText(cand.ch, bX, bY + (r * 0.35));
+                } else if (isCor) {
+                  ctx.fillStyle = 'rgba(250, 204, 21, 0.22)';
+                  ctx.fill();
+                  ctx.strokeStyle = '#eab308';
+                  ctx.lineWidth = Math.max(2, 3.5 * scaleX);
+                  ctx.stroke();
+                }
+
+                activeCanvasBubbles.push({
+                  part: 'p3',
+                  qNum: q,
+                  colIdx: cIdx,
+                  opt: cand.ch,
+                  x: bX,
+                  y: bY,
+                  radius: r
+                });
               });
-            });
+            }
           }
+        } else if (p3Coords && p3ColBases.length > 0) {
+          // Khi đề thi không áp dụng Phần III, vẽ nhãn thông báo mờ thanh lịch để giáo viên hoàn toàn an tâm
+          ctx.save();
+          const ptBox0 = mapCanvasCoord(p3ColBases[0], p3Coords.boxY);
+          ctx.fillStyle = 'rgba(100, 116, 139, 0.65)';
+          ctx.font = `italic bold ${Math.round(18 * scaleY)}px Arial, sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.fillText('— Đề thi không áp dụng Phần III (0 câu hỏi) —', width / 2, ptBox0.y + 40 * scaleY);
+          ctx.restore();
         }
 
         // F. ĐÓNG DẤU ĐIỂM SỐ & KẾT QUẢ THEO TỪNG MẪU PHIẾU
@@ -9916,37 +9928,40 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
         });
       }
 
-      // 5. QUÉT PHẦN III: TRẢ LỜI NGẮN (6 câu × 4 cột ký tự theo mẫu)
-      const p3Cfg = tpl.coords.part3;
-      for (let q = 1; q <= 6; q++) {
-        const qBaseX = p3Cfg.colBases[q - 1];
-        let qChars = '';
-        for (let cIdx = 0; cIdx < 4; cIdx++) {
-          const colX = qBaseX + cIdx * p3Cfg.charStepX;
-          const candidates = [];
-          if (cIdx === 0) candidates.push({ ch: '-', y: p3Cfg.yMinus });
-          if (cIdx === 1 || cIdx === 2) candidates.push({ ch: ',', y: p3Cfg.yComma });
-          for (let d = 0; d <= 9; d++) {
-            candidates.push({ ch: String(d), y: p3Cfg.rowBaseDigitY + d * p3Cfg.rowStepDigitY });
+      // 5. QUÉT PHẦN III: TRẢ LỜI NGẮN (Chỉ quét khi đề thi thực tế có câu hỏi Phần III)
+      const maxP3 = opts.expectedP3Count !== undefined ? opts.expectedP3Count : 0;
+      if (maxP3 > 0 && tpl.coords.part3) {
+        const p3Cfg = tpl.coords.part3;
+        for (let q = 1; q <= Math.min(6, maxP3); q++) {
+          const qBaseX = p3Cfg.colBases[q - 1];
+          let qChars = '';
+          for (let cIdx = 0; cIdx < 4; cIdx++) {
+            const colX = qBaseX + cIdx * p3Cfg.charStepX;
+            const candidates = [];
+            if (cIdx === 0) candidates.push({ ch: '-', y: p3Cfg.yMinus });
+            if (cIdx === 1 || cIdx === 2) candidates.push({ ch: ',', y: p3Cfg.yComma });
+            for (let d = 0; d <= 9; d++) {
+              candidates.push({ ch: String(d), y: p3Cfg.rowBaseDigitY + d * p3Cfg.rowStepDigitY });
+            }
+            const measured = candidates.map(cand => ({
+              ch: cand.ch,
+              val: measureDiskDarkness(colX, cand.y, p3Cfg.radius * 0.75)
+            }));
+            const minD = Math.min(...measured.map(m => m.val));
+            let best = { ch: '', eff: 0, val: 0 };
+            measured.forEach(m => {
+              const eff = m.val - minD;
+              if (eff > best.eff) best = { ch: m.ch, eff, val: m.val };
+            });
+            if (best.eff >= effectiveThreshold && best.val >= minDarknessThreshold) {
+              qChars += best.ch;
+              totalFilledBubbles++;
+            }
           }
-          const measured = candidates.map(cand => ({
-            ch: cand.ch,
-            val: measureDiskDarkness(colX, cand.y, p3Cfg.radius * 0.75)
-          }));
-          const minD = Math.min(...measured.map(m => m.val));
-          let best = { ch: '', eff: 0, val: 0 };
-          measured.forEach(m => {
-            const eff = m.val - minD;
-            if (eff > best.eff) best = { ch: m.ch, eff, val: m.val };
-          });
-          if (best.eff >= effectiveThreshold && best.val >= minDarknessThreshold) {
-            qChars += best.ch;
-            totalFilledBubbles++;
+          if (qChars) {
+            answers.part3[q] = qChars;
+            confidences.part3[q] = 96;
           }
-        }
-        if (qChars) {
-          answers.part3[q] = qChars;
-          confidences.part3[q] = 96;
         }
       }
 

@@ -266,6 +266,10 @@ function gradeSinglePaper(paper, answerKey, pointRules = {}) {
   let p3CorrectCount = 0;
   const p3Details = [];
   const p3Key = answerKey.part3 || {};
+  const p3Total = Object.keys(p3Key).length;
+  if (p3Total === 0 && paper.answers && paper.answers.part3) {
+    paper.answers.part3 = {};
+  }
   const p3Rule = pointRules.sa !== undefined ? pointRules.sa : 0.5;
 
   for (const [qNumStr, correctVal] of Object.entries(p3Key)) {
