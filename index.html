@@ -7020,6 +7020,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         hasScoreBoxLeft: true,
         hasPhach: false,
         scoreBox: { x: 222, y: 420, w: 366, h: 164 },
+        fiducials: { tl: { x: 48, y: 60 }, tr: { x: 2280, y: 60 }, bl: { x: 48, y: 3320 }, br: { x: 2280, y: 3320 } },
         coords: {
           sbd: { colBaseX: 1588.3, colStepX: 48.625, numCols: 6, boxY: 288, rowBaseY: 365, rowStepY: 68.0, radius: 18 },
           code: { colBaseX: 2040.7, colStepX: 49.375, numCols: 4, boxY: 288, rowBaseY: 365, rowStepY: 68.0, radius: 18 },
@@ -7041,6 +7042,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         hasScoreBoxLeft: true,
         hasPhach: false,
         scoreBox: { x: 222, y: 420, w: 366, h: 164 },
+        fiducials: { tl: { x: 48, y: 60 }, tr: { x: 2280, y: 60 }, bl: { x: 48, y: 3320 }, br: { x: 2280, y: 3320 } },
         coords: {
           sbd: { colBaseX: 1588.3, colStepX: 48.625, numCols: 6, boxY: 288, rowBaseY: 365, rowStepY: 68.0, radius: 18 },
           code: { colBaseX: 2040.7, colStepX: 49.375, numCols: 3, boxY: 288, rowBaseY: 365, rowStepY: 68.0, radius: 18 },
@@ -7062,12 +7064,13 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         hasScoreBoxLeft: false,
         hasPhach: false,
         scoreBox: { x: 260, y: 390, w: 350, h: 145 },
+        fiducials: { tl: { x: 150, y: 146 }, tr: { x: 2320, y: 146 }, bl: { x: 150, y: 3351 }, br: { x: 2320, y: 3351 } },
         coords: {
-          sbd: { colBaseX: 1794.0, colStepX: 47.0, numCols: 6, boxY: 295, rowBaseY: 373.0, rowStepY: 68.0, radius: 17.5 },
-          code: { colBaseX: 2194.0, colStepX: 47.0, numCols: 3, boxY: 295, rowBaseY: 373.0, rowStepY: 68.0, radius: 17.5 },
-          part1: { colBases: [295.0, 840.0, 1348.0, 1860.0], optStepX: 104.0, rowBaseY: 1320.0, rowStepY: 54.5, radius: 18.0, totalQuestions: 40 },
-          part2: { colBases: [295.0, 508.0, 840.0, 1052.0, 1348.0, 1560.0, 1860.0, 2072.0], optStepX: 104.0, rowBaseY: 2110.0, rowStepY: 54.0, radius: 18.0, totalQuestions: 8 },
-          part3: { colBases: [275.0, 615.0, 955.0, 1295.0, 1635.0, 1975.0], charStepX: 72.0, boxY: 2540.0, yMinus: 2585.0, yComma: 2640.0, rowBaseDigitY: 2695.0, rowStepDigitY: 55.5, radius: 17.0, totalQuestions: 6 }
+          sbd: { colBaseX: 1798.0, colStepX: 46.4, numCols: 6, boxY: 355, rowBaseY: 424.0, rowStepY: 68.0, radius: 17.0 },
+          code: { colBaseX: 2152.0, colStepX: 44.5, numCols: 3, boxY: 355, rowBaseY: 424.0, rowStepY: 68.0, radius: 17.0 },
+          part1: { colBases: [348.0, 858.0, 1367.0, 1878.0], optStepX: 101.5, rowBaseY: 1339.0, rowStepY: 52.6, radius: 17.5, totalQuestions: 40 },
+          part2: { colBases: [348.0, 552.0, 858.0, 1062.0, 1367.0, 1571.0, 1878.0, 2082.0], optStepX: 101.5, rowBaseY: 2120.0, rowStepY: 52.0, radius: 17.5, totalQuestions: 8 },
+          part3: { colBases: [295.0, 635.0, 975.0, 1315.0, 1655.0, 1995.0], charStepX: 72.0, boxY: 2465.0, yMinus: 2533.0, yComma: 2600.0, rowBaseDigitY: 2668.0, rowStepDigitY: 55.5, radius: 17.0, totalQuestions: 6 }
         }
       },
       {
@@ -7084,6 +7087,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         hasPhach: true,
         scoreBox: { x: 18, y: 132, w: 128, h: 62 },
         scoreWordBox: { x: 18, y: 220, w: 128, h: 56 },
+        fiducials: { tl: { x: 18, y: 22 }, tr: { x: 564, y: 22 }, bl: { x: 18, y: 825 }, br: { x: 564, y: 825 } },
         coords: {
           sbd: { colBaseX: 397.0, colStepX: 12.0, numCols: 6, boxY: 96, rowBaseY: 116.0, rowStepY: 13.8, radius: 4.5 },
           code: { colBaseX: 508.0, colStepX: 12.5, numCols: 4, boxY: 96, rowBaseY: 116.0, rowStepY: 13.8, radius: 4.5 },
@@ -7114,6 +7118,12 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
 
       const activePaper = (appState.omr.gradedPapers || []).find(p => p.id === appState.omr.activePaperId);
       drawOmrCanvas(activePaper || null);
+
+      // Nếu đã có bài scan nạp lên, tự động quét lại theo tọa độ mẫu mới
+      if (Array.isArray(appState.omr.papers) && appState.omr.papers.length > 0) {
+        showToast(`🔄 Đang quét lại ${appState.omr.papers.length} bài thi theo mẫu "${tpl.shortName}"...`, 'info');
+        runOmrBatchGrading(false);
+      }
     }
 
     function downloadSelectedBlankTemplate() {
@@ -7860,18 +7870,24 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
                 expectedP2Count,
                 expectedP3Count
               });
-              if (scanRes && scanRes.totalFilledBubbles > 0) {
-                if (scanRes.sbd) p.sbd = scanRes.sbd;
-                if (scanRes.scannedExamCode) {
-                  const stripped = scanRes.scannedExamCode.replace(/^0+/, '');
-                  p.scannedExamCode = validCodes.includes(scanRes.scannedExamCode)
-                    ? scanRes.scannedExamCode
-                    : (validCodes.includes(stripped) ? stripped : scanRes.scannedExamCode);
+              if (scanRes) {
+                p.isBlankPaper = scanRes.isBlankPaper;
+                p.detectedFiducials = scanRes.detectedFiducials;
+                if (scanRes.totalFilledBubbles > 0) {
+                  if (scanRes.sbd) p.sbd = scanRes.sbd;
+                  if (scanRes.scannedExamCode) {
+                    const stripped = scanRes.scannedExamCode.replace(/^0+/, '');
+                    p.scannedExamCode = validCodes.includes(scanRes.scannedExamCode)
+                      ? scanRes.scannedExamCode
+                      : (validCodes.includes(stripped) ? stripped : scanRes.scannedExamCode);
+                  }
+                  p.answers = scanRes.answers;
+                  p.confidences = scanRes.confidences;
+                  p.ambiguous = scanRes.ambiguous;
+                  p.warnings = scanRes.warnings;
+                } else if (scanRes.isBlankPaper) {
+                  p.warnings = scanRes.warnings;
                 }
-                p.answers = scanRes.answers;
-                p.confidences = scanRes.confidences;
-                p.ambiguous = scanRes.ambiguous;
-                p.warnings = scanRes.warnings;
               }
             }
           }
@@ -7913,6 +7929,11 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
             gp.imageUrl = orig.imageUrl;
             gp.imageElement = orig.imageElement;
             gp.folderName = orig.folderName;
+            gp.isBlankPaper = orig.isBlankPaper;
+            gp.detectedFiducials = orig.detectedFiducials;
+            if (orig.isBlankPaper && orig.warnings) {
+              gp.warnings = orig.warnings;
+            }
           }
         });
         appState.omr.gradedPapers = data.gradedPapers || [];
@@ -8052,7 +8073,9 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
         const scoreStr = numScore.toFixed(2);
 
         let statusHtml = '<span class="badge" style="background:#f1f5f9; color:#475569; font-weight:600; padding:2px 6px; border-radius:4px; font-size:0.72rem;">Đã chấm</span>';
-        if (p.isCorrected) {
+        if (p.isBlankPaper || (numScore === 0 && Object.keys(p.answers?.part1 || {}).length === 0 && Object.keys(p.answers?.part2 || {}).length === 0)) {
+          statusHtml = '<span class="badge" style="background:#fee2e2; color:#991b1b; font-weight:700; padding:2px 6px; border-radius:4px; font-size:0.72rem;">Để trống bài (0 đ)</span>';
+        } else if (p.isCorrected) {
           statusHtml = '<span class="badge" style="background:#e0e7ff; color:#3730a3; font-weight:600; padding:2px 6px; border-radius:4px; font-size:0.72rem;">Đã sửa thủ công</span>';
         } else if (p.warnings && p.warnings.length > 0) {
           statusHtml = '<span class="badge" style="background:#fef08a; color:#854d0e; font-weight:700; padding:2px 6px; border-radius:4px; font-size:0.72rem;">Cần kiểm tra</span>';
@@ -8112,7 +8135,10 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
 
       const diagEl = document.getElementById('omr-bottom-diagnostic');
       if (diagEl) {
-        if (paper.warnings && paper.warnings.length > 0) {
+        if (paper.isBlankPaper || (Number(paper.result?.totalScore || 0) === 0 && Object.keys(paper.answers?.part1 || {}).length === 0 && Object.keys(paper.answers?.part2 || {}).length === 0)) {
+          diagEl.textContent = '⚠️ Thí sinh nộp bài để trống (không tô chì Phần I, II, III). Điểm số 0.00 đ là hoàn toàn chính xác theo bài thi.';
+          diagEl.style.color = '#dc2626';
+        } else if (paper.warnings && paper.warnings.length > 0) {
           diagEl.textContent = paper.warnings[0].message || 'Cần đối chiếu bài thi gốc';
           diagEl.style.color = '#b45309';
         } else if (paper.isCorrected) {
@@ -8229,6 +8255,38 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
         const scaleX = width / tpl.width;
         const scaleY = height / tpl.height;
 
+        // Nếu bài thi có ảnh scan và đã căn chỉnh fiducials -> ánh xạ bilinear để vòng tròn nằm khớp 100% trên ô tròn của ảnh scan
+        const fidTpl = tpl.fiducials || {
+          tl: { x: 50, y: 60 },
+          tr: { x: tpl.width - 50, y: 60 },
+          bl: { x: 50, y: tpl.height - 60 },
+          br: { x: tpl.width - 50, y: tpl.height - 60 }
+        };
+        const W_SCAN = 1164;
+        const H_SCAN = Math.round(W_SCAN * (tpl.height / tpl.width));
+        const scanToCanvasX = width / W_SCAN;
+        const scanToCanvasY = height / H_SCAN;
+
+        const mapCanvasCoord = (origX, origY) => {
+          if (hasStudentScanImage && paper.detectedFiducials) {
+            const df = paper.detectedFiducials;
+            const u = (origX - fidTpl.tl.x) / (fidTpl.tr.x - fidTpl.tl.x);
+            const v = (origY - fidTpl.tl.y) / (fidTpl.bl.y - fidTpl.tl.y);
+            const topX = df.tl.x + u * (df.tr.x - df.tl.x);
+            const topY = df.tl.y + u * (df.tr.y - df.tl.y);
+            const botX = df.bl.x + u * (df.br.x - df.bl.x);
+            const botY = df.bl.y + u * (df.br.y - df.bl.y);
+            return {
+              x: (topX + v * (botX - topX)) * scanToCanvasX,
+              y: (topY + v * (botY - topY)) * scanToCanvasY
+            };
+          }
+          return {
+            x: origX * scaleX,
+            y: origY * scaleY
+          };
+        };
+
         const hasValidKey = !paper.hasError && Boolean(appState.omr.answerKeysByCode[paper.scannedExamCode]);
         const activeKey = hasValidKey
           ? appState.omr.answerKeysByCode[paper.scannedExamCode]
@@ -8236,6 +8294,30 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
         const p1KeyList = activeKey.part1 || [];
         const p2Key = activeKey.part2 || {};
         const p3Key = activeKey.part3 || {};
+
+        // 2.X. HIỂN THỊ CẢNH BÁO BÀI THI ĐỂ TRỐNG (NẾU THÍ SINH KHÔNG TÔ PHẦN I, II, III)
+        const isBlankExam = Boolean(
+          paper.isBlankPaper ||
+          (Number(paper.result?.totalScore || 0) === 0 && Object.keys(paper.answers?.part1 || {}).length === 0 && Object.keys(paper.answers?.part2 || {}).length === 0)
+        );
+        if (isBlankExam) {
+          ctx.save();
+          const bannerY = Math.round(18 * scaleY);
+          const bannerH = Math.round(62 * scaleY);
+          ctx.fillStyle = 'rgba(239, 68, 68, 0.94)';
+          ctx.fillRect(width * 0.05, bannerY, width * 0.9, bannerH);
+          ctx.strokeStyle = '#b91c1c';
+          ctx.lineWidth = Math.max(2, 3 * scaleX);
+          ctx.strokeRect(width * 0.05, bannerY, width * 0.9, bannerH);
+
+          ctx.fillStyle = '#ffffff';
+          ctx.textAlign = 'center';
+          ctx.font = `bold ${Math.round(23 * scaleY)}px Arial, sans-serif`;
+          ctx.fillText('⚠️ BÀI THI ĐỂ TRỐNG TOÀN BỘ (0/40 Phần I, 0/8 Phần II)', width / 2, bannerY + bannerH * 0.44);
+          ctx.font = `italic ${Math.round(16 * scaleY)}px Arial, sans-serif`;
+          ctx.fillText('Thí sinh không tô chì câu trả lời nào — Điểm số 0.00 đ là hoàn toàn chính xác theo bài thi', width / 2, bannerY + bannerH * 0.82);
+          ctx.restore();
+        }
 
         // 2.0. ĐIỀN THÔNG TIN HÀNH CHÍNH CỦA THÍ SINH LÊN DÒNG CHẤM (KHI VẼ TRÊN PHÔI GỐC BGD 2025)
         if (!hasStudentScanImage && (tpl.id === 'bgd_2025_4code' || tpl.id === 'bgd_2025_3code')) {
@@ -8281,16 +8363,18 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
           const sbdStr = String(paper.sbd).padStart(numSbdCols, '0');
           for (let c = 0; c < numSbdCols; c++) {
             const digit = parseInt(sbdStr[c], 10);
-            const colX = (sbdCoords.colBaseX + c * sbdCoords.colStepX) * scaleX;
+            const ptBox = mapCanvasCoord(sbdCoords.colBaseX + c * sbdCoords.colStepX, sbdCoords.boxY);
 
             // In chữ số SBD vào ô chữ nhật phía trên
             ctx.fillStyle = '#0f172a';
             ctx.font = `bold ${Math.round(Math.max(12, sbdCoords.radius * 1.5 * scaleX))}px "Courier New", monospace`;
             ctx.textAlign = 'center';
-            ctx.fillText(sbdStr[c], colX, sbdCoords.boxY * scaleY);
+            ctx.fillText(sbdStr[c], ptBox.x, ptBox.y);
 
             if (!isNaN(digit) && digit >= 0 && digit <= 9) {
-              const bY = (sbdCoords.rowBaseY + digit * sbdCoords.rowStepY) * scaleY;
+              const ptCircle = mapCanvasCoord(sbdCoords.colBaseX + c * sbdCoords.colStepX, sbdCoords.rowBaseY + digit * sbdCoords.rowStepY);
+              const colX = ptCircle.x;
+              const bY = ptCircle.y;
               const r = sbdCoords.radius * scaleX;
 
               ctx.beginPath();
@@ -8310,16 +8394,18 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
         const codeStr = String(paper.scannedExamCode || '101').padStart(numCodeCols, '0');
         for (let c = 0; c < numCodeCols; c++) {
           const digit = parseInt(codeStr[c], 10);
-          const colX = (codeCoords.colBaseX + c * codeCoords.colStepX) * scaleX;
+          const ptBox = mapCanvasCoord(codeCoords.colBaseX + c * codeCoords.colStepX, codeCoords.boxY);
 
           // In chữ số Mã đề vào ô chữ nhật phía trên
           ctx.fillStyle = paper.hasError ? '#dc2626' : '#0f172a';
           ctx.font = `bold ${Math.round(Math.max(12, codeCoords.radius * 1.5 * scaleX))}px "Courier New", monospace`;
           ctx.textAlign = 'center';
-          ctx.fillText(codeStr[c], colX, codeCoords.boxY * scaleY);
+          ctx.fillText(codeStr[c], ptBox.x, ptBox.y);
 
           if (!isNaN(digit) && digit >= 0 && digit <= 9) {
-            const bY = (codeCoords.rowBaseY + digit * codeCoords.rowStepY) * scaleY;
+            const ptCircle = mapCanvasCoord(codeCoords.colBaseX + c * codeCoords.colStepX, codeCoords.rowBaseY + digit * codeCoords.rowStepY);
+            const colX = ptCircle.x;
+            const bY = ptCircle.y;
             const r = codeCoords.radius * scaleX;
 
             ctx.beginPath();
@@ -8341,15 +8427,16 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
           const colIdx = Math.floor((q - 1) / 10);
           const rowIdx = (q - 1) % 10;
           const colBaseX = p1ColBases[colIdx];
-          const rowY = (p1Coords.rowBaseY + rowIdx * p1Coords.rowStepY) * scaleY;
+          const rowYOrig = p1Coords.rowBaseY + rowIdx * p1Coords.rowStepY;
 
           const studentAns = (paper.answers?.part1 || {})[q] || '';
           const correctAns = hasValidKey ? (p1KeyList[q - 1] || '') : '';
           const isAmbiguous = (paper.ambiguous?.part1 && paper.ambiguous.part1[q]);
 
           options.forEach((opt, optIdx) => {
-            const bX = (colBaseX + optIdx * p1Coords.optStepX) * scaleX;
-            const bY = rowY;
+            const pt = mapCanvasCoord(colBaseX + optIdx * p1Coords.optStepX, rowYOrig);
+            const bX = pt.x;
+            const bY = pt.y;
             const r = p1Coords.radius * scaleX;
 
             const isStudent = studentAns === opt;
@@ -8423,13 +8510,14 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
           const subItems = ['a', 'b', 'c', 'd'];
 
           subItems.forEach((sub, sIdx) => {
-            const rowY = (p2Coords.rowBaseY + sIdx * p2Coords.rowStepY) * scaleY;
+            const rowYOrig = p2Coords.rowBaseY + sIdx * p2Coords.rowStepY;
             const studentVal = (paper.answers?.part2 || {})[c]?.[sub] || '';
             const correctVal = hasValidKey ? (p2Key[c]?.[sub] || '') : '';
 
             ['Đ', 'S'].forEach((opt, oIdx) => {
-              const bX = (cBaseX + oIdx * p2Coords.optStepX) * scaleX;
-              const bY = rowY;
+              const pt = mapCanvasCoord(cBaseX + oIdx * p2Coords.optStepX, rowYOrig);
+              const bX = pt.x;
+              const bY = pt.y;
               const r = p2Coords.radius * scaleX;
 
               const isStudent = studentVal === opt || (studentVal === 'Đ/S' && (opt === 'Đ' || opt === 'S'));
@@ -8509,32 +8597,36 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
           }
 
           for (let cIdx = 0; cIdx < 4; cIdx++) {
-            const colX = (qBaseX + cIdx * p3Coords.charStepX) * scaleX;
+            const colX = (qBaseX + cIdx * p3Coords.charStepX);
             const stuChar = rawStudentStr[cIdx] || '';
             const corChar = rawCorrectStr[cIdx] || '';
 
             // In từng ký tự học sinh tô vào ô chữ nhật trên đầu câu Phần III
+            const ptBox = mapCanvasCoord(colX, p3Coords.boxY);
             if (stuChar) {
               ctx.fillStyle = !hasValidKey ? '#2563eb' : (isWholeQCorrect ? '#15803d' : '#dc2626');
               ctx.font = `bold ${Math.round(Math.max(10, p3Coords.radius * 1.5 * scaleX))}px "Courier New", monospace`;
               ctx.textAlign = 'center';
-              ctx.fillText(stuChar, colX, p3Coords.boxY * scaleY);
+              ctx.fillText(stuChar, ptBox.x, ptBox.y);
             }
 
             const charCandidates = [];
-            if (cIdx === 0) charCandidates.push({ ch: '-', y: p3Coords.yMinus * scaleY });
-            if (cIdx === 1 || cIdx === 2) charCandidates.push({ ch: ',', y: p3Coords.yComma * scaleY });
+            if (cIdx === 0) charCandidates.push({ ch: '-', origY: p3Coords.yMinus });
+            if (cIdx === 1 || cIdx === 2) charCandidates.push({ ch: ',', origY: p3Coords.yComma });
             for (let d = 0; d <= 9; d++) {
-              charCandidates.push({ ch: String(d), y: (p3Coords.rowBaseDigitY + d * p3Coords.rowStepDigitY) * scaleY });
+              charCandidates.push({ ch: String(d), origY: p3Coords.rowBaseDigitY + d * p3Coords.rowStepDigitY });
             }
 
             charCandidates.forEach(cand => {
+              const pt = mapCanvasCoord(colX, cand.origY);
+              const bX = pt.x;
+              const bY = pt.y;
               const r = p3Coords.radius * scaleX;
               const isStu = stuChar === cand.ch;
               const isCor = hasCorrectKey && corChar === cand.ch;
 
               ctx.beginPath();
-              ctx.arc(colX, cand.y, r, 0, Math.PI * 2);
+              ctx.arc(bX, bY, r, 0, Math.PI * 2);
 
               if (isStu) {
                 const okColor = isWholeQCorrect || isCor;
@@ -8546,7 +8638,7 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
                 ctx.fillStyle = '#ffffff';
                 ctx.font = `bold ${Math.round(Math.max(9, r * 1.05))}px Arial, sans-serif`;
                 ctx.textAlign = 'center';
-                ctx.fillText(cand.ch, colX, cand.y + (r * 0.35));
+                ctx.fillText(cand.ch, bX, bY + (r * 0.35));
               } else if (isCor) {
                 ctx.fillStyle = 'rgba(250, 204, 21, 0.22)';
                 ctx.fill();
@@ -8560,8 +8652,8 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
                 qNum: q,
                 colIdx: cIdx,
                 opt: cand.ch,
-                x: colX,
-                y: cand.y,
+                x: bX,
+                y: bY,
                 radius: r
               });
             });
@@ -9513,7 +9605,8 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
 
     /**
      * BỘ QUÉT ĐIỂM ẢNH QUANG HỌC OMR THẬT 100% TRÊN HTML5 CANVAS (REAL PIXEL LUMINANCE OMR SCANNER)
-     * Tự động thích ứng với Mẫu phiếu tô được chọn (BGD 4 số, BGD 3 số, Tổng hợp, Rọc phách).
+     * Tự động dò 4 dấu định vị (Fiducials) góc phiếu để căn chỉnh bilinear chính xác từng pixel,
+     * thích ứng với mọi máy photocopy (Ricoh, Canon, Toshiba...), độ nghiêng scan và lề giấy.
      */
     function scanOmrSheetFromImageElement(imgEl, threshold = 0.35, opts = {}) {
       const tpl = getActiveOmrTemplate();
@@ -9526,14 +9619,88 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
       ctx.drawImage(imgEl, 0, 0, W, H);
       const imgData = ctx.getImageData(0, 0, W, H).data;
 
+      // 0. BỘ DÒ ĐIỂM ĐỊNH VỊ GÓC OMR (CORNER FIDUCIAL DETECTOR & BILINEAR ALIGNMENT)
+      const fidTpl = tpl.fiducials || {
+        tl: { x: 50, y: 60 },
+        tr: { x: tpl.width - 50, y: 60 },
+        bl: { x: 50, y: tpl.height - 60 },
+        br: { x: tpl.width - 50, y: tpl.height - 60 }
+      };
+
+      const quads = [
+        { name: 'tl', x0: Math.round(W * 0.02), x1: Math.round(W * 0.22), y0: Math.round(H * 0.02), y1: Math.round(H * 0.22) },
+        { name: 'tr', x0: Math.round(W * 0.78), x1: Math.round(W * 0.98), y0: Math.round(H * 0.02), y1: Math.round(H * 0.22) },
+        { name: 'bl', x0: Math.round(W * 0.02), x1: Math.round(W * 0.22), y0: Math.round(H * 0.78), y1: Math.round(H * 0.98) },
+        { name: 'br', x0: Math.round(W * 0.78), x1: Math.round(W * 0.98), y0: Math.round(H * 0.78), y1: Math.round(H * 0.98) }
+      ];
+
+      const blockSize = Math.max(6, Math.round(W / 120));
+      const detectedFiducials = {};
+
+      for (const q of quads) {
+        let bestScore = 0;
+        let bestX = -1;
+        let bestY = -1;
+        for (let y = q.y0; y < q.y1 - blockSize; y += 3) {
+          for (let x = q.x0; x < q.x1 - blockSize; x += 3) {
+            let blackCount = 0;
+            let total = 0;
+            for (let dy = 0; dy < blockSize; dy += 2) {
+              for (let dx = 0; dx < blockSize; dx += 2) {
+                const idx = ((y + dy) * W + (x + dx)) * 4;
+                const r = imgData[idx];
+                const g = imgData[idx + 1];
+                const b = imgData[idx + 2];
+                if (r < 75 && g < 75 && b < 75) blackCount++;
+                total++;
+              }
+            }
+            const score = total > 0 ? (blackCount / total) : 0;
+            if (score > 0.82 && score > bestScore) {
+              bestScore = score;
+              bestX = x + blockSize / 2;
+              bestY = y + blockSize / 2;
+            }
+          }
+        }
+        if (bestScore > 0.82) {
+          detectedFiducials[q.name] = { x: bestX, y: bestY };
+        }
+      }
+
+      const hasAlignedFiducials = Boolean(
+        detectedFiducials.tl && detectedFiducials.tr && detectedFiducials.bl && detectedFiducials.br
+      );
+
       const scaleX = W / tpl.width;
       const scaleY = H / tpl.height;
+
+      // Hàm ánh xạ tọa độ gốc Mẫu (tplX, tplY) sang tọa độ pixel thực tế trên ảnh scan
+      const mapCoord = (origX, origY) => {
+        if (hasAlignedFiducials) {
+          const u = (origX - fidTpl.tl.x) / (fidTpl.tr.x - fidTpl.tl.x);
+          const v = (origY - fidTpl.tl.y) / (fidTpl.bl.y - fidTpl.tl.y);
+          const topX = detectedFiducials.tl.x + u * (detectedFiducials.tr.x - detectedFiducials.tl.x);
+          const topY = detectedFiducials.tl.y + u * (detectedFiducials.tr.y - detectedFiducials.tl.y);
+          const botX = detectedFiducials.bl.x + u * (detectedFiducials.br.x - detectedFiducials.bl.x);
+          const botY = detectedFiducials.bl.y + u * (detectedFiducials.br.y - detectedFiducials.bl.y);
+          return {
+            x: Math.round(topX + v * (botX - topX)),
+            y: Math.round(topY + v * (botY - topY))
+          };
+        }
+        return {
+          x: Math.round(origX * scaleX),
+          y: Math.round(origY * scaleY)
+        };
+      };
 
       // Hàm đo độ đậm mực/chì trung bình bên trong đĩa tròn bán kính r0
       const measureDiskDarkness = (origX, origY, origR = null) => {
         const r0 = origR || (tpl.coords.sbd.radius * 0.7);
-        const cx = Math.round(origX * scaleX);
-        const cy = Math.round(origY * scaleY);
+        const pt = mapCoord(origX, origY);
+        const cx = pt.x;
+        const cy = pt.y;
         const r = Math.max(3, Math.round(r0 * scaleX));
         const r2 = r * r;
         let sumDark = 0;
@@ -9559,6 +9726,10 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
         return count > 0 ? (sumDark / count) : 0;
       };
 
+      // Ngưỡng tô hiệu dụng: bù trừ nền giấy tự động, phân biệt chuẩn xác bút chì 2B/HB thực tế
+      const effectiveThreshold = Math.max(0.12, Math.min(0.24, threshold * 0.55));
+      const minDarknessThreshold = Math.max(0.17, Math.min(0.28, threshold * 0.65));
+
       let totalFilledBubbles = 0;
       const warnings = [];
       const answers = { part1: {}, part2: {}, part3: {} };
@@ -9578,12 +9749,12 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
           colDarks.push({ d, val: v });
         }
         const minD = Math.min(...colDarks.map(x => x.val));
-        let best = { d: -1, eff: 0 };
+        let best = { d: -1, eff: 0, val: 0 };
         colDarks.forEach(item => {
-          const eff = item.val - minD * 0.65;
-          if (eff > best.eff) best = { d: item.d, eff };
+          const eff = item.val - minD;
+          if (eff > best.eff) best = { d: item.d, eff, val: item.val };
         });
-        if (best.eff >= threshold * 0.75) {
+        if (best.eff >= effectiveThreshold && best.val >= minDarknessThreshold) {
           sbdDigits += String(best.d);
           totalFilledBubbles++;
         }
@@ -9602,12 +9773,12 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
           colDarks.push({ d, val: v });
         }
         const minD = Math.min(...colDarks.map(x => x.val));
-        let best = { d: -1, eff: 0 };
+        let best = { d: -1, eff: 0, val: 0 };
         colDarks.forEach(item => {
-          const eff = item.val - minD * 0.65;
-          if (eff > best.eff) best = { d: item.d, eff };
+          const eff = item.val - minD;
+          if (eff > best.eff) best = { d: item.d, eff, val: item.val };
         });
-        if (best.eff >= threshold * 0.75) {
+        if (best.eff >= effectiveThreshold && best.val >= minDarknessThreshold) {
           codeDigits += String(best.d);
           totalFilledBubbles++;
         }
@@ -9628,8 +9799,8 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
           val: measureDiskDarkness(colBaseX + oIdx * p1Cfg.optStepX, rowY, p1Cfg.radius * 0.75)
         }));
         const minD = Math.min(...rawDarks.map(x => x.val));
-        const evaluated = rawDarks.map(x => ({ opt: x.opt, eff: x.val - minD * 0.65 }));
-        const filled = evaluated.filter(x => x.eff >= threshold).sort((a, b) => b.eff - a.eff);
+        const evaluated = rawDarks.map(x => ({ opt: x.opt, val: x.val, eff: x.val - minD }));
+        const filled = evaluated.filter(x => x.eff >= effectiveThreshold && x.val >= minDarknessThreshold).sort((a, b) => b.eff - a.eff);
 
         if (filled.length === 1) {
           answers.part1[q] = filled[0].opt;
@@ -9647,13 +9818,13 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
             });
           }
         } else if (q <= maxP1) {
-          const faint = evaluated.filter(x => x.eff >= threshold * 0.55).sort((a, b) => b.eff - a.eff);
+          const faint = evaluated.filter(x => x.eff >= effectiveThreshold * 0.55 && x.val >= minDarknessThreshold * 0.75).sort((a, b) => b.eff - a.eff);
           if (faint.length > 0) {
             confidences.part1[q] = Math.round(faint[0].eff * 100);
             ambiguous.part1[q] = [faint[0].opt];
             warnings.push({
               type: 'AMBIGUOUS_FILL',
-              message: `Câu ${q} (Phần I) có vết tô mờ/tẩy xóa ở ô [${faint[0].opt}] (độ đậm ${Math.round(faint[0].eff * 100)}% < ngưỡng ${Math.round(threshold * 100)}%).`
+              message: `Câu ${q} (Phần I) có vết tô mờ/tẩy xóa ở ô [${faint[0].opt}] (độ đậm ${Math.round(faint[0].eff * 100)}% < ngưỡng ${Math.round(effectiveThreshold * 100)}%).`
             });
           }
         }
@@ -9668,12 +9839,12 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
           const rowY = p2Cfg.rowBaseY + sIdx * p2Cfg.rowStepY;
           const dDung = measureDiskDarkness(cBaseX, rowY, p2Cfg.radius * 0.75);
           const dSai = measureDiskDarkness(cBaseX + p2Cfg.optStepX, rowY, p2Cfg.radius * 0.75);
-          const minD = Math.min(dDung, dSai, 0.12);
-          const effD = dDung - minD * 0.6;
-          const effS = dSai - minD * 0.6;
+          const minD = Math.min(dDung, dSai);
+          const effD = dDung - minD;
+          const effS = dSai - minD;
 
-          const isD = effD >= threshold;
-          const isS = effS >= threshold;
+          const isD = effD >= effectiveThreshold && dDung >= minDarknessThreshold;
+          const isS = effS >= effectiveThreshold && dSai >= minDarknessThreshold;
 
           if (isD && !isS) {
             if (!answers.part2[c]) answers.part2[c] = {};
@@ -9718,12 +9889,12 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
             val: measureDiskDarkness(colX, cand.y, p3Cfg.radius * 0.75)
           }));
           const minD = Math.min(...measured.map(m => m.val));
-          let best = { ch: '', eff: 0 };
+          let best = { ch: '', eff: 0, val: 0 };
           measured.forEach(m => {
-            const eff = m.val - minD * 0.65;
-            if (eff > best.eff) best = { ch: m.ch, eff };
+            const eff = m.val - minD;
+            if (eff > best.eff) best = { ch: m.ch, eff, val: m.val };
           });
-          if (best.eff >= threshold) {
+          if (best.eff >= effectiveThreshold && best.val >= minDarknessThreshold) {
             qChars += best.ch;
             totalFilledBubbles++;
           }
@@ -9734,6 +9905,18 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
         }
       }
 
+      const filledP1 = Object.keys(answers.part1).length;
+      const filledP2 = Object.keys(answers.part2).length;
+      const filledP3 = Object.keys(answers.part3).length;
+      const isBlankPaper = (filledP1 === 0 && filledP2 === 0 && filledP3 === 0);
+
+      if (isBlankPaper) {
+        warnings.unshift({
+          type: 'BLANK_SHEET',
+          message: '⚠️ BÀI THI ĐỂ TRỐNG TOÀN BỘ: Thí sinh không tô câu trả lời nào (0/40 Phần I, 0/8 Phần II, 0/6 Phần III). Điểm số 0.00 đ là hoàn toàn chính xác theo bài thi nộp lên.'
+        });
+      }
+
       return {
         sbd: sbdDigits.length >= 3 ? sbdDigits : '',
         scannedExamCode: codeDigits.length >= 2 ? codeDigits : '',
@@ -9741,7 +9924,9 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
         confidences,
         ambiguous,
         warnings,
-        totalFilledBubbles
+        totalFilledBubbles,
+        isBlankPaper,
+        detectedFiducials: hasAlignedFiducials ? detectedFiducials : null
       };
     }
 
@@ -9822,6 +10007,16 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
       syncOmrAnswerKeys();
       updateOmrPointRulesFromMatrix();
 
+      // Tự động nhận diện định dạng Mẫu phiếu nếu tên file scan khớp mẫu thực tế của trường
+      const isTongHopPattern = validFiles.some(f => /(?:tong_hop|thpt_tong_hop|chinh_thuc|doc012911|page\d{4})/i.test(f.name || '')) ||
+        Boolean(folderName && /(?:doc012911|tong_hop)/i.test(folderName));
+      if (isTongHopPattern && appState.omr.selectedTemplateId !== 'thpt_tong_hop') {
+        appState.omr.selectedTemplateId = 'thpt_tong_hop';
+        const sel = document.getElementById('omr-template-select');
+        if (sel) sel.value = 'thpt_tong_hop';
+        showToast('💡 Đã tự động kích hoạt "Mẫu 3: Học kỳ Tổng hợp THPT (Mã 3 số)" phù hợp với bài thi scan nạp lên!', 'info');
+      }
+
       let validCodes = Object.keys(appState.omr.answerKeysByCode || {});
       if (validCodes.length === 0) validCodes = ['101', '102', '103', '104'];
       const firstKey = appState.omr.answerKeysByCode[validCodes[0]] || {};
@@ -9880,6 +10075,9 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
         let ambiguous = { part1: {}, part2: {}, part3: {} };
         let warnings = [];
 
+        let isBlankPaper = false;
+        let detectedFiducials = null;
+
         if (imgEl && imgEl.naturalWidth > 0) {
           // CHẠY BỘ QUÉT ĐIỂM ẢNH QUANG HỌC OMR THẬT 100%
           const scanRes = scanOmrSheetFromImageElement(imgEl, threshold, {
@@ -9888,25 +10086,32 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
             expectedP3Count
           });
 
-          if (scanRes.totalFilledBubbles > 0) {
-            if (scanRes.sbd) {
-              sbd = scanRes.sbd;
+          if (scanRes) {
+            isBlankPaper = Boolean(scanRes.isBlankPaper);
+            detectedFiducials = scanRes.detectedFiducials || null;
+            if (scanRes.totalFilledBubbles > 0) {
+              if (scanRes.sbd) {
+                sbd = scanRes.sbd;
+              }
+              if (scanRes.scannedExamCode) {
+                const strippedCode = scanRes.scannedExamCode.replace(/^0+/, '');
+                code = validCodes.includes(scanRes.scannedExamCode)
+                  ? scanRes.scannedExamCode
+                  : (validCodes.includes(strippedCode) ? strippedCode : scanRes.scannedExamCode);
+              }
+              answers = scanRes.answers;
+              confidences = scanRes.confidences;
+              ambiguous = scanRes.ambiguous;
+              warnings = scanRes.warnings;
+            } else {
+              warnings = scanRes.warnings || [];
+              if (warnings.length === 0) {
+                warnings.push({
+                  type: 'BLANK_SHEET',
+                  message: '⚠️ BÀI THI ĐỂ TRỐNG TOÀN BỘ: Thí sinh không tô câu trả lời nào (0/40 Phần I, 0/8 Phần II, 0/6 Phần III). Điểm số 0.00 đ là hoàn toàn chính xác theo bài thi nộp lên.'
+                });
+              }
             }
-            if (scanRes.scannedExamCode) {
-              const strippedCode = scanRes.scannedExamCode.replace(/^0+/, '');
-              code = validCodes.includes(scanRes.scannedExamCode)
-                ? scanRes.scannedExamCode
-                : (validCodes.includes(strippedCode) ? strippedCode : scanRes.scannedExamCode);
-            }
-            answers = scanRes.answers;
-            confidences = scanRes.confidences;
-            ambiguous = scanRes.ambiguous;
-            warnings = scanRes.warnings;
-          } else {
-            warnings.push({
-              type: 'BLANK_SHEET',
-              message: 'Không phát hiện ô tròn nào được tô vượt ngưỡng (' + threshold + ') trên ảnh này. Vui lòng kiểm tra ảnh scan hoặc giảm Ngưỡng tô!'
-            });
           }
         }
 
@@ -9928,6 +10133,8 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
           confidences,
           ambiguous,
           warnings,
+          isBlankPaper,
+          detectedFiducials,
           imageUrl: imgUrl,
           imageElement: imgEl,
           folderName: folderName || ''

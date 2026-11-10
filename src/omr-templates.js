@@ -27,6 +27,7 @@ const OMR_TEMPLATES = [
     hasScoreBoxLeft: true,
     hasPhach: false,
     scoreBox: { x: 222, y: 420, w: 366, h: 164 },
+    fiducials: { tl: { x: 48, y: 60 }, tr: { x: 2280, y: 60 }, bl: { x: 48, y: 3320 }, br: { x: 2280, y: 3320 } },
     // Tọa độ chuẩn hệ quy chiếu 2328 x 3381
     coords: {
       sbd: {
@@ -92,6 +93,7 @@ const OMR_TEMPLATES = [
     hasScoreBoxLeft: true,
     hasPhach: false,
     scoreBox: { x: 222, y: 420, w: 366, h: 164 },
+    fiducials: { tl: { x: 48, y: 60 }, tr: { x: 2280, y: 60 }, bl: { x: 48, y: 3320 }, br: { x: 2280, y: 3320 } },
     coords: {
       sbd: {
         colBaseX: 1588.3,
@@ -156,48 +158,49 @@ const OMR_TEMPLATES = [
     hasScoreBoxLeft: false,
     hasPhach: false,
     scoreBox: { x: 260, y: 390, w: 350, h: 145 },
+    fiducials: { tl: { x: 150, y: 146 }, tr: { x: 2320, y: 146 }, bl: { x: 150, y: 3351 }, br: { x: 2320, y: 3351 } },
     coords: {
       sbd: {
-        colBaseX: 1794.0,
-        colStepX: 47.0,
+        colBaseX: 1798.0,
+        colStepX: 46.4,
         numCols: 6,
-        boxY: 295,
-        rowBaseY: 373.0,
+        boxY: 355.0,
+        rowBaseY: 424.0,
         rowStepY: 68.0,
-        radius: 17.5
+        radius: 17.0
       },
       code: {
-        colBaseX: 2194.0,
-        colStepX: 47.0,
+        colBaseX: 2152.0,
+        colStepX: 44.5,
         numCols: 3,
-        boxY: 295,
-        rowBaseY: 373.0,
+        boxY: 355.0,
+        rowBaseY: 424.0,
         rowStepY: 68.0,
-        radius: 17.5
+        radius: 17.0
       },
       part1: {
-        colBases: [295.0, 840.0, 1348.0, 1860.0],
-        optStepX: 104.0,
-        rowBaseY: 1320.0,
-        rowStepY: 54.5,
-        radius: 18.0,
+        colBases: [348.0, 858.0, 1367.0, 1878.0],
+        optStepX: 101.5,
+        rowBaseY: 1339.0,
+        rowStepY: 52.6,
+        radius: 17.5,
         totalQuestions: 40
       },
       part2: {
-        colBases: [295.0, 508.0, 840.0, 1052.0, 1348.0, 1560.0, 1860.0, 2072.0],
-        optStepX: 104.0,
-        rowBaseY: 2110.0,
-        rowStepY: 54.0,
-        radius: 18.0,
+        colBases: [348.0, 552.0, 858.0, 1062.0, 1367.0, 1571.0, 1878.0, 2082.0],
+        optStepX: 101.5,
+        rowBaseY: 2120.0,
+        rowStepY: 52.0,
+        radius: 17.5,
         totalQuestions: 8
       },
       part3: {
-        colBases: [275.0, 615.0, 955.0, 1295.0, 1635.0, 1975.0],
+        colBases: [295.0, 635.0, 975.0, 1315.0, 1655.0, 1995.0],
         charStepX: 72.0,
-        boxY: 2540.0,
-        yMinus: 2585.0,
-        yComma: 2640.0,
-        rowBaseDigitY: 2695.0,
+        boxY: 2465.0,
+        yMinus: 2533.0,
+        yComma: 2600.0,
+        rowBaseDigitY: 2668.0,
         rowStepDigitY: 55.5,
         radius: 17.0,
         totalQuestions: 6
@@ -221,6 +224,7 @@ const OMR_TEMPLATES = [
     hasPhach: true,
     scoreBox: { x: 18, y: 132, w: 128, h: 62 },
     scoreWordBox: { x: 18, y: 220, w: 128, h: 56 },
+    fiducials: { tl: { x: 18, y: 22 }, tr: { x: 564, y: 22 }, bl: { x: 18, y: 825 }, br: { x: 564, y: 825 } },
     coords: {
       sbd: {
         colBaseX: 397.0,
@@ -284,3 +288,4 @@ module.exports = {
   getAllTemplates,
   getTemplateById
 };
+

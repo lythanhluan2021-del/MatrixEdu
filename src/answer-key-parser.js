@@ -16,7 +16,7 @@ const { readZipEntries } = require('./zip-docx');
 function parseXlsxSharedStrings(xmlStr) {
   const strings = [];
   if (!xmlStr) return strings;
-  
+
   // Tách từng thẻ <si>...</si>
   const siRegex = /<si\b[^>]*>([\s\S]*?)<\/si>/gi;
   let match;
@@ -167,7 +167,7 @@ function parseMatrix2DToKeys(matrix2D) {
     for (let r = headerRowIdx + 1; r < matrix2D.length; r++) {
       const row = matrix2D[r] || [];
       const firstCell = String(row[0] || '').trim();
-      
+
       // Kiểm tra câu số mấy
       const qNumMatch = firstCell.match(/([0-9]{1,2})/);
       const qNum = qNumMatch ? parseInt(qNumMatch[1], 10) : (r - headerRowIdx);
@@ -242,7 +242,7 @@ function parseTextAnswerKey(rawText) {
         return json;
       }
     }
-  } catch (e) {}
+  } catch (e) { }
 
   const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
   if (lines.length === 0) return result;
@@ -509,7 +509,7 @@ function parseStudentRosterText(rawText) {
     const parsed = JSON.parse(rawText);
     if (Array.isArray(parsed)) return parsed;
     if (Array.isArray(parsed.roster)) return parsed.roster;
-  } catch (_) {}
+  } catch (_) { }
 
   const lines = rawText.replace(/^\uFEFF/, '').split(/\r?\n/).map(l => l.trim()).filter(Boolean);
   if (lines.length === 0) return [];

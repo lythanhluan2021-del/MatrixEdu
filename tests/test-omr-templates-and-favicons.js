@@ -57,6 +57,7 @@ async function runTestSuite() {
     assert(tpl.coords.part1, `Thiếu tọa độ Phần I cho template ${id}`);
     assert(tpl.coords.part2, `Thiếu tọa độ Phần II cho template ${id}`);
     assert(tpl.coords.part3, `Thiếu tọa độ Phần III cho template ${id}`);
+    assert(tpl.fiducials && tpl.fiducials.tl && tpl.fiducials.tr && tpl.fiducials.bl && tpl.fiducials.br, `Thiếu tọa độ fiducials 4 góc cho template ${id}`);
 
     // Kiểm tra file phôi in trắng
     const blankPath = path.join(__dirname, '..', tpl.blankFileName);
@@ -131,3 +132,4 @@ runTestSuite().catch(err => {
   console.error('❌ LỖI KIỂM THỬ:', err);
   process.exit(1);
 });
+
