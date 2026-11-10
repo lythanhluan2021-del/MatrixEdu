@@ -8675,6 +8675,7 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
           ctx.font = `bold ${Math.round(20 * scaleY)}px Arial, sans-serif`;
           ctx.fillText(`SBD: ${paper.sbd || 'chưa tô'}`, 405 * scaleX, 940 * scaleY);
         }
+      }
 
       ctx.restore();
     }
@@ -9744,17 +9745,6 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
       };
     }
 
-      return {
-        sbd: sbdDigits.length >= 4 ? sbdDigits : '',
-        scannedExamCode: codeDigits.length >= 3 ? codeDigits : '',
-        answers,
-        confidences,
-        ambiguous,
-        warnings,
-        totalFilledBubbles
-      };
-    }
-
     /**
      * Giải mã và trích xuất tất cả các trang ảnh JPEG nhúng bên trong file .PDF scan từ máy photocopy
      */
@@ -10106,19 +10096,6 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
         a.click();
         document.body.removeChild(a);
         showToast(`🧪 Đã tải về máy phiếu tô mẫu "${a.download}" (Mẫu: ${tpl.shortName})!`, 'success');
-      }, 'image/png');
-    }
-
-      cnv.toBlob((blob) => {
-        if (!blob) return;
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `Phieu_To_Mau_SBD_${sbdStr}_MaDe_${code}.png`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        showToast(`🧪 Đã tải về máy phiếu tô mẫu "${a.download}"! Hãy nhấn [📄 Chọn file scan] và chọn ảnh này để kiểm nghiệm quét điểm ảnh OMR thật!`, 'success');
       }, 'image/png');
     }
 

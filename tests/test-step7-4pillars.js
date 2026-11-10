@@ -22,12 +22,17 @@ const {
     buildSmartRosterMap
 } = require('../src/omr-engine');
 
+const serverModule = require('../server');
+const requestHandler = typeof serverModule === 'function' ? serverModule : serverModule.requestHandler;
+
+let testServerPort = 3000;
+
 function requestJson(method, urlPath, bodyObj = null) {
     return new Promise((resolve, reject) => {
         const payload = bodyObj ? Buffer.from(JSON.stringify(bodyObj), 'utf8') : null;
         const req = http.request({
-            hostname: 'localhost',
-            port: 3000,
+            hostname: '127.0.0.1',
+            port: testServerPort,
             path: urlPath,
             method,
             headers: {
@@ -55,6 +60,11 @@ async function runTests() {
     console.log('================================================================');
     console.log('🧪 RUNNING STEP 7 (4-PILLAR OMR UPGRADE) VERIFICATION SUITE');
     console.log('================================================================\n');
+
+    // Khởi tạo máy chủ HTTP ephemeral để kiểm thử REST API
+    const server = http.createServer(requestHandler);
+    await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+    testServerPort = server.address().port;
 
     // -----------------------------------------------------------------
     // TEST 1: PILLAR 2 — Student Roster Parser & Smart SBD Matching
@@ -256,6 +266,7 @@ async function runTests() {
     }
     console.log('  ✅ All Frontend UI components & functions verified in index.html!\n');
 
+    server.close();
     console.log('🎉 ALL STEP 7 (4-PILLAR UPGRADE) TESTS PASSED 100%!');
 }
 
