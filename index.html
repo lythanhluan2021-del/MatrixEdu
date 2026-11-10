@@ -7064,13 +7064,13 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         hasScoreBoxLeft: false,
         hasPhach: false,
         scoreBox: { x: 260, y: 390, w: 350, h: 145 },
-        fiducials: { tl: { x: 150, y: 146 }, tr: { x: 2320, y: 146 }, bl: { x: 150, y: 3351 }, br: { x: 2320, y: 3351 } },
+        fiducials: { tl: { x: 155.5, y: 151.0 }, tr: { x: 2324.0, y: 151.0 }, bl: { x: 155.5, y: 3355.0 }, br: { x: 2324.0, y: 3355.0 } },
         coords: {
-          sbd: { colBaseX: 1798.0, colStepX: 46.4, numCols: 6, boxY: 355, rowBaseY: 424.0, rowStepY: 68.0, radius: 17.0 },
-          code: { colBaseX: 2152.0, colStepX: 44.5, numCols: 3, boxY: 355, rowBaseY: 424.0, rowStepY: 68.0, radius: 17.0 },
-          part1: { colBases: [348.0, 858.0, 1367.0, 1878.0], optStepX: 101.5, rowBaseY: 1339.0, rowStepY: 52.6, radius: 17.5, totalQuestions: 40 },
-          part2: { colBases: [348.0, 552.0, 858.0, 1062.0, 1367.0, 1571.0, 1878.0, 2082.0], optStepX: 101.5, rowBaseY: 2120.0, rowStepY: 52.0, radius: 17.5, totalQuestions: 8 },
-          part3: { colBases: [295.0, 635.0, 975.0, 1315.0, 1655.0, 1995.0], charStepX: 72.0, boxY: 2465.0, yMinus: 2533.0, yComma: 2600.0, rowBaseDigitY: 2668.0, rowStepDigitY: 55.5, radius: 17.0, totalQuestions: 6 }
+          sbd: { colBaseX: 1817.5, colStepX: 47.0, numCols: 6, boxY: 307.0, rowBaseY: 389.5, rowStepY: 68.0, radius: 17.5 },
+          code: { colBaseX: 2170.5, colStepX: 47.0, numCols: 3, boxY: 307.0, rowBaseY: 389.5, rowStepY: 68.0, radius: 17.5 },
+          part1: { colBases: [349.0, 857.0, 1365.0, 1876.0], optStepX: 101.5, rowBaseY: 1338.0, rowStepY: 52.44, radius: 18.0, totalQuestions: 40 },
+          part2: { colBases: [348.0, 552.0, 858.0, 1062.0, 1367.0, 1571.0, 1878.0, 2082.0], optStepX: 101.5, rowBaseY: 2110.0, rowStepY: 52.0, radius: 18.0, totalQuestions: 8 },
+          part3: { colBases: [328.0, 672.0, 1016.0, 1360.0, 1704.0, 2048.0], charStepX: 72.0, boxY: 2465.0, yMinus: 2517.0, yComma: 2570.0, rowBaseDigitY: 2681.0, rowStepDigitY: 53.5, radius: 17.0, totalQuestions: 6 }
         }
       },
       {
@@ -9664,7 +9664,28 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
           }
         }
         if (bestScore > 0.82) {
-          detectedFiducials[q.name] = { x: bestX, y: bestY };
+          // Tinh chỉnh trọng tâm (Center of Mass) của khối đen định vị để đạt độ chính xác sub-pixel
+          let sumX = 0;
+          let sumY = 0;
+          let cnt = 0;
+          const rBox = Math.round(blockSize * 2.4);
+          for (let ry = -rBox; ry <= rBox; ry++) {
+            const py = Math.round(bestY + ry);
+            if (py < 0 || py >= H) continue;
+            for (let rx = -rBox; rx <= rBox; rx++) {
+              const px = Math.round(bestX + rx);
+              if (px < 0 || px >= W) continue;
+              const idx = (py * W + px) * 4;
+              if (imgData[idx] < 85 && imgData[idx + 1] < 85 && imgData[idx + 2] < 85) {
+                sumX += px;
+                sumY += py;
+                cnt++;
+              }
+            }
+          }
+          const refinedX = cnt > 0 ? (sumX / cnt) : bestX;
+          const refinedY = cnt > 0 ? (sumY / cnt) : bestY;
+          detectedFiducials[q.name] = { x: refinedX, y: refinedY };
         }
       }
 
@@ -9727,8 +9748,8 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
       };
 
       // Ngưỡng tô hiệu dụng: bù trừ nền giấy tự động, phân biệt chuẩn xác bút chì 2B/HB thực tế
-      const effectiveThreshold = Math.max(0.12, Math.min(0.24, threshold * 0.55));
-      const minDarknessThreshold = Math.max(0.17, Math.min(0.28, threshold * 0.65));
+      const effectiveThreshold = Math.max(0.10, Math.min(0.20, threshold * 0.40));
+      const minDarknessThreshold = Math.max(0.14, Math.min(0.24, threshold * 0.50));
 
       let totalFilledBubbles = 0;
       const warnings = [];
@@ -9818,7 +9839,7 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
             });
           }
         } else if (q <= maxP1) {
-          const faint = evaluated.filter(x => x.eff >= effectiveThreshold * 0.55 && x.val >= minDarknessThreshold * 0.75).sort((a, b) => b.eff - a.eff);
+          const faint = evaluated.filter(x => x.eff >= effectiveThreshold * 0.70 && x.val >= minDarknessThreshold * 0.75).sort((a, b) => b.eff - a.eff);
           if (faint.length > 0) {
             confidences.part1[q] = Math.round(faint[0].eff * 100);
             ambiguous.part1[q] = [faint[0].opt];

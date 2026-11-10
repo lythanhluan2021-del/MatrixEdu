@@ -530,8 +530,11 @@ function gradeBatchPapers({ papers = [], answerKeysByCode = {}, pointRules = {},
   papers.forEach(paper => {
     const rawSbd = String(paper.sbd || '').trim();
     const studentInfo = rosterMap.get(rawSbd) || rosterMap.get(rawSbd.padStart(6, '0')) || rosterMap.get(rawSbd.replace(/^0+/, '')) || null;
-    const code = paper.scannedExamCode;
-    const answerKey = answerKeysByCode[code] || answerKeysByCode[String(code).replace(/^0+/, '')];
+    const rawCode = String(paper.scannedExamCode || '').trim();
+    const answerKey = answerKeysByCode[rawCode] ||
+      answerKeysByCode[rawCode.replace(/^0+/, '')] ||
+      answerKeysByCode[rawCode.padStart(3, '0')] ||
+      answerKeysByCode[rawCode.padStart(4, '0')];
 
     let result = null;
     let hasError = false;
@@ -819,8 +822,11 @@ function updatePaperAndAudit({ paperId, updates, allPapers, answerKeysByCode, po
   paper.hasError = false;
 
   // Chấm lại bài này với đáp án mã đề mới
-  const activeCode = paper.scannedExamCode;
-  const answerKey = answerKeysByCode[activeCode] || answerKeysByCode[String(activeCode).replace(/^0+/, '')];
+  const activeCode = String(paper.scannedExamCode || '').trim();
+  const answerKey = answerKeysByCode[activeCode] ||
+    answerKeysByCode[activeCode.replace(/^0+/, '')] ||
+    answerKeysByCode[activeCode.padStart(3, '0')] ||
+    answerKeysByCode[activeCode.padStart(4, '0')];
   if (answerKey) {
     paper.result = gradeSinglePaper(paper, answerKey, pointRules);
   }

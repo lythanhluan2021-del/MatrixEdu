@@ -158,50 +158,50 @@ const OMR_TEMPLATES = [
     hasScoreBoxLeft: false,
     hasPhach: false,
     scoreBox: { x: 260, y: 390, w: 350, h: 145 },
-    fiducials: { tl: { x: 150, y: 146 }, tr: { x: 2320, y: 146 }, bl: { x: 150, y: 3351 }, br: { x: 2320, y: 3351 } },
+    fiducials: { tl: { x: 155.5, y: 151.0 }, tr: { x: 2324.0, y: 151.0 }, bl: { x: 155.5, y: 3355.0 }, br: { x: 2324.0, y: 3355.0 } },
     coords: {
       sbd: {
-        colBaseX: 1798.0,
-        colStepX: 46.4,
+        colBaseX: 1817.5,
+        colStepX: 47.0,
         numCols: 6,
-        boxY: 355.0,
-        rowBaseY: 424.0,
+        boxY: 307.0,
+        rowBaseY: 389.5,
         rowStepY: 68.0,
-        radius: 17.0
+        radius: 17.5
       },
       code: {
-        colBaseX: 2152.0,
-        colStepX: 44.5,
+        colBaseX: 2170.5,
+        colStepX: 47.0,
         numCols: 3,
-        boxY: 355.0,
-        rowBaseY: 424.0,
+        boxY: 307.0,
+        rowBaseY: 389.5,
         rowStepY: 68.0,
-        radius: 17.0
+        radius: 17.5
       },
       part1: {
-        colBases: [348.0, 858.0, 1367.0, 1878.0],
+        colBases: [349.0, 857.0, 1365.0, 1876.0],
         optStepX: 101.5,
-        rowBaseY: 1339.0,
-        rowStepY: 52.6,
-        radius: 17.5,
+        rowBaseY: 1338.0,
+        rowStepY: 52.44,
+        radius: 18.0,
         totalQuestions: 40
       },
       part2: {
         colBases: [348.0, 552.0, 858.0, 1062.0, 1367.0, 1571.0, 1878.0, 2082.0],
         optStepX: 101.5,
-        rowBaseY: 2120.0,
+        rowBaseY: 2110.0,
         rowStepY: 52.0,
-        radius: 17.5,
+        radius: 18.0,
         totalQuestions: 8
       },
       part3: {
-        colBases: [295.0, 635.0, 975.0, 1315.0, 1655.0, 1995.0],
+        colBases: [328.0, 672.0, 1016.0, 1360.0, 1704.0, 2048.0],
         charStepX: 72.0,
         boxY: 2465.0,
-        yMinus: 2533.0,
-        yComma: 2600.0,
-        rowBaseDigitY: 2668.0,
-        rowStepDigitY: 55.5,
+        yMinus: 2517.0,
+        yComma: 2570.0,
+        rowBaseDigitY: 2681.0,
+        rowStepDigitY: 53.5,
         radius: 17.0,
         totalQuestions: 6
       }
