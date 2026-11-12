@@ -116,3 +116,4 @@ assert.strictEqual(keys4['102'].part2['1']['a'], 'S');
 console.log('  ✅ Test 4 Passed: Word .docx table successfully parsed!');
 
 console.log('\n🎉 ALL 4 EXTERNAL ANSWER KEY TESTS PASSED 100%!');
+

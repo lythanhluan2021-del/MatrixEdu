@@ -11057,6 +11057,28 @@ Phần III:
 
     function printOrExportActiveOmrSheet() {
       const canvas = document.getElementById('omr-interactive-canvas');
+      if (!canvas) return;
+      const dataUrl = canvas.toDataURL('image/png');
+      const win = window.open('');
+      win.document.write(`<title>In Phiếu Đã Chấm</title><img src="${dataUrl}" style="max-width:100%; height:auto;" onload="window.print();"/>`);
+    }
+
+    async function syncOmrToGoogleDrive() {
+      showToast('Đang lưu CSDL vào ổ cứng và đồng bộ lên Google Drive...', 'info');
+      try {
+        const cleanPapers = (appState.omr.gradedPapers || []).map(p => {
+          const c = { ...p };
+          delete c.imageElement;
+          delete c.imageUrl;
+          return c;
+        });
+        const res = await fetch('/api/omr/sync-gdrive', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            folderId: '1wcSRCsZ9wzjO9ypblF_9L4si9kPm_uop',
+            gradedPapers: cleanPapers,
+            answerKeysByCode: appState.omr.answerKeysByCode,
             pointRules: appState.omr.pointRules,
             metadata: {
               schoolName: 'TRƯỜNG THPT NGUYỄN SINH SẮC',
