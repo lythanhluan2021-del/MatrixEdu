@@ -853,7 +853,22 @@ const requestHandler = async (req, res) => {
       return;
     }
 
-    // 14.2b. Phân tích & Nhập Biểu đáp án nạp từ bên ngoài (Excel, CSV, Text, Word, JSON)
+    // 14.2b. Tải file Mẫu Biểu đáp án ngoài (.csv chuẩn 3 phần cho Excel/McMIX/TnMaker)
+    if (req.method === 'GET' && pathname === '/api/omr/download-answer-key-template') {
+      const { generateSampleAnswerKeyCsv } = require('./src/answer-key-parser');
+      const csvContent = generateSampleAnswerKeyCsv();
+      // Thêm UTF-8 BOM (\uFEFF) để Microsoft Excel hiển thị tiếng Việt có dấu chuẩn 100%
+      const buffer = Buffer.concat([Buffer.from([0xEF, 0xBB, 0xBF]), Buffer.from(csvContent, 'utf8')]);
+      res.writeHead(200, {
+        'Content-Type': 'text/csv; charset=utf-8',
+        'Content-Disposition': 'attachment; filename="Bieu_Dap_An_Mau_3Phan_BGD2025.csv"',
+        'Content-Length': buffer.length
+      });
+      res.end(buffer);
+      return;
+    }
+
+    // 14.2c. Phân tích & Nhập Biểu đáp án nạp từ bên ngoài (Excel, CSV, Text, Word, JSON, McMIX, TnMaker)
     if (req.method === 'POST' && pathname === '/api/omr/parse-answer-key') {
       try {
         const raw = await readRequestBody(req);

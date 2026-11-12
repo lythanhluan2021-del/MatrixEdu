@@ -2312,6 +2312,11 @@
                 </div>
               </div>
               <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                <button class="btn btn-outline btn-sm" onclick="openManageAnswerKeysModal('import')"
+                  style="color:#fff; border-color:#67e8f9; background:rgba(6,182,212,0.25); font-weight:700; display:inline-flex; align-items:center; gap:5px;"
+                  title="Nạp file Biểu đáp án được tạo từ phần mềm khác (McMIX, TnMaker, SmartTest, QM, Excel, Word, CSV) để chấm cùng mẫu phiếu">
+                  <span>📥</span> Nạp file Đáp án ngoài (McMIX, TnMaker, Excel)
+                </button>
                 <a href="/api/omr/template-pdf" target="_blank" class="btn btn-outline btn-sm"
                   style="color:#fff; border-color:#93c5fd; background:rgba(255,255,255,0.15); font-weight:600;">
                   📄 Mẫu Phiếu TLTN 2025 (PDF)
@@ -2377,9 +2382,9 @@
                         👥 DS Lớp
                       </button>
                       <button class="btn btn-sm" onclick="openManageAnswerKeysModal('import')"
-                        style="font-size:0.71rem; font-weight:700; padding:3px 7px; background:#fff; border:1px solid #7dd3fc; color:#0369a1; border-radius:6px;"
-                        title="Nạp file đáp án Excel, CSV hoặc dán tin nhắn Zalo">
-                        📥 Đ/Á ngoài
+                        style="font-size:0.73rem; font-weight:700; padding:3px 9px; background:#eff6ff; border:1px solid #60a5fa; color:#1d4ed8; border-radius:6px; display:inline-flex; align-items:center; gap:4px;"
+                        title="Nạp file biểu đáp án từ phần mềm khác (McMIX, TnMaker, SmartTest, Excel, Word, CSV, TXT) cùng mẫu phiếu">
+                        📥 Nạp Đáp án ngoài
                       </button>
                       <button class="btn btn-sm" onclick="toggleOmrSettingsDrawer()" id="omr-btn-toggle-settings"
                         style="font-size:0.74rem; padding:3px 7px; background:#fff; border:1px solid #cbd5e1; color:#475569; border-radius:6px;"
@@ -2469,16 +2474,21 @@
                         <span style="font-size:1.3rem;">📥</span>
                         <div style="text-align:left;">
                           <div style="font-weight:700; color:#1e3a8a; font-size:0.78rem;">
-                            Kéo & thả <b>Thư mục</b> hoặc <b>file scan</b> vào đây
+                            Kéo & thả <b>File Đáp án</b> (Excel/Word/CSV) hoặc <b>Bài scan</b> vào đây
                           </div>
                           <div style="font-size:0.68rem; color:#64748b;">
-                            Nhận diện ảnh JPG, PNG, WEBP, PDF (Không giới hạn số bài)
+                            Hỗ trợ Đáp án McMIX, TnMaker, Excel, Word & Ảnh scan JPG, PNG, PDF
                           </div>
                         </div>
                       </div>
 
-                      <!-- 4 Nút chọn file/thư mục, tải phôi in trắng & xuất phiếu tô mẫu dạng Pill sang trọng -->
+                      <!-- 5 Nút chọn file/thư mục, nạp đáp án ngoài, tải phôi in trắng & xuất phiếu tô mẫu dạng Pill sang trọng -->
                       <div style="display:flex; justify-content:center; gap:6px; margin-top:6px; flex-wrap:wrap;">
+                        <button class="btn btn-sm" onclick="openManageAnswerKeysModal('import')"
+                          style="font-size:0.72rem; padding:3px 9px; background:#eff6ff; border:1.5px solid #3b82f6; color:#1d4ed8; font-weight:700; border-radius:6px; display:inline-flex; align-items:center; gap:4px;"
+                          title="Tải file Đáp án được tạo từ phần mềm khác (McMIX, TnMaker, SmartTest, Excel, Word, CSV, TXT) cùng mẫu phiếu">
+                          📥 Nạp file Đáp án
+                        </button>
                         <button class="btn btn-sm" onclick="document.getElementById('omr-custom-scans-input').click()"
                           style="font-size:0.71rem; padding:3px 9px; background:#fff; border:1px solid #cbd5e1; color:#1d4ed8; font-weight:600; border-radius:6px;">
                           📄 Chọn file scan
@@ -3133,33 +3143,50 @@
 
             <!-- Cột trái: Tải file ngoài -->
             <div
-              style="border:1px solid #cbd5e1; border-radius:8px; padding:14px; background:#fff; display:flex; flex-direction:column; gap:10px;">
-              <strong style="color:#0f172a; font-size:0.88rem; display:flex; align-items:center; gap:6px;">
-                📁 Cách 1: Nạp file Đáp án có sẵn
-              </strong>
-              <p style="font-size:0.78rem; color:#64748b; margin:0;">
-                Hỗ trợ file Excel (<code>.xlsx, .xls</code>), file bảng tính <code>.csv</code>, file Word
-                <code>.docx</code> hoặc file <code>.json</code> từ giáo viên khác / phần mềm trộn đề (McMIX, SmartTest).
+              style="border:1px solid #cbd5e1; border-radius:8px; padding:14px; background:#fff; display:flex; flex-direction:column; gap:8px;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <strong style="color:#0f172a; font-size:0.88rem; display:flex; align-items:center; gap:6px;">
+                  📁 Cách 1: Nạp file Đáp án có sẵn
+                </strong>
+              </div>
+              <div style="display:flex; gap:4px; flex-wrap:wrap;">
+                <span class="badge" style="background:#e0f2fe; color:#0369a1; font-size:0.68rem; font-weight:700; padding:2px 6px;">McMIX</span>
+                <span class="badge" style="background:#f0fdf4; color:#15803d; font-size:0.68rem; font-weight:700; padding:2px 6px;">TnMaker</span>
+                <span class="badge" style="background:#fef3c7; color:#92400e; font-size:0.68rem; font-weight:700; padding:2px 6px;">SmartTest</span>
+                <span class="badge" style="background:#f3e8ff; color:#6b21a8; font-size:0.68rem; font-weight:700; padding:2px 6px;">QM Test</span>
+                <span class="badge" style="background:#f1f5f9; color:#334155; font-size:0.68rem; font-weight:700; padding:2px 6px;">Excel / Word</span>
+              </div>
+              <p style="font-size:0.76rem; color:#64748b; margin:0;">
+                Hỗ trợ file Excel (<code>.xlsx, .xls</code>), bảng tính <code>.csv</code>, Word <code>.docx</code> hoặc <code>.txt</code> từ phần mềm khác cùng mẫu phiếu chấm.
               </p>
 
               <div
-                style="border:2px dashed #94a3b8; border-radius:6px; padding:14px; text-align:center; background:#f8fafc; cursor:pointer;"
+                style="border:2px dashed #3b82f6; border-radius:6px; padding:14px; text-align:center; background:#eff6ff; cursor:pointer;"
                 onclick="document.getElementById('omr-external-keys-file').click()">
                 <div style="font-size:1.8rem; margin-bottom:4px;">📊</div>
-                <div style="font-weight:700; color:#1e40af; font-size:0.84rem;">Click để chọn file Đáp án (.xlsx, .csv,
-                  .txt)</div>
-                <div style="font-size:0.72rem; color:#64748b; margin-top:2px;">Tự động nhận diện tất cả các mã đề trong
-                  file</div>
+                <div style="font-weight:700; color:#1d4ed8; font-size:0.86rem;">Click hoặc Kéo thả file Đáp án vào đây</div>
+                <div style="font-size:0.72rem; color:#475569; margin-top:2px;">Tự động nhận diện tất cả mã đề & 3 phần thi</div>
               </div>
 
-              <div style="display:flex; gap:6px; margin-top:4px;">
+              <div>
+                <a href="/api/omr/download-answer-key-template?format=csv" download="Bieu_Dap_An_Mau_3Phan_BGD2025.csv" class="btn btn-outline btn-sm"
+                  style="font-size:0.73rem; color:#15803d; border-color:#86efac; background:#f0fdf4; width:100%; text-align:center; display:block; padding:5px 0; text-decoration:none; font-weight:600;">
+                  📥 Tải file mẫu Excel (.csv chuẩn 3 Phần BGD 2025)
+                </a>
+              </div>
+
+              <div style="display:flex; gap:4px; margin-top:2px;">
                 <button class="btn btn-outline btn-sm" onclick="loadSampleExternalAnswerKey('csv')"
-                  style="font-size:0.75rem; flex:1;">
-                  📄 Thử file CSV mẫu (Toán 12)
+                  style="font-size:0.71rem; flex:1; padding:3px 2px;">
+                  📄 Mẫu CSV (Toán 12)
+                </button>
+                <button class="btn btn-outline btn-sm" onclick="loadSampleExternalAnswerKey('mcmix')"
+                  style="font-size:0.71rem; flex:1; padding:3px 2px;">
+                  📊 Mẫu McMIX / TnMaker
                 </button>
                 <button class="btn btn-outline btn-sm" onclick="loadSampleExternalAnswerKey('zalo')"
-                  style="font-size:0.75rem; flex:1;">
-                  📱 Thử mẫu Zalo (Tin 12)
+                  style="font-size:0.71rem; flex:1; padding:3px 2px;">
+                  📱 Mẫu Zalo (Tin 12)
                 </button>
               </div>
             </div>
@@ -3175,9 +3202,14 @@
               </p>
 
               <textarea id="ak-raw-textarea" class="form-control" rows="6"
-                style="font-size:0.78rem; font-family:monospace; resize:none;" placeholder="Ví dụ:
+                style="font-size:0.78rem; font-family:monospace; resize:none;" placeholder="Ví dụ dán chuỗi đáp án từ Zalo / McMIX / TnMaker:
 Mã đề 101: 1A 2B 3C 4D 5A 6B 7C 8D...
+Phần II:
 Câu 1: a-Đ, b-S, c-Đ, d-S
+Câu 2: a-Đ, b-Đ, c-S, d-S
+Phần III:
+1: 15.5
+2: -3
 Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
 
               <button class="btn btn-primary btn-sm" onclick="processPastedAnswerKeyText()"
@@ -7551,6 +7583,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         let sampleText = '';
         if (type === 'csv') {
           sampleText = `Câu,101,102,103,104
+# PHẦN I: TRẮC NGHIỆM 4 LỰA CHỌN (A/B/C/D),,,,
 1,A,B,C,D
 2,B,C,D,A
 3,C,D,A,B
@@ -7569,29 +7602,84 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
 16,D,B,A,C
 17,A,B,C,D
 18,B,C,D,A
-19,C,D,A,B
-20,D,A,B,C
-21,A,C,B,D
-22,B,D,C,A
-23,C,A,D,B
-24,D,B,A,C`;
+# PHẦN II: CÂU HỎI ĐÚNG / SAI (Đ/S),,,,
+1a,Đ,S,Đ,S
+1b,S,Đ,S,Đ
+1c,Đ,S,Đ,S
+1d,S,Đ,S,Đ
+2a,Đ,Đ,S,S
+2b,S,S,Đ,Đ
+2c,Đ,S,Đ,S
+2d,S,Đ,S,Đ
+3a,S,Đ,Đ,S
+3b,Đ,S,S,Đ
+3c,Đ,Đ,S,S
+3d,S,S,Đ,Đ
+4a,Đ,S,Đ,S
+4b,S,Đ,S,Đ
+4c,Đ,S,Đ,S
+4d,S,Đ,S,Đ
+# PHẦN III: CÂU HỎI TRẢ LỜI NGẮN (ĐIỀN SỐ),,,,
+1,12.5,-3,0.25,100
+2,-3,0.25,100,4.5
+3,0.25,100,4.5,2025
+4,100,4.5,2025,12.5
+5,4.5,2025,12.5,-3
+6,2025,12.5,-3,0.25`;
+        } else if (type === 'mcmix') {
+          sampleText = `BẢNG ĐÁP ÁN ĐỀ THI TRỘN (MCMIX / TNMAKER)
+Mã đề: 101
+1.A 2.B 3.C 4.D 5.A 6.B 7.C 8.D 9.A 10.B 11.C 12.D 13.A 14.B 15.C 16.D 17.A 18.B
+Phần II:
+Câu 1: a-Đ, b-S, c-Đ, d-S
+Câu 2: a-Đ, b-Đ, c-S, d-S
+Câu 3: a-S, b-Đ, c-Đ, d-S
+Câu 4: a-Đ, b-S, c-Đ, d-S
+Phần III:
+1: 12.5
+2: -3
+3: 0.25
+4: 100
+5: 4.5
+6: 2025
+
+Mã đề: 102
+1.B 2.C 3.D 4.A 5.B 6.C 7.D 8.A 9.B 10.C 11.D 12.A 13.B 14.C 15.D 16.A 17.B 18.C
+Phần II:
+Câu 1: a-S, b-Đ, c-S, d-Đ
+Câu 2: a-Đ, b-S, c-Đ, d-S
+Câu 3: a-Đ, b-Đ, c-S, d-S
+Câu 4: a-S, b-S, c-Đ, d-Đ
+Phần III:
+1: 2025
+2: 0.5
+3: -12
+4: 88
+5: 3.14
+6: 10`;
         } else {
           sampleText = `BẢNG ĐÁP ÁN MÔN TIN HỌC 12 - TỔ CHUYÊN MÔN
 Mã đề 101:
-1.A 2.B 3.C 4.D 5.A 6.B 7.C 8.D 9.A 10.B 11.C 12.D 13.A 14.B 15.C 16.D 17.A 18.B 19.C 20.D 21.A 22.B 23.C 24.D
+1.A 2.B 3.C 4.D 5.A 6.B 7.C 8.D 9.A 10.B 11.C 12.D 13.A 14.B 15.C 16.D 17.A 18.B
 Phần II:
 Câu 1: a-Đ, b-S, c-Đ, d-S
 Câu 2: a-S, b-Đ, c-S, d-Đ
 Câu 3: a-Đ, b-Đ, c-S, d-S
 Câu 4: a-S, b-S, c-Đ, d-Đ
+Phần III:
+1: 15.5
+2: -3
 
 Mã đề 102:
-1.B 2.C 3.D 4.A 5.B 6.C 7.D 8.A 9.B 10.C 11.D 12.A 13.B 14.C 15.D 16.A 17.B 18.C 19.D 20.A 21.B 22.C 23.D 24.A
+1.B 2.C 3.D 4.A 5.B 6.C 7.D 8.A 9.B 10.C 11.D 12.A 13.B 14.C 15.D 16.A 17.B 18.C
 Phần II:
 Câu 1: a-S, b-Đ, c-S, d-Đ
 Câu 2: a-Đ, b-S, c-Đ, d-S
 Câu 3: a-S, b-S, c-Đ, d-Đ
-Câu 4: a-Đ, b-Đ, c-S, d-S`;
+Câu 4: a-Đ, b-Đ, c-S, d-S
+Phần III:
+1: 2025
+2: 0.5`;
         }
 
         const ta = document.getElementById('ak-raw-textarea');
@@ -7605,8 +7693,13 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
         const data = await res.json();
         if (data.ok) {
           appState.omr.tempAnswerKeys = data.answerKeysByCode;
-          appState.omr.lastImportSource = type === 'csv' ? 'File mẫu CSV (Toán 12)' : 'Tin nhắn mẫu Zalo (Tin 12)';
-          updateAkImportStatus(`✅ Đã nạp thành công mẫu ${type.toUpperCase()} (${data.totalCodes} mã đề)`);
+          const labelMap = {
+            csv: 'File mẫu CSV 3 Phần (Toán 12)',
+            mcmix: 'Mẫu McMIX / TnMaker (Vật lý 12)',
+            zalo: 'Tin nhắn mẫu Zalo (Tin học 12)'
+          };
+          appState.omr.lastImportSource = labelMap[type] || `Mẫu ${type.toUpperCase()}`;
+          updateAkImportStatus(`✅ Đã nạp thành công mẫu ${type.toUpperCase()} (${data.totalCodes} mã đề: ${Object.keys(data.answerKeysByCode).join(', ')})`);
           switchAnswerKeyTab('matrix');
           showToast(`Đã nạp thành công mẫu ${type.toUpperCase()}`, 'success');
         }
@@ -7734,6 +7827,42 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
         });
       }
 
+      // Header Nhóm Phần III: Trả lời ngắn (nếu có dữ liệu hoặc theo mẫu 2025)
+      let maxP3 = 0;
+      codes.forEach(c => {
+        const p3Keys = Object.keys(keys[c]?.part3 || {});
+        if (p3Keys.length > maxP3) maxP3 = p3Keys.length;
+      });
+      const p3Count = maxP3 > 0 ? Math.max(maxP3, 6) : 6;
+
+      html += `
+        <tr style="background:#f1f5f9; font-weight:700; color:#1e293b; border-bottom:1px solid #cbd5e1; border-top:2px solid #cbd5e1;">
+          <td colspan="${codes.length + 1}" style="padding:6px 10px; font-size:0.8rem; background:#f8fafc;">
+            🔹 PHẦN III: TRẢ LỜI NGẮN (${p3Count} CÂU - ĐIỀN SỐ NGUYÊN / THẬP PHÂN)
+          </td>
+        </tr>
+      `;
+
+      for (let q = 1; q <= p3Count; q++) {
+        html += `<tr style="border-bottom:1px solid #e2e8f0;">
+          <td style="padding:4px 8px; text-align:center; font-weight:700; color:#475569; background:#f8fafc; font-size:0.78rem;">
+            Câu ${q} (P3)
+          </td>
+          ${codes.map(c => {
+            if (!keys[c].part3) keys[c].part3 = {};
+            const currentVal = keys[c].part3[q] !== undefined ? keys[c].part3[q] : '';
+            return `
+              <td style="padding:3px 6px; text-align:center;">
+                <input type="text" value="${currentVal}" 
+                       placeholder="Số/kết quả"
+                       onchange="setAnswerMatrixP3('${c}', ${q}, this.value)"
+                       style="width:85px; height:24px; text-align:center; font-weight:700; font-size:0.78rem; border:1px solid #cbd5e1; border-radius:4px; padding:2px 4px;">
+              </td>
+            `;
+          }).join('')}
+        </tr>`;
+      }
+
       tbody.innerHTML = html;
     }
 
@@ -7750,6 +7879,12 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
       if (!appState.omr.tempAnswerKeys[code].part2[qNum]) appState.omr.tempAnswerKeys[code].part2[qNum] = {};
       appState.omr.tempAnswerKeys[code].part2[qNum][sub] = val;
       renderAnswerKeyMatrixTable();
+    }
+
+    function setAnswerMatrixP3(code, qNum, val) {
+      if (!appState.omr.tempAnswerKeys[code]) return;
+      if (!appState.omr.tempAnswerKeys[code].part3) appState.omr.tempAnswerKeys[code].part3 = {};
+      appState.omr.tempAnswerKeys[code].part3[qNum] = String(val).trim();
     }
 
     function addNewAnswerKeyCodePrompt() {
@@ -10380,6 +10515,19 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
     async function processUploadedOmrFiles(files, folderName = '') {
       if (!files || files.length === 0) return;
 
+      // 1. Tự động kiểm tra xem có File Biểu Đáp Án (.xlsx, .xls, .csv, .docx, .txt, .json) được kéo thả vào không
+      const answerKeyFiles = Array.from(files).filter(f => {
+        const name = (f.name || '').toLowerCase();
+        return name.endsWith('.xlsx') || name.endsWith('.xls') || name.endsWith('.csv') ||
+          name.endsWith('.docx') || (name.endsWith('.txt') && !name.includes('log')) || name.endsWith('.json');
+      });
+
+      if (answerKeyFiles.length > 0) {
+        const keyFile = answerKeyFiles[0];
+        showToast(`🎯 Tự động phát hiện File Biểu đáp án: ${keyFile.name}. Đang trích xuất mã đề...`, 'info');
+        handleExternalAnswerKeyFile({ target: { files: [keyFile] } });
+      }
+
       const validFiles = Array.from(files).filter(f => {
         const name = (f.name || '').toLowerCase();
         return name.endsWith('.jpg') || name.endsWith('.jpeg') || name.endsWith('.png') ||
@@ -10387,6 +10535,9 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
       });
 
       if (validFiles.length === 0) {
+        if (answerKeyFiles.length > 0) {
+          return;
+        }
         showToast('Không tìm thấy file ảnh scan (.jpg, .png...) hoặc PDF hợp lệ trong danh sách chọn!', 'warning');
         return;
       }
@@ -10906,28 +11057,6 @@ Câu 4: a-Đ, b-Đ, c-S, d-S`;
 
     function printOrExportActiveOmrSheet() {
       const canvas = document.getElementById('omr-interactive-canvas');
-      if (!canvas) return;
-      const dataUrl = canvas.toDataURL('image/png');
-      const win = window.open('');
-      win.document.write(`<title>In Phiếu Đã Chấm</title><img src="${dataUrl}" style="max-width:100%; height:auto;" onload="window.print();"/>`);
-    }
-
-    async function syncOmrToGoogleDrive() {
-      showToast('Đang lưu CSDL vào ổ cứng và đồng bộ lên Google Drive...', 'info');
-      try {
-        const cleanPapers = (appState.omr.gradedPapers || []).map(p => {
-          const c = { ...p };
-          delete c.imageElement;
-          delete c.imageUrl;
-          return c;
-        });
-        const res = await fetch('/api/omr/sync-gdrive', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            folderId: '1wcSRCsZ9wzjO9ypblF_9L4si9kPm_uop',
-            gradedPapers: cleanPapers,
-            answerKeysByCode: appState.omr.answerKeysByCode,
             pointRules: appState.omr.pointRules,
             metadata: {
               schoolName: 'TRƯỜNG THPT NGUYỄN SINH SẮC',
