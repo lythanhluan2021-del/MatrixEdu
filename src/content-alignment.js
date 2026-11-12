@@ -160,8 +160,8 @@ const TOPIC_LEXICON = [
 
   // ============================== TIN HỌC ==============================
   { id: 'it_ai', subject: 'it', label: 'Trí tuệ nhân tạo',
-    triggers: [R('tri tue nhan tao|hoc may|machine learning')],
-    keywords: [R('tri tue nhan tao'), R('hoc may|machine learning|du lieu huan luyen'), R('tro ly ao|chatbot|nhan dang|nhan dien|thi giac may tinh|xu li ngon ngu|xu ly ngon ngu|ocr'), R('tao sinh|generative|turing|dartmouth|watson|siri|google assistant'), R('rui ro tri tue nhan tao|thien kien')] },
+    triggers: [R('tri tue nhan tao|hoc may|machine learning|he chuyen gia|mycin')],
+    keywords: [R('tri tue nhan tao|ai\\b|ani\\b|agi\\b'), R('hoc may|machine learning|du lieu huan luyen'), R('tro ly ao|chatbot|nhan dang|nhan dien|thi giac may tinh|xu li ngon ngu|xu ly ngon ngu|ocr'), R('tao sinh|generative|turing|dartmouth|watson|siri|google assistant|mycin|he chuyen gia|expert system|chuan doan y khoa'), R('rui ro tri tue nhan tao|thien kien|khoa hoc va doi song')] },
   { id: 'it_thiet_bi_mang', subject: 'it', label: 'Thiết bị mạng',
     triggers: [R('thiet bi mang|switch|router|access point|modem|\\bhub\\b')],
     keywords: [R('thiet bi mang'), R('switch|bo chuyen mach'), R('router|bo dinh tuyen'), R('access point|diem truy cap|modem|\\bhub\\b|repeater'), R('cap mang|cap quang|cap xoan|rj-?45')] },
@@ -172,8 +172,8 @@ const TOPIC_LEXICON = [
     triggers: [R('ket noi (cac |voi )?thiet bi so|thiet bi so')],
     keywords: [R('hdmi|vga|displayport|usb|type-?c'), R('bluetooth|ket noi khong day|wi-?fi'), R('may chieu|tai nghe|chuot|ban phim|may in|loa'), R('cong ket noi|thiet bi so|dien thoai thong minh|thiet bi di dong')] },
   { id: 'it_chia_se', subject: 'it', label: 'Chia sẻ tài nguyên trên mạng',
-    triggers: [R('chia se tai nguyen|chia se du lieu|ket noi mang|mang_lan')],
-    keywords: [R('chia se|share'), R('thu muc|tep|may in'), R('mang_lan|mang cuc bo|mang noi bo|workgroup|network discovery'), R('quyen truy cap|read|full control')] },
+    triggers: [R('chia se tai nguyen|chia se du lieu|ket noi mang|mang_lan|thuc hanh chia se|chia se tai nguyen tren mang')],
+    keywords: [R('chia se|share'), R('thu muc|tep|may in|tai nguyen'), R('mang_lan|mang cuc bo|mang noi bo|workgroup|network discovery'), R('quyen truy cap|read|full control|phan quyen')] },
   { id: 'it_dao_duc_mt_so', subject: 'it', label: 'Đạo đức, pháp luật, văn hóa và ứng xử trong môi trường số',
     triggers: [R('dao duc|phap luat|van hoa|ung xu|giao tiep|khong gian mang|moi truong so|ban quyen')],
     keywords: [R('ung xu|giao tiep|van minh|lich su'), R('mang xa hoi|tin nhan|binh luan'), R('ban quyen|phap luat|luat|nghi dinh'), R('lua dao|tin gia|bat nat|quay roi'), R('thong tin ca nhan|quyen rieng tu|mat khau|otp|can cuoc')] },
@@ -335,7 +335,11 @@ function evaluateAlignment(question, row, metadata = {}, opts = {}) {
 
     let aligned = false;
     let reason = '';
-    if (targetScore > 0 && targetScore >= competitorScore) {
+    const isSiblingNetworking = Boolean(targetTopic && competitorTopic &&
+      ['it_thiet_bi_mang', 'it_giao_thuc', 'it_chia_se', 'it_mang_may_tinh'].includes(targetTopic.id) &&
+      ['it_thiet_bi_mang', 'it_giao_thuc', 'it_chia_se', 'it_mang_may_tinh'].includes(competitorTopic.id));
+
+    if (targetScore > 0 && (targetScore >= competitorScore || (isSiblingNetworking && targetScore >= competitorScore - 1) || opts.fromTargetFile)) {
       aligned = true;
       reason = `Khớp chủ đề "${targetTopic.label}".`;
     } else if (targetScore === 0 && competitorScore === 0 && opts.fromTargetFile) {

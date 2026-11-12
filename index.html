@@ -9179,7 +9179,7 @@ Phần III:
           const scoreWords = paper.hasError ? 'Lỗi mã đề thi' : convertScoreToVietnameseWords(totalScore);
           ctx.fillText(scoreWords, (swb.x + swb.w / 2) * scaleX, (swb.y + swb.h / 2 + 4) * scaleY);
         } else if (tpl.id === 'thpt_tong_hop') {
-          // MẪU 3: PHIẾU KIỂM TRA HỌC KỲ TỔNG HỢP THPT
+          // MẪU 3: PHIẾU KIỂM TRA HỌC KỲ TỔNG HỢP THPT (MÃ ĐỀ 3 SỐ)
           const sb = tpl.scoreBox;
           ctx.fillStyle = paper.hasError ? 'rgba(254, 226, 226, 0.95)' : 'rgba(255, 251, 235, 0.92)';
           ctx.fillRect(sb.x * scaleX, sb.y * scaleY, sb.w * scaleX, sb.h * scaleY);
@@ -9188,11 +9188,61 @@ Phần III:
           ctx.strokeRect(sb.x * scaleX, sb.y * scaleY, sb.w * scaleX, sb.h * scaleY);
           ctx.textAlign = 'center';
           ctx.fillStyle = '#dc2626';
-          ctx.font = `bold ${Math.round(48 * scaleY)}px "Times New Roman", serif`;
-          ctx.fillText(paper.hasError ? 'LỖI' : totalScore, (sb.x + sb.w / 2) * scaleX, (sb.y + 65) * scaleY);
+          ctx.font = `bold ${Math.round(44 * scaleY)}px "Times New Roman", serif`;
+          ctx.fillText(paper.hasError ? 'LỖI' : totalScore, (sb.x + sb.w / 2) * scaleX, (sb.y + 52) * scaleY);
           ctx.fillStyle = '#991b1b';
-          ctx.font = `bold ${Math.round(17 * scaleY)}px Arial, sans-serif`;
-          ctx.fillText(paper.hasError ? 'Mã đề chưa khớp' : `Thang điểm 10 • Mã đề ${paper.scannedExamCode}`, (sb.x + sb.w / 2) * scaleX, (sb.y + 110) * scaleY);
+          ctx.font = `bold ${Math.round(15 * scaleY)}px Arial, sans-serif`;
+          ctx.fillText(paper.hasError ? 'Mã đề chưa khớp' : `Thang điểm 10 • Mã đề ${paper.scannedExamCode}`, (sb.x + sb.w / 2) * scaleX, (sb.y + 80) * scaleY);
+
+          // DÒNG BREAKDOWN ĐIỂM CHI TIẾT TRỰC TIẾP TRÊN Ô ĐIỂM
+          if (!paper.hasError) {
+            ctx.fillStyle = '#1e3a8a';
+            ctx.font = `bold ${Math.round(13.5 * scaleY)}px Arial, sans-serif`;
+            const bdText = `P.I: ${Number(p1PtsVal).toFixed(2)}đ  |  P.II: ${Number(p2PtsVal).toFixed(2)}đ${p3Total > 0 ? `  |  P.III: ${Number(p3PtsVal).toFixed(2)}đ` : ''}`;
+            ctx.fillText(bdText, (sb.x + sb.w / 2) * scaleX, (sb.y + 106) * scaleY);
+
+            ctx.font = `italic ${Math.round(11.5 * scaleY)}px Arial, sans-serif`;
+            const isP2Blank = Number(p2PtsVal) === 0 && (!paper.answers?.part2 || Object.keys(paper.answers.part2).length === 0);
+            if (isP2Blank) {
+              ctx.fillStyle = '#b45309';
+              ctx.fillText(`(${p1Correct}/${p1Total} câu TN • Phần II để trống 0đ)`, (sb.x + sb.w / 2) * scaleX, (sb.y + 128) * scaleY);
+            } else {
+              ctx.fillStyle = '#15803d';
+              ctx.fillText(`(${p1Correct}/${p1Total} câu TN • Phần II: ${paper.result?.part2?.correctSubCount || 0}/16 ý)`, (sb.x + sb.w / 2) * scaleX, (sb.y + 128) * scaleY);
+            }
+          }
+
+          // TEM CHI TIẾT OMR ĐẶT TẠI KHUNG CÁN BỘ COI THI 1 (ĐẢM BẢO MINH BẠCH 100%)
+          const cbBoxY = (sb.y + sb.h + 16) * scaleY;
+          const cbBoxH = 126 * scaleY;
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+          ctx.fillRect(sb.x * scaleX, cbBoxY, sb.w * scaleX, cbBoxH);
+          ctx.strokeStyle = '#0284c7';
+          ctx.lineWidth = Math.max(1.5, 2 * scaleX);
+          ctx.strokeRect(sb.x * scaleX, cbBoxY, sb.w * scaleX, cbBoxH);
+
+          ctx.textAlign = 'left';
+          ctx.fillStyle = '#0369a1';
+          ctx.font = `bold ${Math.round(12.5 * scaleY)}px Arial, sans-serif`;
+          ctx.fillText('✓ XÁC NHẬN CHẤM OMR MATRIXEDU', (sb.x + 10) * scaleX, cbBoxY + 22 * scaleY);
+
+          ctx.fillStyle = '#0f172a';
+          ctx.font = `${Math.round(12 * scaleY)}px Arial, sans-serif`;
+          ctx.fillText(`• Phần I (TN): ${p1Correct}/${p1Total} câu = ${Number(p1PtsVal).toFixed(2)} đ`, (sb.x + 10) * scaleX, cbBoxY + 48 * scaleY);
+          const p2Summary = (Number(p2PtsVal) === 0 && (!paper.answers?.part2 || Object.keys(paper.answers.part2).length === 0))
+            ? '0.00 đ (Thí sinh để trống)'
+            : `${Number(p2PtsVal).toFixed(2)} đ (${paper.result?.part2?.correctSubCount || 0}/16 ý)`;
+          ctx.fillText(`• Phần II (Đ/S): ${p2Summary}`, (sb.x + 10) * scaleX, cbBoxY + 72 * scaleY);
+          if (p3Total > 0) {
+            ctx.fillText(`• Phần III (TLN): ${p3Correct}/${p3Total} câu = ${Number(p3PtsVal).toFixed(2)} đ`, (sb.x + 10) * scaleX, cbBoxY + 96 * scaleY);
+          } else {
+            ctx.fillStyle = '#64748b';
+            ctx.fillText('• Phần III (TLN): Không áp dụng', (sb.x + 10) * scaleX, cbBoxY + 96 * scaleY);
+          }
+
+          ctx.fillStyle = paper.hasError ? '#dc2626' : (paper.warnings?.length ? '#b45309' : '#15803d');
+          ctx.font = `bold ${Math.round(11 * scaleY)}px Arial, sans-serif`;
+          ctx.fillText(paper.hasError ? '⚠ Cần sửa mã đề' : (paper.warnings?.length ? `⚠ Cần kiểm tra (${paper.warnings.length} lưu ý)` : '✓ Chấm chuẩn xác'), (sb.x + 10) * scaleX, cbBoxY + 116 * scaleY);
         } else {
           // MẪU 1 & 2: CHUẨN BỘ GD&ĐT 2025 (Mã 4 số & 3 số)
           // 1) Ô ĐIỂM CHÍNH THỨC (X = 222..588, Y = 420..584)
@@ -9211,11 +9261,14 @@ Phần III:
             ctx.fillText(`Mã đề: ${paper.scannedExamCode || '?'} (Chưa khớp)`, 405 * scaleX, 542 * scaleY);
           } else {
             ctx.fillStyle = '#dc2626';
-            ctx.font = `bold ${Math.round(80 * scaleY)}px "Times New Roman", serif`;
-            ctx.fillText(`${totalScore}`, 405 * scaleX, 522 * scaleY);
+            ctx.font = `bold ${Math.round(76 * scaleY)}px "Times New Roman", serif`;
+            ctx.fillText(`${totalScore}`, 405 * scaleX, 514 * scaleY);
             ctx.fillStyle = '#991b1b';
-            ctx.font = `bold ${Math.round(21 * scaleY)}px Arial, sans-serif`;
-            ctx.fillText(`Thang điểm 10 • Mã đề ${paper.scannedExamCode}`, 405 * scaleX, 566 * scaleY);
+            ctx.font = `bold ${Math.round(18 * scaleY)}px Arial, sans-serif`;
+            ctx.fillText(`Thang điểm 10 • Mã đề ${paper.scannedExamCode}`, 405 * scaleX, 550 * scaleY);
+            ctx.fillStyle = '#1e3a8a';
+            ctx.font = `bold ${Math.round(14 * scaleY)}px Arial, sans-serif`;
+            ctx.fillText(`P.I: ${Number(p1PtsVal).toFixed(2)}đ  |  P.II: ${Number(p2PtsVal).toFixed(2)}đ${p3Total > 0 ? `  |  P.III: ${Number(p3PtsVal).toFixed(2)}đ` : ''}`, 405 * scaleX, 574 * scaleY);
           }
 
           // 2) Ô THỐNG KÊ CHI TIẾT TỪNG PHẦN (Nằm gọn trong ô Cán bộ chấm 1: X = 222..588, Y = 645..782)
@@ -9223,9 +9276,12 @@ Phần III:
           ctx.fillRect(222 * scaleX, 645 * scaleY, 366 * scaleX, 136 * scaleY);
           ctx.textAlign = 'left';
           ctx.fillStyle = '#0f172a';
-          ctx.font = `bold ${Math.round(22 * scaleY)}px Arial, sans-serif`;
+          ctx.font = `bold ${Math.round(21 * scaleY)}px Arial, sans-serif`;
           ctx.fillText(`• P.I (TN): ${p1Correct}/${p1Total} câu = ${Number(p1PtsVal).toFixed(2)} đ`, 234 * scaleX, 678 * scaleY);
-          ctx.fillText(`• P.II (Đ/S): ${Number(p2PtsVal).toFixed(2)} đ`, 234 * scaleX, 718 * scaleY);
+          const p2Note = (Number(p2PtsVal) === 0 && (!paper.answers?.part2 || Object.keys(paper.answers.part2).length === 0))
+            ? '0.00 đ (Thí sinh để trống)'
+            : `${Number(p2PtsVal).toFixed(2)} đ (${paper.result?.part2?.correctSubCount || 0}/16 ý)`;
+          ctx.fillText(`• P.II (Đ/S): ${p2Note}`, 234 * scaleX, 718 * scaleY);
           ctx.fillText(`• P.III (TLN): ${p3Correct}/${p3Total} câu = ${Number(p3PtsVal).toFixed(2)} đ`, 234 * scaleX, 758 * scaleY);
 
           // 3) DẤU XÁC NHẬN HỆ THỐNG CHẤM OMR (Nằm gọn trong ô Cán bộ chấm 2: X = 222..588, Y = 850..974)
@@ -10284,6 +10340,19 @@ Phần III:
           codeDigits += String(best.d);
           totalFilledBubbles++;
         }
+      }
+
+      // CẢNH BÁO TÔ THIẾU HOẶC CHƯA TÔ MÃ ĐỀ THI (TRÁNH FALLBACK NGẦM SAI LỆCH ĐIỂM)
+      if (codeDigits.length === 0) {
+        warnings.push({
+          type: 'MISSING_EXAM_CODE',
+          message: `Thí sinh chưa tô Mã đề thi (${numCodeCols} chữ số)! Hệ thống tạm dùng mã mặc định 101. Thầy/Cô cần kiểm tra phiếu gốc và chọn đúng mã đề.`
+        });
+      } else if (codeDigits.length < numCodeCols) {
+        warnings.push({
+          type: 'INCOMPLETE_EXAM_CODE',
+          message: `Thí sinh chỉ mới tô ${codeDigits.length}/${numCodeCols} chữ số Mã đề ("${codeDigits}"). Thầy/Cô cần đối chiếu bài thi gốc để hiệu chỉnh mã đề chuẩn xác.`
+        });
       }
 
       // 3. QUÉT PHẦN I: TRẮC NGHIỆM 4 LỰA CHỌN (Câu 1..40 theo mẫu)

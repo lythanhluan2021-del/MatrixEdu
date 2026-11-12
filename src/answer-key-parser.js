@@ -180,9 +180,9 @@ function parseMatrix2DToKeys(matrix2D) {
 
       // Nhận diện dòng chuyển phân đoạn đề thi (Phần I, Phần II, Phần III)
       if (firstCell.startsWith('#') || firstCell.startsWith('//') ||
-          /phần\s*(?:iii|3)\b|trả\s*lời\s*ngắn/i.test(rowFullStr) ||
-          /phần\s*(?:ii|2)\b|đúng[\s\/\-]sai/i.test(rowFullStr) ||
-          /phần\s*(?:i|1)\b|trắc\s*nghiệm/i.test(rowFullStr)) {
+        /phần\s*(?:iii|3)\b|trả\s*lời\s*ngắn/i.test(rowFullStr) ||
+        /phần\s*(?:ii|2)\b|đúng[\s\/\-]sai/i.test(rowFullStr) ||
+        /phần\s*(?:i|1)\b|trắc\s*nghiệm/i.test(rowFullStr)) {
         if (/phần\s*(?:iii|3)\b|trả\s*lời\s*ngắn/i.test(rowFullStr)) {
           currentSection = 'part3';
         } else if (/phần\s*(?:ii|2)\b|đúng[\s\/\-]sai/i.test(rowFullStr)) {

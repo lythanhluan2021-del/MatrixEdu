@@ -291,6 +291,8 @@ function resolveTargetBankFiles(row = {}, metadata = {}) {
   if (hasNetProtocol) {
     targetFiles = ['Chuyên đề 12B. Bài 4- Giao Thức Mạng.docx'];
     forbiddenFiles = ALL_FILES.filter(f => !targetFiles.includes(f));
+    preferredKeywords = ['giao thuc', 'tcp', 'ip', 'ipv4', 'ipv6', 'dia chi ip', 'subnet', 'gateway', 'goi tin'];
+    penaltyKeywords = ['email', 'thu dien tu', 'lua dao', 'ban quyen'];
     return { targetFiles, forbiddenFiles, preferredKeywords, penaltyKeywords };
   }
 
@@ -298,6 +300,8 @@ function resolveTargetBankFiles(row = {}, metadata = {}) {
   if (hasResourceSharing) {
     targetFiles = ['Chuyên đề 12B. Kết nối mạng.docx', 'CD3-Một số thiết bị Mạng thông dụng.docx'];
     forbiddenFiles = ALL_FILES.filter(f => !targetFiles.includes(f));
+    preferredKeywords = ['chia se', 'tai nguyen', 'thu muc', 'may in', 'share', 'workgroup', 'quyen truy cap', 'read'];
+    penaltyKeywords = ['email', 'ten mien', 'igiaoduc', 'giaoduc.vn', 'lua dao'];
     return { targetFiles, forbiddenFiles, preferredKeywords, penaltyKeywords };
   }
 

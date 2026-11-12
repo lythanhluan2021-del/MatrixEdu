@@ -296,7 +296,7 @@ function validateExamProfile(examData) {
     }
 
     if (targetRow) {
-      const alignRes = evaluateAlignment(q, targetRow, meta);
+      const alignRes = evaluateAlignment(q, targetRow, meta, { fromTargetFile: Boolean(q.sourceFile || q.isFromTarget) });
       if (!alignRes.aligned) {
         misalignedCount++;
         issues.push(`${qLabel}: Nội dung không bám sát đơn vị kiến thức "${targetRow.unit || targetRow.topic || ''}" (${alignRes.reason}).`);
