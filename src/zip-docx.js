@@ -293,7 +293,13 @@ function parseDocxBuffer(buffer) {
       }
       if (rowCells.some(c => c.length > 0)) {
         tableRows.push(rowCells);
-        lines.push('| ' + rowCells.join(' | ') + ' |');
+        const rowText = '| ' + rowCells.join(' | ') + ' |';
+        lines.push(rowText);
+        details.push({
+          text: rowText,
+          taggedText: rowText,
+          underlinedParts: []
+        });
       }
     }
     if (tableRows.length > 0) tables.push(tableRows);

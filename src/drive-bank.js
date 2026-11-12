@@ -7,10 +7,12 @@
 
 const fs = require('fs');
 const path = require('path');
+const https = require('https');
 const { parseDocxBuffer } = require('./zip-docx');
 
 const BANK_DIR = path.join(__dirname, '..', 'data', 'google_drive_bank');
 const MAP_FILE = path.join(__dirname, '..', 'data', 'drive_files_map.json');
+const ACTIVE_BANK_FILE = path.join(__dirname, '..', 'data', 'active_drive_bank.json');
 
 // Metadata mapping filename -> Subject / Grade / Topics
 const FILE_TOPIC_CONFIG = {
@@ -194,6 +196,7 @@ function cleanQuestionPrompt(rawPrompt, optA) {
 function cleanOptionText(text) {
   if (!text) return '';
   let str = text.trim();
+  str = str.replace(/^[|\s]+|[|\s]+$/g, '').trim();
 
   // 1. Cắt bỏ tiêu đề phần tiếp theo hoặc dạng câu hỏi tiếp theo ở cuối phương án:
   // - "\n2. Câu trắc nghiệm đúng sai."
@@ -590,10 +593,10 @@ function extractQuestionsFromFile(filename, buffer) {
 
       // Xử lý câu TN nhiều lựa chọn (Part I)
       const options = {};
-      const optRegex = /(?:^|[\t\n\s])([A-D])\s*[\.:]\s*(.*?)(?=(?:[\t\n\s][A-D]\s*[\.:])|$)/gs;
+      const optRegex = /(?:^|[\t\n\s|])([A-D])\s*[\.:]\s*(.*?)(?=(?:[\t\n\s|][A-D]\s*[\.:])|$)/gs;
       let m;
       while ((m = optRegex.exec(normalizedCombined)) !== null) {
-        options[m[1]] = m[2].trim();
+        options[m[1]] = m[2].replace(/^[|\s]+|[|\s]+$/g, '').trim();
       }
 
       if (options['A'] && options['B']) {
@@ -653,6 +656,460 @@ function extractQuestionsFromFile(filename, buffer) {
 }
 
 /**
+ * Trích xuất folder ID từ link Google Drive
+ */
+function extractFolderId(url) {
+  if (!url) return null;
+  const m = url.match(/folders\/([a-zA-Z0-9_-]+)/);
+  if (m) return m[1];
+  const m2 = url.match(/id=([a-zA-Z0-9_-]+)/);
+  if (m2) return m2[1];
+  if (/^[a-zA-Z0-9_-]{20,}$/.test(url.trim())) return url.trim();
+  return null;
+}
+
+function fetchHttps(url) {
+  return new Promise((resolve, reject) => {
+    https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' } }, (res) => {
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+        fetchHttps(res.headers.location).then(resolve).catch(reject);
+        return;
+      }
+      if (res.statusCode !== 200) {
+        reject(new Error(`HTTP ${res.statusCode}`));
+        return;
+      }
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => resolve(data));
+    }).on('error', reject);
+  });
+}
+
+function downloadHttpsBinary(url, destPath) {
+  return new Promise((resolve, reject) => {
+    https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' } }, (res) => {
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+        downloadHttpsBinary(res.headers.location, destPath).then(resolve).catch(reject);
+        return;
+      }
+      if (res.statusCode !== 200) {
+        reject(new Error(`HTTP ${res.statusCode}`));
+        return;
+      }
+      const stream = fs.createWriteStream(destPath);
+      res.pipe(stream);
+      stream.on('finish', () => {
+        stream.close();
+        resolve(destPath);
+      });
+    }).on('error', reject);
+  });
+}
+
+function parseExamPair(deFile, dapAnFile, folderDir) {
+  const deBuf = fs.readFileSync(path.join(folderDir, deFile));
+  const deParsed = parseDocxBuffer(deBuf);
+  const deLines = deParsed.paragraphs;
+
+  let daLines = [];
+  if (dapAnFile && fs.existsSync(path.join(folderDir, dapAnFile))) {
+    const daBuf = fs.readFileSync(path.join(folderDir, dapAnFile));
+    daLines = parseDocxBuffer(daBuf).paragraphs;
+  }
+
+  const mcqAnswers = {};
+  const mcqExpls = {};
+  for (let i = 0; i < daLines.length; i++) {
+    const l = daLines[i];
+    if (l.includes('| 1 | 2 |') || l.includes('| 1 |')) {
+      const nums = l.split('|').map(s => s.trim()).filter(Boolean);
+      if (i + 1 < daLines.length) {
+        const ans = daLines[i + 1].split('|').map(s => s.trim()).filter(Boolean);
+        nums.forEach((n, idx) => {
+          if (ans[idx]) mcqAnswers[parseInt(n, 10)] = ans[idx].toUpperCase();
+        });
+      }
+    }
+    const expMatch = l.match(/[•\-\*]?\s*Câu\s+(\d+)\s*\([^)]*Đáp án\s+([A-D])[^)]*\)\s*:\s*(.*)/i);
+    if (expMatch) {
+      const qn = parseInt(expMatch[1], 10);
+      mcqAnswers[qn] = expMatch[2].toUpperCase();
+      mcqExpls[qn] = expMatch[3].trim();
+    }
+  }
+
+  const tfAnswers = {};
+  let curTfQ = 0;
+  for (let i = 0; i < daLines.length; i++) {
+    const l = daLines[i];
+    const qm = l.match(/Câu\s+(\d+)[:.]/i);
+    if (qm && i > 15) {
+      curTfQ = parseInt(qm[1], 10);
+      tfAnswers[curTfQ] = tfAnswers[curTfQ] || {};
+    }
+    if (l.includes('|') && curTfQ > 0) {
+      const cells = l.split('|').map(s => s.trim()).filter(Boolean);
+      if (cells.length >= 2) {
+        const letm = cells[0].match(/^[a-d]\)/i);
+        if (letm) {
+          const letter = letm[0][0].toLowerCase();
+          const isTrue = /ĐÚNG|DUNG|TRUE/i.test(cells[1]);
+          const exp = cells[2] || '';
+          tfAnswers[curTfQ] = tfAnswers[curTfQ] || {};
+          tfAnswers[curTfQ][letter] = { isTrue, exp };
+        }
+      }
+    }
+  }
+
+  const mcqs = [];
+  const tfs = [];
+  const essays = [];
+
+  let curSection = 'I';
+  let i = 0;
+  while (i < deLines.length) {
+    const l = deLines[i].trim();
+    if (/PHẦN\s*I\b/i.test(l)) curSection = 'I';
+    else if (/PHẦN\s*II\b/i.test(l)) curSection = 'II';
+    else if (/PHẦN\s*III\b|TỰ\s*LUẬN/i.test(l)) curSection = 'III';
+
+    if (curSection === 'I') {
+      const qm = l.match(/^Câu\s+(\d+)[:.]\s*(.*)/i);
+      if (qm) {
+        const qNum = parseInt(qm[1], 10);
+        let prompt = qm[2].trim();
+        const opts = {};
+        i++;
+        while (i < deLines.length && !/^Câu\s+\d+/i.test(deLines[i]) && !/PHẦN\s+[I|V|X]+/i.test(deLines[i])) {
+          const optLine = deLines[i].trim();
+          const optRegex = /(?:^|[\t\n\s|])([A-D])\s*[\.:]\s*(.*?)(?=(?:[\t\n\s|][A-D]\s*[\.:])|$)/g;
+          let m;
+          while ((m = optRegex.exec(optLine)) !== null) {
+            opts[m[1]] = m[2].replace(/^[|\s]+|[|\s]+$/g, '').trim();
+          }
+          i++;
+        }
+        if (opts['A'] && opts['B']) {
+          mcqs.push({
+            id: `MCQ_${deFile}_Q${qNum}`,
+            prompt,
+            options: [
+              cleanOptionText(opts['A'] || ''),
+              cleanOptionText(opts['B'] || ''),
+              cleanOptionText(opts['C'] || ''),
+              cleanOptionText(opts['D'] || '')
+            ],
+            correctAnswer: mcqAnswers[qNum] || 'A',
+            hasUnderlineAnswer: Boolean(mcqAnswers[qNum]),
+            explanation: mcqExpls[qNum] || `Đáp án đúng là ${mcqAnswers[qNum] || 'A'} theo tài liệu chuẩn "${deFile}".`,
+            sourceFile: deFile,
+            topicTitle: 'Tin học 10 (ICT Giữa HK1)',
+            topicCode: 'TIN 10',
+            grade: 10,
+            subject: 'Tin học',
+            level: qNum <= 4 ? 'Biết' : (qNum <= 9 ? 'Hiểu' : 'Vận dụng')
+          });
+        }
+        continue;
+      }
+    }
+
+    if (curSection === 'II') {
+      const qm = l.match(/^Câu\s+(\d+)[:.]/i);
+      if (qm) {
+        const qNum = parseInt(qm[1], 10);
+        i++;
+        let passage = '';
+        const items = [];
+        while (i < deLines.length && !/^Câu\s+\d+/i.test(deLines[i]) && !/PHẦN\s+[I|V|X]+/i.test(deLines[i])) {
+          const tfLine = deLines[i].trim();
+          if (tfLine.startsWith('|')) {
+            const cells = tfLine.split('|').map(s => s.trim()).filter(Boolean);
+            const letm = cells[0]?.match(/^[a-d]\)/i);
+            if (letm) {
+              const letter = letm[0][0].toLowerCase();
+              const text = cells[0].replace(/^[a-d]\)\s*/i, '').trim();
+              const isTrue = tfAnswers[qNum]?.[letter]?.isTrue ?? false;
+              const exp = tfAnswers[qNum]?.[letter]?.exp || '';
+              items.push({ letter, text, isCorrect: isTrue, explanation: exp });
+            }
+          } else if (!passage) {
+            passage = tfLine;
+          }
+          i++;
+        }
+        if (items.length >= 4) {
+          tfs.push({
+            id: `TF_${deFile}_Q${qNum}`,
+            prompt: passage || `Xét tính Đúng/Sai của các nhận định sau:`,
+            items: items.slice(0, 4),
+            sourceFile: deFile,
+            topicTitle: 'Tin học 10 (ICT Giữa HK1)',
+            topicCode: 'TIN 10',
+            grade: 10,
+            subject: 'Tin học',
+            level: 'Hiểu'
+          });
+        }
+        continue;
+      }
+    }
+
+    if (curSection === 'III') {
+      const qm = l.match(/^Câu\s+(\d+)(?:\s*\([^)]+\))?[:.]\s*(.*)/i);
+      if (qm) {
+        const qNum = parseInt(qm[1], 10);
+        let prompt = qm[2].trim();
+        i++;
+        const parts = [];
+        while (i < deLines.length && !/^Câu\s+\d+/i.test(deLines[i]) && !/───\s*HẾT/i.test(deLines[i])) {
+          const el = deLines[i].trim();
+          if (el) parts.push(el);
+          i++;
+        }
+        essays.push({
+          id: `ESSAY_${deFile}_Q${qNum}`,
+          prompt: (prompt ? prompt + '\n' : '') + parts.join('\n'),
+          sourceFile: deFile,
+          topicTitle: 'Tin học 10 (ICT Giữa HK1)',
+          topicCode: 'TIN 10',
+          grade: 10,
+          subject: 'Tin học',
+          level: qNum === 1 ? 'Hiểu' : (qNum === 2 ? 'Vận dụng' : 'Biết')
+        });
+        continue;
+      }
+    }
+
+    i++;
+  }
+
+  return { mcqs, tfs, essays };
+}
+
+function loadQuestionsFromFolder(targetDir) {
+  if (!fs.existsSync(targetDir)) {
+    return { totalQuestions: 0, mcqQuestions: [], tfQuestions: [], saQuestions: [], files: [] };
+  }
+
+  const files = fs.readdirSync(targetDir).filter(f => f.endsWith('.docx'));
+  const pairs = [];
+  const handled = new Set();
+
+  files.forEach(f => {
+    if (/^De_/i.test(f) || /_De_/i.test(f)) {
+      const numMatch = f.match(/(?:De|On_Tap)_(\d+)/i) || f.match(/(\d+)/);
+      if (numMatch) {
+        const num = numMatch[1];
+        const da = files.find(x => /Dap_An/i.test(x) && x.includes(num));
+        if (da) {
+          pairs.push({ de: f, da });
+          handled.add(f);
+          handled.add(da);
+        }
+      }
+    }
+  });
+
+  const allMCQ = [];
+  const allTF = [];
+  const allSA = [];
+
+  pairs.forEach(p => {
+    const res = parseExamPair(p.de, p.da, targetDir);
+    allMCQ.push(...res.mcqs);
+    allTF.push(...res.tfs);
+    allSA.push(...res.essays);
+  });
+
+  files.forEach(f => {
+    if (!handled.has(f)) {
+      try {
+        const buf = fs.readFileSync(path.join(targetDir, f));
+        const res = extractQuestionsFromFile(f, buf);
+        allMCQ.push(...res.mcqQuestions);
+        allTF.push(...res.tfQuestions);
+        allSA.push(...res.saQuestions);
+      } catch (err) {
+        console.error(`[loadQuestionsFromFolder] Error loading standalone ${f}:`, err.message);
+      }
+    }
+  });
+
+  return {
+    totalQuestions: allMCQ.length + allTF.length + allSA.length,
+    mcqQuestions: allMCQ,
+    tfQuestions: allTF,
+    saQuestions: allSA,
+    files
+  };
+}
+
+/**
+ * Đồng bộ toàn bộ tệp từ đường link thư mục chia sẻ công khai Google Drive
+ */
+async function syncGoogleDriveFolder(folderUrl) {
+  const folderId = extractFolderId(folderUrl);
+  if (!folderId) {
+    throw new Error('Đường link Google Drive không hợp lệ. Vui lòng dán link dạng: https://drive.google.com/drive/folders/ID');
+  }
+
+  const targetDir = path.join(BANK_DIR, folderId);
+  if (!fs.existsSync(targetDir)) fs.mkdirSync(targetDir, { recursive: true });
+
+  let folderName = 'Ngân hàng câu hỏi Google Drive';
+  try {
+    const html = await fetchHttps(`https://drive.google.com/drive/folders/${folderId}`);
+    const titleMatch = html.match(/<title>([^<]+)<\/title>/i);
+    if (titleMatch) {
+      folderName = titleMatch[1].replace(/\s*-\s*Google Drive\s*$/i, '').trim();
+    }
+
+    const fileRegex = /aria-label="([^"]+\.docx)[^"]*"[^>]*ssk='[^:]+:[^:]+:([a-zA-Z0-9_-]+)/g;
+    const filesFound = [];
+    let m;
+    while ((m = fileRegex.exec(html)) !== null) {
+      const cleanId = m[2].replace(/-\d+-\d+$/, '');
+      filesFound.push({ fileName: m[1], fileId: cleanId });
+    }
+
+    for (const f of filesFound) {
+      const destPath = path.join(targetDir, f.fileName);
+      if (!fs.existsSync(destPath) || fs.statSync(destPath).size === 0) {
+        try {
+          await downloadHttpsBinary(`https://drive.google.com/uc?export=download&id=${f.fileId}`, destPath);
+        } catch (err) {
+          console.warn(`[syncGoogleDriveFolder] Failed downloading ${f.fileName}:`, err.message);
+        }
+      }
+    }
+  } catch (netErr) {
+    console.warn(`[syncGoogleDriveFolder] Network fetch warning:`, netErr.message);
+  }
+
+  const bankData = loadQuestionsFromFolder(targetDir);
+  const totalUnderline = bankData.mcqQuestions.filter(q => q.hasUnderlineAnswer).length;
+  const underlinePct = bankData.mcqQuestions.length > 0
+    ? Math.round((totalUnderline / bankData.mcqQuestions.length) * 1000) / 10
+    : 100;
+
+  const fileDetails = (bankData.files || []).map(f => {
+    const mcq = bankData.mcqQuestions.filter(q => q.sourceFile === f).length;
+    const tf = bankData.tfQuestions.filter(q => q.sourceFile === f).length;
+    const sa = bankData.saQuestions.filter(q => q.sourceFile === f).length;
+    const under = bankData.mcqQuestions.filter(q => q.sourceFile === f && q.hasUnderlineAnswer).length;
+    return {
+      fileName: f,
+      mcqCount: mcq,
+      tfCount: tf,
+      saCount: sa,
+      total: mcq + tf + sa,
+      underlineCount: under
+    };
+  });
+
+  const activeBankState = {
+    folderId,
+    folderUrl: `https://drive.google.com/drive/folders/${folderId}?usp=sharing`,
+    folderName,
+    totalQuestions: bankData.totalQuestions,
+    mcqCount: bankData.mcqQuestions.length,
+    tfCount: bankData.tfQuestions.length,
+    saCount: bankData.saQuestions.length,
+    filesCount: bankData.files.length,
+    files: bankData.files,
+    fileDetails,
+    underlineCount: totalUnderline,
+    underlinePercent: underlinePct,
+    updatedAt: new Date().toISOString()
+  };
+
+  fs.writeFileSync(ACTIVE_BANK_FILE, JSON.stringify(activeBankState, null, 2));
+
+  cachedBank = {
+    ...bankData,
+    folderId,
+    folderUrl: activeBankState.folderUrl,
+    folderName,
+    fileDetails,
+    underlineCount: totalUnderline,
+    underlinePercent: underlinePct,
+    updatedAt: activeBankState.updatedAt
+  };
+
+  return {
+    ok: true,
+    message: `Đã kết nối và đồng bộ thành công ${bankData.totalQuestions} câu hỏi từ ${bankData.files.length} tệp Google Drive (${folderName}).`,
+    ...activeBankState
+  };
+}
+
+function getDriveBankStatus() {
+  if (fs.existsSync(ACTIVE_BANK_FILE)) {
+    try {
+      const activeState = JSON.parse(fs.readFileSync(ACTIVE_BANK_FILE, 'utf8'));
+      const targetDir = path.join(BANK_DIR, activeState.folderId);
+      if (fs.existsSync(targetDir)) {
+        const bankData = loadDriveQuestionBank();
+        return {
+          ok: true,
+          status: 'connected',
+          folderId: activeState.folderId,
+          folderUrl: activeState.folderUrl,
+          folderName: activeState.folderName || 'Ngân hàng câu hỏi Google Drive',
+          totalQuestions: bankData.totalQuestions,
+          mcqCount: bankData.mcqQuestions.length,
+          tfCount: bankData.tfQuestions.length,
+          saCount: bankData.saQuestions.length,
+          filesCount: bankData.files.length,
+          files: bankData.files,
+          fileDetails: activeState.fileDetails || [],
+          underlineCount: activeState.underlineCount || bankData.mcqQuestions.length,
+          underlinePercent: activeState.underlinePercent || 100,
+          updatedAt: activeState.updatedAt || new Date().toISOString()
+        };
+      }
+    } catch (_) {}
+  }
+
+  const bank = loadDriveQuestionBank();
+  const totalUnderline = bank.mcqQuestions.filter(q => q.hasUnderlineAnswer).length;
+  const fileDetails = (bank.files || []).map(f => {
+    const mcq = bank.mcqQuestions.filter(q => q.sourceFile === f).length;
+    const tf = bank.tfQuestions.filter(q => q.sourceFile === f).length;
+    const sa = bank.saQuestions.filter(q => q.sourceFile === f).length;
+    const underline = bank.mcqQuestions.filter(q => q.sourceFile === f && q.hasUnderlineAnswer).length;
+    return {
+      fileName: f,
+      mcqCount: mcq,
+      tfCount: tf,
+      saCount: sa,
+      total: mcq + tf + sa,
+      underlineCount: underline
+    };
+  });
+  return {
+    ok: true,
+    status: 'connected',
+    folderId: '1wcSRCsZ9wzjO9ypblF_9L4si9kPm_uop',
+    folderUrl: 'https://drive.google.com/drive/folders/1wcSRCsZ9wzjO9ypblF_9L4si9kPm_uop?usp=sharing',
+    folderName: 'Ngân hàng câu hỏi Tin học THPT (Google Drive)',
+    totalQuestions: bank.totalQuestions,
+    mcqCount: bank.mcqQuestions.length,
+    tfCount: bank.tfQuestions.length,
+    saCount: bank.saQuestions.length,
+    filesCount: bank.files.length,
+    files: bank.files,
+    fileDetails,
+    underlineCount: totalUnderline,
+    underlinePercent: Math.round((totalUnderline / Math.max(1, bank.mcqQuestions.length)) * 1000) / 10,
+    updatedAt: bank.updatedAt
+  };
+}
+
+/**
  * Khởi tạo hoặc tải toàn bộ Ngân hàng câu hỏi từ các file Google Drive
  */
 function loadDriveQuestionBank(forceReload = false) {
@@ -660,44 +1117,37 @@ function loadDriveQuestionBank(forceReload = false) {
     return cachedBank;
   }
 
-  if (!fs.existsSync(BANK_DIR)) {
-    return {
-      totalQuestions: 0,
-      mcqQuestions: [],
-      tfQuestions: [],
-      saQuestions: [],
-      files: [],
-      stats: {}
-    };
-  }
-
-  const files = fs.readdirSync(BANK_DIR).filter(f => f.endsWith('.docx'));
-  const allMCQ = [];
-  const allTF = [];
-  const allSA = [];
-
-  for (const file of files) {
+  let activeDir = BANK_DIR;
+  let activeState = null;
+  if (fs.existsSync(ACTIVE_BANK_FILE)) {
     try {
-      const buf = fs.readFileSync(path.join(BANK_DIR, file));
-      const res = extractQuestionsFromFile(file, buf);
-      allMCQ.push(...res.mcqQuestions);
-      allTF.push(...res.tfQuestions);
-      allSA.push(...res.saQuestions);
-    } catch (err) {
-      console.error(`[loadDriveQuestionBank] Error loading ${file}:`, err.message);
-    }
+      activeState = JSON.parse(fs.readFileSync(ACTIVE_BANK_FILE, 'utf8'));
+      if (activeState && activeState.folderId) {
+        const customDir = path.join(BANK_DIR, activeState.folderId);
+        if (fs.existsSync(customDir) && fs.readdirSync(customDir).filter(f => f.endsWith('.docx')).length > 0) {
+          activeDir = customDir;
+        }
+      }
+    } catch (_) {}
   }
+
+  const bankData = loadQuestionsFromFolder(activeDir);
+  const totalUnderline = bankData.mcqQuestions.filter(q => q.hasUnderlineAnswer).length;
+  const underlinePct = bankData.mcqQuestions.length > 0 
+    ? Math.round((totalUnderline / bankData.mcqQuestions.length) * 1000) / 10 
+    : 100;
 
   cachedBank = {
-    totalQuestions: allMCQ.length + allTF.length + allSA.length,
-    mcqQuestions: allMCQ,
-    tfQuestions: allTF,
-    saQuestions: allSA,
-    files,
-    updatedAt: new Date().toISOString()
+    ...bankData,
+    folderId: activeState?.folderId || '1wcSRCsZ9wzjO9ypblF_9L4si9kPm_uop',
+    folderUrl: activeState?.folderUrl || 'https://drive.google.com/drive/folders/1wcSRCsZ9wzjO9ypblF_9L4si9kPm_uop?usp=sharing',
+    folderName: activeState?.folderName || 'Ngân hàng câu hỏi Tin học THPT (Google Drive)',
+    underlineCount: totalUnderline,
+    underlinePercent: underlinePct,
+    updatedAt: activeState?.updatedAt || new Date().toISOString()
   };
 
-  console.log(`[DriveBank] Loaded ${cachedBank.totalQuestions} questions (${allMCQ.length} MCQ, ${allTF.length} TF, ${allSA.length} SA) from ${files.length} Google Drive files.`);
+  console.log(`[DriveBank] Loaded ${cachedBank.totalQuestions} questions (${cachedBank.mcqQuestions.length} MCQ, ${cachedBank.tfQuestions.length} TF, ${cachedBank.saQuestions.length} SA) from ${cachedBank.files.length} files in ${activeDir}.`);
   return cachedBank;
 }
 
@@ -737,7 +1187,26 @@ function calculateRelevanceScore(question, topicText, subtopicText) {
     { phrase: 'html', weight: 35 },
     { phrase: 'co so du lieu', weight: 35 },
     { phrase: 'lap trinh', weight: 35 },
-    { phrase: 'python', weight: 35 }
+    { phrase: 'python', weight: 35 },
+    { phrase: 'thong tin va xu li thong tin', weight: 35 },
+    { phrase: 'du lieu', weight: 30 },
+    { phrase: 'thiet bi thong minh', weight: 35 },
+    { phrase: 'an toan tren khong gian mang', weight: 35 },
+    { phrase: 'phan mem doc hai', weight: 35 },
+    { phrase: 'trojan', weight: 30 },
+    { phrase: 'virus', weight: 30 },
+    { phrase: 'worm', weight: 30 },
+    { phrase: 'thu rac', weight: 30 },
+    { phrase: 'tin nhan rac', weight: 30 },
+    { phrase: 'bat nat tren mang', weight: 35 },
+    { phrase: 'khai thac tai nguyen', weight: 35 },
+    { phrase: 'dien toan dam may', weight: 35 },
+    { phrase: 'cloud computing', weight: 35 },
+    { phrase: 'dich vu internet', weight: 30 },
+    { phrase: 'ban quyen', weight: 35 },
+    { phrase: 'quyen tac gia', weight: 35 },
+    { phrase: 'quyen nhan than', weight: 35 },
+    { phrase: 'quyen tai san', weight: 35 }
   ];
 
   for (const kp of keyPhrases) {
@@ -875,5 +1344,8 @@ module.exports = {
   inferCognitiveLevel,
   resolveTargetBankFiles,
   cleanQuestionPrompt,
-  cleanOptionText
+  cleanOptionText,
+  syncGoogleDriveFolder,
+  getDriveBankStatus,
+  extractFolderId
 };

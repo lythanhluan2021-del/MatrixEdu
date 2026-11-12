@@ -38,7 +38,7 @@ const {
 const { extractDocumentContent } = require('./src/doc-parser');
 const { computeMatrixStatistics, validateExamProfile, generateShuffledVariants } = require('./src/qa-validator');
 const { SAMPLE_DOCUMENTS } = require('./src/sample-materials');
-const { loadDriveQuestionBank } = require('./src/drive-bank');
+const { loadDriveQuestionBank, syncGoogleDriveFolder, getDriveBankStatus } = require('./src/drive-bank');
 const {
   loadAiConfig,
   saveAiConfig,
@@ -324,38 +324,8 @@ const requestHandler = async (req, res) => {
 
     // 3c. API Quản lý & Xem Ngân hàng câu hỏi Google Drive (Bóc tách câu hỏi, Zero Hallucination)
     if (req.method === 'GET' && pathname === '/api/drive-bank/status') {
-      const bank = loadDriveQuestionBank();
-      const fileDetails = (bank.files || []).map(f => {
-        const mcq = bank.mcqQuestions.filter(q => q.sourceFile === f).length;
-        const tf = bank.tfQuestions.filter(q => q.sourceFile === f).length;
-        const sa = bank.saQuestions.filter(q => q.sourceFile === f).length;
-        const underline = bank.mcqQuestions.filter(q => q.sourceFile === f && q.hasUnderlineAnswer).length;
-        return {
-          fileName: f,
-          mcqCount: mcq,
-          tfCount: tf,
-          saCount: sa,
-          total: mcq + tf + sa,
-          underlineCount: underline
-        };
-      });
-      const totalUnderline = bank.mcqQuestions.filter(q => q.hasUnderlineAnswer).length;
-      sendJson(res, 200, {
-        ok: true,
-        status: 'connected',
-        folderUrl: 'https://drive.google.com/drive/folders/1wcSRCsZ9wzjO9ypblF_9L4si9kPm_uop?usp=sharing',
-        folderName: 'Ngân hàng câu hỏi Tin học THPT (Google Drive)',
-        totalQuestions: bank.totalQuestions,
-        mcqCount: bank.mcqQuestions.length,
-        tfCount: bank.tfQuestions.length,
-        saCount: bank.saQuestions.length,
-        filesCount: bank.files.length,
-        files: bank.files,
-        fileDetails,
-        underlineCount: totalUnderline,
-        underlinePercent: Math.round((totalUnderline / Math.max(1, bank.mcqQuestions.length)) * 1000) / 10,
-        updatedAt: bank.updatedAt
-      });
+      const statusData = getDriveBankStatus();
+      sendJson(res, 200, statusData);
       return;
     }
 
@@ -363,7 +333,7 @@ const requestHandler = async (req, res) => {
       const bank = loadDriveQuestionBank();
       const type = parsedUrl.searchParams.get('type') || 'all';
       const file = parsedUrl.searchParams.get('file') || '';
-      const limit = Math.min(100, Math.max(1, parseInt(parsedUrl.searchParams.get('limit') || '50', 10)));
+      const limit = Math.min(500, Math.max(1, parseInt(parsedUrl.searchParams.get('limit') || '200', 10)));
       
       let list = [];
       if (type === 'mcq') list = bank.mcqQuestions;
@@ -390,38 +360,14 @@ const requestHandler = async (req, res) => {
         if (raw) bodyData = JSON.parse(raw);
       } catch (_) {}
 
-      const bank = loadDriveQuestionBank(true);
-      const fileDetails = (bank.files || []).map(f => {
-        const mcq = bank.mcqQuestions.filter(q => q.sourceFile === f).length;
-        const tf = bank.tfQuestions.filter(q => q.sourceFile === f).length;
-        const sa = bank.saQuestions.filter(q => q.sourceFile === f).length;
-        const underline = bank.mcqQuestions.filter(q => q.sourceFile === f && q.hasUnderlineAnswer).length;
-        return {
-          fileName: f,
-          mcqCount: mcq,
-          tfCount: tf,
-          saCount: sa,
-          total: mcq + tf + sa,
-          underlineCount: underline
-        };
-      });
-      const totalUnderline = bank.mcqQuestions.filter(q => q.hasUnderlineAnswer).length;
-      sendJson(res, 200, {
-        ok: true,
-        message: `Đã kết nối và đồng bộ thành công ${bank.totalQuestions} câu hỏi từ ${bank.files.length} tệp Google Drive.`,
-        folderUrl: bodyData.folderUrl || 'https://drive.google.com/drive/folders/1wcSRCsZ9wzjO9ypblF_9L4si9kPm_uop?usp=sharing',
-        folderName: 'Ngân hàng câu hỏi Tin học THPT (Google Drive)',
-        totalQuestions: bank.totalQuestions,
-        mcqCount: bank.mcqQuestions.length,
-        tfCount: bank.tfQuestions.length,
-        saCount: bank.saQuestions.length,
-        filesCount: bank.files.length,
-        files: bank.files,
-        fileDetails,
-        underlineCount: totalUnderline,
-        underlinePercent: Math.round((totalUnderline / Math.max(1, bank.mcqQuestions.length)) * 1000) / 10,
-        updatedAt: bank.updatedAt
-      });
+      const folderUrl = (bodyData.folderUrl || '').trim();
+      try {
+        const result = await syncGoogleDriveFolder(folderUrl);
+        sendJson(res, 200, result);
+      } catch (err) {
+        console.error('[POST /api/drive-bank/sync] Error:', err.message);
+        sendJson(res, 400, { ok: false, message: 'Lỗi đồng bộ thư mục Google Drive: ' + err.message });
+      }
       return;
     }
 

@@ -1557,9 +1557,9 @@
           </div>
         </div>
         <div class="header-actions">
-          <button class="btn btn-ghost-light btn-sm" onclick="openDriveBankModal()"
+          <button id="header-drive-bank-btn" class="btn btn-ghost-light btn-sm" onclick="openDriveBankModal()"
             style="border-color:#38bdf8; background:rgba(56,189,248,0.2);"
-            title="Ngân hàng câu hỏi bóc tách từ Google Drive">☁️ Ngân hàng Google Drive (804 câu)</button>
+            title="Ngân hàng câu hỏi bóc tách từ Google Drive">☁️ Ngân hàng Google Drive</button>
           <span id="ai-status-badge" class="badge badge-teal">⚡ Bộ máy Tri thức & AI Sẵn sàng</span>
           <span id="session-autosave-badge"
             style="font-size:0.72rem; color:#94a3b8; display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:4px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);"
@@ -1886,7 +1886,7 @@
                     </label>
                     <div style="display:flex; gap:8px; margin-bottom:10px;">
                       <input type="text" id="gdrive-folder-url"
-                        value="https://drive.google.com/drive/folders/1wcSRCsZ9wzjO9ypblF_9L4si9kPm_uop?usp=sharing"
+                        value="https://drive.google.com/drive/folders/1MbQqovIMutXQP-qDRqehjAeRZzVqojF-?usp=sharing"
                         placeholder="https://drive.google.com/drive/folders/..."
                         style="flex:1; border:1px solid #7dd3fc; border-radius:6px; padding:7px 10px; font-size:0.86rem; background:#fff;" />
                       <button class="btn btn-primary btn-sm" onclick="connectAndScanGoogleDriveBank()"
@@ -2120,7 +2120,7 @@
                   <span style="font-size:1.3rem;">🛡️</span>
                   <div>
                     <strong>Bảo chứng Dữ liệu (Không bịa đặt):</strong> Bộ đề được hệ thống tự động bóc tách từ
-                    <strong>Ngân hàng Google Drive của Thầy/Cô (804 câu hỏi gốc)</strong>. Câu hỏi đúng chuẩn chuyên
+                    <strong id="step4-drive-bank-badge">Ngân hàng Google Drive của Thầy/Cô (162 câu hỏi gốc)</strong>. Câu hỏi đúng chuẩn chuyên
                     môn, khớp 100% từng đơn vị kiến thức và mức độ trong Ma trận.
                   </div>
                 </div>
@@ -3661,10 +3661,8 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         <div style="display:flex; align-items:center; gap:8px;">
           <span style="font-size:1.4rem;">☁️</span>
           <div>
-            <div class="card-title" style="color:#fff; font-size:1.08rem;">NGÂN HÀNG CÂU HỎI GOOGLE DRIVE (TIN HỌC THPT)
-            </div>
-            <div style="font-size:0.78rem; opacity:0.9;">Bóc tách từ thư mục Google Drive:
-              1wcSRCsZ9wzjO9ypblF_9L4si9kPm_uop</div>
+            <div class="card-title" id="modal-drive-bank-title" style="color:#fff; font-size:1.08rem;">NGÂN HÀNG CÂU HỎI GOOGLE DRIVE (TIN HỌC THPT)</div>
+            <div id="modal-drive-bank-subtitle" style="font-size:0.78rem; opacity:0.9;">Bóc tách từ thư mục Google Drive: 1MbQqovIMutXQP-qDRqehjAeRZzVqojF-</div>
           </div>
         </div>
         <button class="btn btn-ghost-light btn-sm" onclick="closeModal('modalDriveBank')">✕ Đóng</button>
@@ -6918,7 +6916,11 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
     // ========================================================================
     async function connectAndScanGoogleDriveBank() {
       const urlInput = document.getElementById('gdrive-folder-url');
-      const folderUrl = (urlInput?.value || '').trim() || 'https://drive.google.com/drive/folders/1wcSRCsZ9wzjO9ypblF_9L4si9kPm_uop?usp=sharing';
+      let folderUrl = (urlInput?.value || '').trim();
+      if (!folderUrl) {
+        folderUrl = localStorage.getItem('gdrive_folder_url') || 'https://drive.google.com/drive/folders/1MbQqovIMutXQP-qDRqehjAeRZzVqojF-?usp=sharing';
+        if (urlInput) urlInput.value = folderUrl;
+      }
 
       const reportBox = document.getElementById('gdrive-scan-report');
       if (reportBox) {
@@ -6945,8 +6947,10 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
           return;
         }
 
+        try { localStorage.setItem('gdrive_folder_url', folderUrl); } catch (_) {}
+        globalDriveBankData = null;
         renderDriveBankReport(data);
-        showToast('✅ Đã kết nối và phân tích chính xác Ngân hàng câu hỏi từ Google Drive!', 'success');
+        showToast(data.message || '✅ Đã kết nối và phân tích chính xác Ngân hàng câu hỏi từ Google Drive!', 'success');
       } catch (err) {
         if (reportBox) {
           reportBox.innerHTML = `<div class="alert alert-danger" style="margin:0;">Lỗi kết nối mạng: ${escapeHtml(err.message)}</div>`;
@@ -6954,24 +6958,48 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       }
     }
 
+    async function initDriveBankStatus() {
+      try {
+        const res = await fetch('/api/drive-bank/status');
+        const data = await res.json();
+        if (data && data.ok) {
+          const urlInput = document.getElementById('gdrive-folder-url');
+          if (urlInput && data.folderUrl) {
+            urlInput.value = data.folderUrl;
+          }
+          renderDriveBankReport(data);
+          return;
+        }
+      } catch (_) {}
+      await connectAndScanGoogleDriveBank();
+    }
+
     function renderDriveBankReport(data) {
       const reportBox = document.getElementById('gdrive-scan-report');
-      if (!reportBox) return;
 
-      const total = data.totalQuestions || 1108;
-      const mcq = data.mcqCount || 929;
-      const tf = data.tfCount || 117;
-      const sa = data.saCount || 62;
-      const files = data.filesCount || 10;
-      const underlinePts = data.underlinePercent || 96.4;
-      const folderUrl = data.folderUrl || 'https://drive.google.com/drive/folders/1wcSRCsZ9wzjO9ypblF_9L4si9kPm_uop?usp=sharing';
+      const total = data.totalQuestions || 0;
+      const mcq = data.mcqCount || 0;
+      const tf = data.tfCount || 0;
+      const sa = data.saCount || 0;
+      const files = data.filesCount || (data.files ? data.files.length : 0);
+      const underlinePts = data.underlinePercent !== undefined ? data.underlinePercent : 100;
+      const folderUrl = data.folderUrl || (document.getElementById('gdrive-folder-url')?.value) || 'https://drive.google.com/drive/folders/1MbQqovIMutXQP-qDRqehjAeRZzVqojF-?usp=sharing';
+      const folderName = data.folderName || 'Ngân hàng câu hỏi Google Drive';
+
+      // Cập nhật header button & step 4 badge
+      const headerBtn = document.getElementById('header-drive-bank-btn');
+      if (headerBtn) headerBtn.textContent = `☁️ Ngân hàng Google Drive (${total} câu)`;
+      const step4Badge = document.getElementById('step4-drive-bank-badge');
+      if (step4Badge) step4Badge.textContent = `Ngân hàng Google Drive của Thầy/Cô (${total} câu hỏi gốc - ${folderName})`;
+
+      if (!reportBox) return;
 
       reportBox.innerHTML = `
         <div style="font-size:0.86rem; color:#0f172a;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid #e0f2fe; padding-bottom:6px;">
             <div>
               <span style="font-weight:700; color:#0369a1; font-size:0.92rem;">📁 Thư mục Google Drive:</span>
-              <span style="font-weight:600; color:#0f172a; font-size:0.9rem;"> Ngân hàng câu hỏi Tin học THPT</span>
+              <span style="font-weight:600; color:#0f172a; font-size:0.9rem;"> ${escapeHtml(folderName)}</span>
             </div>
             <span class="badge" style="background:#10b981; color:#fff; font-size:0.75rem;">✔ ĐỒNG BỘ ${files} TỆP WORD</span>
           </div>
@@ -6980,7 +7008,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
             <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:6px 8px; text-align:center;">
               <div style="font-size:0.72rem; color:#64748b; font-weight:700;">PHẦN I: TRẮC NGHIỆM (MCQ)</div>
               <div style="font-size:1.18rem; font-weight:800; color:#2563eb;">${mcq} <span style="font-size:0.72rem; font-weight:500;">câu</span></div>
-              <div style="font-size:0.72rem; color:#16a34a; font-weight:600;">${underlinePts}% có đáp án gạch chân</div>
+              <div style="font-size:0.72rem; color:#16a34a; font-weight:600;">${underlinePts}% có đáp án chuẩn</div>
             </div>
             <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:6px 8px; text-align:center;">
               <div style="font-size:0.72rem; color:#64748b; font-weight:700;">PHẦN II: ĐÚNG / SAI (TF)</div>
@@ -6990,7 +7018,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
             <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:6px 8px; text-align:center;">
               <div style="font-size:0.72rem; color:#64748b; font-weight:700;">PHẦN III: TL NGẮN / TỰ LUẬN</div>
               <div style="font-size:1.18rem; font-weight:800; color:#d97706;">${sa} <span style="font-size:0.72rem; font-weight:500;">câu</span></div>
-              <div style="font-size:0.72rem; color:#b45309; font-weight:600;">Cấu hình mạng & Tình huống</div>
+              <div style="font-size:0.72rem; color:#b45309; font-weight:600;">Bao gồm Tự luận & TL Ngắn</div>
             </div>
           </div>
 
@@ -7038,12 +7066,16 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         if (data.ok && Array.isArray(data.files)) {
           const select = document.getElementById('drive-bank-file-filter');
           if (select) {
-            select.innerHTML = '<option value="">-- Tất cả 10 Chuyên đề Google Drive --</option>' +
+            select.innerHTML = `<option value="">-- Tất cả ${data.files.length} Tệp / Chuyên đề Google Drive --</option>` +
               data.files.map(f => `<option value="${escapeHtml(f)}">${escapeHtml(f)}</option>`).join('');
           }
+          const modalTitle = document.getElementById('modal-drive-bank-title');
+          if (modalTitle) modalTitle.textContent = `NGÂN HÀNG CÂU HỎI GOOGLE DRIVE (${(data.folderName || 'TIN HỌC THPT').toUpperCase()})`;
+          const modalSub = document.getElementById('modal-drive-bank-subtitle');
+          if (modalSub) modalSub.textContent = `Bóc tách từ thư mục: ${data.folderName || 'Google Drive'} (${data.folderId || ''}) — ${data.totalQuestions || 0} câu`;
         }
 
-        const qRes = await fetch('/api/drive-bank/questions?limit=100');
+        const qRes = await fetch('/api/drive-bank/questions?limit=200');
         const qData = await qRes.json();
         if (qData.ok) {
           globalDriveBankData = qData.questions || [];
@@ -7059,12 +7091,21 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
     async function syncDriveBankNow() {
       showToast('Đang đồng bộ lại dữ liệu từ Google Drive...', 'info');
       try {
-        const res = await fetch('/api/drive-bank/sync', { method: 'POST' });
+        const urlInput = document.getElementById('gdrive-folder-url');
+        const folderUrl = (urlInput?.value || '').trim();
+        const res = await fetch('/api/drive-bank/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ folderUrl })
+        });
         const data = await res.json();
         if (data.ok) {
           showToast(data.message || 'Đã đồng bộ thành công!', 'success');
+          renderDriveBankReport(data);
           globalDriveBankData = null;
           await loadDriveBankData();
+        } else {
+          showToast(data.message || 'Lỗi đồng bộ thư mục!', 'error');
         }
       } catch (err) {
         showToast('Lỗi đồng bộ: ' + err.message, 'error');
@@ -7159,7 +7200,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
           </div>`;
 
           // Tự động kết nối và hiển thị báo cáo phân tích Ngân hàng Google Drive
-          await connectAndScanGoogleDriveBank();
+          await initDriveBankStatus();
 
           const targetFile = wfData.files.find(f => f.toUpperCase().includes('MA TRAN')) || wfData.files[0];
           if (targetFile) {

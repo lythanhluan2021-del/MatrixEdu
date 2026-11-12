@@ -56,3 +56,4 @@ assert.ok(
 console.log('  ✅ Test 3 Passed: saveMatrixFromModal preserves row metadata and navigates to Step 2!');
 
 console.log('\n🎉 ALL ESSAY MATRIX DISPLAY TESTS PASSED 100%!');
+
