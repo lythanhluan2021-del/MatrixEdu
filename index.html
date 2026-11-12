@@ -2031,6 +2031,24 @@
 
               <div id="matrix-summary-banner" class="alert alert-success" style="margin-bottom:12px;"></div>
 
+              <!-- THANH CHUYỂN ĐỔI CHẾ ĐỘ XEM MA TRẬN BƯỚC 2 -->
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:8px 12px;">
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                  <span style="font-weight:700; color:#1e3a8a; font-size:12.5px;">Chế độ hiển thị:</span>
+                  <button type="button" id="btn-mode-matrix-standard" class="btn btn-primary btn-sm" onclick="setStep2MatrixMode('standard')" style="font-weight:700; padding:5px 14px;">
+                    📋 Bảng Ma trận Chuẩn Bộ GD&ĐT (Khớp 100% File gốc)
+                  </button>
+                  <button type="button" id="btn-mode-matrix-editor" class="btn btn-outline btn-sm" onclick="setStep2MatrixMode('editor')" style="font-weight:600; padding:5px 14px; background:#fff;">
+                    ✏️ Chế độ Chỉnh sửa ô & Điểm số
+                  </button>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <button type="button" class="btn btn-outline btn-sm" onclick="openMatrixFullscreenModal()" style="font-size:11.5px; padding:4px 10px; color:#0369a1; border-color:#7dd3fc; background:#fff; font-weight:600;">
+                    🔍 Mở Modal Rà soát & Sửa
+                  </button>
+                </div>
+              </div>
+
               <!-- BẢNG MA TRẬN CHUẨN ĐẶC TẢ BỘ GD&ĐT -->
               <div class="matrix-table-wrap col-tln-hidden" id="wrapTableMaTran">
                 <table class="matrix-table" id="matrix-table">
@@ -4029,6 +4047,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
 
         renderUnitsTable();
         renderDetectedMatrixPreview(data.fileName, appState.matrix);
+        currentStep2MatrixMode = 'standard';
         renderMatrixTable();
         renderSpecTable();
 
@@ -4707,12 +4726,41 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       if (typeof scheduleAutoSave === 'function') scheduleAutoSave();
     }
 
+    let currentStep2MatrixMode = 'standard';
+
+    function setStep2MatrixMode(mode) {
+      currentStep2MatrixMode = mode;
+      renderMatrixTable();
+    }
+
     function renderMatrixTable() {
       const matrix = appState.matrix || {};
       const levels = matrix.levels || getLevelsForCurrentMetadata();
       const rows = matrix.rows || [];
       const pr = matrix.pointRules || { MCQ: 0.25, TF: 0.25, SA: 0.5, ESSAY: 1.0 };
       const showTLN = isTLNVisible();
+      const hasEssay = rows.some(r => Object.values(r.counts?.ESSAY || {}).some(v => Number(v) > 0));
+
+      // Cập nhật trạng thái nút chuyển đổi chế độ xem
+      const btnStd = document.getElementById('btn-mode-matrix-standard');
+      const btnEdit = document.getElementById('btn-mode-matrix-editor');
+      if (btnStd && btnEdit) {
+        if (currentStep2MatrixMode === 'standard') {
+          btnStd.className = 'btn btn-primary btn-sm';
+          btnStd.style.fontWeight = '700';
+          btnStd.style.background = '';
+          btnEdit.className = 'btn btn-outline btn-sm';
+          btnEdit.style.fontWeight = '600';
+          btnEdit.style.background = '#fff';
+        } else {
+          btnStd.className = 'btn btn-outline btn-sm';
+          btnStd.style.fontWeight = '600';
+          btnStd.style.background = '#fff';
+          btnEdit.className = 'btn btn-primary btn-sm';
+          btnEdit.style.fontWeight = '700';
+          btnEdit.style.background = '';
+        }
+      }
 
       // Đồng bộ checkbox TLN
       const chk = document.getElementById('chkShowTLN');
@@ -4725,218 +4773,372 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
 
       tuDongDienMaCau();
 
-      // 1. RENDER HEADER 3 TẦNG CHUẨN CÔNG VĂN 7991 (PHOCAP STYLE)
       const thead = document.getElementById('matrix-thead');
-      thead.innerHTML = `
-        <tr>
-          <th rowspan="3" style="width:14%; background:#1e3a8a;">Chương / Chủ đề</th>
-          <th rowspan="3" style="width:18%; background:#1e3a8a;">Nội dung / Đơn vị kiến thức</th>
-          <th colspan="${showTLN ? '12' : '9'}" id="thGroupSoCau" style="background:#0f172a;">Số câu hỏi ở các mức độ đánh giá</th>
-          <th colspan="3" rowspan="2" class="th-sub" style="background:#1e293b; vertical-align:middle; font-size:12px;">Tổng câu</th>
-          <th rowspan="3" style="width:6%; background:#1e3a8a;">Điểm<br>bài</th>
-          <th rowspan="3" style="width:4%; background:#1e3a8a;">Xóa</th>
-        </tr>
-        <tr>
-          <th colspan="3" class="th-sub" style="background:#1d4ed8;">TNKQ (Nhiều lựa chọn)</th>
-          <th colspan="3" class="th-sub" style="background:#7e22ce;">Đúng - Sai (ý)</th>
-          <th colspan="3" class="th-sub col-tln" style="background:#b45309;">TL Ngắn</th>
-          <th colspan="3" class="th-sub" style="background:#047857;">Tự luận (câu)</th>
-        </tr>
-        <tr>
-          <th class="th-level col-tn" style="width:3.8%; background:#2563eb;">${levels[0]}</th>
-          <th class="th-level col-tn" style="width:3.8%; background:#2563eb;">${levels[1]}</th>
-          <th class="th-level col-tn" style="width:3.8%; background:#2563eb;">${levels[2]}</th>
+      const tbody = document.getElementById('matrix-tbody');
+      const tfoot = document.getElementById('matrix-tfoot');
 
-          <th class="th-level col-ds" style="width:3.8%; background:#9333ea;">${levels[0]}</th>
-          <th class="th-level col-ds" style="width:3.8%; background:#9333ea;">${levels[1]}</th>
-          <th class="th-level col-ds" style="width:3.8%; background:#9333ea;">${levels[2]}</th>
+      // TÍNH TOÁN CÁC THỐNG KÊ TOÀN MA TRẬN
+      let totalMcqB = 0, totalMcqH = 0, totalMcqVD = 0;
+      let totalTfB = 0, totalTfH = 0, totalTfVD = 0;
+      let totalSaB = 0, totalSaH = 0, totalSaVD = 0;
+      let totalEssayB = 0, totalEssayH = 0, totalEssayVD = 0;
+      let totalPts = 0;
+      let levelPoints = [0, 0, 0];
 
-          <th class="th-level col-tln" style="width:3.8%; background:#d97706;">${levels[0]}</th>
-          <th class="th-level col-tln" style="width:3.8%; background:#d97706;">${levels[1]}</th>
-          <th class="th-level col-tln" style="width:3.8%; background:#d97706;">${levels[2]}</th>
-
-          <th class="th-level" style="width:3.8%; background:#059669;">${levels[0]}</th>
-          <th class="th-level" style="width:3.8%; background:#059669;">${levels[1]}</th>
-          <th class="th-level" style="width:3.8%; background:#059669;">${levels[2]}</th>
-
-          <th class="th-level" style="width:3.5%; background:#475569; color:#fff;">${levels[0]}</th>
-          <th class="th-level" style="width:3.5%; background:#475569; color:#fff;">${levels[1]}</th>
-          <th class="th-level" style="width:3.5%; background:#475569; color:#fff;">${levels[2]}</th>
-        </tr>
-      `;
-
-      // 2. NHÓM CÁC DÒNG LIÊN TIẾP CÙNG CHỦ ĐỀ ĐỂ ROWSPAN
-      const topicRuns = [];
-      let curRun = null;
       rows.forEach((r, idx) => {
-        const top = (r.topic || `Chủ đề ${idx + 1}`).trim();
-        if (!curRun || curRun.topic !== top) {
-          curRun = { topic: top, startIndex: idx, count: 1 };
-          topicRuns.push(curRun);
-        } else {
-          curRun.count++;
-        }
+        const mB = Number(r.counts?.MCQ?.[levels[0]]) || 0;
+        const mH = Number(r.counts?.MCQ?.[levels[1]]) || 0;
+        const mV = Number(r.counts?.MCQ?.[levels[2]]) || 0;
+        const tB = Number(r.counts?.TF?.[levels[0]]) || 0;
+        const tH = Number(r.counts?.TF?.[levels[1]]) || 0;
+        const tV = Number(r.counts?.TF?.[levels[2]]) || 0;
+        const sB = Number(r.counts?.SA?.[levels[0]]) || 0;
+        const sH = Number(r.counts?.SA?.[levels[1]]) || 0;
+        const sV = Number(r.counts?.SA?.[levels[2]]) || 0;
+        const eB = Number(r.counts?.ESSAY?.[levels[0]]) || 0;
+        const eH = Number(r.counts?.ESSAY?.[levels[1]]) || 0;
+        const eV = Number(r.counts?.ESSAY?.[levels[2]]) || 0;
+
+        totalMcqB += mB; totalMcqH += mH; totalMcqVD += mV;
+        totalTfB += tB; totalTfH += tH; totalTfVD += tV;
+        if (showTLN) { totalSaB += sB; totalSaH += sH; totalSaVD += sV; }
+        totalEssayB += eB; totalEssayH += eH; totalEssayVD += eV;
+
+        const rowPt = Number(r.points || 0);
+        totalPts += rowPt;
+
+        levelPoints[0] += (mB * 0.25) + (tB * 0.25) + (showTLN ? sB * 0.5 : 0) + (r.essayPoints?.[levels[0]] ? Number(r.essayPoints[levels[0]]) : eB * 1.0);
+        levelPoints[1] += (mH * 0.25) + (tH * 0.25) + (showTLN ? sH * 0.5 : 0) + (r.essayPoints?.[levels[1]] ? Number(r.essayPoints[levels[1]]) : eH * 1.0);
+        levelPoints[2] += (mV * 0.25) + (tV * 0.25) + (showTLN ? sV * 0.5 : 0) + (r.essayPoints?.[levels[2]] ? Number(r.essayPoints[levels[2]]) : eV * 1.0);
       });
 
-      // 3. RENDER BODY
-      const tbody = document.getElementById('matrix-tbody');
-      const colSums = {
-        MCQ: [0, 0, 0],
-        TF: [0, 0, 0],
-        SA: [0, 0, 0],
-        ESSAY: [0, 0, 0]
-      };
-      const levelTotals = [0, 0, 0];
-      const levelPoints = [0, 0, 0];
-      let grandPoints = 0;
-      let totalMcq = 0, totalTfItems = 0, totalSa = 0, totalEssay = 0;
+      totalPts = Math.round(totalPts * 100) / 100;
+      const sumMcq = totalMcqB + totalMcqH + totalMcqVD;
+      const sumTf = totalTfB + totalTfH + totalTfVD;
+      const sumSa = totalSaB + totalSaH + totalSaVD;
+      const sumEssay = totalEssayB + totalEssayH + totalEssayVD;
 
-      let bodyHtml = '';
-      rows.forEach((r, rIdx) => {
-        const run = topicRuns.find(grp => rIdx >= grp.startIndex && rIdx < grp.startIndex + grp.count);
-        const isFirstInRun = (run && run.startIndex === rIdx);
-        const dividerClass = (isFirstInRun && rIdx > 0) ? 'row-cd-divider' : '';
+      const ptsMcq = Math.round(sumMcq * (pr.MCQ || 0.25) * 100) / 100;
+      const ptsTf = Math.round(sumTf * (pr.TF || 0.25) * 100) / 100;
+      const ptsSa = showTLN ? Math.round(sumSa * (pr.SA || 0.5) * 100) / 100 : 0;
+      const ptsEssay = Math.max(0, Math.round((totalPts - ptsMcq - ptsTf - ptsSa) * 100) / 100);
 
-        let rowItemCountByLevel = [0, 0, 0];
-        let cellsHtml = '';
+      const ptsKnow = Math.round(levelPoints[0] * 100) / 100;
+      const ptsUnderstand = Math.round(levelPoints[1] * 100) / 100;
+      const ptsApply = Math.max(0, Math.round((totalPts - ptsKnow - ptsUnderstand) * 100) / 100);
+      const pctKnow = totalPts > 0 ? Math.round((ptsKnow / totalPts) * 100) : 0;
+      const pctUnderstand = totalPts > 0 ? Math.round((ptsUnderstand / totalPts) * 100) : 0;
+      const pctApply = Math.max(0, 100 - pctKnow - pctUnderstand);
 
-        const typeConfigs = [
-          { key: 'MCQ', groupClass: 'col-group-tn', extraClass: 'col-tn' },
-          { key: 'TF', groupClass: 'col-group-ds', extraClass: 'col-ds' },
-          { key: 'SA', groupClass: 'col-group-tln', extraClass: 'col-tln' },
-          { key: 'ESSAY', groupClass: 'col-group-tl', extraClass: 'col-tl' }
-        ];
+      // ======================================================================
+      // CHẾ ĐỘ 1: BẢNG MA TRẬN CHUẨN (KHỚP 100% FILE GỐC & BƯỚC 1 - HÌNH 1)
+      // ======================================================================
+      if (currentStep2MatrixMode === 'standard') {
+        thead.innerHTML = `
+          <tr>
+            <th rowspan="2" style="width:40px; background:#1e3a8a; color:#fff; text-align:center;">STT</th>
+            <th rowspan="2" style="width:16%; background:#1e3a8a; color:#fff;">Chương / Chủ đề</th>
+            <th rowspan="2" style="width:20%; background:#1e3a8a; color:#fff;">Nội dung / Đơn vị kiến thức</th>
+            <th colspan="3" style="background:#1d4ed8; color:#fff; text-align:center;">Phần I: TNKQ (Nhiều lựa chọn)</th>
+            <th colspan="3" style="background:#7e22ce; color:#fff; text-align:center;">Phần II: Đúng / Sai (ý)</th>
+            ${showTLN ? `<th colspan="3" style="background:#b45309; color:#fff; text-align:center;">Phần III: TL Ngắn (câu)</th>` : ''}
+            ${hasEssay ? `<th colspan="3" style="background:#047857; color:#fff; text-align:center;">Tự luận (câu)</th>` : ''}
+            <th rowspan="2" style="background:#1e3a8a; color:#fff; text-align:center;">Mã câu hỏi gốc trong File</th>
+            <th rowspan="2" style="width:90px; background:#1e3a8a; color:#fff; text-align:center;">Điểm (Tỉ lệ %)</th>
+          </tr>
+          <tr>
+            <th style="background:#2563eb; color:#fff; width:38px; text-align:center;">Biết</th>
+            <th style="background:#2563eb; color:#fff; width:38px; text-align:center;">Hiểu</th>
+            <th style="background:#2563eb; color:#fff; width:38px; text-align:center;">VD</th>
+            <th style="background:#9333ea; color:#fff; width:38px; text-align:center;">Biết</th>
+            <th style="background:#9333ea; color:#fff; width:38px; text-align:center;">Hiểu</th>
+            <th style="background:#9333ea; color:#fff; width:38px; text-align:center;">VD</th>
+            ${showTLN ? `
+              <th style="background:#d97706; color:#fff; width:38px; text-align:center;">Biết</th>
+              <th style="background:#d97706; color:#fff; width:38px; text-align:center;">Hiểu</th>
+              <th style="background:#d97706; color:#fff; width:38px; text-align:center;">VD</th>
+            ` : ''}
+            ${hasEssay ? `
+              <th style="background:#059669; color:#fff; width:38px; text-align:center;">Biết</th>
+              <th style="background:#059669; color:#fff; width:38px; text-align:center;">Hiểu</th>
+              <th style="background:#059669; color:#fff; width:38px; text-align:center;">VD</th>
+            ` : ''}
+          </tr>
+        `;
 
-        typeConfigs.forEach(cfg => {
-          const qt = cfg.key;
-          levels.forEach((lv, lIdx) => {
-            const val = Number(r.counts?.[qt]?.[lv]) || 0;
-            const code = (r.cellCodes && r.cellCodes[qt] && r.cellCodes[qt][lv]) || '';
+        tbody.innerHTML = rows.map((r, idx) => {
+          const mB = Number(r.counts?.MCQ?.[levels[0]]) || 0;
+          const mH = Number(r.counts?.MCQ?.[levels[1]]) || 0;
+          const mV = Number(r.counts?.MCQ?.[levels[2]]) || 0;
+          const tB = Number(r.counts?.TF?.[levels[0]]) || 0;
+          const tH = Number(r.counts?.TF?.[levels[1]]) || 0;
+          const tV = Number(r.counts?.TF?.[levels[2]]) || 0;
+          const sB = Number(r.counts?.SA?.[levels[0]]) || 0;
+          const sH = Number(r.counts?.SA?.[levels[1]]) || 0;
+          const sV = Number(r.counts?.SA?.[levels[2]]) || 0;
+          const eB = Number(r.counts?.ESSAY?.[levels[0]]) || 0;
+          const eH = Number(r.counts?.ESSAY?.[levels[1]]) || 0;
+          const eV = Number(r.counts?.ESSAY?.[levels[2]]) || 0;
 
-            if (qt !== 'SA' || showTLN) {
-              colSums[qt][lIdx] += val;
-              rowItemCountByLevel[lIdx] += val;
-              levelTotals[lIdx] += val;
-
-              if (qt === 'MCQ') totalMcq += val;
-              if (qt === 'TF') totalTfItems += val;
-              if (qt === 'SA') totalSa += val;
-              if (qt === 'ESSAY') totalEssay += val;
-
-              const itemPt = (qt === 'ESSAY' && r.essayPoints && r.essayPoints[lv])
-                ? Number(r.essayPoints[lv])
-                : val * Number(pr[qt] || 0.25);
-              levelPoints[lIdx] += itemPt;
-            }
-
-            const hasVal = (val > 0);
-            cellsHtml += `
-              <td class="text-center ${cfg.groupClass} ${cfg.extraClass} ${hasVal ? 'td-input-active' : ''}">
-                <div class="input-cell-box ${hasVal ? 'has-value' : ''}">
-                  <input type="number" step="1" min="0" value="${val > 0 ? val : ''}"
-                         class="input-num" oninput="onMatrixCellNumChange(${rIdx}, '${qt}', '${lv}', this.value)" title="Số lượng câu/ý" />
-                  <input type="text" value="${escapeHtml(code)}"
-                         class="input-macau" oninput="onMatrixCellCodeChange(${rIdx}, '${qt}', '${lv}', this.value)" placeholder="" title="Mã câu/ý (vd: 1, 2 hoặc 1a,b hoặc MC(1))" />
-                </div>
-              </td>
-            `;
+          const codeItems = [];
+          const typeLabels = { MCQ: 'TN', TF: 'ĐS', SA: 'TLN', ESSAY: 'TL' };
+          ['MCQ', 'TF', 'SA', 'ESSAY'].forEach(qt => {
+            levels.forEach(lv => {
+              const cd = r.cellCodes?.[qt]?.[lv];
+              if (cd) codeItems.push(`${typeLabels[qt]}:${cd}`);
+            });
           });
+
+          const mcqRefText = (r.cellRefs?.MCQ || []).join(', ');
+          const tfRefText = (r.cellRefs?.TF || []).join(', ');
+          const saRefText = (r.cellRefs?.SA || []).join(', ');
+          const essayRefText = (r.cellRefs?.ESSAY || []).join(', ');
+          const refSummary = codeItems.length > 0 ? codeItems.join(' | ') : [
+            mcqRefText ? `TN: ${mcqRefText}` : '',
+            tfRefText ? `ĐS: ${tfRefText}` : '',
+            saRefText ? `TLN: ${saRefText}` : '',
+            essayRefText ? `TL: ${essayRefText}` : ''
+          ].filter(Boolean).join(' | ');
+
+          const rowPt = Number(r.points || 0);
+          const pctLabel = r.groupPercentLabel || `${((rowPt / 10.0) * 100).toFixed(1)}%`;
+
+          return `
+            <tr style="background:#ffffff;">
+              <td style="text-align:center; font-weight:700; color:#1e293b;">${escapeHtml(r.stt || String(idx + 1))}</td>
+              <td style="font-weight:600; color:#1e3a8a; vertical-align:middle;">${escapeHtml(r.topic)}</td>
+              <td style="color:#0f172a; vertical-align:middle;">${escapeHtml(r.unit)}</td>
+              <td style="text-align:center; font-weight:600;">${mB || '-'}</td>
+              <td style="text-align:center; font-weight:600;">${mH || '-'}</td>
+              <td style="text-align:center; font-weight:600;">${mV || '-'}</td>
+              <td style="text-align:center; font-weight:600;">${tB || '-'}</td>
+              <td style="text-align:center; font-weight:600;">${tH || '-'}</td>
+              <td style="text-align:center; font-weight:600;">${tV ? `${tV} (VDC)` : '-'}</td>
+              ${showTLN ? `
+                <td style="text-align:center; font-weight:600;">${sB || '-'}</td>
+                <td style="text-align:center; font-weight:600;">${sH || '-'}</td>
+                <td style="text-align:center; font-weight:600;">${sV || '-'}</td>
+              ` : ''}
+              ${hasEssay ? `
+                <td style="text-align:center; font-weight:700; color:#047857;">${eB || '-'}</td>
+                <td style="text-align:center; font-weight:700; color:#047857;">${eH || '-'}</td>
+                <td style="text-align:center; font-weight:700; color:#047857;">${eV || '-'}</td>
+              ` : ''}
+              <td style="text-align:center; font-size:0.8rem; color:var(--primary); font-weight:600;">
+                ${escapeHtml(refSummary)}
+              </td>
+              <td style="text-align:center; font-weight:700; color:var(--success);">
+                ${rowPt.toFixed(2).replace(/\.00$/, '.0')}đ
+                <br><small class="badge badge-amber" style="font-size:0.7rem;">${escapeHtml(pctLabel)}</small>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        tfoot.innerHTML = `
+          <tr style="background:#dbeafe; font-weight:700;">
+            <td colspan="3" style="text-align:right; font-size:12.5px; color:#1e3a8a;">TỔNG SỐ CÂU VÀ Ý:</td>
+            <td style="text-align:center;">${totalMcqB}</td>
+            <td style="text-align:center;">${totalMcqH}</td>
+            <td style="text-align:center;">${totalMcqVD}</td>
+            <td style="text-align:center;">${totalTfB}</td>
+            <td style="text-align:center;">${totalTfH}</td>
+            <td style="text-align:center;">${totalTfVD ? `${totalTfVD} (1 VDC)` : totalTfVD}</td>
+            ${showTLN ? `
+              <td style="text-align:center;">${totalSaB}</td>
+              <td style="text-align:center;">${totalSaH}</td>
+              <td style="text-align:center;">${totalSaVD}</td>
+            ` : ''}
+            ${hasEssay ? `
+              <td style="text-align:center; color:#047857;">${totalEssayB}</td>
+              <td style="text-align:center; color:#047857;">${totalEssayH}</td>
+              <td style="text-align:center; color:#047857;">${totalEssayVD}</td>
+            ` : ''}
+            <td style="text-align:center; font-size:0.82rem;">Biết: ${pctKnow}% | Hiểu: ${pctUnderstand}% | VD: ${pctApply}%</td>
+            <td style="text-align:center; color:var(--primary); font-size:0.95rem;">${totalPts.toFixed(1).replace(/\.0$/, '.0')} điểm (100%)</td>
+          </tr>
+          <tr style="background:#eff6ff; font-weight:700; font-size:0.86rem;">
+            <td colspan="3" style="text-align:right; color:#dc2626;">TỔNG ĐIỂM (Thang 10):</td>
+            <td colspan="3" style="text-align:center; color:#1d4ed8;">Phần I: ${ptsMcq.toFixed(2).replace(/\.00$/, '.0')}đ</td>
+            <td colspan="3" style="text-align:center; color:#7e22ce;">Phần II: ${ptsTf.toFixed(2).replace(/\.00$/, '.0')}đ</td>
+            ${showTLN ? `<td colspan="3" style="text-align:center; color:#b45309;">Phần III: ${ptsSa.toFixed(2).replace(/\.00$/, '.0')}đ</td>` : ''}
+            ${hasEssay ? `<td colspan="3" style="text-align:center; color:#047857;">Tự luận: ${ptsEssay.toFixed(2).replace(/\.00$/, '.0')}đ</td>` : ''}
+            <td colspan="2" style="text-align:center; color:#dc2626; font-size:0.95rem;">TỔNG: ${totalPts.toFixed(1).replace(/\.0$/, '.0')}đ</td>
+          </tr>
+        `;
+      } else {
+        // ======================================================================
+        // CHẾ ĐỘ 2: BẢNG CHỈNH SỬA Ô & SỐ LƯỢNG (EDITOR MODE)
+        // ======================================================================
+        thead.innerHTML = `
+          <tr>
+            <th rowspan="3" style="width:36px; background:#1e3a8a; text-align:center;">STT</th>
+            <th rowspan="3" style="width:14%; background:#1e3a8a;">Chương / Chủ đề</th>
+            <th rowspan="3" style="width:18%; background:#1e3a8a;">Nội dung / Đơn vị kiến thức</th>
+            <th colspan="${showTLN ? '12' : '9'}" id="thGroupSoCau" style="background:#0f172a;">Số câu hỏi ở các mức độ đánh giá</th>
+            <th rowspan="3" style="background:#1e3a8a; font-size:12px;">Mã câu hỏi gốc trong File</th>
+            <th rowspan="3" style="width:80px; background:#1e3a8a;">Điểm<br>(Tỉ lệ %)</th>
+            <th rowspan="3" style="width:36px; background:#1e3a8a;">Xóa</th>
+          </tr>
+          <tr>
+            <th colspan="3" class="th-sub" style="background:#1d4ed8;">TNKQ (Nhiều lựa chọn)</th>
+            <th colspan="3" class="th-sub" style="background:#7e22ce;">Đúng - Sai (ý)</th>
+            <th colspan="3" class="th-sub col-tln" style="background:#b45309;">TL Ngắn</th>
+            <th colspan="3" class="th-sub" style="background:#047857;">Tự luận (câu)</th>
+          </tr>
+          <tr>
+            <th class="th-level col-tn" style="width:3.6%; background:#2563eb;">${levels[0]}</th>
+            <th class="th-level col-tn" style="width:3.6%; background:#2563eb;">${levels[1]}</th>
+            <th class="th-level col-tn" style="width:3.6%; background:#2563eb;">${levels[2]}</th>
+
+            <th class="th-level col-ds" style="width:3.6%; background:#9333ea;">${levels[0]}</th>
+            <th class="th-level col-ds" style="width:3.6%; background:#9333ea;">${levels[1]}</th>
+            <th class="th-level col-ds" style="width:3.6%; background:#9333ea;">${levels[2]}</th>
+
+            <th class="th-level col-tln" style="width:3.6%; background:#d97706;">${levels[0]}</th>
+            <th class="th-level col-tln" style="width:3.6%; background:#d97706;">${levels[1]}</th>
+            <th class="th-level col-tln" style="width:3.6%; background:#d97706;">${levels[2]}</th>
+
+            <th class="th-level" style="width:3.6%; background:#059669;">${levels[0]}</th>
+            <th class="th-level" style="width:3.6%; background:#059669;">${levels[1]}</th>
+            <th class="th-level" style="width:3.6%; background:#059669;">${levels[2]}</th>
+          </tr>
+        `;
+
+        const topicRuns = [];
+        let curRun = null;
+        rows.forEach((r, idx) => {
+          const top = (r.topic || `Chủ đề ${idx + 1}`).trim();
+          if (!curRun || curRun.topic !== top) {
+            curRun = { topic: top, startIndex: idx, count: 1 };
+            topicRuns.push(curRun);
+          } else {
+            curRun.count++;
+          }
         });
 
-        const rowTotalPts = Number(r.points || 0);
-        grandPoints += rowTotalPts;
+        tbody.innerHTML = rows.map((r, rIdx) => {
+          const run = topicRuns.find(grp => rIdx >= grp.startIndex && rIdx < grp.startIndex + grp.count);
+          const isFirstInRun = (run && run.startIndex === rIdx);
+          const dividerClass = (isFirstInRun && rIdx > 0) ? 'row-cd-divider' : '';
 
-        bodyHtml += `<tr class="${dividerClass}" style="background-color:#ffffff;">`;
+          let cellsHtml = '';
+          const typeConfigs = [
+            { key: 'MCQ', groupClass: 'col-group-tn', extraClass: 'col-tn' },
+            { key: 'TF', groupClass: 'col-group-ds', extraClass: 'col-ds' },
+            { key: 'SA', groupClass: 'col-group-tln', extraClass: 'col-tln' },
+            { key: 'ESSAY', groupClass: 'col-group-tl', extraClass: 'col-tl' }
+          ];
 
-        if (isFirstInRun) {
-          bodyHtml += `
-            <td rowspan="${run.count}" class="fw-bold" style="background:#ffffff; color:#1e3a8a; vertical-align:top; padding:8px 6px; font-size:12.5px; border-left:3px solid #2563eb;">
-              <div>${escapeHtml(run.topic)}</div>
-            </td>
+          typeConfigs.forEach(cfg => {
+            const qt = cfg.key;
+            levels.forEach((lv, lIdx) => {
+              const val = Number(r.counts?.[qt]?.[lv]) || 0;
+              const code = (r.cellCodes && r.cellCodes[qt] && r.cellCodes[qt][lv]) || '';
+              const hasVal = (val > 0);
+              cellsHtml += `
+                <td class="text-center ${cfg.groupClass} ${cfg.extraClass} ${hasVal ? 'td-input-active' : ''}">
+                  <div class="input-cell-box ${hasVal ? 'has-value' : ''}">
+                    <input type="number" step="1" min="0" value="${val > 0 ? val : ''}"
+                           class="input-num" oninput="onMatrixCellNumChange(${rIdx}, '${qt}', '${lv}', this.value)" title="Số lượng câu/ý" />
+                    <input type="text" value="${escapeHtml(code)}"
+                           class="input-macau" oninput="onMatrixCellCodeChange(${rIdx}, '${qt}', '${lv}', this.value)" placeholder="" title="Mã câu/ý (vd: 1, 2 hoặc 1a,b hoặc MC(1))" />
+                  </div>
+                </td>
+              `;
+            });
+          });
+
+          const codeItems = [];
+          const typeLabels = { MCQ: 'TN', TF: 'ĐS', SA: 'TLN', ESSAY: 'TL' };
+          ['MCQ', 'TF', 'SA', 'ESSAY'].forEach(qt => {
+            levels.forEach(lv => {
+              const cd = r.cellCodes?.[qt]?.[lv];
+              if (cd) codeItems.push(`${typeLabels[qt]}:${cd}`);
+            });
+          });
+          const refSummary = codeItems.length > 0 ? codeItems.join(' | ') : '';
+          const rowTotalPts = Number(r.points || 0);
+          const pctLabel = r.groupPercentLabel || `${((rowTotalPts / 10.0) * 100).toFixed(1)}%`;
+
+          let topicTd = '';
+          if (isFirstInRun) {
+            topicTd = `
+              <td rowspan="${run.count}" class="fw-bold" style="background:#ffffff; color:#1e3a8a; vertical-align:top; padding:8px 6px; font-size:12px; border-left:3px solid #2563eb;">
+                <div>${escapeHtml(run.topic)}</div>
+              </td>
+            `;
+          }
+
+          return `
+            <tr class="${dividerClass}" style="background-color:#ffffff;">
+              <td style="text-align:center; font-weight:700; color:#1e293b;">${escapeHtml(r.stt || String(rIdx + 1))}</td>
+              ${topicTd}
+              <td style="background:#ffffff; color:#1e293b; font-weight:600; padding:6px;">
+                <input type="text" value="${escapeHtml(r.unit)}" onchange="appState.matrix.rows[${rIdx}].unit=this.value"
+                       style="border:none; background:transparent; width:100%; font-weight:600; font-size:12px; outline:none;" />
+              </td>
+              ${cellsHtml}
+              <td style="text-align:center; font-size:0.75rem; color:var(--primary); font-weight:600; padding:4px;">
+                ${escapeHtml(refSummary)}
+              </td>
+              <td class="text-center" style="font-weight:800; font-size:12px; color:#0f172a; background:#f8fafc;">
+                ${rowTotalPts.toFixed(2).replace(/\.00$/, '.0')}đ
+                <br><small class="badge badge-amber" style="font-size:0.7rem;">${escapeHtml(pctLabel)}</small>
+              </td>
+              <td class="text-center">
+                <button class="btn btn-danger btn-sm" style="padding:2px 6px; font-size:10px;" onclick="removeMatrixRow(${rIdx})">✕</button>
+              </td>
+            </tr>
           `;
-        }
+        }).join('');
 
-        bodyHtml += `
-          <td style="background:#ffffff; color:#1e293b; font-weight:600; padding:6px;">
-            <input type="text" value="${escapeHtml(r.unit)}" onchange="appState.matrix.rows[${rIdx}].unit=this.value"
-                   style="border:none; background:transparent; width:100%; font-weight:600; font-size:12px; outline:none;" />
-          </td>
-          ${cellsHtml}
-          <td class="text-center col-group-sum-md" style="font-weight:700; color:#1e3a8a;">${rowItemCountByLevel[0] || '-'}</td>
-          <td class="text-center col-group-sum-md" style="font-weight:700; color:#b45309;">${rowItemCountByLevel[1] || '-'}</td>
-          <td class="text-center col-group-sum-md" style="font-weight:700; color:#15803d;">${rowItemCountByLevel[2] || '-'}</td>
-          <td class="text-center" style="font-weight:800; font-size:12.5px; color:#0f172a; background:#f8fafc;">
-            ${rowTotalPts.toFixed(2).replace(/\.00$/, '.0')}đ
-          </td>
-          <td class="text-center">
-            <button class="btn btn-danger btn-sm" style="padding:2px 6px; font-size:10px;" onclick="removeMatrixRow(${rIdx})">✕</button>
-          </td>
-        </tr>`;
-      });
+        const colSums = { MCQ: [totalMcqB, totalMcqH, totalMcqVD], TF: [totalTfB, totalTfH, totalTfVD], SA: [totalSaB, totalSaH, totalSaVD], ESSAY: [totalEssayB, totalEssayH, totalEssayVD] };
 
-      tbody.innerHTML = bodyHtml || `<tr><td colspan="18" class="text-center py-4 text-muted">Chưa có dòng ma trận nào.</td></tr>`;
+        tfoot.innerHTML = `
+          <tr class="row-total" style="background:#f8fafc; font-weight:700;">
+            <td colspan="3" class="text-end" style="font-size:12.5px; color:#1e3a8a; padding:6px 10px;">TỔNG SỐ CÂU / Ý:</td>
+            <td class="col-tn col-group-tn text-center">${colSums.MCQ[0]}</td>
+            <td class="col-tn col-group-tn text-center">${colSums.MCQ[1]}</td>
+            <td class="col-tn col-group-tn text-center">${colSums.MCQ[2]}</td>
 
-      // 4. RENDER FOOTER TỔNG HỢP CÂU & ĐIỂM
-      const tfoot = document.getElementById('matrix-tfoot');
-      grandPoints = Math.round(grandPoints * 100) / 100;
-      const totalAllItems = totalMcq + totalTfItems + totalSa + totalEssay;
+            <td class="col-ds col-group-ds text-center">${colSums.TF[0]}</td>
+            <td class="col-ds col-group-ds text-center">${colSums.TF[1]}</td>
+            <td class="col-ds col-group-ds text-center">${colSums.TF[2]}</td>
 
-      const diemMcq = totalMcq * (pr.MCQ || 0.25);
-      const diemTf = totalTfItems * (pr.TF || 0.25);
-      const diemSa = showTLN ? (totalSa * (pr.SA || 0.5)) : 0;
-      const diemEssay = grandPoints - (diemMcq + diemTf + diemSa);
+            <td class="col-tln col-group-tln text-center">${colSums.SA[0]}</td>
+            <td class="col-tln col-group-tln text-center">${colSums.SA[1]}</td>
+            <td class="col-tln col-group-tln text-center">${colSums.SA[2]}</td>
 
-      tfoot.innerHTML = `
-        <tr class="row-total" style="background:#f8fafc; font-weight:700;">
-          <td colspan="2" class="text-end" style="font-size:12.5px; color:#1e3a8a; padding:6px 10px;">TỔNG SỐ CÂU / Ý:</td>
-          <td class="col-tn col-group-tn text-center">${colSums.MCQ[0]}</td>
-          <td class="col-tn col-group-tn text-center">${colSums.MCQ[1]}</td>
-          <td class="col-tn col-group-tn text-center">${colSums.MCQ[2]}</td>
+            <td class="col-tl col-group-tl text-center">${colSums.ESSAY[0]}</td>
+            <td class="col-tl col-group-tl text-center">${colSums.ESSAY[1]}</td>
+            <td class="col-tl col-group-tl text-center">${colSums.ESSAY[2]}</td>
 
-          <td class="col-ds col-group-ds text-center">${colSums.TF[0]}</td>
-          <td class="col-ds col-group-ds text-center">${colSums.TF[1]}</td>
-          <td class="col-ds col-group-ds text-center">${colSums.TF[2]}</td>
-
-          <td class="col-tln col-group-tln text-center">${colSums.SA[0]}</td>
-          <td class="col-tln col-group-tln text-center">${colSums.SA[1]}</td>
-          <td class="col-tln col-group-tln text-center">${colSums.SA[2]}</td>
-
-          <td class="col-tl col-group-tl text-center">${colSums.ESSAY[0]}</td>
-          <td class="col-tl col-group-tl text-center">${colSums.ESSAY[1]}</td>
-          <td class="col-tl col-group-tl text-center">${colSums.ESSAY[2]}</td>
-
-          <td class="col-group-sum-md text-center" style="color:#1e40af;">${levelTotals[0]}</td>
-          <td class="col-group-sum-md text-center" style="color:#b45309;">${levelTotals[1]}</td>
-          <td class="col-group-sum-md text-center" style="color:#15803d;">${levelTotals[2]}</td>
-
-          <td class="text-center" style="background:#e2e8f0; color:#0f172a; font-weight:800;">${totalAllItems}</td>
-          <td></td>
-        </tr>
-        <tr class="row-total" style="background:#f8fafc; font-weight:700;">
-          <td colspan="2" class="text-end" style="font-size:12.5px; color:#dc2626; padding:6px 10px;">TỔNG ĐIỂM (Thang 10):</td>
-          <td colspan="3" class="col-tn text-center col-group-tn" style="color:#0369a1; font-weight:800;">${diemMcq.toFixed(2).replace(/\.00$/, '.0')}đ</td>
-          <td colspan="3" class="col-ds text-center col-group-ds" style="color:#7e22ce; font-weight:800;">${diemTf.toFixed(2).replace(/\.00$/, '.0')}đ</td>
-          <td colspan="3" class="col-tln text-center col-group-tln" style="color:#b45309; font-weight:800;">${diemSa.toFixed(2).replace(/\.00$/, '.0')}đ</td>
-          <td colspan="3" class="col-tl text-center col-group-tl" style="color:#15803d; font-weight:800;">${Math.max(0, diemEssay).toFixed(2).replace(/\.00$/, '.0')}đ</td>
-
-          <td class="col-group-sum-md text-center" style="font-weight:800; color:#1e40af;">${levelPoints[0].toFixed(2).replace(/\.00$/, '.0')}đ</td>
-          <td class="col-group-sum-md text-center" style="font-weight:800; color:#b45309;">${levelPoints[1].toFixed(2).replace(/\.00$/, '.0')}đ</td>
-          <td class="col-group-sum-md text-center" style="font-weight:800; color:#15803d;">${levelPoints[2].toFixed(2).replace(/\.00$/, '.0')}đ</td>
-
-          <td class="text-center" style="background:#fef2f2; color:#dc2626; font-size:13.5px; font-weight:800;">
-            ${grandPoints.toFixed(2).replace(/\.00$/, '.0')}đ
-          </td>
-          <td></td>
-        </tr>
-      `;
+            <td class="text-center" style="font-size:0.8rem; color:#475569;">Biết: ${pctKnow}% | Hiểu: ${pctUnderstand}% | VD: ${pctApply}%</td>
+            <td class="text-center" style="background:#e2e8f0; color:#0f172a; font-weight:800;">${totalPts.toFixed(1).replace(/\.0$/, '.0')}đ</td>
+            <td></td>
+          </tr>
+          <tr class="row-total" style="background:#f8fafc; font-weight:700;">
+            <td colspan="3" class="text-end" style="font-size:12.5px; color:#dc2626; padding:6px 10px;">TỔNG ĐIỂM (Thang 10):</td>
+            <td colspan="3" class="col-tn text-center col-group-tn" style="color:#0369a1; font-weight:800;">Phần I: ${ptsMcq.toFixed(2).replace(/\.00$/, '.0')}đ</td>
+            <td colspan="3" class="col-ds text-center col-group-ds" style="color:#7e22ce; font-weight:800;">Phần II: ${ptsTf.toFixed(2).replace(/\.00$/, '.0')}đ</td>
+            <td colspan="3" class="col-tln text-center col-group-tln" style="color:#b45309; font-weight:800;">Phần III: ${ptsSa.toFixed(2).replace(/\.00$/, '.0')}đ</td>
+            <td colspan="3" class="col-tl text-center col-group-tl" style="color:#15803d; font-weight:800;">Tự luận: ${ptsEssay.toFixed(2).replace(/\.00$/, '.0')}đ</td>
+            <td colspan="2" class="text-center" style="background:#fef2f2; color:#dc2626; font-size:13.5px; font-weight:800;">
+              TỔNG: ${totalPts.toFixed(1).replace(/\.0$/, '.0')}đ
+            </td>
+            <td></td>
+          </tr>
+        `;
+      }
 
       // 5. BANNER TỔNG HỢP NHANH
       const banner = document.getElementById('matrix-summary-banner');
-      const isTen = Math.abs(grandPoints - 10.0) <= 0.01;
+      const isTen = Math.abs(totalPts - 10.0) <= 0.01;
       banner.className = isTen ? 'alert alert-success' : 'alert alert-warn';
       const lvSummary = levels.map((lv, lIdx) => {
         const pt = Math.round(levelPoints[lIdx] * 100) / 100;
-        const pct = grandPoints > 0 ? Math.round((pt / grandPoints) * 100) : 0;
+        const pct = totalPts > 0 ? Math.round((pt / totalPts) * 100) : 0;
         return `<strong>${lv}:</strong> ${pt.toFixed(2).replace(/\.00$/, '.0')}đ (${pct}%)`;
       }).join(' &nbsp;|&nbsp; ');
 
@@ -4944,15 +5146,15 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
           <div>
             <strong>Tổng hợp Ma trận:</strong>
-            TN nhiều lựa chọn: <strong>${totalMcq} câu</strong> (${diemMcq.toFixed(1)}đ) |
-            TN Đúng/Sai: <strong>${Math.ceil(totalTfItems / 4)} câu (${totalTfItems} ý)</strong> (${diemTf.toFixed(1)}đ)
-            ${showTLN ? `| Trả lời ngắn: <strong>${totalSa} câu</strong> (${diemSa.toFixed(1)}đ)` : ''}
-            | Tự luận: <strong>${totalEssay} câu</strong> (${Math.max(0, diemEssay).toFixed(1)}đ)
+            TN nhiều lựa chọn: <strong>${sumMcq} câu</strong> (${ptsMcq.toFixed(1)}đ) |
+            TN Đúng/Sai: <strong>${Math.ceil(sumTf / 4)} câu (${sumTf} ý)</strong> (${ptsTf.toFixed(1)}đ)
+            ${showTLN ? `| Trả lời ngắn: <strong>${sumSa} câu</strong> (${ptsSa.toFixed(1)}đ)` : ''}
+            | Tự luận: <strong>${sumEssay} câu</strong> (${ptsEssay.toFixed(1)}đ)
           </div>
           <div>
             ${lvSummary} &nbsp;⇒&nbsp;
             <span class="badge ${isTen ? 'badge-green' : 'badge-red'}" style="font-size:0.9rem;">
-              Tổng điểm: ${grandPoints.toFixed(2).replace(/\.00$/, '.0')} / 10.0 điểm ${isTen ? '✔ Chuẩn' : '⚠️ Chưa tròn 10.0đ'}
+              Tổng điểm: ${totalPts.toFixed(2).replace(/\.00$/, '.0')} / 10.0 điểm ${isTen ? '✔ Chuẩn' : '⚠️ Chưa tròn 10.0đ'}
             </span>
           </div>
         </div>
@@ -4994,6 +5196,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
     }
 
     function addMatrixRow() {
+      currentStep2MatrixMode = 'editor';
       const levels = appState.matrix.levels || getLevelsForCurrentMetadata();
       const idx = (appState.matrix.rows || []).length + 1;
       const emptyLevelMap = () => {
@@ -6900,6 +7103,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
 
       renderUnitsTable();
       renderDetectedMatrixPreview(appState.uploadedDocs?.[0]?.fileName || 'TIN 10 MA TRAN KTGK I 2026 - 2027.docx', appState.matrix);
+      currentStep2MatrixMode = 'standard';
       renderMatrixTable();
       renderSpecTable();
 
