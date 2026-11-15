@@ -489,6 +489,16 @@ async function startTempServer() {
       assert.ok(html.includes('MISSING_SBD') && html.includes('INCOMPLETE_SBD'), 'SBD completeness warnings must exist');
       assert.ok(html.includes('clearDemoOmrSession'), 'Demo mode isolation helper must exist');
     });
+
+    await runTest('6.2 Unified modal open/close & CSS .open/.active parity across index.html', () => {
+      const html = fs.readFileSync(path.join(ROOT_DIR, 'index.html'), 'utf8');
+      assert.ok(/\.modal-backdrop\.open\s*,\s*\r?\n\s*\.modal-backdrop\.active\s*\{/.test(html), 'CSS must style both .modal-backdrop.open and .modal-backdrop.active');
+      assert.ok(html.includes("el.classList.remove('open', 'active')"), 'closeModal must strip both open and active classes');
+      assert.ok(html.includes('setupUnifiedModalDismissal'), 'Unified backdrop click + Escape modal dismissal must exist');
+      assert.ok(!/function openOmrRosterModal[\s\S]{0,200}style\.display\s*=\s*['"]flex['"]/.test(html), 'openOmrRosterModal must not hardcode inline display:flex');
+      assert.ok(!/function openPaperEditModal[\s\S]{0,200}style\.display\s*=\s*['"]flex['"]/.test(html), 'openPaperEditModal must not hardcode inline display:flex');
+      assert.ok(!/function openManageAnswerKeysModal[\s\S]{0,350}modal\.classList\.add\(['"]active['"]\)/.test(html), 'openManageAnswerKeysModal must use unified openModal');
+    });
   } finally {
     await new Promise(resolve => server.close(resolve));
     restoreDataSnapshot(snapshot);

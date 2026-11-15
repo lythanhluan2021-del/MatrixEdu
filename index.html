@@ -1256,7 +1256,8 @@
       padding: 16px;
     }
 
-    .modal-backdrop.open {
+    .modal-backdrop.open,
+    .modal-backdrop.active {
       display: flex;
     }
 
@@ -6757,13 +6758,40 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
 
     function openModal(id) {
       const el = document.getElementById(id);
-      if (el) el.classList.add('open');
+      if (!el) return;
+      el.style.display = '';
+      el.classList.add('open');
     }
 
     function closeModal(id) {
       const el = document.getElementById(id);
-      if (el) el.classList.remove('open');
+      if (!el) return;
+      el.classList.remove('open', 'active');
+      el.style.display = '';
     }
+
+    // Hỗ trợ đóng modal thống nhất bằng click ra vùng tối bên ngoài hoặc nhấn phím Esc
+    (function setupUnifiedModalDismissal() {
+      let mouseDownTarget = null;
+      document.addEventListener('mousedown', (e) => {
+        mouseDownTarget = e.target;
+      });
+      document.addEventListener('click', (e) => {
+        if (e.target && e.target === mouseDownTarget && e.target.classList?.contains('modal-backdrop') && e.target.id) {
+          closeModal(e.target.id);
+        }
+        mouseDownTarget = null;
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        const openModals = Array.from(document.querySelectorAll('.modal-backdrop.open, .modal-backdrop.active'))
+          .filter(m => getComputedStyle(m).display !== 'none');
+        const topModal = openModals[openModals.length - 1];
+        if (topModal && topModal.id) {
+          closeModal(topModal.id);
+        }
+      });
+    })();
 
     // ========================================================================
     // QUẢN LÝ & XEM NGÂN HÀNG CÂU HỎI GOOGLE DRIVE (ZERO HALLUCINATION)
@@ -7586,8 +7614,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
     }
 
     async function openDriveBankModal() {
-      const modal = document.getElementById('modalDriveBank');
-      if (modal) modal.classList.add('open');
+      openModal('modalDriveBank');
       if (!globalDriveBankData) {
         await loadDriveBankData();
       } else {
@@ -8658,7 +8685,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
 
       const modal = document.getElementById('modalManageAnswerKeys');
       if (modal) {
-        modal.classList.add('active');
+        openModal('modalManageAnswerKeys');
         switchAnswerKeyTab(tab);
       }
     }
@@ -11382,8 +11409,7 @@ Phần III:
     function openPaperEditModal(paperId) {
       const modal = document.getElementById('modalEditPaper');
       if (!modal) return;
-      modal.classList.add('active');
-      modal.style.display = 'flex';
+      openModal('modalEditPaper');
       const paper = (appState.omr.gradedPapers || []).find(p => p.id === paperId);
       if (!paper) return;
 
@@ -11502,11 +11528,7 @@ Phần III:
     }
 
     function closePaperEditModal() {
-      const modal = document.getElementById('modalEditPaper');
-      if (modal) {
-        modal.classList.remove('active');
-        modal.style.display = 'none';
-      }
+      closeModal('modalEditPaper');
     }
 
     async function savePaperEditAndRecalculate() {
@@ -12650,11 +12672,7 @@ Phần III:
     }
 
     async function openOmrRosterModal() {
-      const modal = document.getElementById('modalOmrRoster');
-      if (modal) {
-        modal.classList.add('active');
-        modal.style.display = 'flex';
-      }
+      openModal('modalOmrRoster');
       await syncModalRostersFromServer();
     }
 
