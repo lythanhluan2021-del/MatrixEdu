@@ -556,7 +556,8 @@ function extractMatrix2DFromXlsxBuffer(buffer) {
  * Chuyển đổi ma trận 2D thành Danh sách học sinh chuẩn:
  * [{ sbd: '120001', fullName: 'Nguyễn Văn An', className: '12A1', dob: '15/03/2008' }, ...]
  */
-function parseMatrix2DToRoster(matrix2D) {
+function parseMatrix2DToRoster(matrix2D, options = {}) {
+  const defaultClassName = String(options.defaultClassName || '12A1').trim() || '12A1';
   const roster = [];
   if (!Array.isArray(matrix2D) || matrix2D.length === 0) return roster;
 
@@ -665,7 +666,7 @@ function parseMatrix2DToRoster(matrix2D) {
     roster.push({
       sbd,
       fullName: fullName.replace(/\s+/g, ' ').trim(),
-      className: className || '12A1',
+      className: (className || defaultClassName).replace(/\s+/g, ' ').trim(),
       dob: dob || '01/01/2008'
     });
   }
@@ -674,9 +675,26 @@ function parseMatrix2DToRoster(matrix2D) {
 }
 
 /**
+ * Thống kê nhanh danh sách học sinh theo từng lớp trong một danh sách chung
+ */
+function summarizeRosterByClass(roster) {
+  const counts = {};
+  (Array.isArray(roster) ? roster : []).forEach(r => {
+    const cls = String(r?.className || '12A1').replace(/\s+/g, ' ').trim() || '12A1';
+    counts[cls] = (counts[cls] || 0) + 1;
+  });
+  const classes = Object.keys(counts).sort((a, b) => a.localeCompare(b, 'vi', { numeric: true }));
+  return {
+    classes,
+    counts,
+    totalStudents: Array.isArray(roster) ? roster.length : 0
+  };
+}
+
+/**
  * Phân tích Danh sách học sinh từ chuỗi văn bản (CSV, TSV, Copy-Paste từ Excel/Word)
  */
-function parseStudentRosterText(rawText) {
+function parseStudentRosterText(rawText, options = {}) {
   if (!rawText || typeof rawText !== 'string') return [];
 
   try {
@@ -714,20 +732,20 @@ function parseStudentRosterText(rawText) {
     return [line];
   });
 
-  return parseMatrix2DToRoster(matrix2D);
+  return parseMatrix2DToRoster(matrix2D, options);
 }
 
 /**
  * Phân tích file Danh sách học sinh (.xlsx, .csv, .txt, .json)
  */
-function parseStudentRosterFile(filename, buffer) {
+function parseStudentRosterFile(filename, buffer, options = {}) {
   const ext = (filename || '').split('.').pop().toLowerCase();
   if (ext === 'xlsx' || ext === 'xls') {
     const matrix2D = extractMatrix2DFromXlsxBuffer(buffer);
-    return parseMatrix2DToRoster(matrix2D);
+    return parseMatrix2DToRoster(matrix2D, options);
   }
   const textContent = buffer.toString('utf8');
-  return parseStudentRosterText(textContent);
+  return parseStudentRosterText(textContent, options);
 }
 
 module.exports = {
@@ -738,6 +756,7 @@ module.exports = {
   parseMatrix2DToRoster,
   parseStudentRosterText,
   parseStudentRosterFile,
+  summarizeRosterByClass,
   generateSampleAnswerKeyCsv
 };
 

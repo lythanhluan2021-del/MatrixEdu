@@ -32,6 +32,8 @@ const OMR_DB_FILE = path.join(DATA_DIR, 'omr_database.json');
 const OMR_AUDIT_FILE = path.join(DATA_DIR, 'omr_audit_logs.json');
 const OMR_ROSTER_FILE = path.join(DATA_DIR, 'omr_active_roster.json');
 const BUNDLED_ROSTER_FILE = path.join(BUNDLED_DATA_DIR, 'omr_active_roster.json');
+const OMR_ROSTERS_FILE = path.join(DATA_DIR, 'omr_rosters.json');
+const BUNDLED_ROSTERS_FILE = path.join(BUNDLED_DATA_DIR, 'omr_rosters.json');
 const OMR_SESSIONS_DIR = path.join(DATA_DIR, 'omr_database');
 
 // Khởi tạo thư mục data và omr_database an toàn
@@ -42,7 +44,7 @@ try {
   if (!fs.existsSync(OMR_SESSIONS_DIR)) {
     fs.mkdirSync(OMR_SESSIONS_DIR, { recursive: true });
   }
-} catch (_) {}
+} catch (_) { }
 
 /**
  * Danh sách lớp mẫu chuẩn THPT (35 học sinh)
@@ -124,7 +126,7 @@ function logAuditRecord({ paperId, sbd, studentName, field, oldVal, newVal, reas
   logs.unshift(rec);
   try {
     fs.writeFileSync(OMR_AUDIT_FILE, JSON.stringify(logs, null, 2), 'utf8');
-  } catch (_) {}
+  } catch (_) { }
   return rec;
 }
 
@@ -291,7 +293,13 @@ function gradeSinglePaper(paper, answerKey, pointRules = {}) {
 
   // Khử triệt để sai số dấu phẩy động bằng cách quy đổi mili-điểm nguyên
   const rawSumMilli = Math.round(p1Pts * 1000) + Math.round(p2Pts * 1000) + Math.round(p3Pts * 1000);
-  const totalScore = Math.min(10.0, Math.round((rawSumMilli / 1000) * 100) / 100);
+  const omrScore = Math.min(10.0, Math.round((rawSumMilli / 1000) * 100) / 100);
+  const rawEssay = paper?.essayScore;
+  const hasEssayScore = rawEssay !== undefined && rawEssay !== null && rawEssay !== '' && !Number.isNaN(Number(rawEssay));
+  const essayScore = hasEssayScore ? Math.max(0, Math.round(Number(rawEssay) * 100) / 100) : null;
+  const totalScore = hasEssayScore
+    ? Math.min(10.0, Math.round(((Math.round(omrScore * 1000) + Math.round(essayScore * 1000)) / 1000) * 100) / 100)
+    : omrScore;
 
   let gradeClass = 'Chưa đạt';
   let gradeBadge = 'badge-danger';
@@ -313,6 +321,8 @@ function gradeSinglePaper(paper, answerKey, pointRules = {}) {
     part1Score: p1Pts,
     part2Score: p2Pts,
     part3Score: p3Pts,
+    omrScore,
+    essayScore,
     part1Details: p1Details,
     part2Details: p2Details,
     part3Details: p3Details,
@@ -323,36 +333,240 @@ function gradeSinglePaper(paper, answerKey, pointRules = {}) {
 }
 
 /**
- * Lấy danh sách học sinh đang hoạt động (từ file đã lưu hoặc danh sách mẫu)
+ * Chuẩn hóa một bản ghi học sinh
  */
-function getActiveRoster() {
+function normalizeRosterStudent(r, idx = 0, fallbackClass = '12A1') {
+  const cls = String(r?.className || fallbackClass || '12A1').replace(/\s+/g, ' ').trim() || '12A1';
+  const name = String(r?.name || r?.fullName || `Học sinh ${idx + 1}`).replace(/\s+/g, ' ').trim();
+  const fullName = String(r?.fullName || r?.name || `Học sinh ${idx + 1}`).replace(/\s+/g, ' ').trim();
+  return {
+    sbd: String(r?.sbd || (120001 + idx)).trim(),
+    name,
+    fullName,
+    className: cls,
+    dob: String(r?.dob || '01/01/2008').trim(),
+    gender: String(r?.gender || '').trim()
+  };
+}
+
+/**
+ * Đọc Kho Danh sách Nhiều Lớp (tương thích ngược với omr_active_roster.json)
+ */
+function readMultiClassRostersStore() {
+  for (const candidate of [OMR_ROSTERS_FILE, BUNDLED_ROSTERS_FILE]) {
+    if (fs.existsSync(candidate)) {
+      try {
+        const parsed = JSON.parse(fs.readFileSync(candidate, 'utf8'));
+        if (parsed && parsed.classes && typeof parsed.classes === 'object' && Object.keys(parsed.classes).length > 0) {
+          return {
+            activeClass: parsed.activeClass || Object.keys(parsed.classes)[0],
+            classes: parsed.classes,
+            updatedAt: parsed.updatedAt || new Date().toISOString()
+          };
+        }
+      } catch (_) { }
+    }
+  }
+
+  let legacyList = DEFAULT_CLASS_ROSTER;
   for (const candidate of [OMR_ROSTER_FILE, BUNDLED_ROSTER_FILE]) {
     if (fs.existsSync(candidate)) {
       try {
         const saved = JSON.parse(fs.readFileSync(candidate, 'utf8'));
-        if (Array.isArray(saved) && saved.length > 0) return saved;
-      } catch (_) {}
+        if (Array.isArray(saved) && saved.length > 0) {
+          legacyList = saved;
+          break;
+        }
+      } catch (_) { }
     }
   }
-  return DEFAULT_CLASS_ROSTER;
+
+  const classes = {};
+  legacyList.forEach((r, idx) => {
+    const norm = normalizeRosterStudent(r, idx);
+    if (!classes[norm.className]) classes[norm.className] = [];
+    classes[norm.className].push(norm);
+  });
+  const classNames = Object.keys(classes);
+  return {
+    activeClass: classNames.length > 1 ? '__ALL__' : (classNames[0] || '12A1'),
+    classes,
+    updatedAt: new Date().toISOString()
+  };
 }
 
 /**
- * Lưu danh sách học sinh của lớp vào hệ thống
+ * Ghi Kho Danh sách Nhiều Lớp xuống đĩa và đồng bộ omr_active_roster.json
  */
-function saveActiveRoster(roster) {
+function writeMultiClassRostersStore(store) {
+  store.updatedAt = new Date().toISOString();
+  try {
+    fs.writeFileSync(OMR_ROSTERS_FILE, JSON.stringify(store, null, 2), 'utf8');
+  } catch (_) { }
+
+  const activeList = store.activeClass === '__ALL__'
+    ? Object.values(store.classes || {}).flat()
+    : (store.classes?.[store.activeClass] || Object.values(store.classes || {})[0] || DEFAULT_CLASS_ROSTER);
+  try {
+    fs.writeFileSync(OMR_ROSTER_FILE, JSON.stringify(activeList, null, 2), 'utf8');
+  } catch (_) { }
+  return store;
+}
+
+/**
+ * Lấy tóm tắt toàn bộ các lớp trong Kho Danh sách Học sinh
+ */
+function listClassRostersSummary() {
+  const store = readMultiClassRostersStore();
+  const classNames = Object.keys(store.classes || {}).sort((a, b) => a.localeCompare(b, 'vi', { numeric: true }));
+  const classes = classNames.map(cls => {
+    const students = store.classes[cls] || [];
+    return {
+      className: cls,
+      count: students.length,
+      sampleSbds: students.slice(0, 3).map(s => s.sbd)
+    };
+  });
+  const allRoster = classNames.flatMap(cls => store.classes[cls] || []);
+  return {
+    activeClass: store.activeClass,
+    classes,
+    totalStudents: allRoster.length,
+    activeRoster: getActiveRoster(),
+    allRoster,
+    classesMap: store.classes
+  };
+}
+
+/**
+ * Lấy danh sách học sinh đang hoạt động (theo lớp đang chọn hoặc toàn khối)
+ */
+function getActiveRoster(classNameOverride = null) {
+  const store = readMultiClassRostersStore();
+  const target = classNameOverride || store.activeClass;
+  if (target === '__ALL__') {
+    const combined = Object.keys(store.classes || {})
+      .sort((a, b) => a.localeCompare(b, 'vi', { numeric: true }))
+      .flatMap(cls => store.classes[cls] || []);
+    return combined.length > 0 ? combined : DEFAULT_CLASS_ROSTER;
+  }
+  if (store.classes?.[target] && store.classes[target].length > 0) {
+    return store.classes[target];
+  }
+  const firstKey = Object.keys(store.classes || {})[0];
+  return (firstKey && store.classes[firstKey].length > 0) ? store.classes[firstKey] : DEFAULT_CLASS_ROSTER;
+}
+
+/**
+ * Lưu danh sách một lớp hoặc tách tự động nhiều lớp từ một bảng danh sách chung
+ */
+function saveClassRoster({ className = '', roster = [], autoSplitByClass = true, setActive = true } = {}) {
+  if (!Array.isArray(roster) || roster.length === 0) return listClassRostersSummary();
+  const store = readMultiClassRostersStore();
+  if (!store.classes) store.classes = {};
+
+  const targetFallback = String(className || '').replace(/\s+/g, ' ').trim();
+  const normalized = roster.map((r, idx) => {
+    const norm = normalizeRosterStudent(r, idx, targetFallback || '12A1');
+    if (targetFallback && !autoSplitByClass) {
+      norm.className = targetFallback;
+    }
+    return norm;
+  });
+
+  if (autoSplitByClass && !targetFallback) {
+    const grouped = {};
+    normalized.forEach(s => {
+      if (!grouped[s.className]) grouped[s.className] = [];
+      grouped[s.className].push(s);
+    });
+    const newClassNames = Object.keys(grouped);
+    newClassNames.forEach(cls => {
+      store.classes[cls] = grouped[cls];
+    });
+    if (setActive) {
+      store.activeClass = newClassNames.length > 1 ? '__ALL__' : (newClassNames[0] || store.activeClass);
+    }
+  } else {
+    const finalCls = targetFallback || normalized[0]?.className || '12A1';
+    store.classes[finalCls] = normalized.map(s => ({ ...s, className: finalCls }));
+    if (setActive) {
+      store.activeClass = finalCls;
+    }
+  }
+
+  writeMultiClassRostersStore(store);
+  return listClassRostersSummary();
+}
+
+/**
+ * Chuyển lớp đang chấm (hoặc '__ALL__' để đối chiếu SBD toàn khối)
+ */
+function setActiveRosterClass(className) {
+  const store = readMultiClassRostersStore();
+  const target = String(className || '').trim();
+  if (target === '__ALL__' || (store.classes && store.classes[target])) {
+    store.activeClass = target;
+    writeMultiClassRostersStore(store);
+  }
+  return listClassRostersSummary();
+}
+
+/**
+ * Xóa một lớp khỏi Kho Danh sách Học sinh
+ */
+function deleteClassRoster(className) {
+  const store = readMultiClassRostersStore();
+  const target = String(className || '').trim();
+  if (store.classes && store.classes[target]) {
+    delete store.classes[target];
+  }
+  const remaining = Object.keys(store.classes || {});
+  if (remaining.length === 0) {
+    store.classes = { '12A1': DEFAULT_CLASS_ROSTER.map((r, i) => normalizeRosterStudent(r, i, '12A1')) };
+    store.activeClass = '12A1';
+  } else if (store.activeClass === target) {
+    store.activeClass = remaining[0];
+  }
+  writeMultiClassRostersStore(store);
+  return listClassRostersSummary();
+}
+
+/**
+ * Lưu danh sách học sinh của lớp vào hệ thống (giữ tương thích ngược)
+ */
+function saveActiveRoster(roster, options = {}) {
   if (!Array.isArray(roster)) return [];
-  const normalized = roster.map((r, idx) => ({
-    sbd: String(r.sbd || (120001 + idx)).trim(),
-    name: String(r.name || r.fullName || `Học sinh ${idx + 1}`).trim(),
-    fullName: String(r.fullName || r.name || `Học sinh ${idx + 1}`).trim(),
-    className: String(r.className || '12A1').trim(),
-    dob: String(r.dob || '01/01/2008').trim(),
-    gender: String(r.gender || '').trim()
-  }));
+  const store = readMultiClassRostersStore();
+  const targetClass = String(options.className || '').replace(/\s+/g, ' ').trim();
+  const normalized = roster.map((r, idx) => normalizeRosterStudent(r, idx, targetClass || '12A1'));
+
+  if (options.isDefaultReset) {
+    store.classes['12A1'] = normalized;
+    store.activeClass = '12A1';
+  } else if (targetClass) {
+    store.classes[targetClass] = normalized.map(s => ({ ...s, className: targetClass }));
+    store.activeClass = targetClass;
+  } else {
+    const grouped = {};
+    normalized.forEach(s => {
+      if (!grouped[s.className]) grouped[s.className] = [];
+      grouped[s.className].push(s);
+    });
+    const keys = Object.keys(grouped);
+    if (keys.length === 1) {
+      store.classes[keys[0]] = grouped[keys[0]];
+      store.activeClass = keys[0];
+    } else if (keys.length > 1) {
+      keys.forEach(k => { store.classes[k] = grouped[k]; });
+      store.activeClass = '__ALL__';
+    }
+  }
+
+  writeMultiClassRostersStore(store);
   try {
     fs.writeFileSync(OMR_ROSTER_FILE, JSON.stringify(normalized, null, 2), 'utf8');
-  } catch (_) {}
+  } catch (_) { }
   return normalized;
 }
 
@@ -522,76 +736,117 @@ function generateSampleBatchPapers(answerKeysByCode, roster = null) {
 }
 
 /**
+ * Tra cứu đáp án theo mã đề (hỗ trợ chuẩn hóa số 0 đầu 3/4 chữ số)
+ */
+function findAnswerKeyByCode(answerKeysByCode, codeVal) {
+  if (!answerKeysByCode || typeof answerKeysByCode !== 'object') return null;
+  const raw = String(codeVal || '').trim();
+  if (!raw || raw === 'chưa tô') return null;
+  const stripped = raw.replace(/^0+/, '');
+  const p3 = stripped ? stripped.padStart(3, '0') : '';
+  const p4 = stripped ? stripped.padStart(4, '0') : '';
+  return answerKeysByCode[raw] ||
+    (stripped && answerKeysByCode[stripped]) ||
+    (p3 && answerKeysByCode[p3]) ||
+    (p4 && answerKeysByCode[p4]) ||
+    null;
+}
+
+/**
  * Thực hiện chấm toàn bộ lô bài thi (Batch Grading)
  */
-function gradeBatchPapers({ papers = [], answerKeysByCode = {}, pointRules = {}, roster = [] }) {
-  const rosterMap = buildSmartRosterMap(roster);
-
+function gradeBatchPapers({ papers = [], answerKeysByCode = {}, pointRules = {}, roster = [], targetClassName = '' }) {
+  const safeRoster = Array.isArray(roster) && roster.length > 0 ? roster : getActiveRoster();
+  const rosterMap = buildSmartRosterMap(safeRoster);
+  const safeKeys = answerKeysByCode && typeof answerKeysByCode === 'object' ? answerKeysByCode : {};
+  const availableCodes = Object.keys(safeKeys);
+  const fallbackClass = String(targetClassName || '').trim() || safeRoster[0]?.className || '12A1';
   const gradedPapers = [];
   let validCount = 0;
   let warningCount = 0;
 
-  papers.forEach(paper => {
-    const rawSbd = String(paper.sbd || '').trim();
-    const studentInfo = rosterMap.get(rawSbd) || rosterMap.get(rawSbd.padStart(6, '0')) || rosterMap.get(rawSbd.replace(/^0+/, '')) || null;
-    const rawCode = String(paper.scannedExamCode || '').trim();
-    const answerKey = answerKeysByCode[rawCode] ||
-      answerKeysByCode[rawCode.replace(/^0+/, '')] ||
-      answerKeysByCode[rawCode.padStart(3, '0')] ||
-      answerKeysByCode[rawCode.padStart(4, '0')];
+  (Array.isArray(papers) ? papers : []).forEach((paper, idx) => {
+    try {
+      const rawSbd = String(paper?.sbd || '').trim();
+      const studentInfo = (rawSbd && rawSbd !== 'chưa tô')
+        ? (rosterMap.get(rawSbd) || rosterMap.get(rawSbd.padStart(6, '0')) || rosterMap.get(rawSbd.replace(/^0+/, '')) || null)
+        : null;
+      const rawCode = String(paper?.scannedExamCode || '').trim();
+      const answerKey = findAnswerKeyByCode(safeKeys, rawCode);
 
-    let result = null;
-    let hasError = false;
-    const currentWarnings = [...(paper.warnings || [])];
+      let result = null;
+      let hasError = false;
+      const currentWarnings = Array.isArray(paper?.warnings) ? [...paper.warnings] : [];
 
-    // Kiểm tra định danh SBD
-    if (!rawSbd || rawSbd === 'chưa tô') {
-      if (!currentWarnings.some(w => w.type === 'MISSING_SBD')) {
-        currentWarnings.push({
-          type: 'MISSING_SBD',
-          message: 'Phiếu chưa tô đủ Số báo danh! Vui lòng đối chiếu chữ viết tay trên phiếu để nhập SBD.'
-        });
+      // Kiểm tra định danh SBD
+      if (!rawSbd || rawSbd === 'chưa tô') {
+        if (!currentWarnings.some(w => w.type === 'MISSING_SBD')) {
+          currentWarnings.push({
+            type: 'MISSING_SBD',
+            message: 'Phiếu chưa tô đủ Số báo danh! Vui lòng đối chiếu chữ viết tay trên phiếu để nhập SBD.'
+          });
+        }
+      } else if (!studentInfo && rosterMap.size > 0 && (!paper.studentName || paper.studentName.startsWith('Thí sinh') || paper.studentName === 'Chưa định danh')) {
+        if (!currentWarnings.some(w => w.type === 'UNMATCHED_SBD')) {
+          currentWarnings.push({
+            type: 'UNMATCHED_SBD',
+            message: `Số báo danh "${rawSbd}" không nằm trong Danh sách lớp hiện tại! Cần kiểm tra lại SBD hoặc nạp đúng danh sách lớp.`
+          });
+        }
       }
-    } else if (!studentInfo && rosterMap.size > 0 && (!paper.studentName || paper.studentName.startsWith('Thí sinh') || paper.studentName === 'Chưa định danh')) {
-      if (!currentWarnings.some(w => w.type === 'UNMATCHED_SBD')) {
-        currentWarnings.push({
-          type: 'UNMATCHED_SBD',
-          message: `Số báo danh "${rawSbd}" không nằm trong Danh sách lớp hiện tại! Cần kiểm tra lại SBD hoặc nạp đúng danh sách lớp.`
-        });
-      }
-    }
 
-    if (!answerKey) {
-      hasError = true;
-      if (!currentWarnings.some(w => w.type === 'UNKNOWN_EXAM_CODE' || w.type === 'INVALID_EXAM_CODE')) {
-        currentWarnings.push({
-          type: 'UNKNOWN_EXAM_CODE',
-          message: `Mã đề "${code}" không khớp với bất kì mã đề thi nào đã tạo (${Object.keys(answerKeysByCode).join(', ')})!`
-        });
+      if (!answerKey) {
+        hasError = true;
+        if (!currentWarnings.some(w => w.type === 'UNKNOWN_EXAM_CODE' || w.type === 'INVALID_EXAM_CODE')) {
+          currentWarnings.push({
+            type: 'UNKNOWN_EXAM_CODE',
+            message: availableCodes.length > 0
+              ? `Mã đề "${rawCode || 'chưa tô'}" không khớp với bất kì mã đề thi nào đã tạo (${availableCodes.join(', ')})!`
+              : 'Chưa có Biểu đáp án mã đề để đối chiếu! Vui lòng chọn đề hoặc nạp file đáp án.'
+          });
+        }
+      } else {
+        result = gradeSinglePaper(paper, answerKey, pointRules);
       }
-    } else {
-      result = gradeSinglePaper(paper, answerKey, pointRules);
-    }
 
-    if (currentWarnings.length > 0 || hasError) {
+      if (currentWarnings.length > 0 || hasError) {
+        warningCount++;
+      } else {
+        validCount++;
+      }
+
+      const resolvedName = studentInfo
+        ? (studentInfo.name || studentInfo.fullName)
+        : (paper.studentName && !paper.studentName.startsWith('Thí sinh ') ? paper.studentName : 'Chưa định danh');
+
+      gradedPapers.push({
+        ...paper,
+        id: paper.id || `paper_${Date.now()}_${idx}`,
+        sbd: rawSbd || 'chưa tô',
+        scannedExamCode: rawCode,
+        studentName: resolvedName,
+        className: studentInfo?.className || (paper.className && paper.className !== '12A1' ? paper.className : '') || fallbackClass,
+        dob: studentInfo?.dob || paper.dob || '',
+        hasError,
+        warnings: currentWarnings,
+        result
+      });
+    } catch (paperErr) {
       warningCount++;
-    } else {
-      validCount++;
+      gradedPapers.push({
+        ...(paper || {}),
+        id: paper?.id || `paper_err_${Date.now()}_${idx}`,
+        sbd: paper?.sbd || 'chưa tô',
+        studentName: paper?.studentName || 'Lỗi đọc phiếu',
+        className: paper?.className || fallbackClass,
+        hasError: true,
+        warnings: [{
+          type: 'PAPER_PARSE_ERROR',
+          message: `Không thể chấm phiếu này (${paperErr.message || 'dữ liệu không hợp lệ'}). Vui lòng bấm Sửa phiếu để kiểm tra.`
+        }],
+        result: null
+      });
     }
-
-    const resolvedName = studentInfo
-      ? (studentInfo.name || studentInfo.fullName)
-      : (paper.studentName && !paper.studentName.startsWith('Thí sinh ') ? paper.studentName : 'Chưa định danh');
-
-    gradedPapers.push({
-      ...paper,
-      studentName: resolvedName,
-      className: studentInfo?.className || paper.className || '12A1',
-      dob: studentInfo?.dob || paper.dob || '',
-      hasError,
-      warnings: currentWarnings,
-      result
-    });
   });
 
   // Tính toán thống kê toàn diện
@@ -601,7 +856,7 @@ function gradeBatchPapers({ papers = [], answerKeysByCode = {}, pointRules = {},
   saveDatabaseState(gradedPapers);
 
   return {
-    totalPapers: papers.length,
+    totalPapers: gradedPapers.length,
     validCount,
     warningCount,
     gradedPapers,
@@ -820,6 +1075,26 @@ function updatePaperAndAudit({ paperId, updates, allPapers, answerKeysByCode, po
     }
   }
 
+  // 5. Nếu cập nhật điểm Tự luận (khi đề hỗn hợp Trắc nghiệm + Tự luận)
+  if (updates.essayScore !== undefined) {
+    const oldEssay = paper.essayScore ?? '';
+    const parsedEssay = updates.essayScore === '' || updates.essayScore === null ? null : Math.max(0, Number(updates.essayScore));
+    if (!Number.isNaN(parsedEssay) && String(oldEssay) !== String(parsedEssay ?? '')) {
+      paper.essayScore = parsedEssay;
+      const rec = logAuditRecord({
+        paperId: paper.id,
+        sbd: paper.sbd,
+        studentName: paper.studentName,
+        field: 'Điểm Tự luận',
+        oldVal: oldEssay === '' ? 'Chưa nhập' : String(oldEssay),
+        newVal: parsedEssay === null ? 'Xóa điểm TL' : String(parsedEssay),
+        reason: updates.reason || 'Giáo viên nhập/điều chỉnh điểm phần Tự luận',
+        user
+      });
+      newAuditRecords.push(rec);
+    }
+  }
+
   // Đánh dấu đã sửa và làm sạch các cảnh báo đã giải quyết
   paper.isCorrected = true;
   paper.warnings = []; // đã giải quyết xong
@@ -827,10 +1102,7 @@ function updatePaperAndAudit({ paperId, updates, allPapers, answerKeysByCode, po
 
   // Chấm lại bài này với đáp án mã đề mới
   const activeCode = String(paper.scannedExamCode || '').trim();
-  const answerKey = answerKeysByCode[activeCode] ||
-    answerKeysByCode[activeCode.replace(/^0+/, '')] ||
-    answerKeysByCode[activeCode.padStart(3, '0')] ||
-    answerKeysByCode[activeCode.padStart(4, '0')];
+  const answerKey = findAnswerKeyByCode(answerKeysByCode, activeCode);
   if (answerKey) {
     paper.result = gradeSinglePaper(paper, answerKey, pointRules);
   }
@@ -857,16 +1129,57 @@ function saveDatabaseState(papers) {
 }
 
 /**
- * Lưu một ca chấm đầy đủ vào thư mục data/omr_database để mở lại về sau
+ * Suy luận tên lớp chủ đạo của lô bài làm
  */
-function saveGradingSessionSnapshot({ gradedPapers = [], answerKeysByCode = {}, pointRules = {}, metadata = {}, title = '' }) {
+function resolveBatchClassName(gradedPapers = [], explicitClass = '', metadata = {}) {
+  if (explicitClass && String(explicitClass).trim() && explicitClass !== '__ALL__') {
+    return String(explicitClass).trim();
+  }
+  const counts = {};
+  (gradedPapers || []).forEach(p => {
+    const cls = String(p?.className || '').trim();
+    if (cls) counts[cls] = (counts[cls] || 0) + 1;
+  });
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  if (sorted.length > 0) return sorted[0][0];
+  return String(metadata?.className || '12A1').trim() || '12A1';
+}
+
+/**
+ * Lưu một ca chấm đầy đủ vào thư mục data/omr_database (gắn liền Đề thi × Lớp)
+ */
+function saveGradingSessionSnapshot({
+  gradedPapers = [],
+  answerKeysByCode = {},
+  pointRules = {},
+  metadata = {},
+  title = '',
+  examId = '',
+  examTitle = '',
+  className = '',
+  templateId = '',
+  overwriteSameExamClass = false,
+  sessionId = ''
+}) {
   const now = new Date();
-  const id = `omr_session_${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
-  const stats = calculateBatchStatistics(gradedPapers);
-  const firstClass = gradedPapers[0]?.className || metadata.className || '12A1';
+  const resolvedClass = resolveBatchClassName(gradedPapers, className, metadata);
+  const resolvedExamId = String(examId || metadata?.examId || '').replace(/[^a-zA-Z0-9_\-]/g, '');
   const subject = metadata.subject || 'Tin học';
   const grade = metadata.grade || '12';
-  const sessionTitle = title || `${subject} Lớp ${grade} (${firstClass}) - ${gradedPapers.length} bài`;
+  const resolvedExamTitle = examTitle || metadata.examTitle || `${subject} Lớp ${grade}${metadata.examPeriod ? ' - ' + metadata.examPeriod : ''}`;
+
+  let id = '';
+  if (sessionId) {
+    id = String(sessionId).replace(/[^a-zA-Z0-9_\-]/g, '');
+  } else if (overwriteSameExamClass && resolvedExamId && resolvedClass) {
+    const classSlug = resolvedClass.replace(/[^a-zA-Z0-9_\-]/g, '_');
+    id = `omr_exam_${resolvedExamId}__${classSlug}`;
+  } else {
+    id = `omr_session_${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+  }
+
+  const stats = calculateBatchStatistics(gradedPapers);
+  const sessionTitle = title || `${resolvedExamTitle} (${resolvedClass}) - ${gradedPapers.length} bài`;
 
   // Loại bỏ các thuộc tính DOM/Blob phía client trước khi lưu JSON
   const cleanPapers = gradedPapers.map(p => {
@@ -876,12 +1189,18 @@ function saveGradingSessionSnapshot({ gradedPapers = [], answerKeysByCode = {}, 
     return copy;
   });
 
+  const warningCount = cleanPapers.filter(p => p.hasError || (p.warnings && p.warnings.length > 0)).length;
   const payload = {
     id,
     title: sessionTitle,
     savedAt: now.toISOString(),
-    metadata: { ...metadata, className: firstClass, subject, grade },
+    examId: resolvedExamId,
+    examTitle: resolvedExamTitle,
+    className: resolvedClass,
+    templateId: templateId || metadata.templateId || '',
+    metadata: { ...metadata, className: resolvedClass, subject, grade, examId: resolvedExamId, examTitle: resolvedExamTitle },
     totalPapers: cleanPapers.length,
+    warningCount,
     statistics: stats,
     answerKeysByCode,
     pointRules,
@@ -892,9 +1211,46 @@ function saveGradingSessionSnapshot({ gradedPapers = [], answerKeysByCode = {}, 
   try {
     if (!fs.existsSync(OMR_SESSIONS_DIR)) fs.mkdirSync(OMR_SESSIONS_DIR, { recursive: true });
     fs.writeFileSync(sessionPath, JSON.stringify(payload, null, 2), 'utf8');
-  } catch (_) {}
+  } catch (_) { }
   saveDatabaseState(cleanPapers);
-  return { id, title: sessionTitle, savedAt: payload.savedAt, filePath: sessionPath, statistics: stats };
+  return {
+    id,
+    title: sessionTitle,
+    examId: resolvedExamId,
+    examTitle: resolvedExamTitle,
+    className: resolvedClass,
+    savedAt: payload.savedAt,
+    filePath: sessionPath,
+    statistics: stats
+  };
+}
+
+/**
+ * Cập nhật lại dữ liệu bài thi trong một file session đã tồn tại
+ */
+function syncSessionPapers(sessionId, updatedPapers) {
+  if (!sessionId || !Array.isArray(updatedPapers)) return false;
+  const safeId = String(sessionId).replace(/[^a-zA-Z0-9_\-]/g, '');
+  const filePath = path.join(OMR_SESSIONS_DIR, `${safeId}.json`);
+  if (!fs.existsSync(filePath)) return false;
+  try {
+    const raw = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    const cleanPapers = updatedPapers.map(p => {
+      const c = { ...p };
+      delete c.imageElement;
+      delete c.imageUrl;
+      return c;
+    });
+    raw.papers = cleanPapers;
+    raw.totalPapers = cleanPapers.length;
+    raw.warningCount = cleanPapers.filter(p => p.hasError || (p.warnings && p.warnings.length > 0)).length;
+    raw.statistics = calculateBatchStatistics(cleanPapers);
+    raw.savedAt = new Date().toISOString();
+    fs.writeFileSync(filePath, JSON.stringify(raw, null, 2), 'utf8');
+    return true;
+  } catch (_) {
+    return false;
+  }
 }
 
 /**
@@ -910,22 +1266,33 @@ function listSavedOmrSessions() {
       if (papers.length === 0) return;
       const stats = raw.statistics || calculateBatchStatistics(papers);
       const savedAt = raw.savedAt || raw.exportedAt || fs.statSync(fullPath).mtime.toISOString();
-      const firstClass = papers[0]?.className || raw.metadata?.className || '12A1';
+      const firstClass = raw.className || papers[0]?.className || raw.metadata?.className || '12A1';
       const subject = raw.metadata?.subject || 'Tin học';
       const grade = raw.metadata?.grade || '12';
+      const examId = raw.examId || raw.metadata?.examId || '';
+      const examTitle = raw.examTitle || raw.metadata?.examTitle || `${subject} Lớp ${grade}${raw.metadata?.examPeriod ? ' - ' + raw.metadata.examPeriod : ''}`;
+      const warningCount = raw.warningCount ?? papers.filter(p => p.hasError || (p.warnings && p.warnings.length > 0)).length;
       sessions.push({
         id: raw.id || fallbackId,
         fileName: path.basename(fullPath),
-        title: raw.title || `${subject} Lớp ${grade} (${firstClass})`,
+        title: raw.title || `${examTitle} (${firstClass})`,
+        examId,
+        examTitle,
         savedAt,
         totalPapers: papers.length,
+        warningCount,
         avgScore: stats.avg ?? 0,
         maxScore: stats.max ?? 0,
         minScore: stats.min ?? 0,
+        medianScore: stats.median ?? 0,
+        classification: stats.classification || {},
+        tfStyle: raw.pointRules?.tfStyle || 'fixed025',
+        templateId: raw.templateId || raw.metadata?.templateId || '',
         className: firstClass,
-        subject
+        subject,
+        grade
       });
-    } catch (_) {}
+    } catch (_) { }
   };
 
   if (fs.existsSync(OMR_SESSIONS_DIR)) {
@@ -966,6 +1333,10 @@ function loadSavedOmrSession(sessionId) {
       return {
         id: raw.id || safeId,
         title: raw.title || 'Ca chấm đã lưu',
+        examId: raw.examId || raw.metadata?.examId || '',
+        examTitle: raw.examTitle || raw.metadata?.examTitle || '',
+        className: raw.className || papers[0]?.className || raw.metadata?.className || '',
+        templateId: raw.templateId || raw.metadata?.templateId || '',
         savedAt: raw.savedAt || raw.exportedAt || new Date().toISOString(),
         gradedPapers: papers,
         statistics: stats,
@@ -998,20 +1369,145 @@ function deleteSavedOmrSession(sessionId) {
 }
 
 /**
+ * Tổng hợp báo cáo đa lớp & toàn khối theo Đề thi (examId)
+ */
+function aggregateGradeReportByExam(examId = '') {
+  const allSessions = [];
+  if (fs.existsSync(OMR_SESSIONS_DIR)) {
+    const files = fs.readdirSync(OMR_SESSIONS_DIR).filter(f => f.endsWith('.json'));
+    files.forEach(f => {
+      try {
+        const raw = JSON.parse(fs.readFileSync(path.join(OMR_SESSIONS_DIR, f), 'utf8'));
+        const papers = Array.isArray(raw) ? raw : (raw.papers || raw.gradedPapers || []);
+        if (papers.length > 0) {
+          const id = raw.id || f.replace(/\.json$/, '');
+          const resolvedExamId = raw.examId || raw.metadata?.examId || 'unlinked';
+          const resolvedExamTitle = raw.examTitle || raw.metadata?.examTitle || `${raw.metadata?.subject || 'Tin học'} Lớp ${raw.metadata?.grade || '12'}`;
+          const cls = raw.className || papers[0]?.className || raw.metadata?.className || '12A1';
+          allSessions.push({
+            sessionId: id,
+            examId: resolvedExamId,
+            examTitle: resolvedExamTitle,
+            className: cls,
+            savedAt: raw.savedAt || fs.statSync(path.join(OMR_SESSIONS_DIR, f)).mtime.toISOString(),
+            metadata: raw.metadata || {},
+            statistics: raw.statistics || calculateBatchStatistics(papers),
+            papers
+          });
+        }
+      } catch (_) { }
+    });
+  }
+
+  // Xây dựng mục lục các Đề thi đã từng có ca chấm
+  const examsMap = new Map();
+  allSessions.forEach(s => {
+    const key = s.examId !== 'unlinked' ? s.examId : s.examTitle;
+    if (!examsMap.has(key)) {
+      examsMap.set(key, {
+        examKey: key,
+        examId: s.examId,
+        examTitle: s.examTitle,
+        classNames: new Set(),
+        totalPapers: 0,
+        latestAt: s.savedAt
+      });
+    }
+    const entry = examsMap.get(key);
+    entry.classNames.add(s.className);
+    entry.totalPapers += s.papers.length;
+    if (String(s.savedAt) > String(entry.latestAt)) entry.latestAt = s.savedAt;
+  });
+
+  const examsIndex = Array.from(examsMap.values()).map(e => {
+    const classList = Array.from(e.classNames).sort((a, b) => a.localeCompare(b, 'vi', { numeric: true }));
+    return {
+      examKey: e.examKey,
+      examId: e.examId,
+      examTitle: e.examTitle,
+      classes: classList,
+      totalClasses: classList.length,
+      totalPapers: e.totalPapers,
+      latestAt: e.latestAt
+    };
+  }).sort((a, b) => String(b.latestAt).localeCompare(String(a.latestAt)));
+
+  const targetKey = examId || (examsIndex[0]?.examKey || '');
+  const matchedSessions = targetKey
+    ? allSessions.filter(s => s.examId === targetKey || s.examTitle === targetKey || (targetKey === '__ALL__'))
+    : allSessions;
+
+  // Giữ bản mới nhất cho mỗi lớp thuộc cùng đề thi này
+  const latestByClass = new Map();
+  matchedSessions
+    .slice()
+    .sort((a, b) => String(b.savedAt).localeCompare(String(a.savedAt)))
+    .forEach(s => {
+      if (!latestByClass.has(s.className)) {
+        latestByClass.set(s.className, s);
+      }
+    });
+
+  const sortedClassSessions = Array.from(latestByClass.values())
+    .sort((a, b) => a.className.localeCompare(b.className, 'vi', { numeric: true }));
+
+  const classes = sortedClassSessions.map(s => {
+    const st = s.statistics || calculateBatchStatistics(s.papers);
+    const warningCount = s.papers.filter(p => p.hasError || (p.warnings && p.warnings.length > 0)).length;
+    return {
+      sessionId: s.sessionId,
+      className: s.className,
+      count: s.papers.length,
+      totalPapers: s.papers.length,
+      avg: st.avg,
+      max: st.max,
+      min: st.min,
+      median: st.median,
+      classification: st.classification,
+      warningCount,
+      savedAt: s.savedAt
+    };
+  });
+
+  const allPapers = sortedClassSessions.flatMap(s => s.papers.map(p => ({ ...p, className: p.className || s.className })));
+  const overallStats = calculateBatchStatistics(allPapers);
+
+  return {
+    ok: true,
+    examKey: targetKey,
+    examTitle: sortedClassSessions[0]?.examTitle || examsIndex[0]?.examTitle || 'Chưa có dữ liệu',
+    examsIndex,
+    totalClasses: classes.length,
+    classes,
+    overall: {
+      totalClasses: classes.length,
+      totalPapers: allPapers.length,
+      ...overallStats
+    },
+    allPapers
+  };
+}
+
+/**
  * Xuất bảng điểm lớp ra định dạng CSV (tương thích Excel tiếng Việt UTF-8 BOM)
  */
-function exportRosterToCsv(gradedPapers, metadata = {}) {
-  const header = '\uFEFFSTT,Số báo danh,Họ và tên,Lớp,Ngày sinh,Mã đề,Điểm Phần I (TN),Điểm Phần II (Đ/S),Điểm Phần III (TLN),Tổng điểm (Thang 10),Xếp loại,Trạng thái bài\n';
-  const rows = gradedPapers.map((p, idx) => {
+function exportRosterToCsv(gradedPapers, metadata = {}, options = {}) {
+  const list = Array.isArray(gradedPapers) ? gradedPapers : [];
+  const hasEssay = Boolean(options.hasEssay) || list.some(p => p?.essayScore !== undefined && p?.essayScore !== null && p?.essayScore !== '');
+  const header = hasEssay
+    ? '\uFEFFSTT,Số báo danh,Họ và tên,Lớp,Ngày sinh,Mã đề,Điểm Phần I (TN),Điểm Phần II (Đ/S),Điểm Phần III (TLN),Điểm Tự luận,Tổng điểm (Thang 10),Xếp loại,Trạng thái bài\n'
+    : '\uFEFFSTT,Số báo danh,Họ và tên,Lớp,Ngày sinh,Mã đề,Điểm Phần I (TN),Điểm Phần II (Đ/S),Điểm Phần III (TLN),Tổng điểm (Thang 10),Xếp loại,Trạng thái bài\n';
+  const rows = list.map((p, idx) => {
     const r = p.result || {};
     const p1 = r.part1?.points ?? r.part1Score ?? '-';
     const p2 = r.part2?.points ?? r.part2Score ?? '-';
     const p3 = r.part3?.points ?? r.part3Score ?? '-';
+    const essay = p.essayScore ?? r.essayScore ?? '-';
     const total = r.totalScore ?? '-';
     const grade = r.gradeClass ?? 'Chưa chấm';
     const status = p.isCorrected ? 'Đã hiệu chỉnh & Lưu vết' : (p.warnings?.length > 0 ? 'Có cảnh báo' : 'Hợp lệ');
 
-    return [
+    const baseCols = [
       idx + 1,
       `"${p.sbd}"`,
       `"${p.studentName}"`,
@@ -1020,14 +1516,69 @@ function exportRosterToCsv(gradedPapers, metadata = {}) {
       `"${p.scannedExamCode}"`,
       p1,
       p2,
-      p3,
-      total,
-      `"${grade}"`,
-      `"${status}"`
-    ].join(',');
+      p3
+    ];
+    if (hasEssay) baseCols.push(essay);
+    baseCols.push(total, `"${grade}"`, `"${status}"`);
+    return baseCols.join(',');
   });
 
   return header + rows.join('\n');
+}
+
+/**
+ * Xuất Báo cáo Bảng điểm Toàn Khối (nhiều lớp) ra định dạng CSV UTF-8 BOM
+ */
+function exportMultiClassGradeCsv(gradeReport) {
+  const lines = ['\uFEFFBÁO CÁO TỔNG HỢP ĐIỂM TOÀN KHỐI - MATRIXEDU'];
+  lines.push(`"Đề kiểm tra","${(gradeReport.examTitle || '').replace(/"/g, '""')}"`);
+  lines.push(`"Tổng số lớp","${gradeReport.totalClasses || 0}","Tổng số bài","${gradeReport.overall?.count || 0}","Điểm TB khối","${gradeReport.overall?.avg || 0}"`);
+  lines.push('');
+  lines.push('Lớp,Sĩ số chấm,Điểm TB,Cao nhất,Thấp nhất,Trung vị,Giỏi (SL),Giỏi (%),Khá (SL),Khá (%),Trung bình (SL),TB (%),Yếu/Chưa đạt (SL),Yếu (%)');
+
+  (gradeReport.classes || []).forEach(c => {
+    const cl = c.classification || {};
+    lines.push([
+      `"${c.className}"`,
+      c.count,
+      c.avg,
+      c.max,
+      c.min,
+      c.median,
+      cl.gio || 0,
+      cl.gioPct || 0,
+      cl.kha || 0,
+      cl.khaPct || 0,
+      cl.trungBinh || 0,
+      cl.trungBinhPct || 0,
+      cl.yeu || 0,
+      cl.yeuPct || 0
+    ].join(','));
+  });
+
+  const ov = gradeReport.overall || {};
+  const ovCl = ov.classification || {};
+  lines.push([
+    '"TOÀN KHỐI"',
+    ov.count || 0,
+    ov.avg || 0,
+    ov.max || 0,
+    ov.min || 0,
+    ov.median || 0,
+    ovCl.gio || 0,
+    ovCl.gioPct || 0,
+    ovCl.kha || 0,
+    ovCl.khaPct || 0,
+    ovCl.trungBinh || 0,
+    ovCl.trungBinhPct || 0,
+    ovCl.yeu || 0,
+    ovCl.yeuPct || 0
+  ].join(','));
+
+  lines.push('');
+  lines.push('CHI TIẾT ĐIỂM TỪNG HỌC SINH');
+  const detailCsv = exportRosterToCsv(gradeReport.allPapers || []).replace(/^\uFEFF/, '');
+  return lines.join('\n') + '\n' + detailCsv;
 }
 
 /**
@@ -1086,7 +1637,7 @@ function syncOmrDatabaseToGoogleDrive({ folderId = '1wcSRCsZ9wzjO9ypblF_9L4si9kP
   const dbJsonStr = JSON.stringify(dbPayload, null, 2);
   try {
     fs.writeFileSync(dbFilePath, dbJsonStr, 'utf8');
-  } catch (_) {}
+  } catch (_) { }
 
   // 2. Tạo file Bảng điểm CSV
   const csvFileName = `BANG_DIEM_${subjectSlug}_Lop${gradeSlug}_${dateStr}.csv`;
@@ -1094,7 +1645,7 @@ function syncOmrDatabaseToGoogleDrive({ folderId = '1wcSRCsZ9wzjO9ypblF_9L4si9kP
   const csvFilePath = path.join(DATA_DIR, csvFileName);
   try {
     fs.writeFileSync(csvFilePath, csvContent, 'utf8');
-  } catch (_) {}
+  } catch (_) { }
 
   // 3. Tạo file Nhật ký lưu vết CSV
   const auditFileName = `NHAT_KY_LUU_VET_CHAM_THI_${dateStr}.csv`;
@@ -1102,7 +1653,7 @@ function syncOmrDatabaseToGoogleDrive({ folderId = '1wcSRCsZ9wzjO9ypblF_9L4si9kP
   const auditFilePath = path.join(DATA_DIR, auditFileName);
   try {
     fs.writeFileSync(auditFilePath, auditContent, 'utf8');
-  } catch (_) {}
+  } catch (_) { }
 
   return {
     ok: true,
@@ -1122,7 +1673,12 @@ module.exports = {
   DEFAULT_CLASS_ROSTER,
   getActiveRoster,
   saveActiveRoster,
+  listClassRostersSummary,
+  saveClassRoster,
+  setActiveRosterClass,
+  deleteClassRoster,
   buildSmartRosterMap,
+  findAnswerKeyByCode,
   getAuditLogs,
   logAuditRecord,
   isShortAnswerMatch,
@@ -1132,10 +1688,13 @@ module.exports = {
   calculateBatchStatistics,
   updatePaperAndAudit,
   saveGradingSessionSnapshot,
+  syncSessionPapers,
   listSavedOmrSessions,
   loadSavedOmrSession,
   deleteSavedOmrSession,
+  aggregateGradeReportByExam,
   exportRosterToCsv,
+  exportMultiClassGradeCsv,
   exportAuditLogsToCsv,
   syncOmrDatabaseToGoogleDrive
 };

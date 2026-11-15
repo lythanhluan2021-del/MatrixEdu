@@ -2121,7 +2121,9 @@
             <div class="card hover-zone-cyan">
               <div class="card-header">
                 <div class="card-title">📝 4. Soạn Đề & Hoán vị Mã đề</div>
-                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                  <span id="step4-save-badge" style="font-size:0.75rem; font-weight:700; color:#64748b; background:#f1f5f9; padding:4px 10px; border-radius:999px; border:1px solid #cbd5e1;">Chưa lưu Kho Đề</span>
+                  <button class="btn btn-outline" onclick="saveCurrentProfile(false, true)" style="border-color:#0284c7; color:#0369a1; font-weight:700;" title="Lưu đề thi hiện tại (kèm toàn bộ mã đề & đáp án) vào Kho Đề Thi để dùng lại chấm nhiều lớp">💾 Lưu Đề vào Kho Đề Thi</button>
                   <button class="btn btn-primary" onclick="runStep4GenerateExam()">🤖 Tự động Sinh Bộ Câu Hỏi bám sát Ma
                     trận & Đặc tả</button>
                   <button class="btn btn-secondary" onclick="openShuffleVariantsModal()" style="font-weight:700;">🔀 Tùy
@@ -2180,9 +2182,13 @@
 
               <div class="step-footer">
                 <button class="btn btn-outline" onclick="goToStep(3)">← Quay lại Bước 3 (Bản đặc tả)</button>
-                <button class="btn btn-success btn-lg" onclick="confirmStep4AndGoStep5()">
-                  ✅ Xác nhận Đề kiểm tra & Chuyển sang Bước 5: Đáp án & Kiểm định QA →
-                </button>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <button class="btn btn-outline" onclick="saveCurrentProfile(false, true)" style="border-color:#0284c7; color:#0369a1; font-weight:700;">💾 Lưu Đề vào Kho Đề Thi</button>
+                  <button class="btn btn-outline" onclick="saveCurrentProfileAndGradeStep7()" style="border-color:#7c3aed; color:#6d28d9; font-weight:700;">🎯 Lưu & Chấm OMR (Bước 7)</button>
+                  <button class="btn btn-success btn-lg" onclick="confirmStep4AndGoStep5()">
+                    ✅ Xác nhận Đề kiểm tra & Chuyển sang Bước 5: Đáp án & Kiểm định QA →
+                  </button>
+                </div>
               </div>
             </div>
           </section>
@@ -2208,9 +2214,14 @@
 
               <div class="step-footer">
                 <button class="btn btn-outline" onclick="goToStep(4)">← Quay lại Bước 4 (Soạn đề)</button>
-                <button class="btn btn-success btn-lg" onclick="confirmStep5AndGoStep6()">
-                  ✅ Xác nhận Đáp án & Chuyển sang Bước 6: Xuất File Word (.docx) →
-                </button>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                  <span id="step5-save-badge" style="font-size:0.75rem; font-weight:700; color:#64748b; background:#f1f5f9; padding:4px 10px; border-radius:999px; border:1px solid #cbd5e1;">Chưa lưu Kho Đề</span>
+                  <button class="btn btn-outline" onclick="saveCurrentProfile(false, true)" style="border-color:#0284c7; color:#0369a1; font-weight:700;">💾 Lưu Đề vào Kho Đề Thi</button>
+                  <button class="btn btn-outline" onclick="saveCurrentProfileAndGradeStep7()" style="border-color:#7c3aed; color:#6d28d9; font-weight:700;">🎯 Lưu Đề & Chấm OMR (Bước 7)</button>
+                  <button class="btn btn-success btn-lg" onclick="confirmStep5AndGoStep6()">
+                    ✅ Xác nhận Đáp án & Chuyển sang Bước 6: Xuất File Word (.docx) →
+                  </button>
+                </div>
               </div>
             </div>
           </section>
@@ -2373,6 +2384,40 @@
                 <!-- TAB 1 CONTENT: GRADING WORKBENCH (REDESIGNED PRO STUDIO) -->
                 <div id="omr-grade-tab-content" style="display:flex; flex-direction:column; flex:1; overflow:hidden;">
 
+                  <!-- 0. CLOSED-LOOP EXAM WAREHOUSE & MULTI-CLASS BAR -->
+                  <div id="omr-exam-warehouse-bar"
+                    style="padding:8px 12px; background:linear-gradient(135deg,#eef2ff,#f0f9ff); border-bottom:1px solid #c7d2fe; display:flex; flex-direction:column; gap:6px;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">
+                      <div style="display:flex; align-items:center; gap:6px; flex:1; min-width:210px;">
+                        <span style="font-size:0.74rem; font-weight:800; color:#3730a3; white-space:nowrap;">📚 Đề thi:</span>
+                        <select id="omr-saved-exam-select" onchange="onOmrSavedExamSelected(this.value)"
+                          style="flex:1; min-width:140px; font-size:0.75rem; font-weight:600; padding:4px 8px; border:1px solid #a5b4fc; border-radius:6px; background:#fff; color:#1e1b4b;">
+                          <option value="__CURRENT__">📝 Đề đang soạn hiện tại (Bước 4–5)</option>
+                        </select>
+                      </div>
+                      <span id="omr-active-source-pill"
+                        style="font-size:0.7rem; font-weight:700; color:#1d4ed8; background:#dbeafe; padding:2px 8px; border-radius:999px; border:1px solid #93c5fd; white-space:nowrap;">
+                        Nguồn: Đề hiện tại
+                      </span>
+                    </div>
+                    <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">
+                      <div style="display:flex; align-items:center; gap:6px; flex:1; min-width:200px;">
+                        <span style="font-size:0.74rem; font-weight:800; color:#065f46; white-space:nowrap;">🏫 Lớp chấm:</span>
+                        <select id="omr-active-class-select" onchange="onOmrActiveClassSelected(this.value)"
+                          style="flex:1; min-width:120px; font-size:0.75rem; font-weight:600; padding:4px 8px; border:1px solid #6ee7b7; border-radius:6px; background:#fff; color:#064e3b;">
+                          <option value="12A1">Lớp 12A1</option>
+                        </select>
+                      </div>
+                      <button class="btn btn-sm" onclick="prepareNextClassGrading()"
+                        style="font-size:0.72rem; font-weight:700; padding:3px 9px; background:#ecfdf5; border:1px solid #34d399; color:#047857; border-radius:6px; white-space:nowrap;"
+                        title="Giữ nguyên bộ đáp án Đề hiện tại, chuyển sang lớp mới và xóa ảnh bài quét cũ để chấm lớp tiếp theo">
+                        ➡️ Chấm lớp tiếp theo
+                      </button>
+                    </div>
+                    <div id="omr-essay-warning-pill" style="display:none; font-size:0.72rem; font-weight:700; color:#92400e; background:#fef3c7; border:1px solid #fcd34d; padding:4px 8px; border-radius:6px;">
+                      ⚠️ Đề có Tự luận: thang điểm OMR tối đa ...đ
+                    </div>
+                  </div>
                   <!-- 1. SMART EXAM CONFIG DECK (Header Pill tinh gọn, sang trọng) -->
                   <div
                     style="padding:8px 12px; background:#f8fafc; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap;">
@@ -2383,7 +2428,7 @@
                       </span>
                       <span id="omr-roster-badge" onclick="openOmrRosterModal()"
                         style="font-size:0.72rem; font-weight:700; color:#15803d; background:#f0fdf4; padding:3px 7px; border-radius:6px; border:1px solid #bbf7d0; cursor:pointer; white-space:nowrap;"
-                        title="Click để xem hoặc nạp Danh sách Học sinh của lớp">
+                        title="Click để xem hoặc nạp Danh sách Học sinh nhiều lớp">
                         👥 35 HS (12A1)
                       </span>
                       <span id="omr-summary-pts"
@@ -2629,6 +2674,26 @@
                 <!-- TAB 2 CONTENT: REPORTS, SAVED SESSIONS & AUDIT TRAIL -->
                 <div id="omr-reports-tab-content"
                   style="display:none; flex-direction:column; flex:1; overflow-y:auto; padding:12px; gap:12px;">
+                  <div id="omr-multiclass-report-box" style="background:linear-gradient(135deg,#f8fafc,#eef2ff); padding:10px; border-radius:6px; border:1px solid #c7d2fe;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+                      <h5 style="margin:0; color:#1e1b4b; font-size:0.86rem;">🏫 Báo cáo Tổng hợp Khối (Nhiều lớp / Cùng Đề)</h5>
+                      <button id="btn-export-multiclass-csv" class="btn btn-sm" onclick="exportMultiClassGradeCsvClient()"
+                        style="font-size:0.72rem; padding:3px 9px; background:#0f766e; color:#fff; border:none; border-radius:5px; font-weight:700;">
+                        📊 Xuất CSV Toàn Khối
+                      </button>
+                    </div>
+                    <div style="display:flex; gap:6px; align-items:center; margin-bottom:8px;">
+                      <select id="omr-report-exam-filter" onchange="renderMultiClassGradeReport(this.value)"
+                        style="flex:1; font-size:0.75rem; padding:4px 8px; border:1px solid #cbd5e1; border-radius:5px; background:#fff;">
+                        <option value="">Đề vừa chấm gần nhất</option>
+                      </select>
+                      <button class="btn btn-sm btn-outline" onclick="renderMultiClassGradeReport()" style="font-size:0.72rem; padding:3px 8px;">🔄</button>
+                    </div>
+                    <div id="omr-multiclass-report-summary" style="font-size:0.75rem; color:#334155; margin-bottom:6px;">
+                      Chưa có dữ liệu tổng hợp theo khối.
+                    </div>
+                    <div id="omr-multiclass-report-table-wrap" style="overflow-x:auto;"></div>
+                  </div>
                   <div style="background:#f8fafc; padding:10px; border-radius:6px; border:1px solid #cbd5e1;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
                       <h5 style="margin:0; color:#0f172a; font-size:0.86rem;">🗂️ Các ca chấm đã lưu trên máy
@@ -2895,6 +2960,19 @@
                   </div>
                 </div>
 
+                <!-- Tùy chọn nhập thêm Điểm Tự luận (khi đề thi hỗn hợp có Tự luận) -->
+                <div id="edit-paper-essay-box" style="border:1px solid #d8b4fe; background:#faf5ff; border-radius:6px; padding:12px; margin-bottom:14px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+                    <div>
+                      <div style="font-weight:700; font-size:0.86rem; color:#6b21a8;">✍️ Điểm Tự luận chấm tay (Tùy chọn)</div>
+                      <div id="edit-paper-essay-hint" style="font-size:0.75rem; color:#7e22ce;">Để trống nếu chỉ chấm điểm trắc nghiệm OMR; nhập số nếu muốn cộng vào Tổng điểm bài thi.</div>
+                    </div>
+                    <input type="number" step="0.25" min="0" max="10" id="edit-paper-essay-score" class="form-control"
+                      style="width:140px; font-weight:800; border-color:#a855f7; color:#581c87; background:#fff;"
+                      placeholder="VD: 2.5" />
+                  </div>
+                </div>
+
                 <!-- Lý do can thiệp & Người thực hiện (Bắt buộc để lưu vết) -->
                 <div
                   style="background:#fffbeb; border:1px solid #fde68a; border-radius:6px; padding:12px; margin-bottom:10px;">
@@ -2952,6 +3030,23 @@
       </div>
 
       <div style="flex:1; overflow-y:auto; padding:16px 20px; display:flex; flex-direction:column; gap:14px;">
+        <!-- Thanh Quản lý Nhiều Lớp trong Kho Danh sách -->
+        <div style="background:linear-gradient(135deg,#f0fdf4,#ecfeff); border:1px solid #a7f3d0; border-radius:8px; padding:10px 12px; display:flex; flex-direction:column; gap:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <div style="font-size:0.82rem; font-weight:800; color:#065f46;">🏫 Danh sách Các Lớp đã lưu (click để chọn sửa / nạp riêng từng lớp):</div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <label style="font-size:0.76rem; font-weight:700; color:#0f766e;">Tên lớp mặc định khi nạp:</label>
+              <input type="text" id="omr-roster-target-class" class="form-control" value="12A1"
+                style="width:92px; padding:3px 8px; font-size:0.78rem; font-weight:700;"
+                placeholder="VD: 12A2" />
+            </div>
+          </div>
+          <div id="omr-roster-class-pills" style="display:flex; gap:6px; flex-wrap:wrap;"></div>
+          <div style="font-size:0.73rem; color:#047857;">
+            💡 Mẹo: Nếu tải 1 file Excel chứa cả khối (có cột <b>Lớp</b>: 12A1, 12A2, 12A4...), hệ thống sẽ <b>tự động tách và lưu riêng từng lớp</b>.
+          </div>
+        </div>
+
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
           <!-- Cột 1: Tải file Excel / CSV -->
           <div style="border:1px solid #cbd5e1; border-radius:8px; padding:12px; background:#f8fafc;">
@@ -3829,6 +3924,25 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       }
     }
 
+    // Tạo bản sao hồ sơ đề thi sạch (loại bỏ dữ liệu ảnh scan OMR nặng trước khi lưu CSDL/localStorage)
+    function buildCleanProfilePayload() {
+      const clone = {};
+      for (const [k, v] of Object.entries(appState || {})) {
+        if (k === 'omr' || k === 'presetsCache') continue;
+        try {
+          clone[k] = JSON.parse(JSON.stringify(v));
+        } catch (_) {
+          clone[k] = v;
+        }
+      }
+      clone.omrSettings = {
+        selectedTemplateId: appState.omr?.selectedTemplateId || 'bgd_2025_4code',
+        selectedClassName: appState.omr?.selectedClassName || '12A1',
+        tfStyle: appState.omr?.pointRules?.tfStyle || 'fixed025'
+      };
+      return clone;
+    }
+
     // Quản lý Tự động Lưu Phiên làm việc (Session Auto-save Snapshot)
     let autoSaveTimer = null;
     function scheduleAutoSave() {
@@ -3839,7 +3953,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
           const snapshot = {
             timestamp: Date.now(),
             timeStr: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
-            appState: JSON.parse(JSON.stringify(appState))
+            appState: buildCleanProfilePayload()
           };
           localStorage.setItem('MT_DEDA_SESSION_AUTO_SNAPSHOT', JSON.stringify(snapshot));
           const badgeText = document.getElementById('autosave-text');
@@ -3880,11 +3994,28 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         if (!raw) return;
         const snapshot = JSON.parse(raw);
         if (snapshot.appState) {
+          const prevOmr = appState.omr || {};
           Object.assign(appState, snapshot.appState);
+          appState.omr = {
+            papers: prevOmr.papers || [],
+            gradedPapers: prevOmr.gradedPapers || [],
+            statistics: prevOmr.statistics || null,
+            activeFilter: prevOmr.activeFilter || 'all',
+            roster: prevOmr.roster || [],
+            rostersSummary: prevOmr.rostersSummary || [],
+            editingPaperId: null,
+            answerKeysByCode: prevOmr.answerKeysByCode || {},
+            selectedTemplateId: snapshot.appState.omrSettings?.selectedTemplateId || prevOmr.selectedTemplateId || 'bgd_2025_4code',
+            selectedClassName: snapshot.appState.omrSettings?.selectedClassName || prevOmr.selectedClassName || '12A1',
+            activeKeySource: prevOmr.activeKeySource || 'current_workflow',
+            selectedExamProfileId: appState.savedExamProfileId || null,
+            lastImportSource: prevOmr.lastImportSource || null
+          };
           populateMetadataInputs();
           dismissSessionRestoreBanner();
-          const targetStep = appState.currentStep || (appState.exam ? 4 : (appState.matrix ? 2 : 1));
+          const targetStep = appState.currentStep || ((appState.variants?.length > 0 || appState.questions?.length > 0) ? 4 : (appState.matrix ? 2 : 1));
           goToStep(targetStep);
+          refreshWorkflowReadiness();
           showToast('Đã khôi phục thành công toàn bộ phiên làm việc trước đó!', 'success');
         }
       } catch (e) {
@@ -3907,6 +4038,88 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         checkAutoSavedSession();
       } catch (e) { }
     });
+
+    function refreshWorkflowReadiness() {
+      try {
+        const setNavPill = (stepNum, text, color = '#64748b') => {
+          const btn = document.getElementById(`nav-step-${stepNum}`);
+          if (!btn) return;
+          const meta = btn.querySelector('.step-meta');
+          if (!meta) return;
+          let el = document.getElementById(`nav-readiness-${stepNum}`);
+          if (!el) {
+            el = document.createElement('div');
+            el.id = `nav-readiness-${stepNum}`;
+            el.style.cssText = 'font-size:0.65rem; font-weight:700; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;';
+            meta.appendChild(el);
+          }
+          el.textContent = text;
+          el.style.color = color;
+        };
+
+        const unitsCount = (appState.units || []).length;
+        setNavPill(1, unitsCount > 0 ? `✓ ${unitsCount} bài học` : 'Chờ nhập tài liệu', unitsCount > 0 ? '#15803d' : '#94a3b8');
+
+        const mRows = appState.matrix?.rows || [];
+        const totalScore = Number(appState.matrix?.totalScore || 0);
+        setNavPill(2, mRows.length > 0 ? `✓ ${mRows.length} dòng (${totalScore.toFixed(1)}đ)` : 'Chưa lập ma trận', mRows.length > 0 ? '#15803d' : '#94a3b8');
+
+        const specCount = (appState.specification || []).length;
+        setNavPill(3, specCount > 0 ? `✓ ${specCount} YCCĐ` : 'Chưa sinh đặc tả', specCount > 0 ? '#15803d' : '#94a3b8');
+
+        const variants = appState.variants || [];
+        const qCount = (appState.questions || []).length;
+        const isSaved = Boolean(appState.savedExamProfileId && appState.id && appState.savedExamProfileId === appState.id);
+        setNavPill(4,
+          variants.length > 0
+            ? (isSaved ? `💾 Đã lưu (${variants.length} mã đề)` : `✓ ${variants.length} mã đề (Chưa lưu Kho)`)
+            : (qCount > 0 ? `✓ ${qCount} câu gốc` : 'Chưa sinh đề'),
+          variants.length > 0 ? (isSaved ? '#0369a1' : '#b45309') : '#94a3b8'
+        );
+
+        const qa = appState.qaReport;
+        setNavPill(5,
+          qa ? (qa.isValid ? `✓ QA ${qa.score ?? 100}/100` : `⚠ QA ${qa.score ?? 0}/100`) : (variants.length > 0 ? 'Sẵn sàng kiểm định' : 'Chờ Bước 4'),
+          qa ? (qa.isValid ? '#15803d' : '#b45309') : '#94a3b8'
+        );
+
+        setNavPill(6, variants.length > 0 ? `✓ Sẵn sàng xuất (${variants.length} đề)` : 'Chờ Bước 4–5', variants.length > 0 ? '#0369a1' : '#94a3b8');
+
+        const omr = appState.omr || {};
+        const gradedCount = (omr.gradedPapers || []).length;
+        const activeCodes = Object.keys(omr.answerKeysByCode || {}).length;
+        const clsLabel = omr.selectedClassName === '__ALL__' ? 'Toàn khối' : (omr.selectedClassName || '12A1');
+        setNavPill(7,
+          gradedCount > 0
+            ? `✓ ${gradedCount} bài (${clsLabel})`
+            : (activeCodes > 0 ? `Sẵn sàng ${activeCodes} mã • ${clsLabel}` : 'Chờ Đáp án'),
+          gradedCount > 0 ? '#15803d' : (activeCodes > 0 ? '#0369a1' : '#94a3b8')
+        );
+
+        const updateSaveBadge = (elId) => {
+          const badge = document.getElementById(elId);
+          if (!badge) return;
+          if (isSaved) {
+            badge.textContent = `💾 Đã lưu Kho Đề (${variants.map(v => v.code).join(', ')})`;
+            badge.style.color = '#15803d';
+            badge.style.background = '#dcfce7';
+            badge.style.borderColor = '#86efac';
+          } else if (variants.length > 0) {
+            badge.textContent = `⚠️ Chưa lưu vào Kho Đề (${variants.length} mã đề)`;
+            badge.style.color = '#b45309';
+            badge.style.background = '#fef3c7';
+            badge.style.borderColor = '#fcd34d';
+          } else {
+            badge.textContent = 'Chưa lưu Kho Đề';
+            badge.style.color = '#64748b';
+            badge.style.background = '#f1f5f9';
+            badge.style.borderColor = '#cbd5e1';
+          }
+        };
+        updateSaveBadge('step4-save-badge');
+        updateSaveBadge('step5-save-badge');
+      } catch (_) { }
+    }
 
     function goToStep(stepNum) {
       appState.currentStep = stepNum;
@@ -3938,6 +4151,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       if (stepNum === 5) renderAnswersStep();
       if (stepNum === 6) renderExportStep();
       if (stepNum === 7 && typeof renderOmrStep === 'function') renderOmrStep();
+      refreshWorkflowReadiness();
       scheduleAutoSave();
     }
 
@@ -5323,13 +5537,22 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         }
         appState.questions = data.questions || [];
         appState.variants = data.variants || [];
+        appState.savedExamProfileId = null;
         if (data.readingPassage) appState.readingPassage = data.readingPassage;
         if (data.listeningTranscript) appState.listeningTranscript = data.listeningTranscript;
         appState.qaReport = data.qaReport || null;
         appState.selectedVariantCode = appState.variants[0]?.code || '101';
 
+        if (appState.omr) {
+          appState.omr.activeKeySource = 'current_workflow';
+          appState.omr.lastImportSource = null;
+          if (typeof syncOmrAnswerKeys === 'function') syncOmrAnswerKeys(true);
+        }
+
         renderExamStep();
-        showToast(`Đã tạo xong ${appState.questions.length} câu hỏi và ${appState.variants.length} mã đề!`, 'success');
+        refreshWorkflowReadiness();
+        scheduleAutoSave();
+        showToast(`Đã tạo xong ${appState.questions.length} câu hỏi và ${appState.variants.length} mã đề! Hãy bấm [Lưu Đề vào Kho Đề Thi] để dùng chấm nhiều lớp.`, 'success');
       } catch (err) {
         showToast('Lỗi sinh đề kiểm tra: ' + err.message, 'error');
       }
@@ -6069,6 +6292,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         if (data.ok) {
           appState.qaReport = data.qaReport;
           renderAnswerAndQaStep();
+          refreshWorkflowReadiness();
         }
       } catch (err) {
         showToast('Lỗi kiểm định QA: ' + err.message, 'error');
@@ -6257,21 +6481,55 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
     // ========================================================================
     // LƯU TRỮ, MỞ LẠI, NHÂN BẢN HỒ SƠ & CẤU HÌNH AI
     // ========================================================================
-    async function saveCurrentProfile() {
+    async function saveCurrentProfile(silent = false, linkToOmrStep7 = false) {
       syncMetadataFromInputs();
       try {
+        const cleanPayload = buildCleanProfilePayload();
         const res = await fetch('/api/profiles', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(appState)
+          body: JSON.stringify(cleanPayload)
         });
         const data = await res.json();
         if (data.ok) {
-          localStorage.setItem('last_saved_exam_profile', JSON.stringify(appState));
-          showToast(`Đã lưu hồ sơ "${data.title}" an toàn vào Ổ D: [data/profiles/${data.id || ''}.json]!`, 'success');
+          appState.id = data.id || appState.id;
+          appState.savedExamProfileId = data.id || appState.id;
+          appState.lastSavedAt = data.updatedAt;
+          try {
+            localStorage.setItem('last_saved_exam_profile', JSON.stringify(cleanPayload));
+          } catch (_) { }
+          refreshWorkflowReadiness();
+          if (linkToOmrStep7 && appState.omr) {
+            appState.omr.selectedExamProfileId = appState.savedExamProfileId;
+            appState.omr.selectedExamTitle = data.title || '';
+            appState.omr.activeKeySource = 'saved_profile';
+            appState.omr.lastImportSource = null;
+          }
+          if (typeof refreshOmrSavedExamsDropdown === 'function') {
+            refreshOmrSavedExamsDropdown().catch(() => { });
+          }
+          if (!silent) {
+            showToast(`✅ Đã lưu đề thi "${data.title}" (${(data.examCodes || []).length} mã đề) vào Kho Đề Thi! Thầy/Cô có thể chọn lại đề này ở Bước 7 để chấm nhiều lớp.`, 'success');
+          }
+          return data;
         }
       } catch (err) {
-        showToast('Lỗi lưu hồ sơ: ' + err.message, 'error');
+        if (!silent) showToast('Lỗi lưu hồ sơ: ' + err.message, 'error');
+      }
+      return null;
+    }
+
+    async function saveCurrentProfileAndGradeStep7() {
+      const res = await saveCurrentProfile(false, true);
+      if (res && res.ok) {
+        if (appState.omr) {
+          appState.omr.activeKeySource = 'saved_profile';
+          appState.omr.selectedExamProfileId = res.id;
+          appState.omr.selectedExamTitle = res.title || '';
+          appState.omr.lastImportSource = null;
+          if (typeof syncOmrAnswerKeys === 'function') syncOmrAnswerKeys(true);
+        }
+        goToStep(7);
       }
     }
 
@@ -6343,33 +6601,79 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         container.innerHTML = `<div style="text-align:center; color:var(--muted); padding:20px;">Chưa có hồ sơ nào được lưu.</div>`;
         return;
       }
-      container.innerHTML = data.profiles.map(p => `
-        <div style="border:1px solid var(--border); border-radius:8px; padding:12px; display:flex; justify-content:space-between; align-items:center; gap:8px;">
-          <div>
-            <div style="font-weight:700;">${escapeHtml(p.title)}</div>
-            <div style="font-size:0.8rem; color:var(--muted);">
+      container.innerHTML = data.profiles.map(p => {
+        const codesBadge = Array.isArray(p.examCodes) && p.examCodes.length > 0
+          ? `<span style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd; padding:1px 6px; border-radius:4px; font-size:0.72rem; font-weight:700;">Mã đề: ${escapeHtml(p.examCodes.join(', '))}</span>`
+          : '';
+        const essayBadge = p.hasEssay
+          ? `<span style="background:#fef3c7; color:#92400e; border:1px solid #fcd34d; padding:1px 6px; border-radius:4px; font-size:0.72rem; font-weight:700;">Có Tự luận • OMR ${p.maxOmrScore ?? 10}đ</span>`
+          : '';
+        return `
+        <div style="border:1px solid var(--border); border-radius:8px; padding:12px; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+          <div style="min-width:220px; flex:1;">
+            <div style="font-weight:700; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <span>${escapeHtml(p.title)}</span>
+              ${codesBadge}
+              ${essayBadge}
+            </div>
+            <div style="font-size:0.8rem; color:var(--muted); margin-top:3px;">
               Cập nhật: ${new Date(p.updatedAt).toLocaleString('vi-VN')} | Số câu: ${p.questionsCount} | Số mã đề: ${p.variantsCount}
             </div>
           </div>
-          <div style="display:flex; gap:6px;">
-            <button class="btn btn-primary btn-sm" onclick="loadSavedProfile('${escapeHtml(p.id)}')">Mở lại</button>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <button class="btn btn-success btn-sm" onclick="loadSavedProfile('${escapeHtml(p.id)}', 7)" style="background:#0f766e; border-color:#0f766e;">🎯 Chấm OMR (Bước 7)</button>
+            <button class="btn btn-primary btn-sm" onclick="loadSavedProfile('${escapeHtml(p.id)}', 4)">Mở lại (Bước 4)</button>
             <button class="btn btn-danger btn-sm" onclick="deleteSavedProfile('${escapeHtml(p.id)}')">Xóa</button>
           </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
 
-    async function loadSavedProfile(id) {
+    async function loadSavedProfile(id, targetStep = 4) {
       const res = await fetch(`/api/profiles/${encodeURIComponent(id)}`);
       const data = await res.json();
       if (data.ok && data.profile) {
+        const prevOmr = appState.omr || {};
         Object.assign(appState, data.profile);
+        appState.savedExamProfileId = data.profile.id || id;
+        appState.omr = {
+          papers: [],
+          gradedPapers: [],
+          statistics: null,
+          activeFilter: 'all',
+          roster: prevOmr.roster || [],
+          rostersSummary: prevOmr.rostersSummary || [],
+          selectedClassName: prevOmr.selectedClassName || '12A1',
+          editingPaperId: null,
+          answerKeysByCode: prevOmr.answerKeysByCode || {},
+          selectedTemplateId: data.profile.omrSettings?.selectedTemplateId || prevOmr.selectedTemplateId || 'bgd_2025_4code',
+          pointRules: prevOmr.pointRules || { mcq: 0.25, tfStyle: 'fixed025', sa: 0.5 },
+          currentSessionId: null,
+          activeKeySource: targetStep === 7 ? 'saved_profile' : 'current_workflow',
+          selectedExamProfileId: data.profile.id || id,
+          selectedExamTitle: data.profile.title || '',
+          lastImportSource: null
+        };
+        if (data.profile.omrConfig && typeof applyExamOmrConfig === 'function') {
+          applyExamOmrConfig(data.profile.omrConfig, {
+            source: targetStep === 7 ? 'saved_profile' : 'current_workflow',
+            examId: data.profile.id || id,
+            examTitle: data.profile.title || ''
+          });
+        }
         populateMetadataInputs();
         document.getElementById('scope-raw-text').value = (appState.units || []).map(u => `${u.topic}\n${u.unit}`).join('\n');
         renderUnitsTable();
         closeModal('profiles-modal');
-        goToStep(4);
-        showToast('Đã mở lại hồ sơ đề kiểm tra!', 'success');
+        goToStep(targetStep);
+        refreshWorkflowReadiness();
+        showToast(
+          targetStep === 7
+            ? `🎯 Đã nạp đề "${data.profile.title}" (${(data.profile.omrConfig?.examCodes || []).join(', ')}) vào Bước 7 sẵn sàng chấm OMR!`
+            : `Đã mở lại hồ sơ đề kiểm tra "${data.profile.title}"!`,
+          'success'
+        );
       }
     }
 
@@ -7427,13 +7731,29 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         statistics: null,
         activeFilter: 'all',
         roster: [],
+        rostersSummary: [],
+        selectedClassName: '12A1',
         editingPaperId: null,
         answerKeysByCode: {},
-        selectedTemplateId: 'bgd_2025_4code'
+        selectedTemplateId: 'bgd_2025_4code',
+        activeKeySource: 'current_workflow',
+        selectedExamProfileId: null,
+        selectedExamTitle: '',
+        lastImportSource: null,
+        currentSessionId: null,
+        hasEssay: false,
+        essayMaxScore: 0,
+        maxOmrScore: 10
       };
     }
     if (!appState.omr.selectedTemplateId) {
       appState.omr.selectedTemplateId = 'bgd_2025_4code';
+    }
+    if (!appState.omr.selectedClassName) {
+      appState.omr.selectedClassName = '12A1';
+    }
+    if (!appState.omr.activeKeySource) {
+      appState.omr.activeKeySource = appState.omr.lastImportSource ? 'external_file' : 'current_workflow';
     }
 
     /**
@@ -7627,16 +7947,263 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       const roster = appState.omr.roster || [];
       const badge = document.getElementById('omr-roster-badge');
       if (badge) {
-        const cls = roster[0]?.className || '12A1';
+        const cls = appState.omr.selectedClassName === '__ALL__'
+          ? 'Toàn khối'
+          : (appState.omr.selectedClassName || roster[0]?.className || '12A1');
         badge.textContent = `👥 ${roster.length} HS (${cls})`;
       }
+      const clsSel = document.getElementById('omr-active-class-select');
+      if (clsSel && appState.omr.selectedClassName) {
+        const exists = Array.from(clsSel.options).some(o => o.value === appState.omr.selectedClassName);
+        if (exists) clsSel.value = appState.omr.selectedClassName;
+      }
+    }
+
+    function updateOmrSourceAndEssayPills() {
+      const srcPill = document.getElementById('omr-active-source-pill');
+      const src = appState.omr.activeKeySource || 'current_workflow';
+      if (srcPill) {
+        if (src === 'saved_profile') {
+          srcPill.textContent = `Nguồn: Đề đã lưu`;
+          srcPill.style.color = '#065f46';
+          srcPill.style.background = '#d1fae5';
+          srcPill.style.borderColor = '#6ee7b7';
+        } else if (src === 'external_file') {
+          srcPill.textContent = `Nguồn: File Đ/Á ngoài`;
+          srcPill.style.color = '#92400e';
+          srcPill.style.background = '#fef3c7';
+          srcPill.style.borderColor = '#fcd34d';
+        } else {
+          srcPill.textContent = `Nguồn: Đề đang soạn`;
+          srcPill.style.color = '#1d4ed8';
+          srcPill.style.background = '#dbeafe';
+          srcPill.style.borderColor = '#93c5fd';
+        }
+      }
+
+      const warnPill = document.getElementById('omr-essay-warning-pill');
+      if (warnPill) {
+        if (appState.omr.hasEssay && Number(appState.omr.essayMaxScore || 0) > 0) {
+          warnPill.style.display = 'block';
+          warnPill.textContent = `⚠️ Đề hỗn hợp có Tự luận (${appState.omr.essayMaxScore}đ): Thang OMR tối đa ${appState.omr.maxOmrScore}đ. Khi sửa phiếu có thể nhập thêm điểm Tự luận chấm tay.`;
+        } else {
+          warnPill.style.display = 'none';
+        }
+      }
+    }
+
+    function applyExamOmrConfig(omrConfig, metaInfo = {}) {
+      if (!omrConfig || !appState.omr) return;
+      if (omrConfig.answerKeysByCode && Object.keys(omrConfig.answerKeysByCode).length > 0) {
+        appState.omr.answerKeysByCode = JSON.parse(JSON.stringify(omrConfig.answerKeysByCode));
+      }
+      const curTf = appState.omr.pointRules?.tfStyle || localStorage.getItem('matrixedu_omr_tfStyle') || 'fixed025';
+      appState.omr.pointRules = {
+        mcq: Number(omrConfig.pointRules?.MCQ ?? omrConfig.pointRules?.mcq ?? 0.25),
+        tfStyle: curTf,
+        sa: Number(omrConfig.pointRules?.SA ?? omrConfig.pointRules?.sa ?? 0.5)
+      };
+      appState.omr.hasEssay = Boolean(omrConfig.hasEssay);
+      appState.omr.essayMaxScore = Number(omrConfig.essayMaxScore || 0);
+      appState.omr.maxOmrScore = Number(omrConfig.maxOmrScore ?? 10);
+      if (metaInfo.source) appState.omr.activeKeySource = metaInfo.source;
+      if (metaInfo.examId !== undefined) appState.omr.selectedExamProfileId = metaInfo.examId;
+      if (metaInfo.examTitle !== undefined) appState.omr.selectedExamTitle = metaInfo.examTitle;
+      if (metaInfo.source !== 'external_file') appState.omr.lastImportSource = null;
+
+      const codes = Object.keys(appState.omr.answerKeysByCode || {});
+      const summaryCodesEl = document.getElementById('omr-summary-codes');
+      if (summaryCodesEl) summaryCodesEl.textContent = `${codes.length} Mã đề: ${codes.join(', ')}`;
+      updateOmrSourceAndEssayPills();
+    }
+
+    async function refreshOmrSavedExamsDropdown() {
+      const sel = document.getElementById('omr-saved-exam-select');
+      if (!sel) return;
+      try {
+        const res = await fetch('/api/profiles');
+        const data = await res.json();
+        const profiles = data.ok && Array.isArray(data.profiles) ? data.profiles : [];
+        const curVariants = appState.variants || [];
+        const curCodes = curVariants.map(v => v.code).join(', ');
+        let html = `<option value="__CURRENT__">📝 Đề đang soạn hiện tại (Bước 4–5${curCodes ? ': ' + curCodes : ''})</option>`;
+        profiles.forEach(p => {
+          const codeHint = Array.isArray(p.examCodes) && p.examCodes.length > 0 ? p.examCodes.join(', ') : `${p.variantsCount || 0} đề`;
+          const essayHint = p.hasEssay ? ` • TL ${p.essayMaxScore || ''}đ` : '';
+          html += `<option value="${escapeHtml(p.id)}">💾 ${escapeHtml(p.title)} (${escapeHtml(codeHint)}${essayHint})</option>`;
+        });
+        sel.innerHTML = html;
+        if (appState.omr.activeKeySource === 'saved_profile' && appState.omr.selectedExamProfileId) {
+          const exists = profiles.some(p => p.id === appState.omr.selectedExamProfileId);
+          sel.value = exists ? appState.omr.selectedExamProfileId : '__CURRENT__';
+        } else {
+          sel.value = '__CURRENT__';
+        }
+      } catch (_) { }
+    }
+
+    async function onOmrSavedExamSelected(examId) {
+      if (!examId || examId === '__CURRENT__') {
+        appState.omr.activeKeySource = 'current_workflow';
+        appState.omr.selectedExamProfileId = null;
+        appState.omr.selectedExamTitle = '';
+        appState.omr.lastImportSource = null;
+        appState.omr.currentSessionId = null;
+        syncOmrAnswerKeys(true);
+        updateOmrPointRulesFromMatrix();
+        updateOmrSourceAndEssayPills();
+        refreshWorkflowReadiness();
+        showToast('📝 Đã chọn Đề đang soạn ở Bước 4–5 làm bộ đáp án chấm OMR.', 'info');
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/profiles/${encodeURIComponent(examId)}`);
+        const data = await res.json();
+        if (!data.ok || !data.profile) {
+          showToast(data.message || 'Không thể tải đề đã lưu!', 'error');
+          return;
+        }
+        const cfg = data.profile.omrConfig;
+        if (!cfg || !cfg.answerKeysByCode || Object.keys(cfg.answerKeysByCode).length === 0) {
+          showToast('Hồ sơ đề này chưa có mã đề & đáp án! Hãy mở Bước 4 để sinh đề trước.', 'warning');
+          return;
+        }
+        applyExamOmrConfig(cfg, {
+          source: 'saved_profile',
+          examId: data.profile.id || examId,
+          examTitle: data.profile.title || ''
+        });
+        appState.omr.currentSessionId = null;
+        updateOmrPointRulesFromMatrix();
+        refreshWorkflowReadiness();
+        showToast(`✅ Đã nạp đáp án từ Kho Đề: "${data.profile.title}" (${(cfg.examCodes || []).join(', ')})! Sẵn sàng chấm nhiều lớp.`, 'success');
+
+        if (appState.omr.gradedPapers && appState.omr.gradedPapers.length > 0) {
+          await regradeCurrentPapersBatch();
+        }
+      } catch (err) {
+        showToast('Lỗi nạp đề từ kho: ' + err.message, 'error');
+      }
+    }
+
+    async function refreshOmrRostersDropdown(preferredClass) {
+      try {
+        const res = await fetch('/api/omr/rosters');
+        const data = await res.json();
+        if (!data.ok) return;
+        const classes = data.classes || [];
+        appState.omr.rostersSummary = classes;
+
+        const targetCls = preferredClass || appState.omr.selectedClassName || data.activeClass || (classes[0]?.className || '12A1');
+        appState.omr.selectedClassName = targetCls;
+
+        if (targetCls === '__ALL__') {
+          appState.omr.roster = data.allRoster || [];
+        } else if (data.classesMap && data.classesMap[targetCls]) {
+          appState.omr.roster = data.classesMap[targetCls];
+        } else {
+          appState.omr.roster = data.activeRoster || data.allRoster || [];
+        }
+
+        const sel = document.getElementById('omr-active-class-select');
+        if (sel) {
+          let html = classes.map(c => `<option value="${escapeHtml(c.className)}">🏫 Lớp ${escapeHtml(c.className)} (${c.count} HS)</option>`).join('');
+          html += `<option value="__ALL__">📚 Toàn khối (${data.totalStudents || 0} HS • ${classes.length} lớp)</option>`;
+          sel.innerHTML = html;
+          sel.value = Array.from(sel.options).some(o => o.value === targetCls) ? targetCls : (classes[0]?.className || '__ALL__');
+        }
+        updateOmrRosterBadge();
+      } catch (_) { }
+    }
+
+    async function onOmrActiveClassSelected(className) {
+      try {
+        const res = await fetch('/api/omr/rosters/select', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ className })
+        });
+        const data = await res.json();
+        if (data.ok) {
+          appState.omr.selectedClassName = data.activeClass || className;
+          appState.omr.roster = data.roster || [];
+          appState.omr.rostersSummary = data.classes || appState.omr.rostersSummary || [];
+          appState.omr.currentSessionId = null;
+          updateOmrRosterBadge();
+          refreshWorkflowReadiness();
+          showToast(`🏫 Đã chọn danh sách ${className === '__ALL__' ? 'Toàn khối' : 'Lớp ' + className} (${appState.omr.roster.length} HS).`, 'info');
+        }
+      } catch (err) {
+        showToast('Lỗi chuyển danh sách lớp: ' + err.message, 'error');
+      }
+    }
+
+    async function prepareNextClassGrading() {
+      const classes = appState.omr.rostersSummary || [];
+      let nextClass = appState.omr.selectedClassName || '12A1';
+      if (classes.length > 1) {
+        const idx = classes.findIndex(c => c.className === nextClass);
+        nextClass = classes[(idx + 1) % classes.length].className;
+        await onOmrActiveClassSelected(nextClass);
+      }
+
+      appState.omr.papers = [];
+      appState.omr.gradedPapers = [];
+      appState.omr.statistics = null;
+      appState.omr.activePaperId = null;
+      appState.omr.currentSessionId = null;
+
+      switchOmrTab('grade');
+      renderOmrPapersTable();
+      drawOmrCanvas(null);
+
+      const scanBadge = document.getElementById('omr-scans-badge');
+      if (scanBadge) scanBadge.textContent = 'Chưa có bài chấm';
+      const banner = document.getElementById('omr-status-banner-text');
+      if (banner) {
+        banner.textContent = `Sẵn sàng chấm Lớp ${nextClass} với nguyên bộ Đáp án hiện tại (${Object.keys(appState.omr.answerKeysByCode || {}).join(', ')}). Hãy nạp thư mục/ảnh scan bài làm!`;
+      }
+      refreshWorkflowReadiness();
+
+      if (classes.length <= 1) {
+        showToast(`➡️ Đã giữ nguyên bộ đáp án & xóa bài quét cũ! Hiện chỉ có 1 danh sách lớp — mở Quản lý DS Lớp để nạp thêm lớp tiếp theo (VD: 12A2, 12A4...).`, 'info');
+        openOmrRosterModal();
+      } else {
+        showToast(`➡️ Đã chuyển sang Lớp ${nextClass} và giữ nguyên bộ đáp án! Hãy nạp ảnh/PDF bài thi Lớp ${nextClass}.`, 'success');
+      }
+    }
+
+    function buildOmrGradingContext() {
+      const m = appState.metadata || {};
+      const src = appState.omr.activeKeySource || 'current_workflow';
+      const examId = src === 'saved_profile'
+        ? (appState.omr.selectedExamProfileId || appState.id || 'exam_saved')
+        : (src === 'external_file'
+          ? `ext_${String(appState.omr.lastImportSource || 'external').replace(/[^a-zA-Z0-9_-]+/g, '_').slice(0, 32)}`
+          : (appState.savedExamProfileId || appState.id || 'exam_current'));
+      const examTitle = appState.omr.selectedExamTitle
+        || `${m.subject || 'Đề thi'} Lớp ${m.grade || ''} - ${m.examPeriod || 'Kiểm tra'}`.trim();
+      const firstPaperClass = (appState.omr.papers || appState.omr.gradedPapers || [])[0]?.className;
+      const className = (appState.omr.selectedClassName && appState.omr.selectedClassName !== '__ALL__')
+        ? appState.omr.selectedClassName
+        : (firstPaperClass || appState.omr.roster?.[0]?.className || '12A1');
+
+      return {
+        examId,
+        examTitle,
+        className,
+        templateId: appState.omr.selectedTemplateId || 'bgd_2025_4code',
+        overwriteSameExamClass: true,
+        sessionId: appState.omr.currentSessionId || undefined
+      };
     }
 
     /**
      * Khởi tạo giao diện Bước 7 khi chuyển đến tab
      */
     async function renderOmrStep() {
-      // 1. Đồng bộ đáp án chuẩn từ các đề thi Bước 4 & 5
+      // 1. Đồng bộ đáp án chuẩn từ các đề thi Bước 4 & 5 (trừ khi đang dùng Đề đã lưu hoặc Đ/Á ngoài)
       syncOmrAnswerKeys();
 
       // 1b. Đồng bộ giá trị chọn Mẫu phiếu tô trên thanh công cụ
@@ -7653,20 +8220,16 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       const selTf2 = document.getElementById('omr-tf-style-drawer-selector');
       if (selTf2) selTf2.value = curTfStyle;
 
-      // 2. Cập nhật thang điểm chia điểm từ Ma trận Bước 2
+      // 2. Cập nhật thang điểm chia điểm từ Ma trận Bước 2 / Đề đã chọn
       updateOmrPointRulesFromMatrix();
+      updateOmrSourceAndEssayPills();
 
-      // 3. Nạp danh sách lớp nếu có
-      if (!appState.omr.roster || appState.omr.roster.length === 0) {
-        try {
-          const res = await fetch('/api/omr/template-info');
-          const data = await res.json();
-          if (data.ok && Array.isArray(data.defaultRoster)) {
-            appState.omr.roster = data.defaultRoster;
-          }
-        } catch (_) { }
-      }
-      updateOmrRosterBadge();
+      // 3. Nạp Kho Đề đã lưu & Danh sách nhiều lớp
+      await Promise.all([
+        refreshOmrSavedExamsDropdown(),
+        refreshOmrRostersDropdown(appState.omr.selectedClassName)
+      ]);
+      refreshWorkflowReadiness();
 
       // 4. Khởi tạo sự kiện chuột cho Canvas
       initOmrCanvasEvents();
@@ -7687,22 +8250,48 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
     }
 
     /**
-     * Cập nhật nhãn chia điểm động theo đúng Ma trận ở Bước 2
+     * Cập nhật nhãn chia điểm động theo đúng Ma trận ở Bước 2 hoặc Đề đang chọn
      */
     function updateOmrPointRulesFromMatrix() {
+      const curTfStyle = appState.omr.pointRules?.tfStyle || localStorage.getItem('matrixedu_omr_tfStyle') || 'fixed025';
+      if ((appState.omr.activeKeySource === 'saved_profile' || appState.omr.activeKeySource === 'external_file')
+        && Object.keys(appState.omr.answerKeysByCode || {}).length > 0) {
+        const firstCode = Object.keys(appState.omr.answerKeysByCode)[0];
+        const k = appState.omr.answerKeysByCode[firstCode] || {};
+        const p1Count = (k.part1 || []).length;
+        const p2Count = Object.keys(k.part2 || {}).length;
+        const p3Count = Object.keys(k.part3 || {}).length;
+        const mcqRule = Number(appState.omr.pointRules?.mcq ?? 0.25);
+        const saRule = Number(appState.omr.pointRules?.sa ?? 0.5);
+        const p1Pts = Math.round(p1Count * mcqRule * 100) / 100;
+        const p2Pts = Math.round(p2Count * 1.0 * 100) / 100;
+        const p3Pts = Math.round(p3Count * saRule * 100) / 100;
+        const total = Math.round((p1Pts + p2Pts + p3Pts) * 100) / 100;
+        const essaySuffix = appState.omr.hasEssay && appState.omr.essayMaxScore > 0 ? ` • Tự luận: ${appState.omr.essayMaxScore}đ` : '';
+        const ruleText = `P.I (TN): ${p1Pts}đ (${p1Count}c) • P.II (Đ/S): ${p2Pts}đ (${p2Count}c) • P.III: ${p3Pts}đ (${p3Count}c)${essaySuffix} • Tối đa OMR: ${total}đ`;
+        const el = document.getElementById('omr-point-rule-text');
+        if (el) el.value = ruleText;
+        appState.omr.pointRules = { mcq: mcqRule, tfStyle: curTfStyle, sa: saRule };
+        appState.omr.maxOmrScore = total;
+        updateOmrSourceAndEssayPills();
+        return;
+      }
+
       const m = appState.matrix || {};
       let p1Count = 0;
       let p2Count = 0;
       let p3Count = 0;
+      let essayCount = 0;
 
       (m.rows || []).forEach(r => {
         p1Count += (r.mcq_b || 0) + (r.mcq_h || 0) + (r.mcq_vd || 0);
         p2Count += (r.tf_b || 0) + (r.tf_h || 0) + (r.tf_vd || 0);
         p3Count += (r.sa_b || 0) + (r.sa_h || 0) + (r.sa_vd || 0);
+        essayCount += (r.tl_b || 0) + (r.tl_h || 0) + (r.tl_vd || 0);
       });
 
       // Nếu ma trận chưa có dòng nào, lấy mặc định môn Tin học 12 (24 MCQ, 4 TF)
-      if (p1Count === 0 && p2Count === 0 && p3Count === 0) {
+      if (p1Count === 0 && p2Count === 0 && p3Count === 0 && essayCount === 0) {
         p1Count = 24;
         p2Count = 4;
         p3Count = 0;
@@ -7716,17 +8305,23 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       const p2Pts = Math.round(p2Count * tfRule * 100) / 100;
       const p3Pts = Math.round(p3Count * saRule * 100) / 100;
       const total = Math.round((p1Pts + p2Pts + p3Pts) * 100) / 100;
+      const essayMax = essayCount > 0 ? Math.max(0, Math.round((10 - total) * 100) / 100) : 0;
 
-      const ruleText = `P.I (TN): ${p1Pts}đ (${p1Count}c) • P.II (Đ/S): ${p2Pts}đ (${p2Count}c) • P.III: ${p3Pts}đ (${p3Count}c) • Tổng: ${total}đ`;
+      appState.omr.hasEssay = essayCount > 0 || essayMax > 0;
+      appState.omr.essayMaxScore = essayMax;
+      appState.omr.maxOmrScore = total;
+
+      const essaySuffix = essayCount > 0 ? ` • Tự luận: ${essayMax}đ (${essayCount}c)` : '';
+      const ruleText = `P.I (TN): ${p1Pts}đ (${p1Count}c) • P.II (Đ/S): ${p2Pts}đ (${p2Count}c) • P.III: ${p3Pts}đ (${p3Count}c)${essaySuffix} • Tối đa OMR: ${total}đ`;
       const el = document.getElementById('omr-point-rule-text');
       if (el) el.value = ruleText;
 
-      const curTfStyle = appState.omr.pointRules?.tfStyle || localStorage.getItem('matrixedu_omr_tfStyle') || 'fixed025';
       appState.omr.pointRules = {
         mcq: mcqRule,
         tfStyle: curTfStyle,
         sa: saRule
       };
+      updateOmrSourceAndEssayPills();
     }
 
     /**
@@ -7766,6 +8361,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
 
       try {
         const threshold = parseFloat(document.getElementById('omr-threshold-val')?.value || '0.35');
+        const ctx = buildOmrGradingContext();
         const res = await fetch('/api/omr/grade-batch', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -7775,11 +8371,21 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
             pointRules: appState.omr.pointRules,
             roster: appState.omr.roster || [],
             metadata: appState.metadata || {},
+            examId: ctx.examId,
+            examTitle: ctx.examTitle,
+            className: ctx.className,
+            templateId: ctx.templateId,
+            overwriteSameExamClass: true,
+            sessionId: ctx.sessionId,
             papers: cleanPapers
           })
         });
         const data = await res.json();
-        if (data.ok && Array.isArray(data.gradedPapers)) {
+        if (!res.ok || !data.ok) {
+          showToast(data.message || 'Lỗi chấm lại bài thi!', 'error');
+          return;
+        }
+        if (Array.isArray(data.gradedPapers)) {
           const clientPapersMap = new Map((appState.omr.gradedPapers || []).map(p => [p.id, p]));
           data.gradedPapers.forEach(gp => {
             const orig = clientPapersMap.get(gp.id);
@@ -7794,10 +8400,13 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
           });
           appState.omr.gradedPapers = data.gradedPapers;
           if (data.statistics) appState.omr.statistics = data.statistics;
+          const sid = data.sessionId || data.savedSession?.id;
+          if (sid) appState.omr.currentSessionId = sid;
           renderOmrPapersTable();
+          refreshWorkflowReadiness();
           const activeP = appState.omr.gradedPapers.find(p => p.id === appState.omr.activePaperId) || appState.omr.gradedPapers[0];
           if (activeP) selectOmrPaper(activeP.id);
-          showToast(`✅ Đã chấm xong cả lớp! Điểm số mới đã cập nhật!`, 'success');
+          showToast(`✅ Đã chấm xong ${ctx.className}! Điểm số mới đã cập nhật!`, 'success');
         }
       } catch (err) {
         console.error(err);
@@ -8317,17 +8926,20 @@ Phần III:
       }
 
       appState.omr.answerKeysByCode = JSON.parse(JSON.stringify(keys));
+      appState.omr.activeKeySource = 'external_file';
+      appState.omr.selectedExamProfileId = null;
+      appState.omr.selectedExamTitle = appState.omr.lastImportSource || `File Đ/Á ngoài (${codes.length} mã đề)`;
 
       // Cập nhật cấu hình điểm
       const mcqPt = parseFloat(document.getElementById('ak-cfg-mcq-point')?.value || '0.25');
       if (!appState.omr.pointRules) appState.omr.pointRules = {};
       appState.omr.pointRules.mcq = mcqPt;
 
-      // Cập nhật nhãn Bước 7 Left Panel
+      // Cập nhật nhãn Bước 7 Left Panel (giữ nguyên cấu trúc #omr-summary-codes)
       const sourceName = appState.omr.lastImportSource || `File ngoài (${codes.length} mã đề)`;
       const badge = document.getElementById('omr-keys-badge');
       if (badge) {
-        badge.textContent = `Đã nạp file ngoài (${codes.length} mã đề)`;
+        badge.innerHTML = `<span>🎯</span> <span id="omr-summary-codes">${codes.length} Mã đề: ${escapeHtml(codes.join(', '))}</span>`;
         badge.style.color = '#0284c7';
         badge.style.background = '#e0f2fe';
         badge.style.borderColor = '#bae6fd';
@@ -8337,6 +8949,10 @@ Phần III:
       if (input) {
         input.value = `${sourceName}: Mã ${codes.join(', ')}`;
       }
+
+      updateOmrPointRulesFromMatrix();
+      updateOmrSourceAndEssayPills();
+      if (typeof refreshOmrSavedExamsDropdown === 'function') refreshOmrSavedExamsDropdown().catch(() => { });
 
       closeModal('modalManageAnswerKeys');
       showToast(`✅ Đã áp dụng biểu đáp án ${codes.length} mã đề (${codes.join(', ')}). Sẵn sàng chấm bài!`, 'success');
@@ -8349,12 +8965,16 @@ Phần III:
 
     function resetToStep4AnswerKeys() {
       appState.omr.lastImportSource = '';
+      appState.omr.activeKeySource = 'current_workflow';
+      appState.omr.selectedExamProfileId = null;
+      appState.omr.selectedExamTitle = '';
       syncOmrAnswerKeys(true);
       appState.omr.tempAnswerKeys = JSON.parse(JSON.stringify(appState.omr.answerKeysByCode || {}));
 
       const badge = document.getElementById('omr-keys-badge');
       if (badge) {
-        badge.innerHTML = `<span>🎯</span> <span id="omr-summary-codes">Đã liên kết Đề Bước 4</span>`;
+        const codes = Object.keys(appState.omr.answerKeysByCode || {});
+        badge.innerHTML = `<span>🎯</span> <span id="omr-summary-codes">${codes.length} Mã đề: ${escapeHtml(codes.join(', '))}</span>`;
         badge.style.color = '#15803d';
         badge.style.background = '#f0fdf4';
         badge.style.borderColor = '#bbf7d0';
@@ -8365,19 +8985,28 @@ Phần III:
         input.value = `Đã lấy từ Đề Bước 4 & 5 (${Object.keys(appState.omr.answerKeysByCode).join(', ')})`;
       }
 
+      updateOmrSourceAndEssayPills();
+      if (typeof refreshOmrSavedExamsDropdown === 'function') refreshOmrSavedExamsDropdown().catch(() => { });
       renderAnswerKeyMatrixTable();
       showToast('Đã khôi phục biểu đáp án gốc từ Đề thi Bước 4 & 5!', 'info');
     }
 
     /**
-     * Đồng bộ đáp án từ các mã đề thực tế ở Bước 4 & 5 (Giữ nguyên nếu giáo viên đã nạp file Đ/Á ngoài)
+     * Đồng bộ đáp án từ các mã đề thực tế ở Bước 4 & 5 (Giữ nguyên nếu giáo viên đang dùng File Đ/Á ngoài hoặc Đề đã lưu)
      */
     function syncOmrAnswerKeys(forceFromStep4 = false) {
-      if (!forceFromStep4 && appState.omr.lastImportSource && appState.omr.answerKeysByCode && Object.keys(appState.omr.answerKeysByCode).length > 0) {
+      const keepExternal = appState.omr.activeKeySource === 'external_file' && appState.omr.lastImportSource;
+      const keepSaved = appState.omr.activeKeySource === 'saved_profile' && appState.omr.selectedExamProfileId;
+      if (!forceFromStep4 && (keepExternal || keepSaved) && appState.omr.answerKeysByCode && Object.keys(appState.omr.answerKeysByCode).length > 0) {
         const codes = Object.keys(appState.omr.answerKeysByCode);
         const summaryCodesEl = document.getElementById('omr-summary-codes');
         if (summaryCodesEl) summaryCodesEl.textContent = `${codes.length} Mã đề: ${codes.join(', ')}`;
+        updateOmrSourceAndEssayPills();
         return;
+      }
+      if (forceFromStep4 && appState.omr.activeKeySource !== 'saved_profile') {
+        appState.omr.activeKeySource = 'current_workflow';
+        appState.omr.lastImportSource = null;
       }
 
       const keys = {};
@@ -8524,6 +9153,7 @@ Phần III:
           return copy;
         });
 
+        const ctx = buildOmrGradingContext();
         const res = await fetch('/api/omr/grade-batch', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -8533,14 +9163,20 @@ Phần III:
             pointRules: appState.omr.pointRules,
             roster: appState.omr.roster || [],
             metadata: appState.metadata || {},
+            examId: ctx.examId,
+            examTitle: ctx.examTitle,
+            className: ctx.className,
+            templateId: ctx.templateId,
+            overwriteSameExamClass: true,
+            sessionId: ctx.sessionId,
             useSampleBatch: useSample,
             papers: payloadPapers
           })
         });
 
         const data = await res.json();
-        if (!data.ok) {
-          showToast(data.message || 'Lỗi chấm bài thi!', 'error');
+        if (!res.ok || !data.ok) {
+          showToast(data.message || `Lỗi chấm bài thi (${res.status})!`, 'error');
           return;
         }
 
@@ -8561,7 +9197,9 @@ Phần III:
         });
         appState.omr.gradedPapers = data.gradedPapers || [];
         appState.omr.statistics = data.statistics;
-        if (Array.isArray(data.roster) && data.roster.length > 0) {
+        const sid = data.sessionId || data.savedSession?.id;
+        if (sid) appState.omr.currentSessionId = sid;
+        if (Array.isArray(data.roster) && data.roster.length > 0 && appState.omr.selectedClassName !== '__ALL__') {
           appState.omr.roster = data.roster;
           updateOmrRosterBadge();
         }
@@ -8574,11 +9212,12 @@ Phần III:
         if (targetPaper) {
           selectOmrPaper(targetPaper.id);
         }
+        refreshWorkflowReadiness();
 
         const badge = document.getElementById('omr-scans-badge');
-        if (badge) badge.textContent = `Đã chấm ${data.totalPapers} bài`;
+        if (badge) badge.textContent = `Đã chấm ${data.totalPapers} bài (${ctx.className})`;
 
-        showToast(`✅ Đã chấm xong ${data.totalPapers} bài thi (${data.validCount} bài hợp lệ, ${data.warningCount} bài cần kiểm tra)!`, 'success');
+        showToast(`✅ Đã chấm xong ${data.totalPapers} bài lớp ${ctx.className} (${data.validCount} hợp lệ, ${data.warningCount} cần kiểm tra)!`, 'success');
       } catch (err) {
         showToast('Lỗi kết nối máy chủ chấm bài: ' + err.message, 'error');
       }
@@ -9836,6 +10475,7 @@ Phần III:
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            sessionId: appState.omr.currentSessionId || undefined,
             paperId: paper.id,
             updates: updatesPayload,
             allPapers: cleanAllPapers,
@@ -9934,12 +10574,136 @@ Phần III:
       }
     }
 
+    let currentReportExamKey = '';
+
+    async function renderMultiClassGradeReport(examIdOverride) {
+      const summaryEl = document.getElementById('omr-multiclass-report-summary');
+      const wrapEl = document.getElementById('omr-multiclass-report-table-wrap');
+      const filterEl = document.getElementById('omr-report-exam-filter');
+      if (!summaryEl || !wrapEl) return;
+
+      const requestedExam = examIdOverride !== undefined
+        ? examIdOverride
+        : (filterEl?.value || '');
+
+      try {
+        const qs = requestedExam ? `?examId=${encodeURIComponent(requestedExam)}` : '';
+        const res = await fetch(`/api/omr/grade-report${qs}`);
+        const data = await res.json();
+        if (!data.ok) {
+          summaryEl.textContent = 'Không thể tải báo cáo tổng hợp toàn khối.';
+          return;
+        }
+        currentReportExamKey = data.examKey || '';
+
+        if (filterEl && Array.isArray(data.examsIndex)) {
+          const prevVal = requestedExam || data.examKey || '';
+          filterEl.innerHTML = data.examsIndex.length === 0
+            ? '<option value="">Chưa có dữ liệu đề đã chấm</option>'
+            : data.examsIndex.map(e => `<option value="${escapeHtml(e.examKey)}">📘 ${escapeHtml(e.examTitle)} (${e.totalClasses} lớp • ${e.totalPapers} bài)</option>`).join('');
+          if (prevVal && Array.from(filterEl.options).some(o => o.value === prevVal)) {
+            filterEl.value = prevVal;
+          }
+        }
+
+        const classes = data.classes || [];
+        if (classes.length === 0) {
+          summaryEl.textContent = 'Chưa có ca chấm nào cho đề này. Hãy chấm từng lớp ở Tab 1 để tự động tổng hợp toàn khối.';
+          wrapEl.innerHTML = '';
+          return;
+        }
+
+        const ov = data.overall || {};
+        const oc = ov.classification || {};
+        summaryEl.innerHTML = `
+          <div><b>${escapeHtml(data.examTitle || data.examKey)}</b> • <b>${data.totalClasses} lớp</b> • Tổng <b>${ov.totalPapers || 0} bài</b> • Điểm TB khối: <b style="color:#0369a1;">${ov.avg ?? 0}đ</b> (Cao nhất: <b>${ov.max ?? 0}đ</b>, Thấp nhất: <b>${ov.min ?? 0}đ</b>)</div>
+          <div style="font-size:0.71rem; color:#475569; margin-top:2px;">Phân loại toàn khối: Giỏi <b>${oc.gio || 0}</b> (${oc.gioPct || 0}%) • Khá <b>${oc.kha || 0}</b> (${oc.khaPct || 0}%) • TB <b>${oc.trungBinh || 0}</b> (${oc.trungBinhPct || 0}%) • Yếu <b>${oc.yeu || 0}</b> (${oc.yeuPct || 0}%)</div>
+        `;
+
+        wrapEl.innerHTML = `
+          <table style="width:100%; border-collapse:collapse; font-size:0.72rem; background:#fff; border:1px solid #cbd5e1;">
+            <thead>
+              <tr style="background:#e0e7ff; color:#1e1b4b;">
+                <th style="padding:4px 6px; text-align:left;">Lớp</th>
+                <th style="padding:4px 6px; text-align:center;">Bài</th>
+                <th style="padding:4px 6px; text-align:center;">TB</th>
+                <th style="padding:4px 6px; text-align:center;">Max / Min</th>
+                <th style="padding:4px 6px; text-align:center;">G / K / TB / Y</th>
+                <th style="padding:4px 6px; text-align:center;">Mở</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${classes.map(c => {
+                const cl = c.classification || {};
+                return `
+                  <tr style="border-bottom:1px solid #f1f5f9;">
+                    <td style="padding:4px 6px; font-weight:700; color:#0f172a;">${escapeHtml(c.className)}</td>
+                    <td style="padding:4px 6px; text-align:center;">${c.totalPapers}</td>
+                    <td style="padding:4px 6px; text-align:center; font-weight:800; color:#0284c7;">${c.avg}đ</td>
+                    <td style="padding:4px 6px; text-align:center;">${c.max} / ${c.min}</td>
+                    <td style="padding:4px 6px; text-align:center;">${cl.gio || 0} / ${cl.kha || 0} / ${cl.trungBinh || 0} / ${cl.yeu || 0}</td>
+                    <td style="padding:4px 6px; text-align:center;">
+                      <button class="btn btn-outline btn-sm" onclick="jumpToSavedClassSession('${escapeHtml(c.sessionId)}', '${escapeHtml(c.className)}')" style="font-size:0.68rem; padding:1px 6px;">Xem</button>
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        `;
+      } catch (err) {
+        summaryEl.textContent = 'Lỗi tải báo cáo khối: ' + err.message;
+      }
+    }
+
+    async function jumpToSavedClassSession(sessionId, className) {
+      if (className && typeof onOmrActiveClassSelected === 'function') {
+        await onOmrActiveClassSelected(className);
+      }
+      await loadSavedOmrSessionById(sessionId);
+    }
+
+    async function exportMultiClassGradeCsvClient() {
+      const examKey = document.getElementById('omr-report-exam-filter')?.value || currentReportExamKey || buildOmrGradingContext().examId;
+      try {
+        const res = await fetch('/api/omr/export-roster-csv', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            includeAllClasses: true,
+            examId: examKey,
+            hasEssay: Boolean(appState.omr.hasEssay),
+            metadata: { subject: appState.metadata?.subject || 'Tin học', grade: appState.metadata?.grade || '12' }
+          })
+        });
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          showToast(errData.message || 'Chưa có dữ liệu toàn khối để xuất CSV!', 'warning');
+          return;
+        }
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `BANG_DIEM_TOAN_KHOI_${Date.now()}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        showToast('✅ Đã xuất Bảng điểm Tổng hợp Toàn khối (.csv)!', 'success');
+      } catch (err) {
+        showToast('Lỗi xuất CSV toàn khối: ' + err.message, 'error');
+      }
+    }
+
     /**
-     * Hiển thị Tab 2: Danh sách ca chấm đã lưu trên ổ cứng + Thống kê + Bảng điểm + Audit Trail
+     * Hiển thị Tab 2: Báo cáo toàn khối + Danh sách ca chấm đã lưu trên ổ cứng + Thống kê + Bảng điểm + Audit Trail
      */
     async function renderOmrReportsView() {
       const papers = appState.omr.gradedPapers || [];
       const stats = appState.omr.statistics || {};
+
+      // 0. Cập nhật Báo cáo Tổng hợp Khối (nhiều lớp cùng 1 đề)
+      await renderMultiClassGradeReport();
 
       // 1. Nạp danh sách các ca chấm đã lưu trong data/omr_database
       const sessionsEl = document.getElementById('omr-saved-sessions-list');
@@ -9953,21 +10717,22 @@ Phần III:
           } else {
             sessionsEl.innerHTML = sessions.map(s => {
               const dateStr = (s.savedAt || '').replace('T', ' ').substring(0, 16);
+              const clsTag = s.className ? `<span style="background:#dcfce7; color:#166534; padding:0 5px; border-radius:4px; font-weight:700; margin-right:4px;">${escapeHtml(s.className)}</span>` : '';
               return `
                 <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 8px; background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; margin-bottom:5px; gap:6px;">
                   <div style="min-width:0; flex:1;">
-                    <div style="font-weight:700; color:#0f172a; font-size:0.76rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${s.title}">
-                      📁 ${s.title}
+                    <div style="font-weight:700; color:#0f172a; font-size:0.76rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(s.title)}">
+                      ${clsTag}📁 ${escapeHtml(s.title)}
                     </div>
                     <div style="font-size:0.68rem; color:#64748b;">
                       🕒 ${dateStr} • <b>${s.totalPapers} bài</b> • TB: <b style="color:#0284c7;">${s.avgScore}đ</b>
                     </div>
                   </div>
                   <div style="display:flex; gap:4px; flex-shrink:0;">
-                    <button class="btn btn-outline btn-sm" onclick="loadSavedOmrSessionById('${s.id}')" style="font-size:0.70rem; padding:2px 7px; color:#1d4ed8; border-color:#93c5fd; font-weight:700;">
+                    <button class="btn btn-outline btn-sm" onclick="loadSavedOmrSessionById('${escapeHtml(s.id)}')" style="font-size:0.70rem; padding:2px 7px; color:#1d4ed8; border-color:#93c5fd; font-weight:700;">
                       📂 Mở lại
                     </button>
-                    <button class="btn btn-outline btn-sm" onclick="deleteSavedOmrSessionById('${s.id}')" style="font-size:0.70rem; padding:2px 6px; color:#dc2626; border-color:#fecaca;" title="Xóa ca chấm này">
+                    <button class="btn btn-outline btn-sm" onclick="deleteSavedOmrSessionById('${escapeHtml(s.id)}')" style="font-size:0.70rem; padding:2px 6px; color:#dc2626; border-color:#fecaca;" title="Xóa ca chấm này">
                       🗑️
                     </button>
                   </div>
@@ -10076,7 +10841,8 @@ Phần III:
         showToast('Chưa có bài chấm nào trong phiên hiện tại để lưu!', 'warning');
         return;
       }
-      const defaultTitle = `${appState.metadata?.subject || 'Tin học'} Lớp ${papers[0]?.className || '12A1'} (${papers.length} bài)`;
+      const ctx = buildOmrGradingContext();
+      const defaultTitle = `${appState.metadata?.subject || 'Tin học'} Lớp ${ctx.className} (${papers.length} bài)`;
       const customTitle = prompt('Nhập tên ca chấm để lưu trữ và tra cứu về sau:', defaultTitle);
       if (customTitle === null) return;
 
@@ -10089,11 +10855,18 @@ Phần III:
             gradedPapers: papers,
             answerKeysByCode: appState.omr.answerKeysByCode,
             pointRules: appState.omr.pointRules,
-            metadata: appState.metadata || {}
+            metadata: appState.metadata || {},
+            examId: ctx.examId,
+            examTitle: ctx.examTitle,
+            className: ctx.className,
+            templateId: ctx.templateId,
+            sessionId: ctx.sessionId,
+            overwriteSameExamClass: true
           })
         });
         const data = await res.json();
         if (data.ok) {
+          if (data.session?.id) appState.omr.currentSessionId = data.session.id;
           showToast(`✅ Đã lưu ca chấm "${data.session.title}" vào ổ cứng!`, 'success');
           renderOmrReportsView();
         }
@@ -10111,11 +10884,21 @@ Phần III:
           return;
         }
         const s = data.session;
+        appState.omr.currentSessionId = s.id;
         appState.omr.gradedPapers = s.gradedPapers || [];
         appState.omr.papers = s.gradedPapers || [];
         appState.omr.statistics = s.statistics || {};
+        if (s.className) {
+          appState.omr.selectedClassName = s.className;
+          updateOmrRosterBadge();
+        }
+        if (s.examId) appState.omr.selectedExamProfileId = s.examId;
+        if (s.examTitle) appState.omr.selectedExamTitle = s.examTitle;
         if (s.answerKeysByCode && Object.keys(s.answerKeysByCode).length > 0) {
           appState.omr.answerKeysByCode = s.answerKeysByCode;
+          const codes = Object.keys(s.answerKeysByCode);
+          const sc = document.getElementById('omr-summary-codes');
+          if (sc) sc.textContent = `${codes.length} Mã đề: ${codes.join(', ')}`;
         }
         if (s.pointRules) {
           appState.omr.pointRules = s.pointRules;
@@ -10126,12 +10909,13 @@ Phần III:
 
         renderOmrPapersTable();
         renderOmrReportsView();
+        refreshWorkflowReadiness();
         if (firstPaper) {
           selectOmrPaper(firstPaper.id);
         }
 
         const badge = document.getElementById('omr-scans-badge');
-        if (badge) badge.textContent = `Đã mở ${appState.omr.gradedPapers.length} bài`;
+        if (badge) badge.textContent = `Đã mở ${appState.omr.gradedPapers.length} bài (${s.className || ''})`;
 
         showToast(`📂 Đã mở lại ca chấm "${s.title}" (${appState.omr.gradedPapers.length} bài thi)!`, 'success');
       } catch (err) {
@@ -10286,6 +11070,18 @@ Phần III:
         }
         p3Grid.innerHTML = html;
       }
+
+      // 7. Điền điểm Tự luận chấm tay (nếu có)
+      const essayInput = document.getElementById('edit-paper-essay-score');
+      if (essayInput) {
+        essayInput.value = (paper.essayScore !== null && paper.essayScore !== undefined && paper.essayScore !== '') ? paper.essayScore : '';
+      }
+      const essayHint = document.getElementById('edit-paper-essay-hint');
+      if (essayHint) {
+        essayHint.textContent = appState.omr.hasEssay
+          ? `Đề thi có Tự luận tối đa ${appState.omr.essayMaxScore || 0}đ (OMR tối đa ${appState.omr.maxOmrScore || 0}đ). Nhập điểm Tự luận để cộng thành Tổng điểm.`
+          : 'Để trống nếu chỉ chấm trắc nghiệm OMR; nhập số nếu muốn cộng thêm điểm Tự luận vào Tổng điểm.';
+      }
     }
 
     function closePaperEditModal() {
@@ -10304,6 +11100,8 @@ Phần III:
       const newSbd = (document.getElementById('edit-paper-sbd')?.value || '').trim() || paper.sbd;
       const reason = (document.getElementById('edit-paper-reason')?.value || '').trim() || 'Giáo viên rà soát và hiệu chỉnh thông tin phiếu bài làm';
       const user = (document.getElementById('edit-paper-user')?.value || '').trim() || 'Giáo viên bộ môn';
+      const rawEssayStr = (document.getElementById('edit-paper-essay-score')?.value ?? '').trim();
+      const essayScoreVal = rawEssayStr === '' ? null : Number(rawEssayStr);
 
       const part1Answers = {};
       document.querySelectorAll('.edit-p1-select').forEach(sel => {
@@ -10337,6 +11135,7 @@ Phần III:
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            sessionId: appState.omr.currentSessionId || undefined,
             paperId: paper.id,
             updates: {
               sbd: newSbd,
@@ -10344,6 +11143,7 @@ Phần III:
               part1Answers,
               part2Answers,
               part3Answers,
+              essayScore: Number.isFinite(essayScoreVal) ? essayScoreVal : null,
               reason
             },
             allPapers: cleanAllPapers,
@@ -10361,6 +11161,7 @@ Phần III:
           paper.dob = data.updatedPaper.dob;
           paper.scannedExamCode = data.updatedPaper.scannedExamCode;
           paper.answers = data.updatedPaper.answers;
+          paper.essayScore = data.updatedPaper.essayScore;
           paper.result = data.updatedPaper.result;
           paper.isCorrected = true;
           paper.warnings = [];
@@ -10983,9 +11784,21 @@ Phần III:
         Boolean(folderName && /(?:doc012911|tong_hop)/i.test(folderName));
       if (isTongHopPattern && appState.omr.selectedTemplateId !== 'thpt_tong_hop') {
         appState.omr.selectedTemplateId = 'thpt_tong_hop';
-        const sel = document.getElementById('omr-template-select');
-        if (sel) sel.value = 'thpt_tong_hop';
+        const selModel = document.getElementById('omr-sheet-model-select');
+        if (selModel) selModel.value = 'thpt_tong_hop';
+        const selTop = document.getElementById('omr-template-selector');
+        if (selTop) selTop.value = 'thpt_tong_hop';
+        if (typeof onOmrTemplateChanged === 'function') onOmrTemplateChanged('thpt_tong_hop');
         showToast('💡 Đã tự động kích hoạt "Mẫu 3: Học kỳ Tổng hợp THPT (Mã 3 số)" phù hợp với bài thi scan nạp lên!', 'info');
+      }
+
+      // Tự động nhận diện Lớp từ tên thư mục (VD: "Bai_Scan_12A4") nếu khớp Kho DS Lớp
+      if (folderName && Array.isArray(appState.omr.rostersSummary)) {
+        const lowerFolder = folderName.toLowerCase();
+        const matchedFolderClass = appState.omr.rostersSummary.find(c => c.className && lowerFolder.includes(c.className.toLowerCase()));
+        if (matchedFolderClass && matchedFolderClass.className !== appState.omr.selectedClassName && typeof onOmrActiveClassSelected === 'function') {
+          await onOmrActiveClassSelected(matchedFolderClass.className);
+        }
       }
 
       let validCodes = Object.keys(appState.omr.answerKeysByCode || {});
@@ -11025,12 +11838,12 @@ Phần III:
         const item = expandedItems[idx];
         const fn = item.fileName || '';
 
-        // Dự phòng SBD & Mã đề từ tên file (chỉ dùng khi phiếu chưa tô SBD/Mã đề)
+        // Dự phòng SBD & Mã đề từ tên file (CHỈ lấy nếu tên file thực sự có mã khớp, tuyệt đối không gán bừa theo vòng lặp)
         const codeMatch = fn.match(/(?:de|ma|code)[_\-\s]*([0-9]{3,4})/i) || fn.match(/[_\-\s]([0-9]{3,4})[_\-\.]/);
-        let fallbackCode = (codeMatch && validCodes.includes(codeMatch[1])) ? codeMatch[1] : validCodes[idx % validCodes.length];
+        const fallbackCode = (codeMatch && validCodes.includes(codeMatch[1])) ? codeMatch[1] : '';
 
         const sbdMatch = fn.match(/(?:sbd|hs)?[_\-\s]*([0-9]{5,6})/i);
-        let fallbackSbd = sbdMatch ? sbdMatch[1].padStart(6, '0') : '';
+        const fallbackSbd = sbdMatch ? sbdMatch[1].padStart(6, '0') : '';
 
         let imgUrl = null;
         let imgEl = null;
@@ -11089,7 +11902,8 @@ Phần III:
         if (!sbd) sbd = 'chưa tô';
         const matchedStudent = roster.find(r => r.sbd === sbd || r.sbd === sbd.padStart(6, '0'));
         const studentName = matchedStudent ? (matchedStudent.name || matchedStudent.fullName) : 'Chưa định danh';
-        const className = matchedStudent?.className || roster[0]?.className || '12A1';
+        const activeCls = (appState.omr.selectedClassName && appState.omr.selectedClassName !== '__ALL__') ? appState.omr.selectedClassName : '';
+        const className = matchedStudent?.className || activeCls || roster[0]?.className || '12A1';
         const dob = matchedStudent?.dob || '';
 
         scannedPapers.push({
@@ -11278,18 +12092,88 @@ Phần III:
     }
 
     // ========================================================================
-    // QUẢN LÝ & NẠP DANH SÁCH HỌC SINH (ROSTER EXCEL / CSV / PASTE)
+    // QUẢN LÝ & NẠP DANH SÁCH HỌC SINH NHIỀU LỚP (ROSTER EXCEL / CSV / PASTE)
     // ========================================================================
     let tempModalRoster = [];
+    let modalRostersCache = { activeClass: '12A1', classes: [], classesMap: {} };
 
-    function openOmrRosterModal() {
-      tempModalRoster = JSON.parse(JSON.stringify(appState.omr.roster || []));
+    function renderOmrRosterClassPills() {
+      const box = document.getElementById('omr-roster-class-pills');
+      if (!box) return;
+      const classes = modalRostersCache.classes || [];
+      const curTarget = document.getElementById('omr-roster-target-class')?.value.trim() || modalRostersCache.activeClass || '12A1';
+      if (classes.length === 0) {
+        box.innerHTML = '<span style="font-size:0.75rem; color:#64748b;">Chưa có lớp nào được lưu.</span>';
+        return;
+      }
+      box.innerHTML = classes.map(c => {
+        const isActive = c.className === curTarget;
+        const delBtn = classes.length > 1
+          ? `<span onclick="event.stopPropagation(); deleteRosterClassFromModal('${escapeHtml(c.className)}')" title="Xóa lớp ${escapeHtml(c.className)}" style="margin-left:5px; color:#dc2626; font-weight:800;">✕</span>`
+          : '';
+        return `<button type="button" onclick="selectRosterClassInModal('${escapeHtml(c.className)}')"
+          style="padding:3px 10px; border-radius:999px; font-size:0.75rem; font-weight:700; cursor:pointer; border:1px solid ${isActive ? '#059669' : '#cbd5e1'}; background:${isActive ? '#d1fae5' : '#fff'}; color:${isActive ? '#065f46' : '#334155'};">
+          🏫 ${escapeHtml(c.className)} (${c.count} HS)${delBtn}
+        </button>`;
+      }).join('');
+    }
+
+    function selectRosterClassInModal(clsName) {
+      const inp = document.getElementById('omr-roster-target-class');
+      if (inp) inp.value = clsName;
+      if (modalRostersCache.classesMap && modalRostersCache.classesMap[clsName]) {
+        tempModalRoster = JSON.parse(JSON.stringify(modalRostersCache.classesMap[clsName]));
+      }
+      renderOmrRosterClassPills();
       renderOmrRosterModalTable();
+    }
+
+    async function deleteRosterClassFromModal(clsName) {
+      if (!confirm(`Bạn có chắc chắn muốn xóa danh sách lớp "${clsName}"?`)) return;
+      try {
+        const res = await fetch(`/api/omr/rosters/${encodeURIComponent(clsName)}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.ok) {
+          await syncModalRostersFromServer();
+          await refreshOmrRostersDropdown(data.activeClass);
+          showToast(`🗑️ Đã xóa danh sách lớp ${clsName}.`, 'info');
+        } else {
+          showToast(data.message || 'Không thể xóa lớp này.', 'warning');
+        }
+      } catch (err) {
+        showToast('Lỗi xóa lớp: ' + err.message, 'error');
+      }
+    }
+
+    async function syncModalRostersFromServer(preferredClass) {
+      try {
+        const res = await fetch('/api/omr/rosters');
+        const data = await res.json();
+        if (data.ok) {
+          modalRostersCache = data;
+          const target = preferredClass
+            || (appState.omr.selectedClassName && appState.omr.selectedClassName !== '__ALL__' ? appState.omr.selectedClassName : data.activeClass)
+            || (data.classes?.[0]?.className || '12A1');
+          const inp = document.getElementById('omr-roster-target-class');
+          if (inp) inp.value = target;
+          tempModalRoster = JSON.parse(JSON.stringify(data.classesMap?.[target] || data.activeRoster || appState.omr.roster || []));
+          renderOmrRosterClassPills();
+          renderOmrRosterModalTable();
+          return;
+        }
+      } catch (_) { }
+      tempModalRoster = JSON.parse(JSON.stringify(appState.omr.roster || []));
+      renderOmrRosterClassPills();
+      renderOmrRosterModalTable();
+    }
+
+    async function openOmrRosterModal() {
       const modal = document.getElementById('modalOmrRoster');
       if (modal) {
         modal.classList.add('active');
         modal.style.display = 'flex';
       }
+      await syncModalRostersFromServer();
     }
 
     function renderOmrRosterModalTable() {
@@ -11346,11 +12230,22 @@ Phần III:
     async function handleOmrRosterFileSelect(event) {
       const file = event.target.files?.[0];
       if (!file) return;
+      const targetClass = (document.getElementById('omr-roster-target-class')?.value || '').trim();
       showToast(`⏳ Đang đọc danh sách học sinh từ file "${file.name}"...`, 'info');
 
       try {
         const ext = file.name.split('.').pop().toLowerCase();
         const reader = new FileReader();
+
+        const handleRosterParsed = async (data) => {
+          if (data.ok && Array.isArray(data.roster)) {
+            await syncModalRostersFromServer(data.className || targetClass);
+            await refreshOmrRostersDropdown(data.className || targetClass);
+            showToast(data.message, 'success');
+          } else {
+            showToast(data.message || 'Không thể đọc file danh sách lớp!', 'error');
+          }
+        };
 
         if (ext === 'xlsx' || ext === 'xls') {
           reader.onload = async (e) => {
@@ -11358,16 +12253,9 @@ Phần III:
             const res = await fetch('/api/omr/parse-roster', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ fileName: file.name, fileBase64: base64 })
+              body: JSON.stringify({ fileName: file.name, fileBase64: base64, className: targetClass })
             });
-            const data = await res.json();
-            if (data.ok && Array.isArray(data.roster)) {
-              tempModalRoster = data.roster;
-              renderOmrRosterModalTable();
-              showToast(data.message, 'success');
-            } else {
-              showToast(data.message || 'Không thể đọc file danh sách lớp!', 'error');
-            }
+            await handleRosterParsed(await res.json());
           };
           reader.readAsDataURL(file);
         } else {
@@ -11376,16 +12264,9 @@ Phần III:
             const res = await fetch('/api/omr/parse-roster', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ fileName: file.name, rawText })
+              body: JSON.stringify({ fileName: file.name, rawText, className: targetClass })
             });
-            const data = await res.json();
-            if (data.ok && Array.isArray(data.roster)) {
-              tempModalRoster = data.roster;
-              renderOmrRosterModalTable();
-              showToast(data.message, 'success');
-            } else {
-              showToast(data.message || 'Không thể đọc file danh sách lớp!', 'error');
-            }
+            await handleRosterParsed(await res.json());
           };
           reader.readAsText(file);
         }
@@ -11398,6 +12279,7 @@ Phần III:
     async function parsePastedOmrRoster() {
       const ta = document.getElementById('omr-roster-paste-textarea');
       const rawText = (ta?.value || '').trim();
+      const targetClass = (document.getElementById('omr-roster-target-class')?.value || '').trim();
       if (!rawText) {
         showToast('Vui lòng dán danh sách học sinh (SBD, Họ tên, Lớp, Ngày sinh) vào ô văn bản trước!', 'warning');
         return;
@@ -11407,12 +12289,12 @@ Phần III:
         const res = await fetch('/api/omr/parse-roster', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ rawText })
+          body: JSON.stringify({ rawText, className: targetClass })
         });
         const data = await res.json();
         if (data.ok && Array.isArray(data.roster)) {
-          tempModalRoster = data.roster;
-          renderOmrRosterModalTable();
+          await syncModalRostersFromServer(data.className || targetClass);
+          await refreshOmrRostersDropdown(data.className || targetClass);
           showToast(data.message, 'success');
         } else {
           showToast(data.message || 'Không nhận diện được học sinh từ dữ liệu dán!', 'error');
@@ -11427,12 +12309,12 @@ Phần III:
         const res = await fetch('/api/omr/parse-roster', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ resetDefault: true })
+          body: JSON.stringify({ resetDefault: true, className: '12A1' })
         });
         const data = await res.json();
         if (data.ok && Array.isArray(data.roster)) {
-          tempModalRoster = data.roster;
-          renderOmrRosterModalTable();
+          await syncModalRostersFromServer('12A1');
+          await refreshOmrRostersDropdown('12A1');
           showToast('🔄 Đã khôi phục danh sách 35 học sinh mẫu (Lớp 12A1)!', 'info');
         }
       } catch (_) { }
@@ -11443,17 +12325,17 @@ Phần III:
         showToast('Danh sách học sinh không được để trống!', 'warning');
         return;
       }
+      const targetClass = (document.getElementById('omr-roster-target-class')?.value || tempModalRoster[0]?.className || '12A1').trim();
 
       try {
         const res = await fetch('/api/omr/parse-roster', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ roster: tempModalRoster })
+          body: JSON.stringify({ roster: tempModalRoster, className: targetClass })
         });
         const data = await res.json();
         if (data.ok && Array.isArray(data.roster)) {
-          appState.omr.roster = data.roster;
-          updateOmrRosterBadge();
+          await refreshOmrRostersDropdown(data.className || targetClass);
           closeModal('modalOmrRoster');
           showToast(`✅ Đã lưu danh sách ${data.totalStudents} học sinh (Lớp ${data.className})!`, 'success');
 
@@ -11538,6 +12420,8 @@ Phần III:
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             gradedPapers: appState.omr.gradedPapers || [],
+            hasEssay: Boolean(appState.omr.hasEssay),
+            className: appState.omr.selectedClassName || '',
             metadata: { subject: appState.metadata?.subject || 'Tin học', grade: appState.metadata?.grade || '12' }
           })
         });
@@ -11669,6 +12553,7 @@ Phần III:
         const data = await res.json();
         if (data.ok && Array.isArray(data.variants)) {
           appState.variants = data.variants;
+          appState.savedExamProfileId = null;
           appState.selectedVariantCode = data.variants[0]?.code || codes[0];
 
           renderExamStep();
@@ -11676,9 +12561,15 @@ Phần III:
           renderExportStep();
 
           // Tự động đồng bộ sang Bước 7 (Chấm bài)
-          if (typeof syncOmrAnswerKeys === 'function') {
-            syncOmrAnswerKeys();
+          if (appState.omr) {
+            appState.omr.activeKeySource = 'current_workflow';
+            appState.omr.lastImportSource = null;
           }
+          if (typeof syncOmrAnswerKeys === 'function') {
+            syncOmrAnswerKeys(true);
+          }
+          refreshWorkflowReadiness();
+          scheduleAutoSave();
 
           showToast(`✅ Đã trộn thành công ${data.variants.length} mã đề tùy chỉnh (${data.variants.map(v => v.code).join(', ')})!`, 'success');
         } else {

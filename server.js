@@ -15,6 +15,10 @@ const {
   DEFAULT_CLASS_ROSTER,
   getActiveRoster,
   saveActiveRoster,
+  listClassRostersSummary,
+  saveClassRoster,
+  setActiveRosterClass,
+  deleteClassRoster,
   getAuditLogs,
   logAuditRecord,
   gradeSinglePaper,
@@ -23,10 +27,13 @@ const {
   calculateBatchStatistics,
   updatePaperAndAudit,
   saveGradingSessionSnapshot,
+  syncSessionPapers,
   listSavedOmrSessions,
   loadSavedOmrSession,
   deleteSavedOmrSession,
+  aggregateGradeReportByExam,
   exportRosterToCsv,
+  exportMultiClassGradeCsv,
   exportAuditLogsToCsv,
   syncOmrDatabaseToGoogleDrive
 } = require('./src/omr-engine');
@@ -510,6 +517,100 @@ const requestHandler = async (req, res) => {
       return;
     }
 
+/**
+ * Trích xuất chuẩn cấu hình Đáp án & Biểu điểm OMR từ một Hồ sơ Đề thi (Bước 2-4-5)
+ */
+function extractOmrConfigFromProfile(profile = {}) {
+  const variants = Array.isArray(profile.variants) && profile.variants.length > 0
+    ? profile.variants
+    : (Array.isArray(profile.questions) && profile.questions.length > 0
+      ? [{ code: profile.selectedVariantCode || '101', questions: profile.questions }]
+      : []);
+
+  const answerKeysByCode = {};
+  variants.forEach(v => {
+    const code = String(v.code || '101').trim();
+    const p1 = [];
+    const p2 = {};
+    const p3 = {};
+    (v.questions || []).forEach(q => {
+      if (q.format === 'mcq' || q.type === 'MCQ' || (!q.format && q.options?.length === 4)) {
+        const rawAns = String(q.answer || q.correctAnswer || 'A').trim().toUpperCase();
+        p1.push(['A', 'B', 'C', 'D'].includes(rawAns) ? rawAns : 'A');
+      } else if (q.format === 'tf' || q.type === 'TF' || (!q.format && (q.statements?.length === 4 || q.subItems?.length === 4))) {
+        const stmts = q.statements || q.subItems || [];
+        const resolveTf = (item, fallback) => {
+          if (!item) return fallback;
+          if (typeof item.isTrue === 'boolean') return item.isTrue ? 'Đ' : 'S';
+          if (typeof item.correctAnswer === 'string') return item.correctAnswer.toUpperCase().startsWith('S') ? 'S' : 'Đ';
+          if (typeof item.answer === 'string') return item.answer.toUpperCase().startsWith('S') ? 'S' : 'Đ';
+          return fallback;
+        };
+        p2[String(Object.keys(p2).length + 1)] = {
+          a: resolveTf(stmts[0], 'Đ'),
+          b: resolveTf(stmts[1], 'S'),
+          c: resolveTf(stmts[2], 'Đ'),
+          d: resolveTf(stmts[3], 'S')
+        };
+      } else if (q.format === 'short_answer' || q.type === 'SA') {
+        p3[String(Object.keys(p3).length + 1)] = String(q.answer ?? q.correctAnswer ?? '');
+      }
+    });
+    answerKeysByCode[code] = { part1: p1, part2: p2, part3: p3 };
+  });
+
+  const rows = profile.matrix?.rows || [];
+  let essayCount = 0;
+  let essayPts = 0;
+  let mcqCount = 0;
+  let tfCount = 0;
+  let saCount = 0;
+  rows.forEach(r => {
+    const counts = r.counts || {};
+    mcqCount += (counts.MCQ?.['Biết'] || 0) + (counts.MCQ?.['Hiểu'] || 0) + (counts.MCQ?.['Vận dụng'] || 0) + (r.mcq_b || 0) + (r.mcq_h || 0) + (r.mcq_vd || 0);
+    tfCount += (counts.TF?.['Biết'] || 0) + (counts.TF?.['Hiểu'] || 0) + (counts.TF?.['Vận dụng'] || 0) + (r.tf_b || 0) + (r.tf_h || 0) + (r.tf_vd || 0);
+    saCount += (counts.SA?.['Biết'] || 0) + (counts.SA?.['Hiểu'] || 0) + (counts.SA?.['Vận dụng'] || 0) + (r.sa_b || 0) + (r.sa_h || 0) + (r.sa_vd || 0);
+    const eB = counts.ESSAY?.['Biết'] || 0;
+    const eH = counts.ESSAY?.['Hiểu'] || 0;
+    const eV = counts.ESSAY?.['Vận dụng'] || 0;
+    essayCount += eB + eH + eV;
+    if (r.essayPoints && typeof r.essayPoints === 'object') {
+      essayPts += Number(r.essayPoints['Biết'] || 0) + Number(r.essayPoints['Hiểu'] || 0) + Number(r.essayPoints['Vận dụng'] || 0);
+    }
+  });
+  if (essayCount === 0 && Array.isArray(profile.questions)) {
+    const essayQs = profile.questions.filter(q => q.type === 'ESSAY');
+    essayCount = essayQs.length;
+    essayPts = essayQs.reduce((acc, q) => acc + Number(q.points || 0), 0);
+  }
+  const mRules = profile.matrix?.pointRules || {};
+  const existingOmrCfg = profile.omrConfig || {};
+  const mcqRule = Number(existingOmrCfg.pointRules?.mcq ?? mRules.MCQ ?? 0.25);
+  const saRule = Number(existingOmrCfg.pointRules?.sa ?? mRules.SA ?? 0.5);
+  const tfStyle = existingOmrCfg.pointRules?.tfStyle || 'fixed025';
+  if (essayPts === 0 && essayCount > 0) {
+    essayPts = Math.round(essayCount * Number(mRules.ESSAY || 1.0) * 100) / 100;
+  }
+
+  const firstKey = Object.values(answerKeysByCode)[0] || { part1: [], part2: {}, part3: {} };
+  const p1Total = Math.round((firstKey.part1?.length || mcqCount) * mcqRule * 100) / 100;
+  const p2Total = Math.round(Object.keys(firstKey.part2 || {}).length * 1.0 * 100) / 100;
+  const p3Total = Math.round(Object.keys(firstKey.part3 || {}).length * saRule * 100) / 100;
+  const maxOmrScore = Math.round((p1Total + p2Total + p3Total) * 100) / 100;
+
+  return {
+    answerKeysByCode: Object.keys(existingOmrCfg.answerKeysByCode || {}).length > 0
+      ? existingOmrCfg.answerKeysByCode
+      : answerKeysByCode,
+    pointRules: { mcq: mcqRule, tfStyle, sa: saRule },
+    examCodes: Object.keys(answerKeysByCode),
+    hasEssay: essayCount > 0,
+    essayMaxScore: Math.round(essayPts * 100) / 100,
+    maxOmrScore: maxOmrScore || 10.0,
+    recommendedTemplateId: existingOmrCfg.recommendedTemplateId || ''
+  };
+}
+
     // 13. Quản lý Lưu trữ Hồ sơ đề kiểm tra (CRUD Profiles)
     if (req.method === 'GET' && pathname === '/api/profiles') {
       const profileMap = new Map();
@@ -520,13 +621,19 @@ const requestHandler = async (req, res) => {
           try {
             const fullP = path.join(dir, f);
             const content = JSON.parse(fs.readFileSync(fullP, 'utf8'));
+            const omrCfg = extractOmrConfigFromProfile(content);
             const item = {
               id: content.id || f.replace(/\.json$/, ''),
               title: content.title || `${content.metadata?.subject || ''} Lớp ${content.metadata?.grade || ''} - ${content.metadata?.examPeriod || ''}`,
               updatedAt: content.updatedAt || fs.statSync(fullP).mtime.toISOString(),
               metadata: content.metadata || {},
               questionsCount: (content.questions || []).length,
-              variantsCount: (content.variants || []).length
+              variantsCount: (content.variants || []).length,
+              examCodes: omrCfg.examCodes,
+              hasEssay: omrCfg.hasEssay,
+              essayMaxScore: omrCfg.essayMaxScore,
+              maxOmrScore: omrCfg.maxOmrScore,
+              tfStyle: omrCfg.pointRules.tfStyle
             };
             profileMap.set(item.id, item);
           } catch (_) {}
@@ -548,6 +655,7 @@ const requestHandler = async (req, res) => {
         return;
       }
       const profile = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      profile.omrConfig = extractOmrConfigFromProfile(profile);
       sendJson(res, 200, { ok: true, profile });
       return;
     }
@@ -562,11 +670,31 @@ const requestHandler = async (req, res) => {
         const m = profile.metadata || {};
         profile.title = `${m.examPeriod || 'Đề kiểm tra'} - ${m.subject || 'Môn'} Lớp ${m.grade || ''}`;
       }
+      // Làm gọn hồ sơ đề: không nhồi dữ liệu ảnh scan OMR tạm thời của từng lớp vào file đề gốc
+      const cleanProfile = { ...profile };
+      if (cleanProfile.omr) {
+        cleanProfile.omrConfig = {
+          ...(cleanProfile.omrConfig || {}),
+          pointRules: cleanProfile.omr.pointRules || cleanProfile.omrConfig?.pointRules,
+          recommendedTemplateId: cleanProfile.omr.selectedTemplateId || cleanProfile.omrConfig?.recommendedTemplateId
+        };
+        delete cleanProfile.omr;
+      }
+      cleanProfile.omrConfig = extractOmrConfigFromProfile(cleanProfile);
+
       try {
         if (!fs.existsSync(PROFILES_DIR)) fs.mkdirSync(PROFILES_DIR, { recursive: true });
-        fs.writeFileSync(path.join(PROFILES_DIR, `${id}.json`), JSON.stringify(profile, null, 2), 'utf8');
+        fs.writeFileSync(path.join(PROFILES_DIR, `${id}.json`), JSON.stringify(cleanProfile, null, 2), 'utf8');
       } catch (_) {}
-      sendJson(res, 200, { ok: true, id, title: profile.title, updatedAt: profile.updatedAt });
+      sendJson(res, 200, {
+        ok: true,
+        id,
+        title: cleanProfile.title,
+        updatedAt: cleanProfile.updatedAt,
+        examCodes: cleanProfile.omrConfig.examCodes,
+        hasEssay: cleanProfile.omrConfig.hasEssay,
+        maxOmrScore: cleanProfile.omrConfig.maxOmrScore
+      });
       return;
     }
 
@@ -612,17 +740,19 @@ const requestHandler = async (req, res) => {
         pdfUrl: `/api/omr/download-blank-template?templateId=${template.id}`,
         fileSize: exists ? fs.statSync(blankFilePath).size : 0,
         description: template.description,
-        defaultRoster: getActiveRoster()
+        defaultRoster: getActiveRoster(),
+        rostersSummary: listClassRostersSummary()
       });
       return;
     }
 
-    // 14.1c. Phân tích & Lưu Danh sách Học sinh (Excel, CSV, Text hoặc Mảng trực tiếp)
+    // 14.1c. Phân tích & Lưu Danh sách Học sinh (Excel, CSV, Text hoặc Mảng trực tiếp - Hỗ trợ Đa Lớp)
     if (req.method === 'POST' && pathname === '/api/omr/parse-roster') {
       try {
         const raw = await readRequestBody(req);
         const body = JSON.parse(raw.toString('utf8') || '{}');
         const { parseStudentRosterFile, parseStudentRosterText } = require('./src/answer-key-parser');
+        const targetClass = String(body.className || '').trim();
 
         let parsedRoster = [];
         if (body.resetDefault) {
@@ -630,10 +760,10 @@ const requestHandler = async (req, res) => {
         } else if (Array.isArray(body.roster) && body.roster.length > 0) {
           parsedRoster = body.roster;
         } else if (body.rawText) {
-          parsedRoster = parseStudentRosterText(body.rawText);
+          parsedRoster = parseStudentRosterText(body.rawText, { defaultClassName: targetClass || '12A1' });
         } else if (body.fileBase64 && body.fileName) {
           const buf = Buffer.from(body.fileBase64, 'base64');
-          parsedRoster = parseStudentRosterFile(body.fileName, buf);
+          parsedRoster = parseStudentRosterFile(body.fileName, buf, { defaultClassName: targetClass || '12A1' });
         }
 
         if (!Array.isArray(parsedRoster) || parsedRoster.length === 0) {
@@ -644,20 +774,59 @@ const requestHandler = async (req, res) => {
           return;
         }
 
-        const savedRoster = saveActiveRoster(parsedRoster);
-        const firstClass = savedRoster[0]?.className || '12A1';
+        const savedRoster = saveActiveRoster(parsedRoster, {
+          className: body.resetDefault ? '' : targetClass,
+          isDefaultReset: Boolean(body.resetDefault)
+        });
+        const rostersSummary = listClassRostersSummary();
+        const firstClass = savedRoster[0]?.className || rostersSummary.activeClass || '12A1';
         sendJson(res, 200, {
           ok: true,
           roster: savedRoster,
           totalStudents: savedRoster.length,
           className: firstClass,
-          message: `Đã nạp thành công danh sách ${savedRoster.length} học sinh (Lớp ${firstClass})!`
+          rostersSummary,
+          message: rostersSummary.classes.length > 1 && !targetClass && !body.resetDefault
+            ? `Đã nạp thành công danh sách ${savedRoster.length} học sinh thuộc ${rostersSummary.classes.length} lớp!`
+            : `Đã nạp thành công danh sách ${savedRoster.length} học sinh (Lớp ${firstClass})!`
         });
         return;
       } catch (err) {
         sendJson(res, 500, { ok: false, message: 'Lỗi phân tích danh sách học sinh: ' + err.message });
         return;
       }
+    }
+
+    // 14.1c2. Quản lý Kho Danh sách Nhiều Lớp (Rosters)
+    if (req.method === 'GET' && pathname === '/api/omr/rosters') {
+      sendJson(res, 200, {
+        ok: true,
+        ...listClassRostersSummary()
+      });
+      return;
+    }
+
+    if (req.method === 'POST' && pathname === '/api/omr/rosters/select') {
+      const raw = await readRequestBody(req);
+      const body = JSON.parse(raw.toString('utf8') || '{}');
+      const summary = setActiveRosterClass(body.className || '12A1');
+      sendJson(res, 200, {
+        ok: true,
+        ...summary,
+        roster: summary.activeRoster
+      });
+      return;
+    }
+
+    if (req.method === 'DELETE' && pathname.startsWith('/api/omr/rosters/')) {
+      const clsName = decodeURIComponent(pathname.split('/')[4] || '');
+      const summary = deleteClassRoster(clsName);
+      sendJson(res, 200, {
+        ok: true,
+        ...summary,
+        roster: summary.activeRoster
+      });
+      return;
     }
 
     // 14.1d. Quản lý các ca chấm đã lưu trong ổ cứng (data/omr_database)
@@ -691,7 +860,13 @@ const requestHandler = async (req, res) => {
         answerKeysByCode: body.answerKeysByCode || {},
         pointRules: body.pointRules || {},
         metadata: body.metadata || {},
-        title: body.title || ''
+        title: body.title || '',
+        examId: body.examId || '',
+        examTitle: body.examTitle || '',
+        className: body.className || '',
+        templateId: body.templateId || '',
+        overwriteSameExamClass: Boolean(body.overwriteSameExamClass),
+        sessionId: body.sessionId || ''
       });
       sendJson(res, 200, {
         ok: true,
@@ -858,7 +1033,18 @@ const requestHandler = async (req, res) => {
       const body = JSON.parse(raw.toString('utf8') || '{}');
       let answerKeysByCode = body.answerKeysByCode || {};
       let pointRules = body.pointRules || { mcq: 0.25, tfStyle: 'fixed025' };
-      const roster = Array.isArray(body.roster) && body.roster.length > 0 ? body.roster : getActiveRoster();
+      const targetClassName = String(body.className || '').trim();
+      const roster = Array.isArray(body.roster) && body.roster.length > 0
+        ? body.roster
+        : getActiveRoster(targetClassName && targetClassName !== '__ALL__' ? targetClassName : null);
+
+      if (!body.useSampleBatch && (!answerKeysByCode || Object.keys(answerKeysByCode).length === 0)) {
+        sendJson(res, 400, {
+          ok: false,
+          message: 'Chưa có Biểu đáp án mã đề! Vui lòng chọn một Đề thi từ Kho đề hoặc nạp file Đáp án trước khi bấm Chấm.'
+        });
+        return;
+      }
 
       let papers = body.papers;
       if (!Array.isArray(papers) || papers.length === 0 || body.useSampleBatch) {
@@ -870,17 +1056,24 @@ const requestHandler = async (req, res) => {
         papers,
         answerKeysByCode,
         pointRules,
-        roster
+        roster,
+        targetClassName
       });
 
-      // Tự động lưu snapshot ca chấm vào data/omr_database
+      // Tự động lưu snapshot ca chấm vào data/omr_database (gắn Đề × Lớp nếu có examId)
       let savedSession = null;
       try {
         savedSession = saveGradingSessionSnapshot({
           gradedPapers: gradeResult.gradedPapers,
           answerKeysByCode,
           pointRules,
-          metadata: body.metadata || {}
+          metadata: body.metadata || {},
+          examId: body.examId || '',
+          examTitle: body.examTitle || '',
+          className: targetClassName,
+          templateId: body.templateId || '',
+          overwriteSameExamClass: Boolean(body.overwriteSameExamClass && body.examId),
+          sessionId: body.sessionId || ''
         });
       } catch (_) {}
 
@@ -890,6 +1083,7 @@ const requestHandler = async (req, res) => {
         answerKeysByCode,
         pointRules,
         roster,
+        sessionId: savedSession ? savedSession.id : null,
         savedSession,
         auditLogs: getAuditLogs()
       });
@@ -900,7 +1094,7 @@ const requestHandler = async (req, res) => {
     if (req.method === 'POST' && pathname === '/api/omr/update-paper') {
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
-      const { paperId, updates, allPapers, answerKeysByCode, pointRules, roster, user } = body;
+      const { paperId, updates, allPapers, answerKeysByCode, pointRules, roster, user, sessionId } = body;
 
       if (!paperId || !updates || !Array.isArray(allPapers)) {
         sendJson(res, 400, { ok: false, message: 'Dữ liệu hiệu chỉnh bài thi không hợp lệ!' });
@@ -917,6 +1111,10 @@ const requestHandler = async (req, res) => {
         user: user || 'Giáo viên bộ môn'
       });
 
+      if (sessionId) {
+        syncSessionPapers(sessionId, allPapers);
+      }
+
       const newStats = calculateBatchStatistics(allPapers);
 
       sendJson(res, 200, {
@@ -928,6 +1126,14 @@ const requestHandler = async (req, res) => {
         statistics: newStats,
         allPapers
       });
+      return;
+    }
+
+    // 14.4b. Báo cáo Tổng hợp Toàn Khối theo Đề thi (Multi-Class Grade Report)
+    if (req.method === 'GET' && pathname === '/api/omr/grade-report') {
+      const examId = parsedUrl.searchParams.get('examId') || '';
+      const report = aggregateGradeReportByExam(examId);
+      sendJson(res, 200, report);
       return;
     }
 
@@ -955,19 +1161,29 @@ const requestHandler = async (req, res) => {
       return;
     }
 
-    // 14.7. Xuất Bảng điểm lớp dạng CSV (tương thích Microsoft Excel UTF-8 BOM)
+    // 14.7. Xuất Bảng điểm lớp hoặc Toàn khối dạng CSV (tương thích Microsoft Excel UTF-8 BOM)
     if (req.method === 'POST' && pathname === '/api/omr/export-roster-csv') {
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
       const gradedPapers = body.gradedPapers || [];
       const metadata = body.metadata || {};
 
-      const csvContent = exportRosterToCsv(gradedPapers, metadata);
+      let csvContent = '';
+      let downloadName = 'Bang_Diem_Lop_TLTN_2025.csv';
+      if (body.includeAllClasses && body.examId) {
+        const gradeReport = aggregateGradeReportByExam(body.examId);
+        csvContent = exportMultiClassGradeCsv(gradeReport);
+        downloadName = 'Bao_Cao_Diem_Toan_Khoi_MatrixEdu.csv';
+      } else {
+        csvContent = exportRosterToCsv(gradedPapers, metadata, { hasEssay: Boolean(body.hasEssay) });
+        const safeCls = String(body.className || gradedPapers[0]?.className || '').replace(/[^a-zA-Z0-9_\-]/g, '');
+        if (safeCls) downloadName = `Bang_Diem_${safeCls}_TLTN_2025.csv`;
+      }
       const csvBuffer = Buffer.from(csvContent, 'utf8');
 
       res.writeHead(200, {
         'Content-Type': 'text/csv; charset=utf-8',
-        'Content-Disposition': 'attachment; filename="Bang_Diem_Lop_TLTN_2025.csv"',
+        'Content-Disposition': `attachment; filename="${downloadName}"`,
         'Content-Length': csvBuffer.length
       });
       res.end(csvBuffer);

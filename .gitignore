@@ -20,6 +20,7 @@ data/CSDL_CHAM_THI_*.json
 data/NHAT_KY_LUU_VET_*.csv
 data/omr_audit_logs.json
 data/omr_database.json
+data/omr_rosters.json
 data/profiles/exam_*.json
 scripts/*.txt
 
