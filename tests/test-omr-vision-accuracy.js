@@ -126,6 +126,33 @@ function readBmpAsImageElement(bmpPath) {
   return { naturalWidth: w, naturalHeight: h, _rgba: rgba };
 }
 
+// Xoay ảnh theo chiều kim đồng hồ ở độ phân giải gốc (mô phỏng rotateOmrImageElementAsync trên trình duyệt)
+function rotateImageElementCW(img, rotation) {
+  const rot = ((rotation % 360) + 360) % 360;
+  if (rot === 0) return img;
+  const sw = img.naturalWidth;
+  const sh = img.naturalHeight;
+  const quarter = rot === 90 || rot === 270;
+  const W = quarter ? sh : sw;
+  const H = quarter ? sw : sh;
+  const out = new Uint8ClampedArray(W * H * 4);
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      let sx, sy;
+      if (rot === 180) { sx = sw - 1 - x; sy = sh - 1 - y; }
+      else if (rot === 90) { sx = y; sy = sh - 1 - x; }
+      else { sx = sw - 1 - y; sy = x; }
+      const si = (sy * sw + sx) * 4;
+      const di = (y * W + x) * 4;
+      out[di] = img._rgba[si];
+      out[di + 1] = img._rgba[si + 1];
+      out[di + 2] = img._rgba[si + 2];
+      out[di + 3] = 255;
+    }
+  }
+  return { naturalWidth: W, naturalHeight: H, _rgba: out };
+}
+
 function generateTestBitmaps(tmpDir) {
   const tplTongHop = OMR_TEMPLATES.find(t => t.id === 'thpt_tong_hop');
   const tplBgd4 = OMR_TEMPLATES.find(t => t.id === 'bgd_2025_4code');
@@ -321,6 +348,25 @@ ConvertTo-Bmp $spec.bgdSrc (Join-Path $spec.outDir 'clean_bgd.bmp')
 ConvertTo-Bmp $spec.rocSrc (Join-Path $spec.outDir 'clean_roc.bmp')
 Render-Synthetic $spec.thSrc (Join-Path $spec.outDir 'synth_th.bmp') $spec.thMarks 1.4 -18 14 78
 Render-Synthetic $spec.bgdSrc (Join-Path $spec.outDir 'synth_bgd.bmp') $spec.bgdMarks -1.2 14 -12 52
+
+function Save-Rotated($inPath, $outPath, $flip) {
+  $src = [System.Drawing.Bitmap]::new($inPath)
+  $copy = [System.Drawing.Bitmap]::new($src.Width, $src.Height, [System.Drawing.Imaging.PixelFormat]::Format24bppRgb)
+  $g = [System.Drawing.Graphics]::FromImage($copy)
+  $g.DrawImage($src, 0, 0, $src.Width, $src.Height)
+  $g.Dispose()
+  $src.Dispose()
+  $copy.RotateFlip($flip)
+  $copy.Save($outPath, [System.Drawing.Imaging.ImageFormat]::Bmp)
+  $copy.Dispose()
+}
+
+# Phiếu bị lật ngược 180 độ và phiếu scan nằm ngang 90/270 độ
+Save-Rotated (Join-Path $spec.outDir 'synth_th.bmp') (Join-Path $spec.outDir 'synth_th_flip180.bmp') ([System.Drawing.RotateFlipType]::Rotate180FlipNone)
+Save-Rotated (Join-Path $spec.outDir 'clean_th.bmp') (Join-Path $spec.outDir 'clean_th_flip180.bmp') ([System.Drawing.RotateFlipType]::Rotate180FlipNone)
+Save-Rotated (Join-Path $spec.outDir 'synth_bgd.bmp') (Join-Path $spec.outDir 'synth_bgd_rot90.bmp') ([System.Drawing.RotateFlipType]::Rotate90FlipNone)
+Save-Rotated (Join-Path $spec.outDir 'clean_roc.bmp') (Join-Path $spec.outDir 'clean_roc_rot270.bmp') ([System.Drawing.RotateFlipType]::Rotate270FlipNone)
+Save-Rotated (Join-Path $spec.outDir 'clean_roc.bmp') (Join-Path $spec.outDir 'clean_roc_flip180.bmp') ([System.Drawing.RotateFlipType]::Rotate180FlipNone)
 `;
   const psPath = path.join(tmpDir, 'render.ps1');
   fs.writeFileSync(psPath, psScript);
@@ -451,6 +497,56 @@ function run() {
       assert.strictEqual(bgdRes.answers.part1[q], expOpt, `BGD 4 số P1 Câu ${q} sai`);
     }
     console.log('✓ Phiếu Bộ GD&ĐT 2025 Mã 4 số (2104) + bỏ trống SBD + tô đúp P2 1a + P3 -2,5 đạt chính xác 100%!');
+
+    // 5. PHIẾU BỊ LẬT NGƯỢC / SCAN NẰM NGANG: tự phát hiện góc xoay, xoay về đúng chiều rồi chấm cho kết quả y hệt
+    const orientCases = [
+      { file: 'clean_th.bmp', expect: 0, label: 'Phôi Tổng hợp đúng chiều' },
+      { file: 'synth_th.bmp', expect: 0, label: 'Phiếu Tổng hợp đã tô đúng chiều' },
+      { file: 'synth_bgd.bmp', expect: 0, label: 'Phiếu BGD đã tô đúng chiều' },
+      { file: 'clean_th_flip180.bmp', expect: 180, label: 'Phôi Tổng hợp lật ngược' },
+      { file: 'synth_th_flip180.bmp', expect: 180, label: 'Phiếu Tổng hợp đã tô bị lật ngược' },
+      { file: 'synth_bgd_rot90.bmp', expect: 270, label: 'Phiếu BGD scan nằm ngang (xoay 90°)' },
+      { file: 'clean_roc_rot270.bmp', expect: 90, label: 'Phôi Rọc phách nằm ngang (xoay 270°)' },
+      { file: 'clean_roc_flip180.bmp', expect: 180, label: 'Phôi Rọc phách lật ngược' }
+    ];
+    const orientImgs = {};
+    for (const oc of orientCases) {
+      const img = readBmpAsImageElement(path.join(tmpDir, oc.file));
+      orientImgs[oc.file] = img;
+      const res = ctx.detectOmrSheetOrientation(img);
+      assert.strictEqual(res.rotation, oc.expect, `${oc.label}: kỳ vọng xoay ${oc.expect}°, nhận ${res.rotation}° (scores=${JSON.stringify(res.scores)})`);
+      if (oc.expect !== 0) assert(res.confident, `${oc.label}: phải xác định hướng với độ tin cậy cao (scores=${JSON.stringify(res.scores)})`);
+      console.log(`  ✓ ${oc.label}: xoay ${res.rotation}° (scores=${JSON.stringify(res.scores)})`);
+    }
+
+    // Phiếu Tổng hợp lật ngược: gọi trực tiếp scanOmrSheetFromImageElement trên ảnh ngược đầu vẫn tự động lật 180° & chấm đúng 9.35đ
+    ctx.appState.omr.selectedTemplateId = 'thpt_tong_hop';
+    const directFlipRes = ctx.scanOmrSheetFromImageElement(orientImgs['synth_th_flip180.bmp'], 0.35, { expectedP1Count: 24, expectedP2Count: 4, expectedP3Count: 4 });
+    assert.strictEqual(directFlipRes.autoRotatedDeg, 180, 'scanOmrSheetFromImageElement phải tự động xoay 180° khi gặp ảnh ngược đầu');
+    assert.strictEqual(directFlipRes.sbd, '035');
+    assert.strictEqual(directFlipRes.scannedExamCode, '102');
+    assert.deepStrictEqual(JSON.parse(JSON.stringify(directFlipRes.answers)), JSON.parse(JSON.stringify(thRes.answers)), 'Đáp án quét trực tiếp trên ảnh ngược đầu phải trùng khớp 100%');
+
+    // Phiếu Tổng hợp lật ngược: sau khi xoay ảnh -> nhận diện mẫu & chấm giống hệt phiếu đúng chiều
+    const fixedTh = rotateImageElementCW(orientImgs['synth_th_flip180.bmp'], 180);
+    assert.strictEqual(ctx.detectOmrTemplateFromImageData(fixedTh, ['102', '103']), 'thpt_tong_hop');
+    ctx.appState.omr.selectedTemplateId = 'thpt_tong_hop';
+    const fixedThRes = ctx.scanOmrSheetFromImageElement(fixedTh, 0.35, { expectedP1Count: 24, expectedP2Count: 4, expectedP3Count: 4 });
+    assert.strictEqual(fixedThRes.sbd, '035');
+    assert.strictEqual(fixedThRes.scannedExamCode, '102');
+    assert.deepStrictEqual(JSON.parse(JSON.stringify(fixedThRes.answers)), JSON.parse(JSON.stringify(thRes.answers)), 'Đáp án phiếu lật ngược sau khi xoay phải trùng khớp phiếu đúng chiều');
+    const gradedFlip = gradeSinglePaper({ answers: fixedThRes.answers }, keyByCode['102'], { mcq: 0.25, tfStyle: 'moet2025', sa: 0.5 });
+    assert.strictEqual(gradedFlip.totalScore, 9.35, 'Phiếu lật ngược sau khi xoay phải được 9.35đ như chấm tay');
+
+    // Phiếu BGD scan nằm ngang: sau khi xoay -> mã đề 2104, MISSING_SBD, 12 câu P1 đúng
+    const fixedBgd = rotateImageElementCW(orientImgs['synth_bgd_rot90.bmp'], 270);
+    assert.strictEqual(ctx.detectOmrTemplateFromImageData(fixedBgd, ['2101', '2104']), 'bgd_2025_4code');
+    ctx.appState.omr.selectedTemplateId = 'bgd_2025_4code';
+    const fixedBgdRes = ctx.scanOmrSheetFromImageElement(fixedBgd, 0.35, { expectedP1Count: 12, expectedP2Count: 4, expectedP3Count: 2 });
+    assert.strictEqual(fixedBgdRes.scannedExamCode, '2104');
+    assert(fixedBgdRes.warnings.some(w => w.type === 'MISSING_SBD'));
+    assert.deepStrictEqual(JSON.parse(JSON.stringify(fixedBgdRes.answers)), JSON.parse(JSON.stringify(bgdRes.answers)), 'Đáp án phiếu nằm ngang sau khi xoay phải trùng khớp phiếu đúng chiều');
+    console.log('✓ Phiếu lật ngược 180° & scan nằm ngang 90°/270°: tự phát hiện, xoay đúng chiều và chấm trùng khớp 100% (9.35đ)!');
     console.log('\n🎉 ALL PIXEL-LEVEL OMR VISION & GRADING ACCURACY TESTS PASSED!');
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
