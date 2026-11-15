@@ -2832,15 +2832,15 @@
                   <span style="color:#94a3b8; font-weight:700; white-space:nowrap;">🎯 Quy ước:</span>
                   <span style="display:inline-flex; align-items:center; gap:4px; color:#4ade80; white-space:nowrap;" title="Học sinh tô đúng đáp án (+điểm)">
                     <span style="width:12px; height:12px; border-radius:50%; background:#16a34a; display:inline-flex; align-items:center; justify-content:center; color:#fff; font-size:8px; font-weight:bold; line-height:1;">✓</span>
-                    <b>Đúng</b>
+                    <b>Tô đúng (+đ)</b>
                   </span>
                   <span style="display:inline-flex; align-items:center; gap:4px; color:#f87171; white-space:nowrap;" title="Học sinh tô sai đáp án (0 điểm)">
                     <span style="width:12px; height:12px; border-radius:50%; background:#dc2626; display:inline-flex; align-items:center; justify-content:center; color:#fff; font-size:8px; font-weight:bold; line-height:1;">✕</span>
-                    <b>Sai</b>
+                    <b>Tô sai (0đ)</b>
                   </span>
-                  <span style="display:inline-flex; align-items:center; gap:4px; color:#86efac; white-space:nowrap;" title="Vị trí đáp án đúng của đề khi học sinh làm sai">
-                    <span style="width:12px; height:12px; border-radius:50%; background:rgba(34,197,94,0.25); border:1.5px solid #16a34a; display:inline-flex; align-items:center; justify-content:center; color:#15803d; font-size:9px; font-weight:bold; line-height:1;">✔</span>
-                    <b>Đ/Á đúng</b>
+                  <span style="display:inline-flex; align-items:center; gap:4px; color:#38bdf8; white-space:nowrap;" title="Vòng tròn rỗng nét đứt chỉ vị trí đáp án của đề khi học sinh tô sai (ô này học sinh không tô)">
+                    <span style="width:12px; height:12px; border-radius:50%; border:2px dashed #0284c7; display:inline-block;"></span>
+                    <b>Vị trí Đ/Á (khi sai)</b>
                   </span>
                   <span style="display:inline-flex; align-items:center; gap:4px; color:#fde047; white-space:nowrap;" title="Câu học sinh bỏ trống (0 điểm)">
                     <span style="width:11px; height:11px; border-radius:50%; border:1.5px dashed rgba(234,179,8,0.85); display:inline-block;"></span>
@@ -4009,10 +4009,18 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       if (autoSaveTimer) clearTimeout(autoSaveTimer);
       autoSaveTimer = setTimeout(() => {
         try {
-          syncMetadataFromInputs();
+          syncMetadataFromInputs(false);
+          const hasUserWork = Boolean(
+            appState.userInitiated &&
+            ((Array.isArray(appState.matrix?.rows) && appState.matrix.rows.length > 0) ||
+             (Array.isArray(appState.questions) && appState.questions.length > 0) ||
+             (Array.isArray(appState.variants) && appState.variants.length > 0))
+          );
+          if (!hasUserWork) return;
           const snapshot = {
             timestamp: Date.now(),
             timeStr: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+            userInitiated: true,
             appState: buildCleanProfilePayload()
           };
           localStorage.setItem('MT_DEDA_SESSION_AUTO_SNAPSHOT', JSON.stringify(snapshot));
@@ -4031,6 +4039,10 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         const raw = localStorage.getItem('MT_DEDA_SESSION_AUTO_SNAPSHOT');
         if (!raw) return;
         const snapshot = JSON.parse(raw);
+        if (!snapshot || !snapshot.userInitiated || !Array.isArray(snapshot.appState?.matrix?.rows) || snapshot.appState.matrix.rows.length === 0) {
+          localStorage.removeItem('MT_DEDA_SESSION_AUTO_SNAPSHOT');
+          return;
+        }
         const ageHours = (Date.now() - snapshot.timestamp) / (1000 * 60 * 60);
         if (ageHours < 48 && snapshot.appState && snapshot.appState.matrix) {
           const banner = document.getElementById('session-restore-banner');
@@ -4225,7 +4237,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       scheduleAutoSave();
     }
 
-    function syncMetadataFromInputs() {
+    function syncMetadataFromInputs(triggerSave = true) {
       const m = appState.metadata;
       const getVal = (id, def = '') => {
         const el = document.getElementById(id);
@@ -4246,7 +4258,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       m.customCodes = rawCustomCodes.split(/[,;\s]+/).map(c => c.trim()).filter(Boolean);
       m.localGuidelines = '';
       m.regulation = 'CV7991_TT22';
-      if (typeof scheduleAutoSave === 'function') scheduleAutoSave();
+      if (triggerSave && typeof scheduleAutoSave === 'function') scheduleAutoSave();
     }
 
     function populateMetadataInputs() {
@@ -4266,13 +4278,14 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       if (Array.isArray(m.customCodes) && m.customCodes.length > 0) {
         setVal('meta-custom-codes', m.customCodes.join(', '));
       }
-      syncMetadataFromInputs();
+      syncMetadataFromInputs(false);
     }
 
     // ========================================================================
     // TẢI FILE LÊN (.DOCX, .PDF, .TXT, HÌNH ẢNH) & BÓC TÁCH MA TRẬN NHÀ TRƯỜNG
     // ========================================================================
     async function applyExtractedDocumentData(data) {
+      appState.userInitiated = true;
       // Thay thế dữ liệu tài liệu cũ bằng tài liệu mới vừa tải lên (không trộn lẫn với đề mẫu trước đó)
       appState.uploadedDocs = [{
         fileName: data.fileName,
@@ -4608,6 +4621,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
     // ========================================================================
     async function loadPresetScenario(presetId) {
       try {
+        appState.userInitiated = true;
         if (appState.presetsCache.length === 0) {
           const res = await fetch('/api/presets');
           const data = await res.json();
@@ -7802,7 +7816,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       }).join('');
     }
 
-    // Tự động kiểm tra các file .docx có trong thư mục dự án (như "TIN 12 - MA TRAN KTGK 1.docx") và nạp ngay khi khởi chạy
+    // Kiểm tra các file .docx có trong thư mục dự án để hiển thị nút chọn nhanh (KHÔNG tự động nạp đề mẫu ảo khi khởi chạy để tránh chấm nhầm đáp án ở Bước 7)
     window.addEventListener('DOMContentLoaded', async () => {
       try {
         const healthRes = await fetch('/api/health');
@@ -7819,18 +7833,11 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
             <strong style="font-size:0.84rem; color:var(--primary);">📁 File Word có sẵn trong thư mục dự án:</strong>
             ${wfData.files.map(fn => `<button class="btn btn-outline btn-sm" onclick="loadWorkspaceDocxFile('${escapeHtml(fn)}')">📄 Nạp "${escapeHtml(fn)}"</button>`).join('')}
           </div>`;
-
-          // Tự động kết nối và hiển thị báo cáo phân tích Ngân hàng Google Drive
-          await initDriveBankStatus();
-
-          const targetFile = wfData.files.find(f => f.toUpperCase().includes('MA TRAN')) || wfData.files[0];
-          if (targetFile) {
-            await loadWorkspaceDocxFile(targetFile, false);
-            return;
-          }
         }
 
-        await loadPresetScenario('thpt_math_12');
+        // Tự động kết nối và hiển thị báo cáo phân tích Ngân hàng Google Drive
+        await initDriveBankStatus();
+        if (typeof refreshWorkflowReadiness === 'function') refreshWorkflowReadiness();
       } catch (_) { }
     });
 
@@ -9709,8 +9716,8 @@ Phần III:
 
       if (!useSample) {
         const keyCodes = Object.keys(appState.omr.answerKeysByCode || {});
-        if (keyCodes.length === 0) {
-          showToast('⚠️ Chưa có Đáp án đề thi để đối chiếu! Hãy soạn đề ở Bước 4, Chọn Đề đã lưu hoặc bấm [Nạp Đáp án ngoài].', 'warning');
+        if ((!Array.isArray(appState.omr.papers) || appState.omr.papers.length === 0) && keyCodes.length === 0) {
+          showToast('⚠️ Chưa có Đáp án đề thi để đối chiếu! Hãy soạn đề ở Bước 4, Chọn Đề đã lưu hoặc bấm [📥 Nạp Đ/Á].', 'warning');
           return;
         }
         if (!Array.isArray(appState.omr.papers) || appState.omr.papers.length === 0) {
@@ -9720,7 +9727,7 @@ Phần III:
       }
 
       appState.omr.isDemoMode = Boolean(useSample);
-      if (!opts.silentToast) {
+      if (!opts.silentToast && (useSample || Object.keys(appState.omr.answerKeysByCode || {}).length > 0)) {
         showToast(useSample ? '🧪 Đang chạy chế độ Chấm thử Mẫu (Mô phỏng Demo)...' : 'Đang quét nhận dạng OMR và chấm bài trắc nghiệm theo mã đề...', 'info');
       }
 
@@ -9795,6 +9802,38 @@ Phần III:
               }
             }
           }
+        }
+
+        if (!useSample && Object.keys(appState.omr.answerKeysByCode || {}).length === 0) {
+          appState.omr.gradedPapers = (appState.omr.papers || []).map(p => ({
+            ...p,
+            hasError: true,
+            noAnswerKeyLoaded: true,
+            warnings: [
+              ...(p.warnings || []).filter(w => w.type !== 'NO_ANSWER_KEY'),
+              { type: 'NO_ANSWER_KEY', message: 'Chưa nạp Đáp án đề thi để đối chiếu — hãy chọn đề hoặc bấm [📥 Nạp Đ/Á] ở Bước 1!' }
+            ],
+            result: {
+              totalScore: 0,
+              part1Score: 0,
+              part2Score: 0,
+              part3Score: 0,
+              part1: { correctCount: 0, total: 0, points: 0, details: [] },
+              part2: { correctSubCount: 0, total: 0, points: 0, details: {} },
+              part3: { correctCount: 0, total: 0, points: 0, details: {} }
+            }
+          }));
+          renderOmrPapersTable();
+          if (appState.omr.gradedPapers.length > 0) {
+            const targetId = appState.omr.activePaperId && appState.omr.gradedPapers.some(gp => gp.id === appState.omr.activePaperId)
+              ? appState.omr.activePaperId
+              : appState.omr.gradedPapers[0].id;
+            selectOmrPaper(targetId);
+          }
+          if (!opts.silentToast) {
+            showToast('⚠️ Chưa có Đáp án đề thi để đối chiếu! Đã hiển thị kết quả nhận dạng ô tô — hãy chọn Đề hoặc bấm [📥 Nạp Đ/Á] ở Bước 1 để tính điểm.', 'warning');
+          }
+          return;
         }
 
         // Loại bỏ DOM element trước khi gửi JSON
@@ -10062,10 +10101,12 @@ Phần III:
       tbody.innerHTML = filtered.map(p => {
         const isActive = p.id === appState.omr.activePaperId;
         const numScore = typeof p.result?.totalScore === 'number' ? p.result.totalScore : 0;
-        const scoreStr = numScore.toFixed(2);
+        const scoreStr = p.noAnswerKeyLoaded ? 'Chờ Đ/Á' : numScore.toFixed(2);
 
         let statusHtml = '<span class="badge" style="background:#f1f5f9; color:#475569; font-weight:600; padding:2px 6px; border-radius:4px; font-size:0.72rem;">Đã chấm</span>';
-        if (p.isBlankPaper || (numScore === 0 && Object.keys(p.answers?.part1 || {}).length === 0 && Object.keys(p.answers?.part2 || {}).length === 0)) {
+        if (p.noAnswerKeyLoaded) {
+          statusHtml = '<span class="badge" style="background:#dbeafe; color:#1d4ed8; font-weight:700; padding:2px 6px; border-radius:4px; font-size:0.72rem;">Chờ nạp Đ/Á</span>';
+        } else if (p.isBlankPaper || (numScore === 0 && Object.keys(p.answers?.part1 || {}).length === 0 && Object.keys(p.answers?.part2 || {}).length === 0)) {
           statusHtml = '<span class="badge" style="background:#fee2e2; color:#991b1b; font-weight:700; padding:2px 6px; border-radius:4px; font-size:0.72rem;">Để trống bài (0 đ)</span>';
         } else if (p.isCorrected) {
           statusHtml = '<span class="badge" style="background:#e0e7ff; color:#3730a3; font-weight:600; padding:2px 6px; border-radius:4px; font-size:0.72rem;">Đã sửa thủ công</span>';
@@ -10073,7 +10114,7 @@ Phần III:
           statusHtml = '<span class="badge" style="background:#fef08a; color:#854d0e; font-weight:700; padding:2px 6px; border-radius:4px; font-size:0.72rem;">Cần kiểm tra</span>';
         }
 
-        const scoreColor = numScore >= 8.0 ? '#15803d' : (numScore >= 5.0 ? '#0284c7' : '#dc2626');
+        const scoreColor = p.noAnswerKeyLoaded ? '#64748b' : (numScore >= 8.0 ? '#15803d' : (numScore >= 5.0 ? '#0284c7' : '#dc2626'));
 
         const rowStyle = isActive
           ? 'background:#eff6ff; border-left:3px solid #2563eb; cursor:pointer; box-shadow:inset 0 0 0 1px #bfdbfe;'
@@ -10260,9 +10301,11 @@ Phần III:
       const banner = document.getElementById('omr-status-banner-text');
       const score = typeof paper.result?.totalScore === 'number' ? paper.result.totalScore.toFixed(2) : '0.00';
       if (banner) {
-        banner.textContent = paper.isCorrected
-          ? `Đã lưu sửa phiếu: mã ${paper.scannedExamCode || '---'}, điểm ${score} đ`
-          : `Đang xem phiếu: mã ${paper.scannedExamCode || '---'}, điểm ${score} đ`;
+        banner.textContent = paper.noAnswerKeyLoaded
+          ? `Đã nhận dạng phiếu: mã ${paper.scannedExamCode || '---'} (Chờ nạp Đáp án ở Bước 1 để tính điểm)`
+          : (paper.isCorrected
+              ? `Đã lưu sửa phiếu: mã ${paper.scannedExamCode || '---'}, điểm ${score} đ`
+              : `Đang xem phiếu: mã ${paper.scannedExamCode || '---'}, điểm ${score} đ`);
       }
 
       // Cập nhật chi tiết đáy panel trái
@@ -10273,7 +10316,10 @@ Phần III:
 
       const diagEl = document.getElementById('omr-bottom-diagnostic');
       if (diagEl) {
-        if (paper.isBlankPaper || (Number(paper.result?.totalScore || 0) === 0 && Object.keys(paper.answers?.part1 || {}).length === 0 && Object.keys(paper.answers?.part2 || {}).length === 0)) {
+        if (paper.noAnswerKeyLoaded) {
+          diagEl.textContent = 'ℹ️ Đã nhận dạng các ô tô trên phiếu (màu xanh dương). Hãy chọn Đề hoặc bấm [📥 Nạp Đ/Á] ở Bước 1 để chấm điểm!';
+          diagEl.style.color = '#1d4ed8';
+        } else if (paper.isBlankPaper || (Number(paper.result?.totalScore || 0) === 0 && Object.keys(paper.answers?.part1 || {}).length === 0 && Object.keys(paper.answers?.part2 || {}).length === 0)) {
           diagEl.textContent = '⚠️ Thí sinh nộp bài để trống (không tô chì Phần I, II, III). Điểm số 0.00 đ là hoàn toàn chính xác theo bài thi.';
           diagEl.style.color = '#dc2626';
         } else if (paper.warnings && paper.warnings.length > 0) {
@@ -10758,25 +10804,14 @@ Phần III:
               }
             } else if (isCorrect && q <= p1KeyList.length) {
               if (studentAns) {
-                // HỌC SINH CÓ LÀM NHƯNG CHỌN SAI: Vẽ viền xanh + DẤU TICK XANH ✔ để Thầy/Cô đối chiếu
-                ctx.fillStyle = 'rgba(34, 197, 94, 0.22)';
-                ctx.fill();
-                ctx.strokeStyle = '#16a34a';
-                ctx.lineWidth = Math.max(2.5, 3.8 * scaleX);
+                // HỌC SINH CHỌN SAI: Chỉ vẽ vòng tròn RỖNG nét đứt màu xanh lam (#0284c7) chỉ vị trí đáp án đề.
+                // TUYỆT ĐỐI KHÔNG tô nền xanh hay gắn huy hiệu dấu tích (✓) để tránh nhầm là học sinh làm đúng hoặc tô 2 ô!
+                ctx.save();
+                ctx.setLineDash([3.5 * scaleX, 2.5 * scaleX]);
+                ctx.strokeStyle = '#0284c7';
+                ctx.lineWidth = Math.max(2, 2.8 * scaleX);
                 ctx.stroke();
-
-                ctx.strokeStyle = '#f59e0b';
-                ctx.lineWidth = Math.max(1, 1.8 * scaleX);
-                ctx.beginPath();
-                ctx.arc(bX, bY, r + Math.max(2, 2.8 * scaleX), 0, Math.PI * 2);
-                ctx.stroke();
-
-                // DẤU TICK XANH (GREEN CHECKMARK) TO RÕ NÉT NGAY TẠI Ô ĐÁP ÁN ĐÚNG
-                drawCanvasCheckmark(ctx, bX, bY, r * 1.35, '#15803d', '#ffffff');
-
-                // Huy hiệu Tick Xanh ở góc trên bên phải
-                const badgeR = r * 0.55;
-                drawCheckmarkBadge(ctx, bX + r * 0.72, bY - r * 0.68, badgeR);
+                ctx.restore();
               } else {
                 // HỌC SINH BỎ TRỐNG CÂU NÀY: Viền nét đứt màu vàng nhạt (tránh nhầm lẫn là học sinh làm đúng)
                 ctx.save();
@@ -10884,26 +10919,14 @@ Phần III:
                 }
               } else if (isCorrect) {
                 if (studentVal) {
-                  // HỌC SINH CÓ CHỌN NHƯNG CHỌN SAI: Vẽ viền xanh + DẤU TICK XANH ✔ để Thầy/Cô đối chiếu
-                  ctx.fillStyle = 'rgba(34, 197, 94, 0.22)';
-                  ctx.fill();
-                  ctx.strokeStyle = '#16a34a';
-                  ctx.lineWidth = Math.max(2.5, 3.8 * scaleX);
+                  // HỌC SINH CHỌN SAI: Chỉ vẽ vòng tròn RỖNG nét đứt màu xanh lam (#0284c7) chỉ vị trí đáp án đề.
+                  // TUYỆT ĐỐI KHÔNG tô nền xanh hay gắn huy hiệu dấu tích (✓) để tránh nhầm là học sinh làm đúng hoặc tô 2 ô!
+                  ctx.save();
+                  ctx.setLineDash([3.5 * scaleX, 2.5 * scaleX]);
+                  ctx.strokeStyle = '#0284c7';
+                  ctx.lineWidth = Math.max(2, 2.8 * scaleX);
                   ctx.stroke();
-
-                  // Viền ngoài phụ vàng
-                  ctx.strokeStyle = '#f59e0b';
-                  ctx.lineWidth = Math.max(1, 1.8 * scaleX);
-                  ctx.beginPath();
-                  ctx.arc(bX, bY, r + Math.max(2, 2.8 * scaleX), 0, Math.PI * 2);
-                  ctx.stroke();
-
-                  // DẤU TICK XANH (GREEN CHECKMARK)
-                  drawCanvasCheckmark(ctx, bX, bY, r * 1.35, '#15803d', '#ffffff');
-
-                  // Huy hiệu Tick Xanh ở góc trên bên phải
-                  const badgeR = r * 0.55;
-                  drawCheckmarkBadge(ctx, bX + r * 0.72, bY - r * 0.68, badgeR);
+                  ctx.restore();
                 } else {
                   // HỌC SINH BỎ TRỐNG Ý NÀY: Viền nét đứt màu vàng nhạt (tránh nhầm lẫn là học sinh làm đúng)
                   ctx.save();
@@ -11092,9 +11115,11 @@ Phần III:
         const p1Total = paper.result?.part1?.total || p1DetailsArr.length || p1KeyList.length || 24;
         const p1PtsVal = paper.result?.part1?.points ?? paper.result?.part1Score ?? 0;
         const p2PtsVal = paper.result?.part2?.points ?? paper.result?.part2Score ?? 0;
+        const p2TotalSubItems = Math.max(1, Object.keys(p2KeyObj || {}).length || Object.keys(paper.answers?.part2 || {}).length || 4) * 4;
         const p3PtsVal = paper.result?.part3?.points ?? paper.result?.part3Score ?? 0;
         const p3Correct = paper.result?.part3?.correctCount ?? 0;
         const p3Total = paper.result?.part3?.total ?? Object.keys(p3Key).length;
+        const isNoKey = Boolean(paper.noAnswerKeyLoaded);
 
         if (tpl.hasPhach) {
           // MẪU 4: PHIẾU THI RỌC PHÁCH THPT 2025-2026
@@ -11108,7 +11133,7 @@ Phần III:
           ctx.textAlign = 'center';
           ctx.fillStyle = '#dc2626';
           ctx.font = `bold ${Math.round(26 * scaleY)}px "Times New Roman", serif`;
-          ctx.fillText(paper.hasError ? 'LỖI ĐỀ' : totalScore, (sb.x + sb.w / 2) * scaleX, (sb.y + sb.h / 2 + 9) * scaleY);
+          ctx.fillText(isNoKey ? 'CHỜ Đ/Á' : (paper.hasError ? 'LỖI ĐỀ' : totalScore), (sb.x + sb.w / 2) * scaleX, (sb.y + sb.h / 2 + 9) * scaleY);
 
           // 2) Ô Điểm bằng chữ (X = 18, Y = 220, W = 128, H = 56)
           const swb = tpl.scoreWordBox;
@@ -11120,7 +11145,7 @@ Phần III:
           ctx.textAlign = 'center';
           ctx.fillStyle = '#1e3a8a';
           ctx.font = `italic bold ${Math.round(11 * scaleY)}px "Times New Roman", serif`;
-          const scoreWords = paper.hasError ? 'Lỗi mã đề thi' : convertScoreToVietnameseWords(totalScore);
+          const scoreWords = isNoKey ? 'Chưa nạp Đáp án' : (paper.hasError ? 'Lỗi mã đề thi' : convertScoreToVietnameseWords(totalScore));
           ctx.fillText(scoreWords, (swb.x + swb.w / 2) * scaleX, (swb.y + swb.h / 2 + 4) * scaleY);
         } else if (tpl.id === 'thpt_tong_hop') {
           // MẪU 3: PHIẾU KIỂM TRA HỌC KỲ TỔNG HỢP THPT (MÃ ĐỀ 3 SỐ)
@@ -11132,11 +11157,11 @@ Phần III:
           ctx.strokeRect(sb.x * scaleX, sb.y * scaleY, sb.w * scaleX, sb.h * scaleY);
           ctx.textAlign = 'center';
           ctx.fillStyle = '#dc2626';
-          ctx.font = `bold ${Math.round(44 * scaleY)}px "Times New Roman", serif`;
-          ctx.fillText(paper.hasError ? 'LỖI' : totalScore, (sb.x + sb.w / 2) * scaleX, (sb.y + 52) * scaleY);
+          ctx.font = `bold ${Math.round((isNoKey ? 28 : 44) * scaleY)}px "Times New Roman", serif`;
+          ctx.fillText(isNoKey ? 'CHỜ ĐÁP ÁN' : (paper.hasError ? 'LỖI' : totalScore), (sb.x + sb.w / 2) * scaleX, (sb.y + 52) * scaleY);
           ctx.fillStyle = '#991b1b';
           ctx.font = `bold ${Math.round(15 * scaleY)}px Arial, sans-serif`;
-          ctx.fillText(paper.hasError ? 'Mã đề chưa khớp' : `Thang điểm 10 • Mã đề ${paper.scannedExamCode}`, (sb.x + sb.w / 2) * scaleX, (sb.y + 80) * scaleY);
+          ctx.fillText(isNoKey ? `Đã quét Mã ${paper.scannedExamCode || '?'} • Hãy nạp Đ/Á` : (paper.hasError ? 'Mã đề chưa khớp' : `Thang điểm 10 • Mã đề ${paper.scannedExamCode}`), (sb.x + sb.w / 2) * scaleX, (sb.y + 80) * scaleY);
 
           // DÒNG BREAKDOWN ĐIỂM CHI TIẾT TRỰC TIẾP TRÊN Ô ĐIỂM
           if (!paper.hasError) {
@@ -11152,7 +11177,7 @@ Phần III:
               ctx.fillText(`(${p1Correct}/${p1Total} câu TN • Phần II để trống 0đ)`, (sb.x + sb.w / 2) * scaleX, (sb.y + 128) * scaleY);
             } else {
               ctx.fillStyle = '#15803d';
-              ctx.fillText(`(${p1Correct}/${p1Total} câu TN • Phần II: ${paper.result?.part2?.correctSubCount || 0}/16 ý)`, (sb.x + sb.w / 2) * scaleX, (sb.y + 128) * scaleY);
+              ctx.fillText(`(${p1Correct}/${p1Total} câu TN • Phần II: ${paper.result?.part2?.correctSubCount || 0}/${p2TotalSubItems} ý)`, (sb.x + sb.w / 2) * scaleX, (sb.y + 128) * scaleY);
             }
           }
 
@@ -11175,7 +11200,7 @@ Phần III:
           ctx.fillText(`• Phần I (TN): ${p1Correct}/${p1Total} câu = ${Number(p1PtsVal).toFixed(2)} đ`, (sb.x + 10) * scaleX, cbBoxY + 48 * scaleY);
           const p2Summary = (Number(p2PtsVal) === 0 && (!paper.answers?.part2 || Object.keys(paper.answers.part2).length === 0))
             ? '0.00 đ (Thí sinh để trống)'
-            : `${Number(p2PtsVal).toFixed(2)} đ (${paper.result?.part2?.correctSubCount || 0}/16 ý)`;
+            : `${Number(p2PtsVal).toFixed(2)} đ (${paper.result?.part2?.correctSubCount || 0}/${p2TotalSubItems} ý)`;
           ctx.fillText(`• Phần II (Đ/S): ${p2Summary}`, (sb.x + 10) * scaleX, cbBoxY + 72 * scaleY);
           if (p3Total > 0) {
             ctx.fillText(`• Phần III (TLN): ${p3Correct}/${p3Total} câu = ${Number(p3PtsVal).toFixed(2)} đ`, (sb.x + 10) * scaleX, cbBoxY + 96 * scaleY);
@@ -11186,7 +11211,7 @@ Phần III:
 
           ctx.fillStyle = paper.hasError ? '#dc2626' : (paper.warnings?.length ? '#b45309' : '#15803d');
           ctx.font = `bold ${Math.round(11 * scaleY)}px Arial, sans-serif`;
-          ctx.fillText(paper.hasError ? '⚠ Cần sửa mã đề' : (paper.warnings?.length ? `⚠ Cần kiểm tra (${paper.warnings.length} lưu ý)` : '✓ Chấm chuẩn xác'), (sb.x + 10) * scaleX, cbBoxY + 116 * scaleY);
+          ctx.fillText(isNoKey ? '⚠ Chưa nạp Đáp án đề thi' : (paper.hasError ? '⚠ Cần sửa mã đề' : (paper.warnings?.length ? `⚠ Cần kiểm tra (${paper.warnings.length} lưu ý)` : '✓ Chấm chuẩn xác')), (sb.x + 10) * scaleX, cbBoxY + 116 * scaleY);
         } else {
           // MẪU 1 & 2: CHUẨN BỘ GD&ĐT 2025 (Mã 4 số & 3 số)
           // 1) Ô ĐIỂM CHÍNH THỨC (X = 222..588, Y = 420..584)
@@ -11200,9 +11225,9 @@ Phần III:
           if (paper.hasError) {
             ctx.fillStyle = '#dc2626';
             ctx.font = `bold ${Math.round(34 * scaleY)}px "Times New Roman", serif`;
-            ctx.fillText('LỖI MÃ ĐỀ', 405 * scaleX, 492 * scaleY);
+            ctx.fillText(isNoKey ? 'CHỜ ĐÁP ÁN' : 'LỖI MÃ ĐỀ', 405 * scaleX, 492 * scaleY);
             ctx.font = `bold ${Math.round(22 * scaleY)}px Arial, sans-serif`;
-            ctx.fillText(`Mã đề: ${paper.scannedExamCode || '?'} (Chưa khớp)`, 405 * scaleX, 542 * scaleY);
+            ctx.fillText(isNoKey ? `Đã quét Mã ${paper.scannedExamCode || '?'} • Hãy nạp Đ/Á` : `Mã đề: ${paper.scannedExamCode || '?'} (Chưa khớp)`, 405 * scaleX, 542 * scaleY);
           } else {
             ctx.fillStyle = '#dc2626';
             ctx.font = `bold ${Math.round(76 * scaleY)}px "Times New Roman", serif`;
@@ -11224,7 +11249,7 @@ Phần III:
           ctx.fillText(`• P.I (TN): ${p1Correct}/${p1Total} câu = ${Number(p1PtsVal).toFixed(2)} đ`, 234 * scaleX, 678 * scaleY);
           const p2Note = (Number(p2PtsVal) === 0 && (!paper.answers?.part2 || Object.keys(paper.answers.part2).length === 0))
             ? '0.00 đ (Thí sinh để trống)'
-            : `${Number(p2PtsVal).toFixed(2)} đ (${paper.result?.part2?.correctSubCount || 0}/16 ý)`;
+            : `${Number(p2PtsVal).toFixed(2)} đ (${paper.result?.part2?.correctSubCount || 0}/${p2TotalSubItems} ý)`;
           ctx.fillText(`• P.II (Đ/S): ${p2Note}`, 234 * scaleX, 718 * scaleY);
           ctx.fillText(`• P.III (TLN): ${p3Correct}/${p3Total} câu = ${Number(p3PtsVal).toFixed(2)} đ`, 234 * scaleX, 758 * scaleY);
 
@@ -11240,7 +11265,7 @@ Phần III:
           ctx.fillStyle = paper.hasError ? '#dc2626' : (hasWarn ? '#b45309' : '#15803d');
           ctx.font = `bold ${Math.round(21 * scaleY)}px Arial, sans-serif`;
           ctx.fillText(
-            paper.hasError ? '⚠ CẦN SỬA MÃ ĐỀ THI' : (hasWarn ? `⚠ CẦN KIỂM TRA (${paper.warnings.length})` : '✓ ĐÃ CHẤM OMR CHUẨN XÁC'),
+            isNoKey ? '⚠ CHƯA NẠP ĐÁP ÁN ĐỀ THI' : (paper.hasError ? '⚠ CẦN SỬA MÃ ĐỀ THI' : (hasWarn ? `⚠ CẦN KIỂM TRA (${paper.warnings.length})` : '✓ ĐÃ CHẤM OMR CHUẨN XÁC')),
             405 * scaleX,
             898 * scaleY
           );
