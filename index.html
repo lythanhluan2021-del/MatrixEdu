@@ -857,6 +857,32 @@
       border: 1px solid transparent;
     }
 
+    /* Step 7 Guided Pipeline No-Wrap & Balanced Split */
+    #step-7 .badge,
+    #omr-filter-pills button,
+    #omr-pipeline-bar span,
+    #omr-left-panel .omr-nowrap {
+      white-space: nowrap;
+    }
+
+    #omr-left-panel {
+      width: 445px;
+      min-width: 420px;
+      max-width: 470px;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 1120px) {
+      #omr-workspace-split {
+        flex-direction: column;
+      }
+      #omr-left-panel {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+      }
+    }
+
     .badge-blue {
       background: #eff6ff;
       color: #1d4ed8;
@@ -2324,55 +2350,53 @@
           <section class="step-card glass-zone-step-7 hover-zone-rose" id="step-7" style="display:none; padding:18px;">
             <!-- TOP APPLICATION HEADER BAR -->
             <div class="card-header"
-              style="background:#0f172a; color:#fff; border-radius:8px; padding:12px 18px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-              <div style="display:flex; align-items:center; gap:12px;">
-                <span style="font-size:1.6rem;">🎯</span>
-                <div>
+              style="background:#0f172a; color:#fff; border-radius:8px; padding:12px 16px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <div style="display:flex; align-items:center; gap:10px; min-width:0; flex:1;">
+                <span style="font-size:1.5rem; flex-shrink:0;">🎯</span>
+                <div style="min-width:0;">
                   <div
-                    style="color:#fff; font-size:1.18rem; font-weight:800; display:flex; align-items:center; gap:8px;">
-                    Chấm trắc nghiệm - x31 / BỘ GD / A4 tự luận
+                    style="color:#fff; font-size:1.12rem; font-weight:800; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                    <span class="omr-nowrap" style="white-space:nowrap;">Chấm trắc nghiệm OMR</span>
                     <span class="badge"
-                      style="background:#38bdf8; color:#082f49; font-size:0.75rem; font-weight:700; padding:3px 8px;">Mẫu
-                      Phiếu 2025 BGD</span>
+                      style="background:#38bdf8; color:#082f49; font-size:0.74rem; font-weight:700; padding:3px 8px; white-space:nowrap;">Mẫu Phiếu 2025 BGD</span>
                   </div>
-                  <div style="font-size:0.8rem; color:#bfdbfe;">
-                    Chấm OMR theo mã đề 4 số, thang điểm BGD 2025, sửa trực tiếp trên phiếu, lưu vết minh bạch & đồng bộ
-                    Google Drive
+                  <div style="font-size:0.79rem; color:#bfdbfe; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                    Chấm phiếu scan theo mã đề, thang điểm BGD 2025, sửa trực tiếp trên phiếu &amp; lưu vết minh bạch
                   </div>
                 </div>
               </div>
-              <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+              <div style="display:flex; gap:7px; align-items:center; flex-wrap:nowrap; flex-shrink:0;">
                 <a href="/api/omr/template-pdf" target="_blank" class="btn btn-outline btn-sm"
-                  style="color:#fff; border-color:#93c5fd; background:rgba(255,255,255,0.15); font-weight:600;">
-                  📄 Mẫu Phiếu TLTN 2025 (PDF)
+                  style="color:#fff; border-color:#93c5fd; background:rgba(255,255,255,0.15); font-weight:600; white-space:nowrap;">
+                  📄 Mẫu Phiếu (PDF)
                 </a>
                 <button class="btn btn-outline btn-sm" onclick="exportOmrRosterCsv()"
-                  style="color:#fff; border-color:#93c5fd; background:rgba(255,255,255,0.15); font-weight:600;">
-                  📥 Xuất Bảng điểm (Excel/CSV)
+                  style="color:#fff; border-color:#93c5fd; background:rgba(255,255,255,0.15); font-weight:600; white-space:nowrap;">
+                  📥 Xuất Bảng điểm
                 </button>
                 <button class="btn btn-success btn-sm" onclick="syncOmrToGoogleDrive()"
-                  style="font-weight:700; background:#16a34a; border-color:#16a34a;">
-                  ☁️ Lưu CSDL & Lưu vết vào Google Drive
+                  style="font-weight:700; background:#16a34a; border-color:#16a34a; white-space:nowrap;">
+                  ☁️ Lưu CSDL &amp; Drive
                 </button>
               </div>
             </div>
 
             <!-- MAIN TWO-COLUMN WORKSPACE CONTAINER -->
-            <div id="omr-workspace-split" style="display:flex; gap:16px; align-items:stretch; min-height:860px;">
+            <div id="omr-workspace-split" style="display:flex; gap:14px; align-items:stretch; min-height:860px;">
 
               <!-- LEFT PANEL (CONFIGURATION & GRADED PAPERS LIST) -->
-              <div
-                style="width:415px; min-width:375px; max-width:445px; background:#ffffff; border-radius:8px; border:1px solid #e2e8f0; display:flex; flex-direction:column; overflow:hidden;">
+              <div id="omr-left-panel"
+                style="width:445px; min-width:420px; max-width:470px; flex-shrink:0; background:#ffffff; border-radius:8px; border:1px solid #e2e8f0; display:flex; flex-direction:column; overflow:hidden;">
 
                 <!-- TOP TABS: [Chấm bài mới] & [Mở kết quả đã chấm] -->
                 <div
                   style="display:flex; background:#f1f5f9; border-bottom:1px solid #cbd5e1; padding:4px 6px 0 6px; gap:4px;">
                   <button id="omr-tab-grade" class="btn btn-sm" onclick="switchOmrTab('grade')"
-                    style="flex:1; border-radius:6px 6px 0 0; font-weight:700; font-size:0.83rem; padding:8px 6px; background:#ffffff; color:#1e40af; border:1px solid #cbd5e1; border-bottom-color:#ffffff; margin-bottom:-1px;">
+                    style="flex:1; border-radius:6px 6px 0 0; font-weight:700; font-size:0.82rem; padding:8px 6px; background:#ffffff; color:#1e40af; border:1px solid #cbd5e1; border-bottom-color:#ffffff; margin-bottom:-1px; white-space:nowrap;">
                     📝 Chấm bài mới
                   </button>
                   <button id="omr-tab-reports" class="btn btn-sm" onclick="switchOmrTab('reports')"
-                    style="flex:1; border-radius:6px 6px 0 0; font-weight:600; font-size:0.83rem; padding:8px 6px; background:transparent; color:#64748b; border:1px solid transparent;">
+                    style="flex:1; border-radius:6px 6px 0 0; font-weight:600; font-size:0.82rem; padding:8px 6px; background:transparent; color:#64748b; border:1px solid transparent; white-space:nowrap;">
                     📊 Mở kết quả đã chấm
                   </button>
                 </div>
@@ -2382,17 +2406,16 @@
 
                   <!-- THANH CHỈ DẪN QUY TRÌNH 3 BƯỚC + CÀI ĐẶT -->
                   <div id="omr-pipeline-bar"
-                    style="padding:6px 10px; background:#f8fafc; border-bottom:1px solid #e2e8f0; display:flex; align-items:center; justify-content:space-between; gap:6px;">
-                    <div style="display:flex; align-items:center; gap:5px; font-size:0.71rem; font-weight:700; color:#475569; flex-wrap:wrap;">
-                      <span style="color:#1e40af;">Quy trình chấm:</span>
-                      <span style="background:#e0e7ff; color:#3730a3; padding:1px 6px; border-radius:4px;">1. Đáp án</span>
-                      <span>→</span>
-                      <span style="background:#dcfce7; color:#166534; padding:1px 6px; border-radius:4px;">2. Lớp & SBD</span>
-                      <span>→</span>
-                      <span style="background:#dbeafe; color:#1d4ed8; padding:1px 6px; border-radius:4px;">3. Scan & Chấm</span>
+                    style="padding:6px 10px; background:#f8fafc; border-bottom:1px solid #e2e8f0; display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:nowrap;">
+                    <div style="display:flex; align-items:center; gap:4px; font-size:0.70rem; font-weight:700; color:#475569; flex-wrap:nowrap; overflow:hidden;">
+                      <span style="background:#e0e7ff; color:#3730a3; padding:2px 6px; border-radius:4px; white-space:nowrap;">1. Đáp án</span>
+                      <span style="color:#94a3b8;">→</span>
+                      <span style="background:#dcfce7; color:#166534; padding:2px 6px; border-radius:4px; white-space:nowrap;">2. Lớp &amp; SBD</span>
+                      <span style="color:#94a3b8;">→</span>
+                      <span style="background:#dbeafe; color:#1d4ed8; padding:2px 6px; border-radius:4px; white-space:nowrap;">3. Scan &amp; Chấm</span>
                     </div>
                     <button class="btn btn-sm" onclick="toggleOmrSettingsDrawer()" id="omr-btn-toggle-settings"
-                      style="font-size:0.72rem; font-weight:700; padding:2px 8px; background:#fff; border:1px solid #cbd5e1; color:#475569; border-radius:5px; flex-shrink:0;"
+                      style="font-size:0.71rem; font-weight:700; padding:2px 8px; background:#fff; border:1px solid #cbd5e1; color:#475569; border-radius:5px; flex-shrink:0; white-space:nowrap;"
                       title="Cài đặt kỹ thuật: Ngưỡng tô, Mẫu phiếu, Thư mục lưu">
                       ⚙️ Cài đặt
                     </button>
@@ -2465,32 +2488,32 @@
                     <!-- BƯỚC 1: CHỌN ĐỀ THI & ĐÁP ÁN (BẮT BUỘC) -->
                     <div id="omr-step1-card"
                       style="background:#fff; border:1px solid #c7d2fe; border-left:3.5px solid #4f46e5; border-radius:7px; padding:7px 9px; display:flex; flex-direction:column; gap:5px;">
-                      <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
-                        <div style="display:flex; align-items:center; gap:5px;">
-                          <span style="font-size:0.74rem; font-weight:800; color:#3730a3;">BƯỚC 1: Đề & Đáp án</span>
+                      <div style="display:flex; align-items:center; justify-content:space-between; gap:5px; flex-wrap:nowrap;">
+                        <div style="display:flex; align-items:center; gap:5px; min-width:0; flex:1; overflow:hidden;">
+                          <span class="omr-nowrap" style="font-size:0.73rem; font-weight:800; color:#3730a3; white-space:nowrap;">BƯỚC 1: Đề &amp; Đáp án</span>
                           <span id="omr-active-source-pill"
-                            style="font-size:0.67rem; font-weight:700; color:#1d4ed8; background:#dbeafe; padding:1px 6px; border-radius:999px; border:1px solid #93c5fd; white-space:nowrap;">
-                            Nguồn: Đề đang soạn
+                            style="font-size:0.66rem; font-weight:700; color:#1d4ed8; background:#dbeafe; padding:1px 6px; border-radius:999px; border:1px solid #93c5fd; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                            Nguồn: Chưa chọn
                           </span>
                         </div>
                         <span id="omr-step1-status"
-                          style="font-size:0.67rem; font-weight:700; padding:1px 7px; border-radius:999px; background:#fffbeb; color:#92400e; border:1px solid #fde68a; white-space:nowrap;">
+                          style="font-size:0.66rem; font-weight:700; padding:1px 7px; border-radius:999px; background:#fffbeb; color:#92400e; border:1px solid #fde68a; white-space:nowrap; flex-shrink:0;">
                           ⚠️ Bắt buộc
                         </span>
                       </div>
 
-                      <div style="display:flex; align-items:center; gap:4px;">
+                      <div style="display:flex; align-items:center; gap:4px; flex-wrap:nowrap;">
                         <select id="omr-saved-exam-select" onchange="onOmrSavedExamSelected(this.value)"
-                          style="flex:1; min-width:120px; font-size:0.74rem; font-weight:600; padding:4px 6px; border:1px solid #cbd5e1; border-radius:5px; background:#fff; color:#1e1b4b;">
-                          <option value="__CURRENT__">📝 Đề đang soạn hiện tại (Bước 4–5)</option>
+                          style="flex:1; min-width:0; font-size:0.73rem; font-weight:600; padding:4px 6px; border:1px solid #cbd5e1; border-radius:5px; background:#fff; color:#1e1b4b; text-overflow:ellipsis;">
+                          <option value="__CURRENT__">-- Chưa có đề đang soạn (Chọn Kho hoặc Nạp Đ/Á) --</option>
                         </select>
                         <button class="btn btn-sm" onclick="openManageAnswerKeysModal('import')"
-                          style="font-size:0.72rem; font-weight:700; padding:4px 8px; background:#eff6ff; border:1px solid #3b82f6; color:#1d4ed8; border-radius:5px; white-space:nowrap;"
+                          style="font-size:0.71rem; font-weight:700; padding:4px 8px; background:#eff6ff; border:1px solid #3b82f6; color:#1d4ed8; border-radius:5px; white-space:nowrap; flex-shrink:0;"
                           title="Tải file đáp án Excel, Word, CSV hoặc dán từ McMIX, TnMaker, Zalo">
                           📥 Nạp Đ/Á ngoài
                         </button>
                         <button class="btn btn-sm" onclick="openManageAnswerKeysModal('matrix')"
-                          style="font-size:0.72rem; font-weight:700; padding:4px 7px; background:#f8fafc; border:1px solid #cbd5e1; color:#334155; border-radius:5px; white-space:nowrap;"
+                          style="font-size:0.71rem; font-weight:700; padding:4px 7px; background:#f8fafc; border:1px solid #cbd5e1; color:#334155; border-radius:5px; white-space:nowrap; flex-shrink:0;"
                           title="Xem và sửa từng câu trong Ma trận đáp án">
                           👁️ Xem
                         </button>
@@ -2498,27 +2521,27 @@
 
                       <div id="omr-exam-identity-banner"
                         style="display:flex; flex-direction:column; gap:4px; padding:5px 7px; border-radius:5px; background:#f8fafc; border:1px solid #e2e8f0; font-size:0.71rem; color:#1e1b4b;">
-                        <div id="omr-exam-identity-text" style="font-weight:700; line-height:1.3;">
-                          📌 Đang chấm theo: Đề đang soạn
+                        <div id="omr-exam-identity-text"
+                          style="font-weight:700; line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"
+                          title="Nguồn đề &amp; đáp án đang dùng để chấm OMR">
+                          📌 Đang chấm theo: Chưa có đáp án
                         </div>
-                        <div style="display:flex; align-items:center; justify-content:space-between; gap:4px; flex-wrap:wrap;">
-                          <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap;">
-                            <span id="omr-keys-badge"
-                              style="font-size:0.69rem; font-weight:700; color:#92400e; background:#fffbeb; padding:1px 6px; border-radius:4px; border:1px solid #fde68a; display:inline-flex; align-items:center; gap:3px; white-space:nowrap;">
-                              <span>🎯</span> <span id="omr-summary-codes">⚠️ Chưa có Đáp án đề (0 mã)</span>
-                            </span>
-                            <span id="omr-summary-pts"
-                              style="font-size:0.68rem; font-weight:600; color:#475569; background:#fff; padding:1px 5px; border-radius:4px; border:1px solid #e2e8f0; white-space:nowrap;">
-                              0.0đ
-                            </span>
-                          </div>
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:5px; flex-wrap:nowrap;">
+                          <span id="omr-keys-badge"
+                            style="font-size:0.68rem; font-weight:700; color:#92400e; background:#fffbeb; padding:1px 6px; border-radius:4px; border:1px solid #fde68a; display:inline-flex; align-items:center; gap:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; flex:1;">
+                            <span>🎯</span> <span id="omr-summary-codes" style="overflow:hidden; text-overflow:ellipsis;">⚠️ Chưa có Đáp án (0 mã)</span>
+                          </span>
                           <select id="omr-tf-style-inline-selector" onchange="onOmrTfStyleChanged(this.value)"
-                            style="font-size:0.68rem; font-weight:700; color:#0f172a; background:#fff; padding:1px 4px; border-radius:4px; border:1px solid #cbd5e1; cursor:pointer;"
+                            style="font-size:0.68rem; font-weight:700; color:#0f172a; background:#fff; padding:1px 5px; border-radius:4px; border:1px solid #cbd5e1; cursor:pointer; white-space:nowrap; flex-shrink:0;"
                             title="Cách tính điểm Phần II (Đúng/Sai)">
                             <option value="fixed025" selected>⚖️ P.II: 0.25đ/ý</option>
                             <option value="moet2025">⚖️ P.II: Lũy tiến BGD</option>
                           </select>
                         </div>
+                        <span id="omr-summary-pts"
+                          style="display:block; font-size:0.68rem; font-weight:600; color:#475569; background:#fff; padding:2px 6px; border-radius:4px; border:1px solid #e2e8f0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                          0.0đ (Chờ đáp án Bước 4 hoặc Đáp án ngoài)
+                        </span>
                       </div>
 
                       <div id="omr-essay-warning-pill"
@@ -2530,26 +2553,26 @@
                     <!-- BƯỚC 2: CHỌN LỚP & DANH SÁCH SBD (TÙY CHỌN NHƯNG KHUYẾN NGHỊ) -->
                     <div id="omr-step2-card"
                       style="background:#fff; border:1px solid #bbf7d0; border-left:3.5px solid #10b981; border-radius:7px; padding:7px 9px; display:flex; flex-direction:column; gap:5px;">
-                      <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
-                        <span style="font-size:0.74rem; font-weight:800; color:#065f46;">BƯỚC 2: Lớp & Danh sách HS</span>
+                      <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:nowrap;">
+                        <span class="omr-nowrap" style="font-size:0.73rem; font-weight:800; color:#065f46; white-space:nowrap;">BƯỚC 2: Lớp &amp; DS Học sinh</span>
                         <span id="omr-roster-badge" onclick="openOmrRosterModal()"
-                          style="font-size:0.68rem; font-weight:700; color:#92400e; background:#fffbeb; padding:1px 7px; border-radius:999px; border:1px solid #fde68a; cursor:pointer; white-space:nowrap;"
+                          style="font-size:0.67rem; font-weight:700; color:#92400e; background:#fffbeb; padding:1px 7px; border-radius:999px; border:1px solid #fde68a; cursor:pointer; white-space:nowrap; flex-shrink:0;"
                           title="Click để xem hoặc nạp Danh sách Học sinh nhiều lớp">
                           👥 Chưa nạp DS Lớp (0 HS)
                         </span>
                       </div>
-                      <div style="display:flex; align-items:center; gap:4px;">
+                      <div style="display:flex; align-items:center; gap:4px; flex-wrap:nowrap;">
                         <select id="omr-active-class-select" onchange="onOmrActiveClassSelected(this.value)"
-                          style="flex:1; min-width:110px; font-size:0.74rem; font-weight:600; padding:4px 6px; border:1px solid #6ee7b7; border-radius:5px; background:#fff; color:#064e3b;">
+                          style="flex:1; min-width:0; font-size:0.73rem; font-weight:600; padding:4px 6px; border:1px solid #6ee7b7; border-radius:5px; background:#fff; color:#064e3b; text-overflow:ellipsis;">
                           <option value="">-- Chưa nạp danh sách lớp --</option>
                         </select>
                         <button class="btn btn-sm" onclick="openOmrRosterModal()"
-                          style="font-size:0.72rem; font-weight:700; padding:4px 8px; background:#f0fdf4; border:1px solid #4ade80; color:#15803d; border-radius:5px; white-space:nowrap;"
+                          style="font-size:0.71rem; font-weight:700; padding:4px 8px; background:#f0fdf4; border:1px solid #4ade80; color:#15803d; border-radius:5px; white-space:nowrap; flex-shrink:0;"
                           title="Tải danh sách học sinh (Excel, CSV hoặc dán từ VNEDU/SMAS) để định danh SBD">
                           👥 DS Lớp
                         </button>
                         <button class="btn btn-sm" onclick="prepareNextClassGrading()"
-                          style="font-size:0.72rem; font-weight:700; padding:4px 8px; background:#ecfdf5; border:1px solid #34d399; color:#047857; border-radius:5px; white-space:nowrap;"
+                          style="font-size:0.71rem; font-weight:700; padding:4px 8px; background:#ecfdf5; border:1px solid #34d399; color:#047857; border-radius:5px; white-space:nowrap; flex-shrink:0;"
                           title="Giữ nguyên bộ đáp án Đề hiện tại, chuyển sang lớp mới và xóa ảnh bài quét cũ để chấm lớp tiếp theo">
                           ➡️ Lớp tiếp
                         </button>
@@ -2564,15 +2587,15 @@
                       <input type="file" id="omr-folder-scans-input" webkitdirectory directory multiple
                         style="display:none;" onchange="handleOmrFolderScans(event)">
 
-                      <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
-                        <span style="font-size:0.74rem; font-weight:800; color:#1e40af;">BƯỚC 3: Nạp Phiếu Scan & Chấm</span>
-                        <div style="display:flex; align-items:center; gap:6px; font-size:0.68rem;">
+                      <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:nowrap;">
+                        <span class="omr-nowrap" style="font-size:0.73rem; font-weight:800; color:#1e40af; white-space:nowrap;">BƯỚC 3: Phiếu Scan &amp; Chấm</span>
+                        <div style="display:flex; align-items:center; gap:6px; font-size:0.68rem; white-space:nowrap; flex-shrink:0;">
                           <a href="javascript:void(0)" onclick="downloadSelectedBlankTemplate()"
-                            style="color:#166534; font-weight:600; text-decoration:none;"
+                            style="color:#166534; font-weight:600; text-decoration:none; white-space:nowrap;"
                             title="Tải tệp phôi in trắng của mẫu phiếu đang chọn">🖨️ Phôi in</a>
                           <span style="color:#cbd5e1;">|</span>
                           <a href="javascript:void(0)" onclick="downloadSampleFilledOmrSheetPng()"
-                            style="color:#854d0e; font-weight:600; text-decoration:none;"
+                            style="color:#854d0e; font-weight:600; text-decoration:none; white-space:nowrap;"
                             title="Tải về máy 1 file ảnh .PNG phiếu học sinh đã tô sẵn để thử nghiệm quét OMR">🧪 Ảnh tô mẫu</a>
                         </div>
                       </div>
@@ -2581,39 +2604,39 @@
                       <div id="omr-dropzone" ondragover="onOmrDragOver(event)" ondragleave="onOmrDragLeave(event)"
                         ondrop="onOmrDrop(event)"
                         style="border:1.5px dashed #93c5fd; border-radius:6px; padding:8px; background:#f8fafc; text-align:center; transition:border-color 0.2s ease;">
-                        <div style="font-weight:700; color:#1e3a8a; font-size:0.75rem;">
-                          📥 Kéo & thả Ảnh / PDF phiếu bài làm vào đây
+                        <div style="font-weight:700; color:#1e3a8a; font-size:0.74rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                          📥 Kéo &amp; thả Ảnh / PDF phiếu bài làm vào đây
                         </div>
-                        <div style="font-size:0.67rem; color:#64748b; margin-top:2px;">
-                          Hỗ trợ JPG, PNG, PDF nhiều trang (hoặc thả kèm file Đáp án Excel/Word)
+                        <div style="font-size:0.66rem; color:#64748b; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                          Hỗ trợ JPG, PNG, PDF nhiều trang (hoặc file Đáp án Excel/Word)
                         </div>
                         <div style="display:flex; justify-content:center; gap:6px; margin-top:6px;">
                           <button class="btn btn-sm" onclick="document.getElementById('omr-custom-scans-input').click()"
-                            style="flex:1; font-size:0.72rem; padding:4px 8px; background:#fff; border:1px solid #60a5fa; color:#1d4ed8; font-weight:700; border-radius:5px;">
+                            style="flex:1; font-size:0.72rem; padding:4px 8px; background:#fff; border:1px solid #60a5fa; color:#1d4ed8; font-weight:700; border-radius:5px; white-space:nowrap;">
                             📄 Chọn file scan
                           </button>
                           <button class="btn btn-sm" onclick="document.getElementById('omr-folder-scans-input').click()"
-                            style="flex:1; font-size:0.72rem; padding:4px 8px; background:#f0fdf4; border:1px solid #86efac; color:#15803d; font-weight:700; border-radius:5px;">
+                            style="flex:1; font-size:0.72rem; padding:4px 8px; background:#f0fdf4; border:1px solid #86efac; color:#15803d; font-weight:700; border-radius:5px; white-space:nowrap;">
                             📂 Chọn Thư mục
                           </button>
                         </div>
                       </div>
 
                       <!-- Thanh Trạng thái thực tế & Nút Bắt đầu chấm -->
-                      <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
+                      <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:nowrap;">
                         <div style="display:flex; align-items:center; gap:5px; min-width:0; overflow:hidden; flex:1;">
                           <span id="omr-scans-badge"
-                            style="font-size:0.70rem; font-weight:700; color:#475569; background:#f1f5f9; padding:2px 7px; border-radius:4px; border:1px solid #cbd5e1; white-space:nowrap; flex-shrink:0;">
+                            style="font-size:0.69rem; font-weight:700; color:#475569; background:#f1f5f9; padding:2px 7px; border-radius:4px; border:1px solid #cbd5e1; white-space:nowrap; flex-shrink:0;">
                             Chưa nạp bài
                           </span>
                           <span id="omr-status-banner-text"
-                            style="font-size:0.69rem; color:#92400e; font-weight:600; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">
-                            ⚠️ Hoàn thành Bước 1 & Bước 3
+                            style="font-size:0.68rem; color:#92400e; font-weight:600; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">
+                            ⚠️ Hoàn thành Bước 1 &amp; Bước 3
                           </span>
                         </div>
                         <button class="btn btn-primary btn-sm" onclick="runOmrBatchGrading(false)"
                           id="omr-btn-start-grade"
-                          style="font-size:0.75rem; font-weight:700; background:#64748b; border-color:#64748b; padding:5px 11px; border-radius:6px; flex-shrink:0; display:flex; align-items:center; gap:4px;">
+                          style="font-size:0.74rem; font-weight:700; background:#64748b; border-color:#64748b; padding:5px 10px; border-radius:6px; flex-shrink:0; display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">
                           <span>🚀</span> <span>Chờ Đáp án (B1)</span>
                         </button>
                       </div>
@@ -2623,24 +2646,24 @@
 
                   <!-- 3. QUICK STATS & SMART FILTER BAR -->
                   <div
-                    style="display:flex; align-items:center; justify-content:space-between; padding:5px 10px; background:#f8fafc; border-bottom:1px solid #e2e8f0; font-size:0.73rem;">
-                    <div style="display:flex; gap:3px;" id="omr-filter-pills">
+                    style="display:flex; align-items:center; justify-content:space-between; gap:5px; flex-wrap:nowrap; padding:5px 10px; background:#f8fafc; border-bottom:1px solid #e2e8f0; font-size:0.71rem;">
+                    <div style="display:flex; gap:3px; flex-wrap:nowrap; flex-shrink:0;" id="omr-filter-pills">
                       <button onclick="setOmrPaperFilter('all')" id="omr-filter-btn-all"
-                        style="border:none; background:#e2e8f0; color:#1e293b; font-weight:700; padding:2px 7px; border-radius:4px; cursor:pointer;">
+                        style="border:none; background:#e2e8f0; color:#1e293b; font-weight:700; padding:3px 6px; border-radius:4px; cursor:pointer; white-space:nowrap; flex-shrink:0;">
                         Tất cả (<span id="omr-cnt-all">0</span>)
                       </button>
                       <button onclick="setOmrPaperFilter('valid')" id="omr-filter-btn-valid"
-                        style="border:none; background:transparent; color:#15803d; font-weight:600; padding:2px 7px; border-radius:4px; cursor:pointer;">
+                        style="border:none; background:transparent; color:#15803d; font-weight:600; padding:3px 6px; border-radius:4px; cursor:pointer; white-space:nowrap; flex-shrink:0;">
                         ✓ Hợp lệ (<span id="omr-cnt-valid">0</span>)
                       </button>
                       <button onclick="setOmrPaperFilter('warning')" id="omr-filter-btn-warning"
-                        style="border:none; background:transparent; color:#b45309; font-weight:600; padding:2px 7px; border-radius:4px; cursor:pointer;">
-                        ⚠️ Cần kiểm tra (<span id="omr-cnt-warning">0</span>)
+                        style="border:none; background:transparent; color:#b45309; font-weight:600; padding:3px 6px; border-radius:4px; cursor:pointer; white-space:nowrap; flex-shrink:0;">
+                        ⚠️ Cần k.tra (<span id="omr-cnt-warning">0</span>)
                       </button>
                     </div>
                     <input type="text" id="omr-search-paper-input" placeholder="🔍 Tìm SBD/Tên..."
                       oninput="onOmrSearchPaper(this.value)"
-                      style="width:110px; font-size:0.71rem; padding:2px 6px; height:22px; border-radius:4px; border:1px solid #cbd5e1; background:#fff;">
+                      style="flex:1; min-width:85px; font-size:0.71rem; padding:2px 6px; height:24px; border-radius:4px; border:1px solid #cbd5e1; background:#fff;">
                   </div>
 
                   <!-- 3b. BATCH MISMATCH DIAGNOSTICS BANNER (Tự phát hiện lệch Đề/Khối, Điểm lẻ .10, Sai SBD lớp) -->
@@ -2652,11 +2675,11 @@
                   <div style="flex:1; overflow-y:auto; padding:0 8px;">
                     <table style="width:100%; border-collapse:collapse; font-size:0.82rem;">
                       <thead>
-                        <tr style="border-bottom:2px solid #cbd5e1; color:#475569; font-size:0.78rem;">
-                          <th style="padding:6px 4px; text-align:left; width:18%;">Mã đề</th>
-                          <th style="padding:6px 4px; text-align:right; width:18%;">Điểm</th>
-                          <th style="padding:6px 4px; text-align:center; width:34%;">Trạng thái</th>
-                          <th style="padding:6px 4px; text-align:left; width:30%;">SBD (click để xem / sửa)</th>
+                        <tr style="border-bottom:2px solid #cbd5e1; color:#475569; font-size:0.76rem;">
+                          <th style="padding:6px 4px; text-align:left; width:16%; white-space:nowrap;">Mã đề</th>
+                          <th style="padding:6px 4px; text-align:right; width:15%; white-space:nowrap;">Điểm</th>
+                          <th style="padding:6px 4px; text-align:center; width:33%; white-space:nowrap;">Trạng thái</th>
+                          <th style="padding:6px 4px; text-align:left; width:36%; white-space:nowrap;">SBD / Thí sinh</th>
                         </tr>
                       </thead>
                       <tbody id="omr-papers-list-tbody">
@@ -2766,17 +2789,17 @@
 
               <!-- RIGHT PANEL (AUTHENTIC OFFICIAL OMR CANVAS & INSPECTOR) -->
               <div
-                style="flex:1; min-width:520px; background:#1e293b; border-radius:8px; border:1px solid #334155; display:flex; flex-direction:column; overflow:hidden;">
+                style="flex:1; min-width:440px; background:#1e293b; border-radius:8px; border:1px solid #334155; display:flex; flex-direction:column; overflow:hidden;">
 
                 <!-- TOP CANVAS HEADER (THANH THOÁT, SẮC NÉT, TƯƠNG PHẢN CAO) -->
                 <div
-                  style="background:#091325; padding:8px 16px; border-bottom:1px solid #1e293b; display:flex; justify-content:space-between; align-items:center;">
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <span style="font-size:1rem;">👁️</span>
-                    <strong style="color:#f8fafc; font-size:0.86rem; letter-spacing:0.2px;">Khung Soi & Chấm Phiếu Trắc
-                      Nghiệm</strong>
-                    <span style="font-size:0.72rem; color:#94a3b8; font-style:italic;">(Lăn chuột để phóng to • Kéo
-                      chuột để di chuyển • Click ô tròn để sửa)</span>
+                  style="background:#091325; padding:8px 14px; border-bottom:1px solid #1e293b; display:flex; flex-direction:column; gap:7px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+                    <div style="display:flex; align-items:center; gap:7px; flex-shrink:0;">
+                      <span style="font-size:1rem;">👁️</span>
+                      <strong style="color:#f8fafc; font-size:0.86rem; letter-spacing:0.2px; white-space:nowrap;">Khung Soi &amp; Chấm Phiếu Trắc Nghiệm</strong>
+                    </div>
+                    <span style="font-size:0.72rem; color:#94a3b8; font-style:italic; white-space:nowrap;">Lăn chuột để phóng to • Kéo để di chuyển • Click ô tròn để sửa</span>
                   </div>
 
                   <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
@@ -2784,7 +2807,7 @@
                     <div style="display:flex; align-items:center; gap:5px; background:rgba(255,255,255,0.08); padding:3px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.18);">
                       <label for="omr-template-selector" style="font-size:0.74rem; color:#93c5fd; font-weight:700; white-space:nowrap;">📋 Mẫu phiếu:</label>
                       <select id="omr-template-selector" onchange="onOmrTemplateChanged(this.value)"
-                        style="background:#0f172a; color:#f8fafc; border:1px solid #38bdf8; font-size:0.75rem; padding:3px 6px; border-radius:4px; font-weight:600; cursor:pointer;"
+                        style="background:#0f172a; color:#f8fafc; border:1px solid #38bdf8; font-size:0.74rem; padding:3px 6px; border-radius:4px; font-weight:600; cursor:pointer; max-width:215px;"
                         title="Chọn mẫu phiếu thi tô trắc nghiệm (Chuẩn Bộ GD&ĐT 2025, Phiếu Học kỳ Tổng hợp, Phiếu Rọc phách)">
                         <option value="bgd_2025_4code" selected>Mẫu 1: Chuẩn Bộ GD&ĐT 2025 (Mã 4 số)</option>
                         <option value="bgd_2025_3code">Mẫu 2: Chuẩn Bộ GD&ĐT 2025 (Mã 3 số)</option>
@@ -2797,24 +2820,24 @@
                     <div style="display:flex; align-items:center; gap:5px; background:rgba(255,255,255,0.08); padding:3px 8px; border-radius:6px; border:1px solid rgba(255,255,255,0.18);">
                       <label for="omr-tf-style-selector" style="font-size:0.74rem; color:#fde047; font-weight:700; white-space:nowrap;">⚖️ Thang P.II:</label>
                       <select id="omr-tf-style-selector" onchange="onOmrTfStyleChanged(this.value)"
-                        style="background:#0f172a; color:#fef08a; border:1px solid #eab308; font-size:0.75rem; padding:3px 6px; border-radius:4px; font-weight:600; cursor:pointer;"
+                        style="background:#0f172a; color:#fef08a; border:1px solid #eab308; font-size:0.74rem; padding:3px 6px; border-radius:4px; font-weight:600; cursor:pointer; max-width:205px;"
                         title="Chọn cách tính điểm cho Phần II Đúng/Sai">
                         <option value="fixed025" selected>Chia đều 0.25đ / ý (Không điểm lẻ)</option>
                         <option value="moet2025">Lũy tiến Bộ GD 2025 (0.1 - 0.25 - 0.5 - 1.0đ)</option>
                       </select>
                     </div>
                     <button class="btn btn-sm" onclick="downloadSelectedBlankTemplate()"
-                      style="background:#059669; color:#ffffff; border:1px solid #10b981; padding:4px 9px; font-weight:700; font-size:0.74rem; border-radius:6px; cursor:pointer; display:flex; align-items:center; gap:4px;"
+                      style="background:#059669; color:#ffffff; border:1px solid #10b981; padding:4px 9px; font-weight:700; font-size:0.74rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; white-space:nowrap; flex-shrink:0;"
                       title="Tải file phôi phiếu in trắng gốc (.pdf hoặc .docx) để in ra cho học sinh làm bài">
                       <span>🖨️</span> <span>Tải phôi in</span>
                     </button>
                     <button class="btn btn-sm" id="omr-mode-toggle-btn" onclick="toggleOmrTemplateMode()"
-                      style="background:rgba(56,189,248,0.12); color:#38bdf8; border:1px solid #0284c7; padding:4px 9px; font-weight:700; font-size:0.74rem; border-radius:6px; cursor:pointer;"
+                      style="background:rgba(56,189,248,0.12); color:#38bdf8; border:1px solid #0284c7; padding:4px 9px; font-weight:700; font-size:0.74rem; border-radius:6px; cursor:pointer; white-space:nowrap; flex-shrink:0;"
                       title="Chuyển đổi giữa Phôi chuẩn và Bản vẽ số hóa">
                       📄 Phôi gốc
                     </button>
                     <button class="btn btn-sm" onclick="printOrExportActiveOmrSheet()"
-                      style="background:#2563eb; color:#ffffff; border:1px solid #3b82f6; padding:4px 10px; font-weight:700; font-size:0.74rem; border-radius:6px; cursor:pointer; display:flex; align-items:center; gap:4px;"
+                      style="background:#2563eb; color:#ffffff; border:1px solid #3b82f6; padding:4px 10px; font-weight:700; font-size:0.74rem; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:4px; white-space:nowrap; flex-shrink:0;"
                       title="In phiếu bài thi hoặc xuất file ảnh">
                       <span>🖨️</span> <span>In phiếu</span>
                     </button>
@@ -6654,15 +6677,17 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         container.innerHTML = `<div style="text-align:center; color:var(--muted); padding:20px;">Chưa có hồ sơ nào được lưu.</div>`;
         return;
       }
-      container.innerHTML = data.profiles.map(p => {
+      const userProfiles = data.profiles.filter(p => !p.isSampleProfile);
+      const sampleProfiles = data.profiles.filter(p => p.isSampleProfile);
+      const renderProfileCard = (p) => {
         const codesBadge = Array.isArray(p.examCodes) && p.examCodes.length > 0
-          ? `<span style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd; padding:1px 6px; border-radius:4px; font-size:0.72rem; font-weight:700;">Mã đề: ${escapeHtml(p.examCodes.join(', '))}</span>`
+          ? `<span style="background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd; padding:1px 6px; border-radius:4px; font-size:0.72rem; font-weight:700; white-space:nowrap;">Mã đề: ${escapeHtml(p.examCodes.join(', '))}</span>`
           : '';
         const essayBadge = p.hasEssay
-          ? `<span style="background:#fef3c7; color:#92400e; border:1px solid #fcd34d; padding:1px 6px; border-radius:4px; font-size:0.72rem; font-weight:700;">Có Tự luận • OMR ${p.maxOmrScore ?? 10}đ</span>`
+          ? `<span style="background:#fef3c7; color:#92400e; border:1px solid #fcd34d; padding:1px 6px; border-radius:4px; font-size:0.72rem; font-weight:700; white-space:nowrap;">Có Tự luận • OMR ${p.maxOmrScore ?? 10}đ</span>`
           : '';
         return `
-        <div style="border:1px solid var(--border); border-radius:8px; padding:12px; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+        <div style="border:1px solid var(--border); border-radius:8px; padding:12px; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; background:#fff;">
           <div style="min-width:220px; flex:1;">
             <div style="font-weight:700; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
               <span>${escapeHtml(p.title)}</span>
@@ -6673,14 +6698,29 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
               Cập nhật: ${new Date(p.updatedAt).toLocaleString('vi-VN')} | Số câu: ${p.questionsCount} | Số mã đề: ${p.variantsCount}
             </div>
           </div>
-          <div style="display:flex; gap:6px; flex-wrap:wrap;">
-            <button class="btn btn-success btn-sm" onclick="loadSavedProfile('${escapeHtml(p.id)}', 7)" style="background:#0f766e; border-color:#0f766e;">🎯 Chấm OMR (Bước 7)</button>
-            <button class="btn btn-primary btn-sm" onclick="loadSavedProfile('${escapeHtml(p.id)}', 4)">Mở lại (Bước 4)</button>
-            <button class="btn btn-danger btn-sm" onclick="deleteSavedProfile('${escapeHtml(p.id)}')">Xóa</button>
+          <div style="display:flex; gap:6px; flex-wrap:nowrap;">
+            <button class="btn btn-success btn-sm" onclick="loadSavedProfile('${escapeHtml(p.id)}', 7)" style="background:#0f766e; border-color:#0f766e; white-space:nowrap;">🎯 Chấm OMR (Bước 7)</button>
+            <button class="btn btn-primary btn-sm" onclick="loadSavedProfile('${escapeHtml(p.id)}', 4)" style="white-space:nowrap;">Mở lại (Bước 4)</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteSavedProfile('${escapeHtml(p.id)}')" style="white-space:nowrap;">Xóa</button>
           </div>
         </div>
       `;
-      }).join('');
+      };
+
+      let html = userProfiles.length > 0
+        ? userProfiles.map(renderProfileCard).join('')
+        : `<div style="text-align:center; color:var(--muted); padding:14px; border:1px dashed var(--border); border-radius:8px; font-size:0.85rem;">Chưa có đề nào do Thầy/Cô tự lưu. Hãy soạn đề rồi bấm <b>💾 Lưu Hồ sơ</b> để lưu đề riêng.</div>`;
+
+      if (sampleProfiles.length > 0) {
+        html += `
+        <details style="margin-top:8px; border:1px dashed #cbd5e1; border-radius:8px; padding:8px 12px; background:#f8fafc;">
+          <summary style="cursor:pointer; font-size:0.82rem; font-weight:700; color:#475569; user-select:none;">🧪 Đề tham khảo hệ thống cài sẵn (${sampleProfiles.length} đề mẫu — ẩn khỏi danh sách chấm mặc định)</summary>
+          <div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">
+            ${sampleProfiles.map(renderProfileCard).join('')}
+          </div>
+        </details>`;
+      }
+      container.innerHTML = html;
     }
 
     async function loadSavedProfile(id, targetStep = 4) {
@@ -8092,14 +8132,20 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       if (!options.preserveScanBadge) {
         const scansBadge = document.getElementById('omr-scans-badge');
         if (scansBadge) {
+          const classLabel = appState.omr.selectedClassName || 'Lớp hiện tại';
           if (appState.omr.isDemoMode && gradedCount > 0) {
-            scansBadge.textContent = `🧪 DEMO: ${gradedCount} bài mẫu`;
+            scansBadge.textContent = `🧪 DEMO: ${gradedCount} bài`;
+            scansBadge.title = `Chế độ DEMO: ${gradedCount} bài mẫu`;
           } else if (papersCount > 0) {
             scansBadge.textContent = gradedCount > 0
-              ? `Đã chấm ${gradedCount} bài (${appState.omr.selectedClassName || 'Lớp hiện tại'})`
-              : `Đã nạp ${papersCount} phiếu`;
+              ? `✅ Đã chấm ${gradedCount} bài`
+              : `📄 Đã nạp ${papersCount} phiếu`;
+            scansBadge.title = gradedCount > 0
+              ? `Đã chấm ${gradedCount} bài (${classLabel})`
+              : `Đã nạp ${papersCount} phiếu (${classLabel})`;
           } else {
             scansBadge.textContent = 'Chưa nạp bài';
+            scansBadge.title = '';
           }
         }
       }
@@ -8260,52 +8306,63 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
     }
 
     function updateOmrSourceAndEssayPills() {
+      const info = getActiveOmrStructureSummary();
       const srcPill = document.getElementById('omr-active-source-pill');
       const src = appState.omr.activeKeySource || 'current_workflow';
       if (srcPill) {
         if (src === 'saved_profile') {
-          srcPill.textContent = `Nguồn: Đề đã lưu`;
+          srcPill.textContent = 'Nguồn: Đề đã lưu';
           srcPill.style.color = '#065f46';
           srcPill.style.background = '#d1fae5';
           srcPill.style.borderColor = '#6ee7b7';
         } else if (src === 'external_file') {
-          srcPill.textContent = `Nguồn: File Đ/Á ngoài`;
+          srcPill.textContent = 'Nguồn: Đ/Á ngoài';
           srcPill.style.color = '#92400e';
           srcPill.style.background = '#fef3c7';
           srcPill.style.borderColor = '#fcd34d';
-        } else {
-          srcPill.textContent = `Nguồn: Đề đang soạn`;
+        } else if (info.codes.length > 0) {
+          srcPill.textContent = 'Nguồn: Đề đang soạn';
           srcPill.style.color = '#1d4ed8';
           srcPill.style.background = '#dbeafe';
           srcPill.style.borderColor = '#93c5fd';
+        } else {
+          srcPill.textContent = 'Nguồn: Chưa chọn';
+          srcPill.style.color = '#475569';
+          srcPill.style.background = '#f1f5f9';
+          srcPill.style.borderColor = '#cbd5e1';
         }
       }
 
-      const info = getActiveOmrStructureSummary();
       const keysBadgeEl = document.getElementById('omr-keys-badge');
       const summaryCodesEl = document.getElementById('omr-summary-codes');
       if (summaryCodesEl) {
         summaryCodesEl.textContent = info.codes.length > 0
-          ? `${info.codes.length} Mã đề: ${info.codes.join(', ')}`
-          : '⚠️ Chưa có Đáp án đề (0 mã)';
+          ? `${info.codes.length} mã: ${info.codes.join(', ')}`
+          : 'Chưa có đáp án (0 mã)';
       }
-      if (keysBadgeEl && src === 'current_workflow') {
-        if (info.codes.length === 0) {
-          keysBadgeEl.style.color = '#92400e';
-          keysBadgeEl.style.background = '#fffbeb';
-          keysBadgeEl.style.borderColor = '#fde68a';
-        } else {
-          keysBadgeEl.style.color = '#15803d';
-          keysBadgeEl.style.background = '#f0fdf4';
-          keysBadgeEl.style.borderColor = '#bbf7d0';
+      if (keysBadgeEl) {
+        keysBadgeEl.title = info.codes.length > 0
+          ? `${info.codes.length} Mã đề đang áp dụng: ${info.codes.join(', ')}`
+          : 'Chưa có bộ đáp án nào';
+        if (src === 'current_workflow') {
+          if (info.codes.length === 0) {
+            keysBadgeEl.style.color = '#92400e';
+            keysBadgeEl.style.background = '#fffbeb';
+            keysBadgeEl.style.borderColor = '#fde68a';
+          } else {
+            keysBadgeEl.style.color = '#15803d';
+            keysBadgeEl.style.background = '#f0fdf4';
+            keysBadgeEl.style.borderColor = '#bbf7d0';
+          }
         }
       }
       const summaryPtsEl = document.getElementById('omr-summary-pts');
       if (summaryPtsEl) {
         const tlNote = info.essayMax > 0 ? ` • TL ${info.essayMax}đ` : '';
         summaryPtsEl.textContent = info.codes.length > 0
-          ? `${info.maxOmrScore.toFixed(1)}đ OMR (${info.structureLabel})${tlNote}`
-          : '0.0đ (Chờ đáp án Bước 4 hoặc Đáp án ngoài)';
+          ? `📊 ${info.maxOmrScore.toFixed(1)}đ OMR • ${info.structureLabel}${tlNote}`
+          : '📊 0.0đ (Chờ đáp án Bước 4 hoặc Nạp Đ/Á ngoài)';
+        summaryPtsEl.title = summaryPtsEl.textContent;
       }
 
       const meta = appState.metadata || {};
@@ -8315,19 +8372,27 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       if (idBanner && idText) {
         if (src === 'external_file') {
           const title = appState.omr.lastImportSource || appState.omr.selectedExamTitle || 'File đáp án ngoài';
-          idText.innerHTML = `📥 Đang chấm theo <b>File Đ/Á ngoài</b>: ${escapeHtml(title)} <span style="color:#475569; font-weight:600;">(${escapeHtml(info.structureLabel)} • OMR ${info.maxOmrScore.toFixed(1)}đ)</span>`;
+          idText.innerHTML = `📥 <b>Đ/Á ngoài:</b> ${escapeHtml(title)}`;
+          idText.title = `Đang chấm theo File Đ/Á ngoài: ${title} (${info.structureLabel} • OMR ${info.maxOmrScore.toFixed(1)}đ)`;
           idBanner.style.background = '#fffbeb';
           idBanner.style.borderColor = '#fcd34d';
         } else if (src === 'saved_profile') {
           const title = appState.omr.selectedExamTitle || subjectGrade;
-          idText.innerHTML = `💾 Đang chấm theo <b>Kho Đề</b>: ${escapeHtml(title)} <span style="color:#475569; font-weight:600;">(${escapeHtml(info.structureLabel)} • OMR ${info.maxOmrScore.toFixed(1)}đ)</span>`;
+          idText.innerHTML = `💾 <b>Kho Đề:</b> ${escapeHtml(title)}`;
+          idText.title = `Đang chấm theo Kho Đề: ${title} (${info.structureLabel} • OMR ${info.maxOmrScore.toFixed(1)}đ)`;
           idBanner.style.background = '#ecfdf5';
           idBanner.style.borderColor = '#6ee7b7';
+        } else if (info.codes.length === 0 && (!appState.questions || appState.questions.length === 0)) {
+          idText.innerHTML = `📌 <b>Đang chấm:</b> Chưa chọn đề / đáp án`;
+          idText.title = 'Chọn đề đã lưu từ danh sách hoặc bấm [Nạp Đ/Á ngoài] ở Bước 1';
+          idBanner.style.background = '#f8fafc';
+          idBanner.style.borderColor = '#e2e8f0';
         } else {
           const sourceFile = String(appState.matrix?.sourceFile || appState.uploadedDocs?.[0]?.fileName || '');
           const isDemo12 = /TIN\s*12\s*-\s*MA\s*TRAN/i.test(sourceFile) && !appState.savedExamProfileId;
-          const demoTag = isDemo12 ? ' <span style="color:#b45309; font-weight:700;">(Đề mẫu mặc định)</span>' : '';
-          idText.innerHTML = `📌 Đang chấm theo: <b>${escapeHtml(subjectGrade || 'Đề đang soạn')}</b>${demoTag} <span style="color:#475569; font-weight:600;">• ${escapeHtml(info.structureLabel)} (OMR ${info.maxOmrScore.toFixed(1)}đ)</span>`;
+          const demoTag = isDemo12 ? ' <span style="color:#b45309;">(Mặc định)</span>' : '';
+          idText.innerHTML = `📌 <b>Đề đang soạn:</b> ${escapeHtml(subjectGrade || 'Đề đang soạn')}${demoTag}`;
+          idText.title = `Đang chấm theo: ${subjectGrade}${isDemo12 ? ' (Đề mặc định)' : ''} • ${info.structureLabel} (OMR ${info.maxOmrScore.toFixed(1)}đ)`;
           idBanner.style.background = 'rgba(255,255,255,0.92)';
           idBanner.style.borderColor = '#c7d2fe';
         }
@@ -8376,7 +8441,15 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         const res = await fetch('/api/profiles');
         const data = await res.json();
         const profiles = data.ok && Array.isArray(data.profiles) ? data.profiles : [];
+        // Ẩn các đề mẫu cài sẵn (profile_thpt_*) khỏi danh sách chấm thực tế để tránh nhầm lẫn,
+        // chỉ giữ lại nếu giáo viên chủ động mở từ Kho Đề tham khảo.
+        const visibleProfiles = profiles.filter(p =>
+          !p.isSampleProfile ||
+          (appState.omr.activeKeySource === 'saved_profile' && appState.omr.selectedExamProfileId === p.id)
+        );
         const curVariants = appState.variants || [];
+        const curQuestions = appState.questions || [];
+        const hasCurrentExam = curVariants.length > 0 || curQuestions.length > 0;
         const curCodes = curVariants.map(v => v.code).join(', ');
         const meta = appState.metadata || {};
         const subjectGrade = `${meta.subject || 'Tin học'} ${meta.grade || ''}`.trim();
@@ -8385,8 +8458,13 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
           const extLabel = appState.omr.lastImportSource || 'File Đáp án ngoài';
           html += `<option value="__EXTERNAL__" disabled>📥 Đ/Á ngoài: ${escapeHtml(extLabel)}</option>`;
         }
-        html += `<option value="__CURRENT__">📝 Đề đang soạn: ${escapeHtml(subjectGrade)}${curCodes ? ' (' + escapeHtml(curCodes) + ')' : ''}</option>`;
-        profiles.forEach(p => {
+        if (hasCurrentExam) {
+          const codeNote = curCodes ? ` (${escapeHtml(curCodes)})` : ' (Đề gốc)';
+          html += `<option value="__CURRENT__">📝 Đề đang soạn: ${escapeHtml(subjectGrade)}${codeNote}</option>`;
+        } else {
+          html += `<option value="__CURRENT__">-- Chưa có đề đang soạn (${visibleProfiles.length > 0 ? 'Chọn đề bên dưới hoặc Nạp Đ/Á' : 'Chọn Kho hoặc Nạp Đ/Á'}) --</option>`;
+        }
+        visibleProfiles.forEach(p => {
           const codeHint = Array.isArray(p.examCodes) && p.examCodes.length > 0 ? p.examCodes.join(', ') : `${p.variantsCount || 0} đề`;
           const essayHint = p.hasEssay ? ` • TL ${p.essayMaxScore || ''}đ` : '';
           const iconPrefix = p.isSampleProfile ? '🧪 [Đề mẫu]' : '💾';
@@ -8396,7 +8474,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         if (appState.omr.activeKeySource === 'external_file') {
           sel.value = '__EXTERNAL__';
         } else if (appState.omr.activeKeySource === 'saved_profile' && appState.omr.selectedExamProfileId) {
-          const exists = profiles.some(p => p.id === appState.omr.selectedExamProfileId);
+          const exists = visibleProfiles.some(p => p.id === appState.omr.selectedExamProfileId);
           sel.value = exists ? appState.omr.selectedExamProfileId : '__CURRENT__';
         } else {
           sel.value = '__CURRENT__';
@@ -8415,7 +8493,13 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         updateOmrPointRulesFromMatrix();
         updateOmrSourceAndEssayPills();
         refreshWorkflowReadiness();
-        showToast('📝 Đã chọn Đề đang soạn ở Bước 4–5 làm bộ đáp án chấm OMR.', 'info');
+        const hasCurrent = (appState.variants || []).length > 0 || (appState.questions || []).length > 0;
+        showToast(
+          hasCurrent
+            ? '📝 Đã chọn Đề đang soạn ở Bước 4–5 làm bộ đáp án chấm OMR.'
+            : 'ℹ️ Đề đang soạn ở Bước 4 hiện đang trống — hãy Chọn Đề đã lưu hoặc bấm [Nạp Đ/Á ngoài].',
+          'info'
+        );
         return;
       }
 

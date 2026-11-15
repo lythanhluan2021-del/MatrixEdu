@@ -506,6 +506,8 @@ async function startTempServer() {
       assert.ok(html.includes('updateOmrGradingPipelineUI'), 'Strict pipeline readiness gating helper must exist');
       assert.ok(html.includes('id="ak-file-dropzone"') && html.includes('ondrop="onAkModalDrop(event)"'), 'Modal answer key dropzone must support real drag-and-drop');
       assert.ok(!html.includes("if (validCodes.length === 0) validCodes = ['101', '102', '103', '104']"), 'No bogus 101..104 fallback in processUploadedOmrFiles');
+      assert.ok(/async function refreshOmrSavedExamsDropdown[\s\S]{0,650}!p\.isSampleProfile/.test(html), 'refreshOmrSavedExamsDropdown must filter out unrequested sample profiles');
+      assert.ok(/#omr-filter-pills button[\s\S]{0,120}white-space:\s*nowrap/.test(html), 'Step 7 filter pills must enforce white-space: nowrap');
 
       const { createZipBuffer } = require('../src/zip-docx');
       const sst = `<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><si><t>Câu</t></si><si><t>A</t></si></sst>`;
