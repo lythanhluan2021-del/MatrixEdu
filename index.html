@@ -2342,11 +2342,6 @@
                 </div>
               </div>
               <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-                <button class="btn btn-outline btn-sm" onclick="openManageAnswerKeysModal('import')"
-                  style="color:#fff; border-color:#67e8f9; background:rgba(6,182,212,0.25); font-weight:700; display:inline-flex; align-items:center; gap:5px;"
-                  title="Nạp file Biểu đáp án được tạo từ phần mềm khác (McMIX, TnMaker, SmartTest, QM, Excel, Word, CSV) để chấm cùng mẫu phiếu">
-                  <span>📥</span> Nạp file Đáp án ngoài (McMIX, TnMaker, Excel)
-                </button>
                 <a href="/api/omr/template-pdf" target="_blank" class="btn btn-outline btn-sm"
                   style="color:#fff; border-color:#93c5fd; background:rgba(255,255,255,0.15); font-weight:600;">
                   📄 Mẫu Phiếu TLTN 2025 (PDF)
@@ -2367,7 +2362,7 @@
 
               <!-- LEFT PANEL (CONFIGURATION & GRADED PAPERS LIST) -->
               <div
-                style="width:410px; min-width:370px; max-width:440px; background:#ffffff; border-radius:8px; border:1px solid #e2e8f0; display:flex; flex-direction:column; overflow:hidden;">
+                style="width:415px; min-width:375px; max-width:445px; background:#ffffff; border-radius:8px; border:1px solid #e2e8f0; display:flex; flex-direction:column; overflow:hidden;">
 
                 <!-- TOP TABS: [Chấm bài mới] & [Mở kết quả đã chấm] -->
                 <div
@@ -2382,114 +2377,40 @@
                   </button>
                 </div>
 
-                <!-- TAB 1 CONTENT: GRADING WORKBENCH (REDESIGNED PRO STUDIO) -->
+                <!-- TAB 1 CONTENT: STRICT 3-STEP GUIDED GRADING PIPELINE -->
                 <div id="omr-grade-tab-content" style="display:flex; flex-direction:column; flex:1; overflow:hidden;">
 
-                  <!-- 0. CLOSED-LOOP EXAM WAREHOUSE & MULTI-CLASS BAR -->
-                  <div id="omr-exam-warehouse-bar"
-                    style="padding:8px 12px; background:linear-gradient(135deg,#eef2ff,#f0f9ff); border-bottom:1px solid #c7d2fe; display:flex; flex-direction:column; gap:6px;">
-                    <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">
-                      <div style="display:flex; align-items:center; gap:6px; flex:1; min-width:210px;">
-                        <span style="font-size:0.74rem; font-weight:800; color:#3730a3; white-space:nowrap;">📚 Đề thi:</span>
-                        <select id="omr-saved-exam-select" onchange="onOmrSavedExamSelected(this.value)"
-                          style="flex:1; min-width:140px; font-size:0.75rem; font-weight:600; padding:4px 8px; border:1px solid #a5b4fc; border-radius:6px; background:#fff; color:#1e1b4b;">
-                          <option value="__CURRENT__">📝 Đề đang soạn hiện tại (Bước 4–5)</option>
-                        </select>
-                      </div>
-                      <span id="omr-active-source-pill"
-                        style="font-size:0.7rem; font-weight:700; color:#1d4ed8; background:#dbeafe; padding:2px 8px; border-radius:999px; border:1px solid #93c5fd; white-space:nowrap;">
-                        Nguồn: Đề đang soạn
-                      </span>
+                  <!-- THANH CHỈ DẪN QUY TRÌNH 3 BƯỚC + CÀI ĐẶT -->
+                  <div id="omr-pipeline-bar"
+                    style="padding:6px 10px; background:#f8fafc; border-bottom:1px solid #e2e8f0; display:flex; align-items:center; justify-content:space-between; gap:6px;">
+                    <div style="display:flex; align-items:center; gap:5px; font-size:0.71rem; font-weight:700; color:#475569; flex-wrap:wrap;">
+                      <span style="color:#1e40af;">Quy trình chấm:</span>
+                      <span style="background:#e0e7ff; color:#3730a3; padding:1px 6px; border-radius:4px;">1. Đáp án</span>
+                      <span>→</span>
+                      <span style="background:#dcfce7; color:#166534; padding:1px 6px; border-radius:4px;">2. Lớp & SBD</span>
+                      <span>→</span>
+                      <span style="background:#dbeafe; color:#1d4ed8; padding:1px 6px; border-radius:4px;">3. Scan & Chấm</span>
                     </div>
-                    <div id="omr-exam-identity-banner"
-                      style="display:flex; align-items:center; justify-content:space-between; gap:6px; padding:5px 8px; border-radius:6px; background:rgba(255,255,255,0.88); border:1px solid #c7d2fe; font-size:0.72rem; color:#1e1b4b;">
-                      <div id="omr-exam-identity-text" style="flex:1; min-width:0; font-weight:700; line-height:1.35;">
-                        📌 Đang chấm theo: Đề đang soạn
-                      </div>
-                      <button class="btn btn-sm" onclick="openManageAnswerKeysModal('matrix')"
-                        style="font-size:0.7rem; font-weight:700; padding:2px 7px; background:#eef2ff; border:1px solid #818cf8; color:#3730a3; border-radius:5px; white-space:nowrap; flex-shrink:0;"
-                        title="Xem và kiểm tra từng câu trong Ma trận đáp án đang dùng để chấm">
-                        👁️ Xem đáp án
-                      </button>
-                    </div>
-                    <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">
-                      <div style="display:flex; align-items:center; gap:6px; flex:1; min-width:200px;">
-                        <span style="font-size:0.74rem; font-weight:800; color:#065f46; white-space:nowrap;">🏫 Lớp chấm:</span>
-                        <select id="omr-active-class-select" onchange="onOmrActiveClassSelected(this.value)"
-                          style="flex:1; min-width:120px; font-size:0.75rem; font-weight:600; padding:4px 8px; border:1px solid #6ee7b7; border-radius:6px; background:#fff; color:#064e3b;">
-                          <option value="">-- Chưa nạp danh sách lớp --</option>
-                        </select>
-                      </div>
-                      <button class="btn btn-sm" onclick="prepareNextClassGrading()"
-                        style="font-size:0.72rem; font-weight:700; padding:3px 9px; background:#ecfdf5; border:1px solid #34d399; color:#047857; border-radius:6px; white-space:nowrap;"
-                        title="Giữ nguyên bộ đáp án Đề hiện tại, chuyển sang lớp mới và xóa ảnh bài quét cũ để chấm lớp tiếp theo">
-                        ➡️ Chấm lớp tiếp theo
-                      </button>
-                    </div>
-                    <div id="omr-essay-warning-pill" style="display:none; font-size:0.72rem; font-weight:700; color:#92400e; background:#fef3c7; border:1px solid #fcd34d; padding:4px 8px; border-radius:6px;">
-                      ⚠️ Đề có Tự luận: thang điểm OMR tối đa ...đ
-                    </div>
-                  </div>
-                  <!-- 1. SMART EXAM CONFIG DECK (Header Pill tinh gọn, sang trọng) -->
-                  <div
-                    style="padding:8px 12px; background:#f8fafc; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap;">
-                    <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap; min-width:0;">
-                      <span id="omr-keys-badge"
-                        style="font-size:0.72rem; font-weight:700; color:#92400e; background:#fffbeb; padding:3px 7px; border-radius:6px; border:1px solid #fde68a; display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">
-                        <span>🎯</span> <span id="omr-summary-codes">⚠️ Chưa có Đáp án đề (0 mã)</span>
-                      </span>
-                      <span id="omr-roster-badge" onclick="openOmrRosterModal()"
-                        style="font-size:0.72rem; font-weight:700; color:#92400e; background:#fffbeb; padding:3px 7px; border-radius:6px; border:1px solid #fde68a; cursor:pointer; white-space:nowrap;"
-                        title="Click để xem hoặc nạp Danh sách Học sinh nhiều lớp">
-                        👥 Chưa nạp DS Lớp (0 HS)
-                      </span>
-                      <span id="omr-summary-pts"
-                        style="font-size:0.70rem; font-weight:600; color:#475569; background:#fff; padding:3px 6px; border-radius:6px; border:1px solid #e2e8f0; white-space:nowrap;">
-                        0.0đ
-                      </span>
-                      <select id="omr-tf-style-inline-selector" onchange="onOmrTfStyleChanged(this.value)"
-                        style="font-size:0.70rem; font-weight:700; color:#0f172a; background:#fff; padding:2px 5px; border-radius:6px; border:1px solid #cbd5e1; cursor:pointer;"
-                        title="Cách tính điểm Phần II (Đúng/Sai): Chia đều 0.25đ/ý tránh điểm lẻ .10/.35/.60 hoặc Lũy tiến BGD 2025">
-                        <option value="fixed025" selected>⚖️ P.II: 0.25đ/ý</option>
-                        <option value="moet2025">⚖️ P.II: Lũy tiến BGD</option>
-                      </select>
-                    </div>
-
-                    <!-- Nút Nạp DS Học sinh, Nạp Đ/Á ngoài & Bánh răng Tùy chỉnh Drawer -->
-                    <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
-                      <button class="btn btn-sm" onclick="openOmrRosterModal()"
-                        style="font-size:0.71rem; font-weight:700; padding:3px 7px; background:#fff; border:1px solid #86efac; color:#15803d; border-radius:6px;"
-                        title="Tải danh sách học sinh (Excel, CSV hoặc dán từ VNEDU/SMAS) để định danh SBD">
-                        👥 DS Lớp
-                      </button>
-                      <button class="btn btn-sm" onclick="openManageAnswerKeysModal('import')"
-                        style="font-size:0.73rem; font-weight:700; padding:3px 9px; background:#eff6ff; border:1px solid #60a5fa; color:#1d4ed8; border-radius:6px; display:inline-flex; align-items:center; gap:4px;"
-                        title="Nạp file biểu đáp án từ phần mềm khác (McMIX, TnMaker, SmartTest, Excel, Word, CSV, TXT) cùng mẫu phiếu">
-                        📥 Nạp Đáp án ngoài
-                      </button>
-                      <button class="btn btn-sm" onclick="toggleOmrSettingsDrawer()" id="omr-btn-toggle-settings"
-                        style="font-size:0.74rem; padding:3px 7px; background:#fff; border:1px solid #cbd5e1; color:#475569; border-radius:6px;"
-                        title="Cài đặt kỹ thuật: Ngưỡng tô, Mẫu phiếu, Thư mục lưu">
-                        ⚙️
-                      </button>
-                    </div>
+                    <button class="btn btn-sm" onclick="toggleOmrSettingsDrawer()" id="omr-btn-toggle-settings"
+                      style="font-size:0.72rem; font-weight:700; padding:2px 8px; background:#fff; border:1px solid #cbd5e1; color:#475569; border-radius:5px; flex-shrink:0;"
+                      title="Cài đặt kỹ thuật: Ngưỡng tô, Mẫu phiếu, Thư mục lưu">
+                      ⚙️ Cài đặt
+                    </button>
                   </div>
 
                   <!-- DRAWER CÀI ĐẶT KỸ THUẬT RÚT GỌN (Chỉ mở khi bấm ⚙️) -->
                   <div id="omr-settings-drawer"
-                    style="display:none; padding:10px 14px; background:#f8fafc; border-bottom:1px solid #cbd5e1; font-size:0.76rem; animation:fadeIn 0.15s ease;">
+                    style="display:none; padding:10px 12px; background:#f8fafc; border-bottom:1px solid #cbd5e1; font-size:0.76rem; animation:fadeIn 0.15s ease;">
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
                       <div>
-                        <label style="font-weight:700; color:#475569; display:block; margin-bottom:2px;">Ngưỡng tô than
-                          chì:</label>
+                        <label style="font-weight:700; color:#475569; display:block; margin-bottom:2px;">Ngưỡng tô than chì:</label>
                         <input type="number" id="omr-threshold-val" class="form-control" value="0.35" min="0.10"
                           max="0.90" step="0.05"
                           style="height:26px; padding:2px 6px; font-weight:700; text-align:center;"
                           onchange="onThresholdChange(this.value)">
                       </div>
                       <div>
-                        <label style="font-weight:700; color:#475569; display:block; margin-bottom:2px;">Mẫu phiếu
-                          OMR:</label>
+                        <label style="font-weight:700; color:#475569; display:block; margin-bottom:2px;">Mẫu phiếu OMR:</label>
                         <select id="omr-sheet-model-select" class="form-control"
                           style="height:26px; padding:1px 4px; font-size:0.74rem;"
                           onchange="onOmrTemplateChanged(this.value)">
@@ -2522,9 +2443,9 @@
                     </div>
                     <div
                       style="display:flex; justify-content:space-between; align-items:center; margin-top:6px; padding-top:6px; border-top:1px dashed #e2e8f0;">
-                      <button class="btn btn-outline btn-sm" onclick="openManageAnswerKeysModal('matrix')"
+                      <button class="btn btn-outline btn-sm" onclick="openManageAnswerKeysModal('config')"
                         style="font-size:0.72rem; padding:2px 8px;">
-                        👁️ Xem ma trận đáp án
+                        ⚖️ Điểm mỗi câu MCQ
                       </button>
                       <button class="btn btn-outline btn-sm" onclick="toggleOmrSettingsDrawer()"
                         style="font-size:0.72rem; padding:2px 8px;">
@@ -2538,77 +2459,166 @@
                       style="display:none;" onchange="handleExternalAnswerKeyFile(event)">
                   </div>
 
-                  <!-- 2. MODERN UPLOAD & GRADING HUB (All-In-One Action Card) -->
-                  <div style="padding:8px 12px; background:#ffffff; border-bottom:1px solid #e2e8f0;">
-                    <input type="file" id="omr-custom-scans-input" multiple accept="image/*,.pdf" style="display:none;"
-                      onchange="handleOmrUserScans(event)">
-                    <input type="file" id="omr-folder-scans-input" webkitdirectory directory multiple
-                      style="display:none;" onchange="handleOmrFolderScans(event)">
+                  <!-- KHUNG QUY TRÌNH 3 BƯỚC TUẦN TỰ -->
+                  <div style="padding:8px 10px; background:#f8fafc; border-bottom:1px solid #e2e8f0; display:flex; flex-direction:column; gap:7px;">
 
-                    <!-- Drag & Drop Zone nhỏ gọn, hiện đại -->
-                    <div id="omr-dropzone" ondragover="onOmrDragOver(event)" ondragleave="onOmrDragLeave(event)"
-                      ondrop="onOmrDrop(event)"
-                      style="border:1.5px dashed #93c5fd; border-radius:8px; padding:8px 10px; background:#f8fafc; text-align:center; transition:border-color 0.2s ease;">
+                    <!-- BƯỚC 1: CHỌN ĐỀ THI & ĐÁP ÁN (BẮT BUỘC) -->
+                    <div id="omr-step1-card"
+                      style="background:#fff; border:1px solid #c7d2fe; border-left:3.5px solid #4f46e5; border-radius:7px; padding:7px 9px; display:flex; flex-direction:column; gap:5px;">
+                      <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
+                        <div style="display:flex; align-items:center; gap:5px;">
+                          <span style="font-size:0.74rem; font-weight:800; color:#3730a3;">BƯỚC 1: Đề & Đáp án</span>
+                          <span id="omr-active-source-pill"
+                            style="font-size:0.67rem; font-weight:700; color:#1d4ed8; background:#dbeafe; padding:1px 6px; border-radius:999px; border:1px solid #93c5fd; white-space:nowrap;">
+                            Nguồn: Đề đang soạn
+                          </span>
+                        </div>
+                        <span id="omr-step1-status"
+                          style="font-size:0.67rem; font-weight:700; padding:1px 7px; border-radius:999px; background:#fffbeb; color:#92400e; border:1px solid #fde68a; white-space:nowrap;">
+                          ⚠️ Bắt buộc
+                        </span>
+                      </div>
 
-                      <div style="display:flex; align-items:center; justify-content:center; gap:8px;">
-                        <span style="font-size:1.3rem;">📥</span>
-                        <div style="text-align:left;">
-                          <div style="font-weight:700; color:#1e3a8a; font-size:0.78rem;">
-                            Kéo & thả <b>File Đáp án</b> (Excel/Word/CSV) hoặc <b>Bài scan</b> vào đây
+                      <div style="display:flex; align-items:center; gap:4px;">
+                        <select id="omr-saved-exam-select" onchange="onOmrSavedExamSelected(this.value)"
+                          style="flex:1; min-width:120px; font-size:0.74rem; font-weight:600; padding:4px 6px; border:1px solid #cbd5e1; border-radius:5px; background:#fff; color:#1e1b4b;">
+                          <option value="__CURRENT__">📝 Đề đang soạn hiện tại (Bước 4–5)</option>
+                        </select>
+                        <button class="btn btn-sm" onclick="openManageAnswerKeysModal('import')"
+                          style="font-size:0.72rem; font-weight:700; padding:4px 8px; background:#eff6ff; border:1px solid #3b82f6; color:#1d4ed8; border-radius:5px; white-space:nowrap;"
+                          title="Tải file đáp án Excel, Word, CSV hoặc dán từ McMIX, TnMaker, Zalo">
+                          📥 Nạp Đ/Á ngoài
+                        </button>
+                        <button class="btn btn-sm" onclick="openManageAnswerKeysModal('matrix')"
+                          style="font-size:0.72rem; font-weight:700; padding:4px 7px; background:#f8fafc; border:1px solid #cbd5e1; color:#334155; border-radius:5px; white-space:nowrap;"
+                          title="Xem và sửa từng câu trong Ma trận đáp án">
+                          👁️ Xem
+                        </button>
+                      </div>
+
+                      <div id="omr-exam-identity-banner"
+                        style="display:flex; flex-direction:column; gap:4px; padding:5px 7px; border-radius:5px; background:#f8fafc; border:1px solid #e2e8f0; font-size:0.71rem; color:#1e1b4b;">
+                        <div id="omr-exam-identity-text" style="font-weight:700; line-height:1.3;">
+                          📌 Đang chấm theo: Đề đang soạn
+                        </div>
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:4px; flex-wrap:wrap;">
+                          <div style="display:flex; align-items:center; gap:4px; flex-wrap:wrap;">
+                            <span id="omr-keys-badge"
+                              style="font-size:0.69rem; font-weight:700; color:#92400e; background:#fffbeb; padding:1px 6px; border-radius:4px; border:1px solid #fde68a; display:inline-flex; align-items:center; gap:3px; white-space:nowrap;">
+                              <span>🎯</span> <span id="omr-summary-codes">⚠️ Chưa có Đáp án đề (0 mã)</span>
+                            </span>
+                            <span id="omr-summary-pts"
+                              style="font-size:0.68rem; font-weight:600; color:#475569; background:#fff; padding:1px 5px; border-radius:4px; border:1px solid #e2e8f0; white-space:nowrap;">
+                              0.0đ
+                            </span>
                           </div>
-                          <div style="font-size:0.68rem; color:#64748b;">
-                            Hỗ trợ Đáp án McMIX, TnMaker, Excel, Word & Ảnh scan JPG, PNG, PDF
-                          </div>
+                          <select id="omr-tf-style-inline-selector" onchange="onOmrTfStyleChanged(this.value)"
+                            style="font-size:0.68rem; font-weight:700; color:#0f172a; background:#fff; padding:1px 4px; border-radius:4px; border:1px solid #cbd5e1; cursor:pointer;"
+                            title="Cách tính điểm Phần II (Đúng/Sai)">
+                            <option value="fixed025" selected>⚖️ P.II: 0.25đ/ý</option>
+                            <option value="moet2025">⚖️ P.II: Lũy tiến BGD</option>
+                          </select>
                         </div>
                       </div>
 
-                      <!-- 5 Nút chọn file/thư mục, nạp đáp án ngoài, tải phôi in trắng & xuất phiếu tô mẫu dạng Pill sang trọng -->
-                      <div style="display:flex; justify-content:center; gap:6px; margin-top:6px; flex-wrap:wrap;">
-                        <button class="btn btn-sm" onclick="openManageAnswerKeysModal('import')"
-                          style="font-size:0.72rem; padding:3px 9px; background:#eff6ff; border:1.5px solid #3b82f6; color:#1d4ed8; font-weight:700; border-radius:6px; display:inline-flex; align-items:center; gap:4px;"
-                          title="Tải file Đáp án được tạo từ phần mềm khác (McMIX, TnMaker, SmartTest, Excel, Word, CSV, TXT) cùng mẫu phiếu">
-                          📥 Nạp file Đáp án
+                      <div id="omr-essay-warning-pill"
+                        style="display:none; font-size:0.70rem; font-weight:700; color:#92400e; background:#fef3c7; border:1px solid #fcd34d; padding:3px 7px; border-radius:5px;">
+                        ⚠️ Đề có Tự luận: thang điểm OMR tối đa ...đ
+                      </div>
+                    </div>
+
+                    <!-- BƯỚC 2: CHỌN LỚP & DANH SÁCH SBD (TÙY CHỌN NHƯNG KHUYẾN NGHỊ) -->
+                    <div id="omr-step2-card"
+                      style="background:#fff; border:1px solid #bbf7d0; border-left:3.5px solid #10b981; border-radius:7px; padding:7px 9px; display:flex; flex-direction:column; gap:5px;">
+                      <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
+                        <span style="font-size:0.74rem; font-weight:800; color:#065f46;">BƯỚC 2: Lớp & Danh sách HS</span>
+                        <span id="omr-roster-badge" onclick="openOmrRosterModal()"
+                          style="font-size:0.68rem; font-weight:700; color:#92400e; background:#fffbeb; padding:1px 7px; border-radius:999px; border:1px solid #fde68a; cursor:pointer; white-space:nowrap;"
+                          title="Click để xem hoặc nạp Danh sách Học sinh nhiều lớp">
+                          👥 Chưa nạp DS Lớp (0 HS)
+                        </span>
+                      </div>
+                      <div style="display:flex; align-items:center; gap:4px;">
+                        <select id="omr-active-class-select" onchange="onOmrActiveClassSelected(this.value)"
+                          style="flex:1; min-width:110px; font-size:0.74rem; font-weight:600; padding:4px 6px; border:1px solid #6ee7b7; border-radius:5px; background:#fff; color:#064e3b;">
+                          <option value="">-- Chưa nạp danh sách lớp --</option>
+                        </select>
+                        <button class="btn btn-sm" onclick="openOmrRosterModal()"
+                          style="font-size:0.72rem; font-weight:700; padding:4px 8px; background:#f0fdf4; border:1px solid #4ade80; color:#15803d; border-radius:5px; white-space:nowrap;"
+                          title="Tải danh sách học sinh (Excel, CSV hoặc dán từ VNEDU/SMAS) để định danh SBD">
+                          👥 DS Lớp
                         </button>
-                        <button class="btn btn-sm" onclick="document.getElementById('omr-custom-scans-input').click()"
-                          style="font-size:0.71rem; padding:3px 9px; background:#fff; border:1px solid #cbd5e1; color:#1d4ed8; font-weight:600; border-radius:6px;">
-                          📄 Chọn file scan
-                        </button>
-                        <button class="btn btn-sm" onclick="document.getElementById('omr-folder-scans-input').click()"
-                          style="font-size:0.71rem; padding:3px 9px; background:#f0fdf4; border:1px solid #bbf7d0; color:#15803d; font-weight:600; border-radius:6px;">
-                          📂 Chọn Thư mục
-                        </button>
-                        <button class="btn btn-sm" onclick="downloadSelectedBlankTemplate()"
-                          style="font-size:0.71rem; padding:3px 9px; background:#f0fdf4; border:1px solid #86efac; color:#166534; font-weight:700; border-radius:6px;"
-                          title="Tải tệp phôi in trắng gốc (PDF hoặc Docx) của mẫu phiếu đang chọn để in ấn phát cho học sinh">
-                          🖨️ Tải phôi in
-                        </button>
-                        <button class="btn btn-sm" onclick="downloadSampleFilledOmrSheetPng()"
-                          style="font-size:0.71rem; padding:3px 9px; background:#fefce8; border:1px solid #fde047; color:#854d0e; font-weight:600; border-radius:6px;"
-                          title="Tải về máy 1 file ảnh .PNG phiếu học sinh đã tô chì thật để thử nghiệm tải lên quét điểm ảnh OMR">
-                          🧪 Tô mẫu (.png)
+                        <button class="btn btn-sm" onclick="prepareNextClassGrading()"
+                          style="font-size:0.72rem; font-weight:700; padding:4px 8px; background:#ecfdf5; border:1px solid #34d399; color:#047857; border-radius:5px; white-space:nowrap;"
+                          title="Giữ nguyên bộ đáp án Đề hiện tại, chuyển sang lớp mới và xóa ảnh bài quét cũ để chấm lớp tiếp theo">
+                          ➡️ Lớp tiếp
                         </button>
                       </div>
                     </div>
 
-                    <!-- Thanh Trạng thái & Nút Bắt đầu chấm -->
-                    <div
-                      style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:7px;">
-                      <div style="display:flex; align-items:center; gap:6px; min-width:0; overflow:hidden;">
-                        <span id="omr-scans-badge"
-                          style="font-size:0.72rem; font-weight:700; color:#0369a1; background:#e0f2fe; padding:3px 8px; border-radius:5px; border:1px solid #bae6fd; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">
-                          Chưa nạp bài
-                        </span>
-                        <span id="omr-status-banner-text"
-                          style="font-size:0.71rem; color:#64748b; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">
-                          Sẵn sàng chấm
-                        </span>
+                    <!-- BƯỚC 3: NẠP PHIẾU SCAN & THỰC HIỆN CHẤM -->
+                    <div id="omr-step3-card"
+                      style="background:#fff; border:1px solid #bfdbfe; border-left:3.5px solid #2563eb; border-radius:7px; padding:7px 9px; display:flex; flex-direction:column; gap:6px;">
+                      <input type="file" id="omr-custom-scans-input" multiple accept="image/*,.pdf" style="display:none;"
+                        onchange="handleOmrUserScans(event)">
+                      <input type="file" id="omr-folder-scans-input" webkitdirectory directory multiple
+                        style="display:none;" onchange="handleOmrFolderScans(event)">
+
+                      <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
+                        <span style="font-size:0.74rem; font-weight:800; color:#1e40af;">BƯỚC 3: Nạp Phiếu Scan & Chấm</span>
+                        <div style="display:flex; align-items:center; gap:6px; font-size:0.68rem;">
+                          <a href="javascript:void(0)" onclick="downloadSelectedBlankTemplate()"
+                            style="color:#166534; font-weight:600; text-decoration:none;"
+                            title="Tải tệp phôi in trắng của mẫu phiếu đang chọn">🖨️ Phôi in</a>
+                          <span style="color:#cbd5e1;">|</span>
+                          <a href="javascript:void(0)" onclick="downloadSampleFilledOmrSheetPng()"
+                            style="color:#854d0e; font-weight:600; text-decoration:none;"
+                            title="Tải về máy 1 file ảnh .PNG phiếu học sinh đã tô sẵn để thử nghiệm quét OMR">🧪 Ảnh tô mẫu</a>
+                        </div>
                       </div>
-                      <button class="btn btn-primary btn-sm" onclick="runOmrBatchGrading(false)"
-                        id="omr-btn-start-grade"
-                        style="font-size:0.78rem; font-weight:700; background:#2563eb; padding:5px 12px; border-radius:6px; flex-shrink:0; display:flex; align-items:center; gap:4px;">
-                        <span>🚀</span> <span>Bắt đầu chấm</span>
-                      </button>
+
+                      <!-- Drag & Drop Zone gọn gàng cho Phiếu scan -->
+                      <div id="omr-dropzone" ondragover="onOmrDragOver(event)" ondragleave="onOmrDragLeave(event)"
+                        ondrop="onOmrDrop(event)"
+                        style="border:1.5px dashed #93c5fd; border-radius:6px; padding:8px; background:#f8fafc; text-align:center; transition:border-color 0.2s ease;">
+                        <div style="font-weight:700; color:#1e3a8a; font-size:0.75rem;">
+                          📥 Kéo & thả Ảnh / PDF phiếu bài làm vào đây
+                        </div>
+                        <div style="font-size:0.67rem; color:#64748b; margin-top:2px;">
+                          Hỗ trợ JPG, PNG, PDF nhiều trang (hoặc thả kèm file Đáp án Excel/Word)
+                        </div>
+                        <div style="display:flex; justify-content:center; gap:6px; margin-top:6px;">
+                          <button class="btn btn-sm" onclick="document.getElementById('omr-custom-scans-input').click()"
+                            style="flex:1; font-size:0.72rem; padding:4px 8px; background:#fff; border:1px solid #60a5fa; color:#1d4ed8; font-weight:700; border-radius:5px;">
+                            📄 Chọn file scan
+                          </button>
+                          <button class="btn btn-sm" onclick="document.getElementById('omr-folder-scans-input').click()"
+                            style="flex:1; font-size:0.72rem; padding:4px 8px; background:#f0fdf4; border:1px solid #86efac; color:#15803d; font-weight:700; border-radius:5px;">
+                            📂 Chọn Thư mục
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- Thanh Trạng thái thực tế & Nút Bắt đầu chấm -->
+                      <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
+                        <div style="display:flex; align-items:center; gap:5px; min-width:0; overflow:hidden; flex:1;">
+                          <span id="omr-scans-badge"
+                            style="font-size:0.70rem; font-weight:700; color:#475569; background:#f1f5f9; padding:2px 7px; border-radius:4px; border:1px solid #cbd5e1; white-space:nowrap; flex-shrink:0;">
+                            Chưa nạp bài
+                          </span>
+                          <span id="omr-status-banner-text"
+                            style="font-size:0.69rem; color:#92400e; font-weight:600; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">
+                            ⚠️ Hoàn thành Bước 1 & Bước 3
+                          </span>
+                        </div>
+                        <button class="btn btn-primary btn-sm" onclick="runOmrBatchGrading(false)"
+                          id="omr-btn-start-grade"
+                          style="font-size:0.75rem; font-weight:700; background:#64748b; border-color:#64748b; padding:5px 11px; border-radius:6px; flex-shrink:0; display:flex; align-items:center; gap:4px;">
+                          <span>🚀</span> <span>Chờ Đáp án (B1)</span>
+                        </button>
+                      </div>
                     </div>
+
                   </div>
 
                   <!-- 3. QUICK STATS & SMART FILTER BAR -->
@@ -3297,12 +3307,15 @@
                 Hỗ trợ file Excel (<code>.xlsx, .xls</code>), bảng tính <code>.csv</code>, Word <code>.docx</code> hoặc <code>.txt</code> từ phần mềm khác cùng mẫu phiếu chấm.
               </p>
 
-              <div
-                style="border:2px dashed #3b82f6; border-radius:6px; padding:14px; text-align:center; background:#eff6ff; cursor:pointer;"
-                onclick="document.getElementById('omr-external-keys-file').click()">
+              <div id="ak-file-dropzone"
+                style="border:2px dashed #3b82f6; border-radius:6px; padding:14px; text-align:center; background:#eff6ff; cursor:pointer; transition:all 0.15s ease;"
+                onclick="document.getElementById('omr-external-keys-file').click()"
+                ondragover="onAkModalDragOver(event)"
+                ondragleave="onAkModalDragLeave(event)"
+                ondrop="onAkModalDrop(event)">
                 <div style="font-size:1.8rem; margin-bottom:4px;">📊</div>
                 <div style="font-weight:700; color:#1d4ed8; font-size:0.86rem;">Click hoặc Kéo thả file Đáp án vào đây</div>
-                <div style="font-size:0.72rem; color:#475569; margin-top:2px;">Tự động nhận diện tất cả mã đề & 3 phần thi</div>
+                <div style="font-size:0.72rem; color:#475569; margin-top:2px;">Hỗ trợ .xlsx, .csv, .docx, .txt, .json • Tự động nhận diện tất cả mã đề & 3 phần thi</div>
               </div>
 
               <div>
@@ -3371,6 +3384,14 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
 
         <!-- TAB 2: XEM & SỬA MA TRẬN ĐÁP ÁN -->
         <div id="ak-tab-pane-matrix" style="display:none;">
+          <div id="ak-matrix-source-banner"
+            style="display:none; margin-bottom:10px; padding:8px 12px; border-radius:6px; background:#ecfdf5; border:1px solid #6ee7b7; font-size:0.8rem; color:#065f46; font-weight:700; align-items:center; justify-content:space-between; gap:8px;">
+            <span id="ak-matrix-source-text"></span>
+            <button type="button" class="btn btn-success btn-sm" onclick="applyExternalAnswerKeysToApp()"
+              style="font-size:0.75rem; font-weight:700; background:#16a34a; border-color:#16a34a; white-space:nowrap;">
+              ✅ Áp dụng ngay
+            </button>
+          </div>
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
             <div style="display:flex; align-items:center; gap:8px;">
               <span style="font-size:0.82rem; font-weight:700; color:#334155;">Các mã đề hiện có:</span>
@@ -3417,14 +3438,12 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
 
             <div style="border:1px solid #cbd5e1; border-radius:8px; padding:14px; background:#fff;">
               <strong style="color:#0f172a; font-size:0.88rem; display:block; margin-bottom:8px;">
-                Phần II: Đúng / Sai (Quy chế Bộ GD&ĐT 2025)
+                Phần II: Đúng / Sai (4 ý / câu)
               </strong>
-              <div style="font-size:0.8rem; line-height:1.6; color:#334155;">
-                • Đúng 1 ý: <b>0.10 điểm</b><br>
-                • Đúng 2 ý: <b>0.25 điểm</b><br>
-                • Đúng 3 ý: <b>0.50 điểm</b><br>
-                • Đúng cả 4 ý: <b>1.00 điểm</b> / câu<br>
-                <span style="color:#047857; font-weight:700;">(Đề 4 câu Đúng/Sai tối đa = 4.0 điểm)</span>
+              <div style="font-size:0.78rem; line-height:1.55; color:#334155;">
+                • <b>Chia đều 0.25đ / ý</b> (mặc định): 1ý=0.25đ, 2ý=0.5đ, 3ý=0.75đ, 4ý=1.0đ.<br>
+                • <b>Lũy tiến BGD 2025</b>: 1ý=0.1đ, 2ý=0.25đ, 3ý=0.5đ, 4ý=1.0đ.<br>
+                <span style="color:#047857; font-weight:700;">(Chọn kiểu tính điểm tại mục P.II ở Bước 1 / ⚙️ Cài đặt)</span>
               </div>
             </div>
           </div>
@@ -8027,6 +8046,108 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         const exists = Array.from(clsSel.options).some(o => o.value === appState.omr.selectedClassName);
         if (exists) clsSel.value = appState.omr.selectedClassName;
       }
+      updateOmrGradingPipelineUI();
+    }
+
+    /**
+     * Đồng bộ trạng thái trực quan cho Quy trình 3 Bước ở Bước 7 (B1: Đáp án -> B2: Lớp/SBD -> B3: Scan & Chấm)
+     */
+    function updateOmrGradingPipelineUI(options = {}) {
+      const keyCodes = Object.keys(appState.omr.answerKeysByCode || {});
+      const hasKeys = keyCodes.length > 0;
+      const rosterCount = Array.isArray(appState.omr.roster) ? appState.omr.roster.length : 0;
+      const hasRoster = rosterCount > 0;
+      const papersCount = Array.isArray(appState.omr.papers) ? appState.omr.papers.length : 0;
+      const gradedCount = Array.isArray(appState.omr.gradedPapers) ? appState.omr.gradedPapers.length : 0;
+
+      // Bước 1: Trạng thái Đáp án (Bắt buộc)
+      const step1Status = document.getElementById('omr-step1-status');
+      const step1Card = document.getElementById('omr-step1-card');
+      if (step1Status) {
+        if (hasKeys) {
+          step1Status.textContent = `✅ Đã có ${keyCodes.length} mã đề`;
+          step1Status.style.background = '#dcfce7';
+          step1Status.style.color = '#166534';
+          step1Status.style.borderColor = '#86efac';
+        } else {
+          step1Status.textContent = '⚠️ Bắt buộc (0 mã)';
+          step1Status.style.background = '#fffbeb';
+          step1Status.style.color = '#92400e';
+          step1Status.style.borderColor = '#fde68a';
+        }
+      }
+      if (step1Card) {
+        step1Card.style.borderLeftColor = hasKeys ? '#16a34a' : '#f59e0b';
+        step1Card.style.borderColor = hasKeys ? '#bbf7d0' : '#fde68a';
+      }
+
+      // Bước 2: Trạng thái Lớp & SBD
+      const step2Card = document.getElementById('omr-step2-card');
+      if (step2Card) {
+        step2Card.style.borderLeftColor = hasRoster ? '#10b981' : '#94a3b8';
+        step2Card.style.borderColor = hasRoster ? '#bbf7d0' : '#cbd5e1';
+      }
+
+      // Bước 3: Huy hiệu số bài & Dòng trạng thái hướng dẫn thực tế
+      if (!options.preserveScanBadge) {
+        const scansBadge = document.getElementById('omr-scans-badge');
+        if (scansBadge) {
+          if (appState.omr.isDemoMode && gradedCount > 0) {
+            scansBadge.textContent = `🧪 DEMO: ${gradedCount} bài mẫu`;
+          } else if (papersCount > 0) {
+            scansBadge.textContent = gradedCount > 0
+              ? `Đã chấm ${gradedCount} bài (${appState.omr.selectedClassName || 'Lớp hiện tại'})`
+              : `Đã nạp ${papersCount} phiếu`;
+          } else {
+            scansBadge.textContent = 'Chưa nạp bài';
+          }
+        }
+      }
+
+      if (!options.preserveStatusText) {
+        const banner = document.getElementById('omr-status-banner-text');
+        if (banner) {
+          const codePreview = keyCodes.slice(0, 4).join(', ') + (keyCodes.length > 4 ? '...' : '');
+          if (!hasKeys) {
+            banner.textContent = '⚠️ Chưa có Đáp án — Hãy chọn Đề hoặc [Nạp Đ/Á ngoài] ở Bước 1';
+            banner.style.color = '#b45309';
+          } else if (appState.omr.isDemoMode && gradedCount > 0) {
+            banner.textContent = `🧪 Chế độ DEMO (${gradedCount} bài mẫu — không lưu vào CSDL)`;
+            banner.style.color = '#6d28d9';
+          } else if (papersCount === 0) {
+            banner.textContent = `Đã đủ ${keyCodes.length} mã (${codePreview}) — Hãy nạp ảnh/PDF bài làm`;
+            banner.style.color = '#1d4ed8';
+          } else if (gradedCount > 0) {
+            banner.textContent = `✅ Đã chấm ${gradedCount} phiếu theo ${keyCodes.length} mã (${codePreview})`;
+            banner.style.color = '#15803d';
+          } else {
+            banner.textContent = `🚀 Sẵn sàng chấm ${papersCount} phiếu (${codePreview})`;
+            banner.style.color = '#15803d';
+          }
+        }
+      }
+
+      const startBtn = document.getElementById('omr-btn-start-grade');
+      if (startBtn) {
+        if (!hasKeys) {
+          startBtn.style.background = '#64748b';
+          startBtn.style.borderColor = '#64748b';
+          startBtn.style.opacity = '0.88';
+          startBtn.innerHTML = '<span>🚀</span> <span>Chờ Đáp án (B1)</span>';
+        } else if (papersCount === 0) {
+          startBtn.style.background = '#3b82f6';
+          startBtn.style.borderColor = '#3b82f6';
+          startBtn.style.opacity = '0.95';
+          startBtn.innerHTML = '<span>🚀</span> <span>Chờ File Scan</span>';
+        } else {
+          startBtn.style.background = '#1d4ed8';
+          startBtn.style.borderColor = '#1d4ed8';
+          startBtn.style.opacity = '1';
+          startBtn.innerHTML = gradedCount > 0
+            ? `<span>🔄</span> <span>Chấm lại (${papersCount})</span>`
+            : `<span>🚀</span> <span>Bắt đầu chấm (${papersCount})</span>`;
+        }
+      }
     }
 
     const OMR_TF_STYLE_STORAGE_KEY = 'matrixedu_omr_tfStyle_v2';
@@ -8223,6 +8344,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
           warnPill.style.display = 'none';
         }
       }
+      if (typeof updateOmrGradingPipelineUI === 'function') updateOmrGradingPipelineUI();
     }
 
     function applyExamOmrConfig(omrConfig, metaInfo = {}) {
@@ -8409,7 +8531,8 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       drawOmrCanvas(null);
 
       const scanBadge = document.getElementById('omr-scans-badge');
-      if (scanBadge) scanBadge.textContent = 'Chưa có bài chấm';
+      if (scanBadge) scanBadge.textContent = 'Chưa nạp bài';
+      if (typeof updateOmrGradingPipelineUI === 'function') updateOmrGradingPipelineUI();
       const banner = document.getElementById('omr-status-banner-text');
       const codeStr = Object.keys(appState.omr.answerKeysByCode || {}).join(', ') || 'chưa có mã';
       if (banner) {
@@ -8677,11 +8800,14 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
     /**
      * Quản lý Biểu đáp án (Nạp từ file ngoài, Zalo, hoặc xem/sửa ma trận)
      */
-    function openManageAnswerKeysModal(tab = 'import') {
-      if (!appState.omr.answerKeysByCode || Object.keys(appState.omr.answerKeysByCode).length === 0) {
-        syncOmrAnswerKeys();
+    function openManageAnswerKeysModal(tab = 'import', preserveTemp = false) {
+      if (!preserveTemp) {
+        if (!appState.omr.answerKeysByCode || Object.keys(appState.omr.answerKeysByCode).length === 0) {
+          syncOmrAnswerKeys();
+        }
+        appState.omr.tempAnswerKeys = JSON.parse(JSON.stringify(appState.omr.answerKeysByCode || {}));
+        appState.omr.hasPendingExternalImport = false;
       }
-      appState.omr.tempAnswerKeys = JSON.parse(JSON.stringify(appState.omr.answerKeysByCode || {}));
 
       const modal = document.getElementById('modalManageAnswerKeys');
       if (modal) {
@@ -8720,62 +8846,131 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       }
     }
 
-    async function handleExternalAnswerKeyFile(event) {
-      const file = event.target.files?.[0];
-      if (!file) return;
-
-      showToast(`Đang đọc file đáp án: ${file.name}...`, 'info');
-      try {
+    function readFileAsyncForAnswerKey(file, mode = 'text') {
+      return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        const ext = file.name.split('.').pop().toLowerCase();
-
-        if (ext === 'xlsx' || ext === 'xls' || ext === 'docx') {
-          // Gửi base64 lên server để giải mã bằng zip-docx
-          reader.onload = async (e) => {
-            const base64 = e.target.result.split(',')[1];
-            const res = await fetch('/api/omr/parse-answer-key', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ fileName: file.name, fileBase64: base64 })
-            });
-            const data = await res.json();
-            if (data.ok) {
-              appState.omr.tempAnswerKeys = data.answerKeysByCode;
-              appState.omr.lastImportSource = `File: ${file.name}`;
-              updateAkImportStatus(`✅ Đã nạp thành công ${data.totalCodes} mã đề từ file ${file.name}`);
-              switchAnswerKeyTab('matrix');
-              showToast(data.summary, 'success');
-            } else {
-              showToast(data.message || 'Lỗi nhận diện file đáp án', 'error');
-            }
-          };
+        reader.onload = (e) => resolve(e.target.result);
+        reader.onerror = () => reject(reader.error || new Error('Không thể đọc dữ liệu file từ ổ đĩa'));
+        if (mode === 'dataUrl') {
           reader.readAsDataURL(file);
         } else {
-          // File văn bản (.csv, .txt, .json)
-          reader.onload = async (e) => {
-            const text = e.target.result;
-            const res = await fetch('/api/omr/parse-answer-key', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ fileName: file.name, rawText: text })
-            });
-            const data = await res.json();
-            if (data.ok) {
-              appState.omr.tempAnswerKeys = data.answerKeysByCode;
-              appState.omr.lastImportSource = `File: ${file.name}`;
-              updateAkImportStatus(`✅ Đã nạp thành công ${data.totalCodes} mã đề từ file ${file.name}`);
-              switchAnswerKeyTab('matrix');
-              showToast(data.summary, 'success');
-            } else {
-              showToast(data.message || 'Lỗi nhận diện file đáp án', 'error');
-            }
-          };
-          reader.readAsText(file);
+          reader.readAsText(file, 'UTF-8');
         }
-      } catch (err) {
-        showToast('Lỗi đọc file: ' + err.message, 'error');
+      });
+    }
+
+    function onAkModalDragOver(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const dz = document.getElementById('ak-file-dropzone');
+      if (dz) {
+        dz.style.borderColor = '#1d4ed8';
+        dz.style.background = '#dbeafe';
       }
-      event.target.value = '';
+    }
+
+    function onAkModalDragLeave(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const dz = document.getElementById('ak-file-dropzone');
+      if (dz) {
+        dz.style.borderColor = '#3b82f6';
+        dz.style.background = '#eff6ff';
+      }
+    }
+
+    function onAkModalDrop(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      onAkModalDragLeave(e);
+      const files = e.dataTransfer?.files;
+      if (files && files.length > 0) {
+        handleExternalAnswerKeyFile({ target: { files } });
+      }
+    }
+
+    async function handleExternalAnswerKeyFile(event, options = {}) {
+      const file = event?.target?.files?.[0];
+      if (!file) return { ok: false, error: 'Chưa chọn file đáp án' };
+
+      showToast(`Đang đọc & phân tích file đáp án: ${file.name}...`, 'info');
+      updateAkImportStatus(`⏳ Đang đọc và trích xuất mã đề từ ${file.name}...`, false);
+
+      try {
+        const ext = (file.name.split('.').pop() || '').toLowerCase();
+        const isBinaryOffice = ext === 'xlsx' || ext === 'xls' || ext === 'docx';
+
+        let payload;
+        if (isBinaryOffice) {
+          const dataUrl = await readFileAsyncForAnswerKey(file, 'dataUrl');
+          const base64 = String(dataUrl || '').split(',')[1] || '';
+          if (!base64) throw new Error('Nội dung file rỗng hoặc không đọc được Base64.');
+          payload = { fileName: file.name, fileBase64: base64 };
+        } else {
+          const text = await readFileAsyncForAnswerKey(file, 'text');
+          payload = { fileName: file.name, rawText: String(text || '') };
+        }
+
+        const res = await fetch('/api/omr/parse-answer-key', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const rawBody = await res.text();
+        let data = {};
+        try {
+          data = rawBody ? JSON.parse(rawBody) : {};
+        } catch (_) {
+          throw new Error(`Máy chủ phản hồi lỗi (HTTP ${res.status}). Vui lòng kiểm tra định dạng file.`);
+        }
+
+        if (!res.ok || !data.ok) {
+          const errMsg = data.message || `Không trích xuất được mã đề từ file ${file.name} (HTTP ${res.status})`;
+          updateAkImportStatus(`❌ ${errMsg}`, true);
+          showToast(errMsg, 'error');
+          if (options.openModal) {
+            openManageAnswerKeysModal('import', true);
+          }
+          return { ok: false, error: errMsg };
+        }
+
+        appState.omr.tempAnswerKeys = data.answerKeysByCode;
+        appState.omr.lastImportSource = `File: ${file.name}`;
+        appState.omr.hasPendingExternalImport = true;
+
+        updateAkImportStatus(`✅ Đã nạp thành công ${data.totalCodes} mã đề (${(data.detectedCodes || []).join(', ')}) từ ${file.name}`, false);
+
+        if (options.autoApply) {
+          applyExternalAnswerKeysToApp({
+            keepModalClosed: true,
+            skipRegrade: Boolean(options.skipRegrade)
+          });
+        } else {
+          const modal = document.getElementById('modalManageAnswerKeys');
+          const isModalOpen = modal && (modal.classList.contains('open') || modal.classList.contains('active'));
+          if (!isModalOpen && options.openModal !== false) {
+            openManageAnswerKeysModal('matrix', true);
+          } else {
+            switchAnswerKeyTab('matrix');
+          }
+          showToast(data.summary || `Đã nạp ${data.totalCodes} mã đề từ ${file.name}`, 'success');
+        }
+
+        return { ok: true, codes: data.detectedCodes || Object.keys(data.answerKeysByCode || {}) };
+      } catch (err) {
+        const errMsg = 'Lỗi đọc/phân tích file đáp án: ' + (err?.message || String(err));
+        updateAkImportStatus(`❌ ${errMsg}`, true);
+        showToast(errMsg, 'error');
+        if (options.openModal) {
+          openManageAnswerKeysModal('import', true);
+        }
+        return { ok: false, error: errMsg };
+      } finally {
+        if (event?.target && 'value' in event.target) {
+          try { event.target.value = ''; } catch (_) { }
+        }
+      }
     }
 
     async function processPastedAnswerKeyText() {
@@ -8787,6 +8982,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       }
 
       showToast('Đang trích xuất đáp án từ văn bản...', 'info');
+      updateAkImportStatus('⏳ Đang trích xuất đáp án từ văn bản dán...', false);
       try {
         const res = await fetch('/api/omr/parse-answer-key', {
           method: 'POST',
@@ -8794,17 +8990,22 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
           body: JSON.stringify({ rawText: text })
         });
         const data = await res.json();
-        if (data.ok) {
+        if (res.ok && data.ok) {
           appState.omr.tempAnswerKeys = data.answerKeysByCode;
           appState.omr.lastImportSource = 'Dán văn bản (Zalo/Email)';
-          updateAkImportStatus(`✅ Đã nhận diện thành công ${data.totalCodes} mã đề từ văn bản dán`);
+          appState.omr.hasPendingExternalImport = true;
+          updateAkImportStatus(`✅ Đã nhận diện thành công ${data.totalCodes} mã đề từ văn bản dán`, false);
           switchAnswerKeyTab('matrix');
           showToast(data.summary, 'success');
         } else {
-          showToast(data.message || 'Không thể nhận diện mã đề', 'error');
+          const msg = data.message || 'Không thể nhận diện mã đề từ văn bản đã dán';
+          updateAkImportStatus(`❌ ${msg}`, true);
+          showToast(msg, 'error');
         }
       } catch (err) {
-        showToast('Lỗi phân tích: ' + err.message, 'error');
+        const msg = 'Lỗi phân tích: ' + err.message;
+        updateAkImportStatus(`❌ ${msg}`, true);
+        showToast(msg, 'error');
       }
     }
 
@@ -8929,18 +9130,28 @@ Phần III:
             zalo: 'Tin nhắn mẫu Zalo (Tin học 12)'
           };
           appState.omr.lastImportSource = labelMap[type] || `Mẫu ${type.toUpperCase()}`;
-          updateAkImportStatus(`✅ Đã nạp thành công mẫu ${type.toUpperCase()} (${data.totalCodes} mã đề: ${Object.keys(data.answerKeysByCode).join(', ')})`);
+          appState.omr.hasPendingExternalImport = true;
+          updateAkImportStatus(`✅ Đã nạp thành công mẫu ${type.toUpperCase()} (${data.totalCodes} mã đề: ${Object.keys(data.answerKeysByCode).join(', ')})`, false);
           switchAnswerKeyTab('matrix');
           showToast(`Đã nạp thành công mẫu ${type.toUpperCase()}`, 'success');
         }
       } catch (err) {
+        updateAkImportStatus(`❌ Lỗi nạp mẫu: ${err.message}`, true);
         showToast('Lỗi nạp mẫu: ' + err.message, 'error');
       }
     }
 
-    function updateAkImportStatus(text) {
+    function updateAkImportStatus(text, isError = false) {
       const el = document.getElementById('ak-import-status-text');
-      if (el) el.textContent = text;
+      const box = document.getElementById('ak-import-status-box');
+      if (el) {
+        el.textContent = text;
+        el.style.color = isError ? '#b91c1c' : '#166534';
+      }
+      if (box) {
+        box.style.background = isError ? '#fef2f2' : '#f0fdf4';
+        box.style.borderColor = isError ? '#fecaca' : '#bbf7d0';
+      }
     }
 
     function renderAnswerKeyMatrixTable() {
@@ -8949,6 +9160,17 @@ Phần III:
       const badgesContainer = document.getElementById('ak-matrix-codes-badges');
       const theadTr = document.getElementById('ak-matrix-thead-tr');
       const tbody = document.getElementById('ak-matrix-tbody');
+      const srcBanner = document.getElementById('ak-matrix-source-banner');
+      const srcText = document.getElementById('ak-matrix-source-text');
+
+      if (srcBanner && srcText) {
+        if (codes.length > 0 && appState.omr.hasPendingExternalImport && appState.omr.lastImportSource) {
+          srcBanner.style.display = 'flex';
+          srcText.textContent = `📥 Đã trích xuất ${codes.length} mã đề (${codes.join(', ')}) từ [${appState.omr.lastImportSource}] — Bấm "Lưu & Áp dụng" để dùng chấm bài.`;
+        } else {
+          srcBanner.style.display = 'none';
+        }
+      }
 
       if (!theadTr || !tbody) return;
 
@@ -9192,7 +9414,7 @@ Phần III:
       }
     }
 
-    function applyExternalAnswerKeysToApp() {
+    function applyExternalAnswerKeysToApp(options = {}) {
       const keys = appState.omr.tempAnswerKeys;
       const codes = Object.keys(keys || {});
       if (codes.length === 0) {
@@ -9204,6 +9426,7 @@ Phần III:
       appState.omr.activeKeySource = 'external_file';
       appState.omr.selectedExamProfileId = null;
       appState.omr.selectedExamTitle = appState.omr.lastImportSource || `File Đ/Á ngoài (${codes.length} mã đề)`;
+      appState.omr.hasPendingExternalImport = false;
 
       // Cập nhật cấu hình điểm
       const mcqPt = parseFloat(document.getElementById('ak-cfg-mcq-point')?.value || '0.25');
@@ -9227,13 +9450,16 @@ Phần III:
 
       updateOmrPointRulesFromMatrix();
       updateOmrSourceAndEssayPills();
+      if (typeof updateOmrGradingPipelineUI === 'function') updateOmrGradingPipelineUI();
       if (typeof refreshOmrSavedExamsDropdown === 'function') refreshOmrSavedExamsDropdown().catch(() => { });
 
-      closeModal('modalManageAnswerKeys');
+      if (!options.keepModalClosed) {
+        closeModal('modalManageAnswerKeys');
+      }
       showToast(`✅ Đã áp dụng biểu đáp án ${codes.length} mã đề (${codes.join(', ')}). Sẵn sàng chấm bài!`, 'success');
 
       // Nếu đã có bài scan nạp trước đó, tự động chấm lại với đáp án mới
-      if (appState.omr.papers && appState.omr.papers.length > 0) {
+      if (!options.skipRegrade && appState.omr.papers && appState.omr.papers.length > 0) {
         runOmrBatchGrading(false);
       }
     }
@@ -9243,6 +9469,7 @@ Phần III:
       appState.omr.activeKeySource = 'current_workflow';
       appState.omr.selectedExamProfileId = null;
       appState.omr.selectedExamTitle = '';
+      appState.omr.hasPendingExternalImport = false;
       syncOmrAnswerKeys(true);
       appState.omr.tempAnswerKeys = JSON.parse(JSON.stringify(appState.omr.answerKeysByCode || {}));
 
@@ -9261,6 +9488,7 @@ Phần III:
       }
 
       updateOmrSourceAndEssayPills();
+      if (typeof updateOmrGradingPipelineUI === 'function') updateOmrGradingPipelineUI();
       if (typeof refreshOmrSavedExamsDropdown === 'function') refreshOmrSavedExamsDropdown().catch(() => { });
       renderAnswerKeyMatrixTable();
       showToast('Đã khôi phục biểu đáp án gốc từ Đề thi Bước 4 & 5!', 'info');
@@ -9356,10 +9584,13 @@ Phần III:
       appState.omr.currentSessionId = null;
       renderOmrPapersTable();
       drawOmrCanvas(null);
-      const badge = document.getElementById('omr-scans-badge');
-      if (badge) badge.textContent = 'Chưa nạp bài';
-      const banner = document.getElementById('omr-status-banner-text');
-      if (banner) banner.textContent = 'Sẵn sàng chấm phiếu thật';
+      if (typeof updateOmrGradingPipelineUI === 'function') {
+        updateOmrGradingPipelineUI();
+      } else {
+        const badge = document.getElementById('omr-scans-badge');
+        if (badge) badge.textContent = 'Chưa nạp bài';
+      }
+      refreshWorkflowReadiness();
       showToast('🧹 Đã thoát Chế độ Chấm thử Mẫu (Demo) và làm sạch danh sách bài mô phỏng!', 'info');
     }
 
@@ -9502,6 +9733,9 @@ Phần III:
           badge.textContent = appState.omr.isDemoMode
             ? `🧪 DEMO: ${data.totalPapers} bài mẫu`
             : `Đã chấm ${data.totalPapers} bài (${ctx.className})`;
+        }
+        if (typeof updateOmrGradingPipelineUI === 'function') {
+          updateOmrGradingPipelineUI({ preserveScanBadge: true, preserveStatusText: Boolean(targetPaper) });
         }
 
         showToast(
@@ -9997,191 +10231,6 @@ Phần III:
         ctx.fillRect(16, 1133 - 36, 20, 20);
         ctx.fillRect(780 - 36, 1133 - 36, 20, 20);
 
-        // Tiêu đề chính
-        ctx.fillStyle = '#0f172a';
-        ctx.font = 'bold 16px "Times New Roman", serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('PHIẾU TRẢ LỜI TRẮC NGHIỆM', 780 / 2 - 40, 48);
-        ctx.font = 'italic 11px "Times New Roman", serif';
-        ctx.fillText('Kỳ thi: ...................................................................................', 780 / 2 - 40, 68);
-
-        // Khung điểm và giám thị bên trái
-        ctx.strokeStyle = '#0f172a';
-        ctx.lineWidth = 1;
-        ctx.strokeRect(36, 96, 170, 210);
-        ctx.font = '11px "Times New Roman", serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('Điểm', 121, 114);
-        ctx.beginPath();
-        ctx.moveTo(36, 126); ctx.lineTo(206, 126);
-        ctx.moveTo(36, 180); ctx.lineTo(206, 180);
-        ctx.moveTo(36, 245); ctx.lineTo(206, 245);
-        ctx.stroke();
-        ctx.fillText('Cán bộ coi thi 1', 121, 198);
-        ctx.fillText('Cán bộ coi thi 2', 121, 263);
-
-        // Khung thông tin thí sinh ở giữa
-        ctx.strokeRect(214, 96, 305, 210);
-        ctx.textAlign = 'left';
-        ctx.fillText('1. Hội đồng thi: ....................................', 224, 118);
-        ctx.fillText('2. Điểm thi: ..............................................', 224, 148);
-        ctx.fillText('3. Phòng thi số: .......................................', 224, 178);
-        ctx.fillText('4. Họ và tên thí sinh: ..............................', 224, 208);
-        ctx.fillText('5. Ngày sinh: ....../....../...... (Nam/ Nữ)', 224, 238);
-        ctx.fillText('6. Chữ ký thí sinh: .................................', 224, 268);
-        ctx.restore();
-      }
-
-      // 2. VẼ DỮ LIỆU ĐÁP ÁN & ĐIỂM SỐ NẾU CÓ BÀI THI
-      if (paper) {
-        // Hệ tọa độ chuẩn hóa chính xác theo Mẫu phiếu đang chọn
-        const tpl = getActiveOmrTemplate();
-        const scaleX = width / tpl.width;
-        const scaleY = height / tpl.height;
-
-        // Nếu bài thi có ảnh scan và đã căn chỉnh fiducials -> ánh xạ bilinear để vòng tròn nằm khớp 100% trên ô tròn của ảnh scan
-        const fidTpl = tpl.fiducials || {
-          tl: { x: 50, y: 60 },
-          tr: { x: tpl.width - 50, y: 60 },
-          bl: { x: 50, y: tpl.height - 60 },
-          br: { x: tpl.width - 50, y: tpl.height - 60 }
-        };
-        const W_SCAN = 1164;
-        const H_SCAN = Math.round(W_SCAN * (tpl.height / tpl.width));
-        const scanToCanvasX = width / W_SCAN;
-        const scanToCanvasY = height / H_SCAN;
-
-        const mapCanvasCoord = (origX, origY) => {
-          if (hasStudentScanImage && paper.detectedFiducials) {
-            const df = paper.detectedFiducials;
-            const u = (origX - fidTpl.tl.x) / (fidTpl.tr.x - fidTpl.tl.x);
-            const v = (origY - fidTpl.tl.y) / (fidTpl.bl.y - fidTpl.tl.y);
-            const topX = df.tl.x + u * (df.tr.x - df.tl.x);
-            const topY = df.tl.y + u * (df.tr.y - df.tl.y);
-            const botX = df.bl.x + u * (df.br.x - df.bl.x);
-            const botY = df.bl.y + u * (df.br.y - df.bl.y);
-            return {
-              x: (topX + v * (botX - topX)) * scanToCanvasX,
-              y: (topY + v * (botY - topY)) * scanToCanvasY
-            };
-          }
-          return {
-            x: origX * scaleX,
-            y: origY * scaleY
-          };
-        };
-
-        const hasValidKey = !paper.hasError && Boolean(appState.omr.answerKeysByCode[paper.scannedExamCode]);
-        const activeKey = hasValidKey
-          ? appState.omr.answerKeysByCode[paper.scannedExamCode]
-          : (paper.hasError ? {} : (appState.omr.answerKeysByCode['101'] || {}));
-        const p1KeyList = activeKey.part1 || [];
-        const p2Key = activeKey.part2 || {};
-        const p3Key = activeKey.part3 || {};
-
-        // 2.X. HIỂN THỊ CẢNH BÁO BÀI THI ĐỂ TRỐNG (NẾU THÍ SINH KHÔNG TÔ PHẦN I, II, III)
-        const isBlankExam = Boolean(
-          paper.isBlankPaper ||
-          (Number(paper.result?.totalScore || 0) === 0 && Object.keys(paper.answers?.part1 || {}).length === 0 && Object.keys(paper.answers?.part2 || {}).length === 0)
-        );
-        if (isBlankExam) {
-          ctx.save();
-          const bannerY = Math.round(18 * scaleY);
-          const bannerH = Math.round(62 * scaleY);
-          ctx.fillStyle = 'rgba(239, 68, 68, 0.94)';
-          ctx.fillRect(width * 0.05, bannerY, width * 0.9, bannerH);
-          ctx.strokeStyle = '#b91c1c';
-          ctx.lineWidth = Math.max(2, 3 * scaleX);
-          ctx.strokeRect(width * 0.05, bannerY, width * 0.9, bannerH);
-
-          ctx.fillStyle = '#ffffff';
-          ctx.textAlign = 'center';
-          ctx.font = `bold ${Math.round(23 * scaleY)}px Arial, sans-serif`;
-          ctx.fillText('⚠️ BÀI THI ĐỂ TRỐNG TOÀN BỘ (0/40 Phần I, 0/8 Phần II)', width / 2, bannerY + bannerH * 0.44);
-          ctx.font = `italic ${Math.round(16 * scaleY)}px Arial, sans-serif`;
-          ctx.fillText('Thí sinh không tô chì câu trả lời nào — Điểm số 0.00 đ là hoàn toàn chính xác theo bài thi', width / 2, bannerY + bannerH * 0.82);
-          ctx.restore();
-        }
-
-        // 2.0. ĐIỀN THÔNG TIN HÀNH CHÍNH CỦA THÍ SINH LÊN DÒNG CHẤM (KHI VẼ TRÊN PHÔI GỐC BGD 2025)
-        if (!hasStudentScanImage && (tpl.id === 'bgd_2025_4code' || tpl.id === 'bgd_2025_3code')) {
-          const examTitle = appState.metadata?.examTitle || 'KIỂM TRA ĐỊNH KỲ NĂM HỌC 2025 - 2026';
-          const schoolName = appState.metadata?.schoolName || 'TRƯỜNG THPT CHUYÊN';
-          const subjectName = appState.metadata?.subject || 'Môn học THPT';
-          const stuName = (paper.studentName && paper.studentName !== 'Chưa định danh')
-            ? paper.studentName
-            : 'Chưa định danh (Kiểm tra SBD)';
-          const className = paper.className || '---';
-          const dobStr = paper.dob || '15 / 08 / 2008';
-
-          ctx.save();
-          ctx.fillStyle = '#1e3a8a';
-          ctx.textAlign = 'left';
-          ctx.font = `bold ${Math.round(25 * scaleY)}px "Times New Roman", serif`;
-          ctx.fillText(`${examTitle} (${subjectName})`, 835 * scaleX, 290 * scaleY);
-
-          ctx.font = `italic ${Math.round(25 * scaleY)}px "Times New Roman", serif`;
-          ctx.fillText('08', 1055 * scaleX, 333 * scaleY);
-          ctx.fillText('11', 1175 * scaleX, 333 * scaleY);
-          ctx.fillText('26', 1358 * scaleX, 333 * scaleY);
-
-          ctx.font = `${Math.round(26 * scaleY)}px "Times New Roman", serif`;
-          ctx.fillText(schoolName, 955 * scaleX, 412 * scaleY);
-          ctx.fillText(`Điểm thi ${schoolName}`, 875 * scaleX, 518 * scaleY);
-          ctx.fillText(`Phòng ${className}`, 935 * scaleX, 624 * scaleY);
-
-          ctx.font = `bold ${Math.round(29 * scaleY)}px "Times New Roman", serif`;
-          ctx.fillStyle = (paper.studentName && paper.studentName !== 'Chưa định danh') ? '#0f172a' : '#dc2626';
-          ctx.fillText(stuName, 1015 * scaleX, 731 * scaleY);
-
-          ctx.font = `${Math.round(26 * scaleY)}px "Times New Roman", serif`;
-          ctx.fillStyle = '#1e3a8a';
-          ctx.fillText(dobStr, 915 * scaleX, 834 * scaleY);
-          ctx.restore();
-        }
-
-        // A. TÔ TRÒN & ĐIỀN Ô CHỮ NHẬT SỐ BÁO DANH THEO MẪU PHIẾU
-        const sbdCoords = tpl.coords.sbd;
-        const numSbdCols = sbdCoords.numCols || 6;
-        if (paper.sbd && paper.sbd !== 'chưa tô') {
-          const sbdStr = String(paper.sbd).padStart(numSbdCols, '0');
-          for (let c = 0; c < numSbdCols; c++) {
-            const digit = parseInt(sbdStr[c], 10);
-            const ptBox = mapCanvasCoord(sbdCoords.colBaseX + c * sbdCoords.colStepX, sbdCoords.boxY);
-
-            // In chữ số SBD vào ô chữ nhật phía trên
-            ctx.fillStyle = '#0f172a';
-            ctx.font = `bold ${Math.round(Math.max(12, sbdCoords.radius * 1.5 * scaleX))}px "Courier New", monospace`;
-            ctx.textAlign = 'center';
-            ctx.fillText(sbdStr[c], ptBox.x, ptBox.y);
-
-            if (!isNaN(digit) && digit >= 0 && digit <= 9) {
-              const ptCircle = mapCanvasCoord(sbdCoords.colBaseX + c * sbdCoords.colStepX, sbdCoords.rowBaseY + digit * sbdCoords.rowStepY);
-              const colX = ptCircle.x;
-              const bY = ptCircle.y;
-              const r = sbdCoords.radius * scaleX;
-
-              ctx.beginPath();
-              ctx.arc(colX, bY, r, 0, Math.PI * 2);
-              ctx.fillStyle = '#1e293b';
-              ctx.fill();
-              ctx.fillStyle = '#ffffff';
-              ctx.font = `bold ${Math.round(Math.max(10, r * 1.1))}px Arial, sans-serif`;
-              ctx.fillText(String(digit), colX, bY + (r * 0.35));
-            }
-          }
-        }
-
-        // B. TÔ TRÒN & ĐIỀN Ô CHỮ NHẬT MÃ ĐỀ THI THEO MẪU PHIẾU
-        const codeCoords = tpl.coords.code;
-        const numCodeCols = codeCoords.numCols || 4;
-        const codeStr = String(paper.scannedExamCode || '101').padStart(numCodeCols, '0');
-        for (let c = 0; c < numCodeCols; c++) {
-          const digit = parseInt(codeStr[c], 10);
-          const ptBox = mapCanvasCoord(codeCoords.colBaseX + c * codeCoords.colStepX, codeCoords.boxY);
-
-          // In chữ số Mã đề vào ô chữ nhật phía trên
-          ctx.fillStyle = paper.hasError ? '#dc2626' : '#0f172a';
           ctx.font = `bold ${Math.round(Math.max(12, codeCoords.radius * 1.5 * scaleX))}px "Courier New", monospace`;
           ctx.textAlign = 'center';
           ctx.fillText(codeStr[c], ptBox.x, ptBox.y);
@@ -12247,18 +12296,12 @@ Phần III:
     async function processUploadedOmrFiles(files, folderName = '') {
       if (!files || files.length === 0) return;
 
-      // 1. Tự động kiểm tra xem có File Biểu Đáp Án (.xlsx, .xls, .csv, .docx, .txt, .json) được kéo thả vào không
+      // 1. Tự động kiểm tra xem có File Biểu Đáp Án (.xlsx, .xls, .csv, .docx, .txt, .json) hoặc ảnh scan được nạp vào
       const answerKeyFiles = Array.from(files).filter(f => {
         const name = (f.name || '').toLowerCase();
         return name.endsWith('.xlsx') || name.endsWith('.xls') || name.endsWith('.csv') ||
           name.endsWith('.docx') || (name.endsWith('.txt') && !name.includes('log')) || name.endsWith('.json');
       });
-
-      if (answerKeyFiles.length > 0) {
-        const keyFile = answerKeyFiles[0];
-        showToast(`🎯 Tự động phát hiện File Biểu đáp án: ${keyFile.name}. Đang trích xuất mã đề...`, 'info');
-        handleExternalAnswerKeyFile({ target: { files: [keyFile] } });
-      }
 
       const validFiles = Array.from(files).filter(f => {
         const name = (f.name || '').toLowerCase();
@@ -12266,20 +12309,38 @@ Phần III:
           name.endsWith('.webp') || name.endsWith('.bmp') || name.endsWith('.pdf');
       });
 
+      const hasScansAlongside = validFiles.length > 0;
+      if (answerKeyFiles.length > 0) {
+        const keyFile = answerKeyFiles[0];
+        showToast(`🎯 Tự động phát hiện File Biểu đáp án: ${keyFile.name}. Đang trích xuất mã đề...`, 'info');
+        const parseRes = await handleExternalAnswerKeyFile(
+          { target: { files: [keyFile] } },
+          hasScansAlongside ? { autoApply: true, skipRegrade: true } : { openModal: true }
+        );
+        if (!hasScansAlongside) return;
+        if (!parseRes || !parseRes.ok) return;
+      }
+
       if (validFiles.length === 0) {
-        if (answerKeyFiles.length > 0) {
-          return;
-        }
         showToast('Không tìm thấy file ảnh scan (.jpg, .png...) hoặc PDF hợp lệ trong danh sách chọn!', 'warning');
         return;
       }
 
       validFiles.sort((a, b) => (a.name || '').localeCompare(b.name || '', undefined, { numeric: true, sensitivity: 'base' }));
 
-      showToast(`⏳ Đang giải mã và quét điểm ảnh OMR cho ${validFiles.length} tệp tải lên...`, 'info');
-
       syncOmrAnswerKeys();
       updateOmrPointRulesFromMatrix();
+
+      // Cổng kiểm soát Bước 1: Không cho phép quét/chấm mù khi chưa có mã đề & đáp án thật
+      const validCodes = Object.keys(appState.omr.answerKeysByCode || {});
+      if (validCodes.length === 0) {
+        if (typeof updateOmrGradingPipelineUI === 'function') updateOmrGradingPipelineUI();
+        showToast('⚠️ Chưa có Bộ Đáp án (Bước 1)! Vui lòng chọn Đề đã lưu hoặc bấm [Nạp Đ/Á ngoài] trước khi nạp phiếu scan.', 'warning');
+        if (typeof openManageAnswerKeysModal === 'function') openManageAnswerKeysModal('import');
+        return;
+      }
+
+      showToast(`⏳ Đang giải mã và quét điểm ảnh OMR cho ${validFiles.length} tệp tải lên...`, 'info');
 
       // Tự động nhận diện định dạng Mẫu phiếu nếu tên file scan khớp mẫu thực tế của trường
       const isTongHopPattern = validFiles.some(f => /(?:tong_hop|thpt_tong_hop|chinh_thuc|doc012911|page\d{4})/i.test(f.name || '')) ||
@@ -12303,8 +12364,6 @@ Phần III:
         }
       }
 
-      let validCodes = Object.keys(appState.omr.answerKeysByCode || {});
-      if (validCodes.length === 0) validCodes = ['101', '102', '103', '104'];
       const firstKey = appState.omr.answerKeysByCode[validCodes[0]] || {};
       const expectedP1Count = (firstKey.part1 || []).length || 24;
       const expectedP2Count = Object.keys(firstKey.part2 || {}).length || 4;
@@ -12438,6 +12497,9 @@ Phần III:
       const banner = document.getElementById('omr-status-banner-text');
       if (banner) {
         banner.textContent = `Đã quét quang học ${scannedPapers.length} phiếu. Đang chấm điểm...`;
+      }
+      if (typeof updateOmrGradingPipelineUI === 'function') {
+        updateOmrGradingPipelineUI({ preserveScanBadge: true, preserveStatusText: true });
       }
 
       // Chấm điểm lô bài vừa quét điểm ảnh

@@ -499,6 +499,31 @@ async function startTempServer() {
       assert.ok(!/function openPaperEditModal[\s\S]{0,200}style\.display\s*=\s*['"]flex['"]/.test(html), 'openPaperEditModal must not hardcode inline display:flex');
       assert.ok(!/function openManageAnswerKeysModal[\s\S]{0,350}modal\.classList\.add\(['"]active['"]\)/.test(html), 'openManageAnswerKeysModal must use unified openModal');
     });
+
+    await runTest('6.3 Step 7 3-Step Guided Pipeline & External Answer Key Drop/Error Guards', async () => {
+      const html = fs.readFileSync(path.join(ROOT_DIR, 'index.html'), 'utf8');
+      assert.ok(html.includes('id="omr-step1-card"') && html.includes('id="omr-step2-card"') && html.includes('id="omr-step3-card"'), '3-step guided pipeline cards must exist');
+      assert.ok(html.includes('updateOmrGradingPipelineUI'), 'Strict pipeline readiness gating helper must exist');
+      assert.ok(html.includes('id="ak-file-dropzone"') && html.includes('ondrop="onAkModalDrop(event)"'), 'Modal answer key dropzone must support real drag-and-drop');
+      assert.ok(!html.includes("if (validCodes.length === 0) validCodes = ['101', '102', '103', '104']"), 'No bogus 101..104 fallback in processUploadedOmrFiles');
+
+      const { createZipBuffer } = require('../src/zip-docx');
+      const sst = `<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><si><t>Câu</t></si><si><t>A</t></si></sst>`;
+      const s1 = `<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData><row r="1"><c t="s" r="A1"><v>0</v></c><c r="B1"><v>501</v></c><c r="C1"><v>502</v></c></row><row r="2"><c r="A2"><v>1</v></c><c t="s" r="B2"><v>1</v></c><c r="C2" t="inlineStr"><is><t>C</t></is></c></row></sheetData></worksheet>`;
+      const b64 = createZipBuffer({ 'xl/sharedStrings.xml': Buffer.from(sst, 'utf8'), 'xl/worksheets/sheet1.xml': Buffer.from(s1, 'utf8') }).toString('base64');
+
+      const httpRes = await fetch(`${baseUrl}/api/omr/parse-answer-key`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fileName: 'audit_501_502.xlsx', fileBase64: b64 })
+      });
+      const parsedBody = await httpRes.json();
+      assert.strictEqual(httpRes.status, 200);
+      assert.strictEqual(parsedBody.ok, true);
+      assert.deepStrictEqual(parsedBody.detectedCodes, ['501', '502']);
+      assert.strictEqual(parsedBody.answerKeysByCode['501'].part1[0], 'A');
+      assert.strictEqual(parsedBody.answerKeysByCode['502'].part1[0], 'C');
+    });
   } finally {
     await new Promise(resolve => server.close(resolve));
     restoreDataSnapshot(snapshot);
