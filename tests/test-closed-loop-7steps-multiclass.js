@@ -69,6 +69,13 @@ async function runTests() {
     assert(html.includes('prepareNextClassGrading'), 'Missing prepareNextClassGrading');
     assert(html.includes('refreshWorkflowReadiness'), 'Missing refreshWorkflowReadiness');
     assert(html.includes('buildCleanProfilePayload'), 'Missing buildCleanProfilePayload');
+    assert(html.includes('omr-exam-identity-banner'), 'Missing omr-exam-identity-banner');
+    assert(html.includes('omr-tf-style-inline-selector'), 'Missing omr-tf-style-inline-selector');
+    assert(html.includes('omr-batch-diagnostic-alert'), 'Missing omr-batch-diagnostic-alert');
+    assert(html.includes('summarizeMatrixRows'), 'Missing summarizeMatrixRows');
+    assert(html.includes('renderOmrBatchDiagnosticAlert'), 'Missing renderOmrBatchDiagnosticAlert');
+    assert(!html.includes('const p2Count = 4;'), 'renderAnswerKeyMatrixTable must not hardcode const p2Count = 4');
+    assert(html.includes("matrixedu_omr_tfStyle_v2"), 'Expected versioned matrixedu_omr_tfStyle_v2 persistence key');
 
     const scripts = [...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)];
     scripts.forEach((m, idx) => {
@@ -334,6 +341,55 @@ async function runTests() {
     assert(!delClsRes.json.classes.some(c => c.className === '12A4'));
 
     console.log('  ✅ 4. Multi-class rosters, re-grade deduplication, grade-report, and whole-grade CSV OK');
+
+    // ------------------------------------------------------------------
+    // 5. Grade 10 mixed matrix counting (r.counts) + fixed025 vs moet2025 check
+    // ------------------------------------------------------------------
+    const fnMatch = html.match(/function summarizeMatrixRows\([\s\S]*?\n    \}/);
+    assert(fnMatch, 'Could not locate summarizeMatrixRows in index.html');
+    const vm = require('vm');
+    const sandbox = {};
+    vm.runInNewContext(`${fnMatch[0]}; this.summarizeMatrixRows = summarizeMatrixRows;`, sandbox);
+
+    const tin10Rows = [
+      { topic: 'CĐ1', unit: 'Bài 1', counts: { MCQ: { 'Biết': 2, 'Hiểu': 2, 'Vận dụng': 0 }, TF: { 'Biết': 0, 'Hiểu': 0, 'Vận dụng': 1 }, SA: {}, ESSAY: {} }, points: 1.25 },
+      { topic: 'CĐ1', unit: 'Bài 2', counts: { MCQ: { 'Biết': 2, 'Hiểu': 0, 'Vận dụng': 0 }, TF: { 'Biết': 2, 'Hiểu': 1, 'Vận dụng': 0 }, SA: {}, ESSAY: {} }, points: 1.25 },
+      { topic: 'CĐ2', unit: 'Bài 8', counts: { MCQ: { 'Biết': 2, 'Hiểu': 1, 'Vận dụng': 0 }, TF: {}, SA: {}, ESSAY: {} }, points: 0.75 },
+      { topic: 'CĐ2', unit: 'Bài 9', counts: { MCQ: { 'Biết': 2, 'Hiểu': 1, 'Vận dụng': 1 }, TF: {}, SA: {}, ESSAY: { 'Hiểu': 1 } }, points: 2.0 },
+      { topic: 'CĐ2', unit: 'Bài 10', counts: { MCQ: { 'Biết': 0, 'Hiểu': 1, 'Vận dụng': 2 }, TF: {}, SA: {}, ESSAY: { 'Vận dụng': 1 } }, points: 1.75 },
+      { topic: 'CĐ3', unit: 'Bài 11', counts: { MCQ: { 'Biết': 0, 'Hiểu': 1, 'Vận dụng': 3 }, TF: { 'Biết': 2, 'Hiểu': 1, 'Vận dụng': 1 }, SA: {}, ESSAY: { 'Biết': 1 } }, points: 3.0 }
+    ];
+    const summary10 = sandbox.summarizeMatrixRows(tin10Rows, { MCQ: 0.25, TF: 0.25, SA: 0.5, ESSAY: 1.0 });
+    assert.strictEqual(summary10.p1Count, 20, 'Grade 10 matrix must count 20 MCQ questions');
+    assert.strictEqual(summary10.tfSubItems, 8, 'Grade 10 matrix must count 8 TF sub-items across rows');
+    assert.strictEqual(summary10.p2Count, 2, '8 TF sub-items = 2 large TF questions');
+    assert.strictEqual(summary10.essayCount, 3, 'Grade 10 matrix must count 3 ESSAY questions');
+    assert.strictEqual(summary10.totalScore, 10.0, 'Grade 10 matrix totalScore must be 10.0');
+
+    // Verify fixed025 eliminates .10/.35/.60 decimal score while moet2025 produces .10 for 1 correct TF sub-item
+    const g10Keys = {
+      '101': {
+        part1: Array(20).fill('A'),
+        part2: { '1': { a: 'Đ', b: 'S', c: 'Đ', d: 'S' }, '2': { a: 'Đ', b: 'Đ', c: 'S', d: 'S' } },
+        part3: {}
+      }
+    };
+    const samplePaperG10 = [{
+      id: 'g10_1',
+      sbd: '001',
+      scannedExamCode: '101',
+      answers: {
+        part1: { 1: 'A', 2: 'A', 3: 'A', 4: 'A' }, // 4 right = 1.0đ
+        part2: { '1': { a: 'Đ', b: 'Đ', c: 'S', d: 'Đ' }, '2': { a: 'S', b: 'S', c: 'Đ', d: 'Đ' } }, // 1 right in Q1 => +0.10 (moet2025) vs +0.25 (fixed025)
+        part3: {}
+      }
+    }];
+    const resMoet = gradeBatchPapers({ papers: samplePaperG10, answerKeysByCode: g10Keys, pointRules: { mcq: 0.25, tfStyle: 'moet2025', sa: 0.5 }, roster: [] });
+    const resFixed = gradeBatchPapers({ papers: samplePaperG10, answerKeysByCode: g10Keys, pointRules: { mcq: 0.25, tfStyle: 'fixed025', sa: 0.5 }, roster: [] });
+    assert.strictEqual(resMoet.gradedPapers[0].result.totalScore, 1.1, 'moet2025 gives 1.0 + 0.1 = 1.10');
+    assert.strictEqual(resFixed.gradedPapers[0].result.totalScore, 1.25, 'fixed025 gives 1.0 + 0.25 = 1.25 (no odd decimal)');
+
+    console.log('  ✅ 5. Grade 10 r.counts summary & fixed025 vs moet2025 scoring checks OK');
   } finally {
     await new Promise(resolve => server.close(resolve));
     // Clean up temporary files created in profiles/ and omr_database/ and restore data/*.json

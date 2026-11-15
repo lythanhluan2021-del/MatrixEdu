@@ -2397,8 +2397,19 @@
                       </div>
                       <span id="omr-active-source-pill"
                         style="font-size:0.7rem; font-weight:700; color:#1d4ed8; background:#dbeafe; padding:2px 8px; border-radius:999px; border:1px solid #93c5fd; white-space:nowrap;">
-                        Nguồn: Đề hiện tại
+                        Nguồn: Đề đang soạn
                       </span>
+                    </div>
+                    <div id="omr-exam-identity-banner"
+                      style="display:flex; align-items:center; justify-content:space-between; gap:6px; padding:5px 8px; border-radius:6px; background:rgba(255,255,255,0.88); border:1px solid #c7d2fe; font-size:0.72rem; color:#1e1b4b;">
+                      <div id="omr-exam-identity-text" style="flex:1; min-width:0; font-weight:700; line-height:1.35;">
+                        📌 Đang chấm theo: Đề đang soạn
+                      </div>
+                      <button class="btn btn-sm" onclick="openManageAnswerKeysModal('matrix')"
+                        style="font-size:0.7rem; font-weight:700; padding:2px 7px; background:#eef2ff; border:1px solid #818cf8; color:#3730a3; border-radius:5px; white-space:nowrap; flex-shrink:0;"
+                        title="Xem và kiểm tra từng câu trong Ma trận đáp án đang dùng để chấm">
+                        👁️ Xem đáp án
+                      </button>
                     </div>
                     <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">
                       <div style="display:flex; align-items:center; gap:6px; flex:1; min-width:200px;">
@@ -2435,6 +2446,12 @@
                         style="font-size:0.70rem; font-weight:600; color:#475569; background:#fff; padding:3px 6px; border-radius:6px; border:1px solid #e2e8f0; white-space:nowrap;">
                         10.0đ
                       </span>
+                      <select id="omr-tf-style-inline-selector" onchange="onOmrTfStyleChanged(this.value)"
+                        style="font-size:0.70rem; font-weight:700; color:#0f172a; background:#fff; padding:2px 5px; border-radius:6px; border:1px solid #cbd5e1; cursor:pointer;"
+                        title="Cách tính điểm Phần II (Đúng/Sai): Chia đều 0.25đ/ý tránh điểm lẻ .10/.35/.60 hoặc Lũy tiến BGD 2025">
+                        <option value="fixed025" selected>⚖️ P.II: 0.25đ/ý</option>
+                        <option value="moet2025">⚖️ P.II: Lũy tiến BGD</option>
+                      </select>
                     </div>
 
                     <!-- Nút Nạp DS Học sinh, Nạp Đ/Á ngoài & Bánh răng Tùy chỉnh Drawer -->
@@ -2614,6 +2631,11 @@
                     <input type="text" id="omr-search-paper-input" placeholder="🔍 Tìm SBD/Tên..."
                       oninput="onOmrSearchPaper(this.value)"
                       style="width:110px; font-size:0.71rem; padding:2px 6px; height:22px; border-radius:4px; border:1px solid #cbd5e1; background:#fff;">
+                  </div>
+
+                  <!-- 3b. BATCH MISMATCH DIAGNOSTICS BANNER (Tự phát hiện lệch Đề/Khối, Điểm lẻ .10, Sai SBD lớp) -->
+                  <div id="omr-batch-diagnostic-alert"
+                    style="display:none; margin:6px 10px 2px; padding:8px 10px; border-radius:8px; font-size:0.74rem; line-height:1.45;">
                   </div>
 
                   <!-- 4. GRADED PAPERS HERO TABLE (Nhiều không gian dọc hơn gấp 2 lần) -->
@@ -3996,6 +4018,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         if (snapshot.appState) {
           const prevOmr = appState.omr || {};
           Object.assign(appState, snapshot.appState);
+          const restoredTfStyle = snapshot.appState.omrSettings?.tfStyle || prevOmr.pointRules?.tfStyle || getOmrTfStyle();
           appState.omr = {
             papers: prevOmr.papers || [],
             gradedPapers: prevOmr.gradedPapers || [],
@@ -4004,13 +4027,19 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
             roster: prevOmr.roster || [],
             rostersSummary: prevOmr.rostersSummary || [],
             editingPaperId: null,
-            answerKeysByCode: prevOmr.answerKeysByCode || {},
+            answerKeysByCode: prevOmr.activeKeySource === 'external_file' ? (prevOmr.answerKeysByCode || {}) : {},
+            pointRules: {
+              ...(prevOmr.pointRules || { mcq: 0.25, sa: 0.5 }),
+              tfStyle: restoredTfStyle
+            },
             selectedTemplateId: snapshot.appState.omrSettings?.selectedTemplateId || prevOmr.selectedTemplateId || 'bgd_2025_4code',
             selectedClassName: snapshot.appState.omrSettings?.selectedClassName || prevOmr.selectedClassName || '12A1',
-            activeKeySource: prevOmr.activeKeySource || 'current_workflow',
+            activeKeySource: prevOmr.activeKeySource === 'external_file' ? 'external_file' : 'current_workflow',
             selectedExamProfileId: appState.savedExamProfileId || null,
-            lastImportSource: prevOmr.lastImportSource || null
+            lastImportSource: prevOmr.activeKeySource === 'external_file' ? (prevOmr.lastImportSource || null) : null
           };
+          if (typeof updateOmrPointRulesFromMatrix === 'function') updateOmrPointRulesFromMatrix();
+          if (typeof syncOmrAnswerKeys === 'function') syncOmrAnswerKeys(appState.omr.activeKeySource !== 'external_file');
           populateMetadataInputs();
           dismissSessionRestoreBanner();
           const targetStep = appState.currentStep || ((appState.variants?.length > 0 || appState.questions?.length > 0) ? 4 : (appState.matrix ? 2 : 1));
@@ -4061,7 +4090,10 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         setNavPill(1, unitsCount > 0 ? `✓ ${unitsCount} bài học` : 'Chờ nhập tài liệu', unitsCount > 0 ? '#15803d' : '#94a3b8');
 
         const mRows = appState.matrix?.rows || [];
-        const totalScore = Number(appState.matrix?.totalScore || 0);
+        let totalScore = Number(appState.matrix?.totalScore || 0);
+        if (totalScore <= 0 && mRows.length > 0 && typeof summarizeMatrixRows === 'function') {
+          totalScore = summarizeMatrixRows(mRows, appState.matrix?.pointRules).totalScore;
+        }
         setNavPill(2, mRows.length > 0 ? `✓ ${mRows.length} dòng (${totalScore.toFixed(1)}đ)` : 'Chưa lập ma trận', mRows.length > 0 ? '#15803d' : '#94a3b8');
 
         const specCount = (appState.specification || []).length;
@@ -7959,6 +7991,115 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       }
     }
 
+    const OMR_TF_STYLE_STORAGE_KEY = 'matrixedu_omr_tfStyle_v2';
+
+    function getOmrTfStyle() {
+      const explicit = appState.omr?.pointRules?.tfStyle;
+      if (explicit === 'fixed025' || explicit === 'moet2025') return explicit;
+      const saved = localStorage.getItem(OMR_TF_STYLE_STORAGE_KEY);
+      if (saved === 'fixed025' || saved === 'moet2025') return saved;
+      return 'fixed025';
+    }
+
+    function summarizeMatrixRows(rows = [], pointRules = {}) {
+      const pr = {
+        MCQ: Number(pointRules?.MCQ ?? pointRules?.mcq ?? 0.25),
+        TF: Number(pointRules?.TF ?? pointRules?.tf ?? 0.25),
+        SA: Number(pointRules?.SA ?? pointRules?.sa ?? 0.5),
+        ESSAY: Number(pointRules?.ESSAY ?? pointRules?.essay ?? 1.0)
+      };
+      let p1Count = 0;
+      let tfSubItems = 0;
+      let p2FlatCount = 0;
+      let p3Count = 0;
+      let essayCount = 0;
+      let explicitEssayPoints = 0;
+      let explicitRowPoints = 0;
+
+      (rows || []).forEach(r => {
+        if (!r) return;
+        if (Number(r.points) > 0) explicitRowPoints += Number(r.points);
+        if (Number(r.essayPoints) > 0) explicitEssayPoints += Number(r.essayPoints);
+
+        if (r.counts) {
+          ['Biết', 'Hiểu', 'Vận dụng'].forEach(lv => {
+            p1Count += Number(r.counts.MCQ?.[lv] || 0);
+            tfSubItems += Number(r.counts.TF?.[lv] || 0);
+            p3Count += Number(r.counts.SA?.[lv] || 0);
+            essayCount += Number(r.counts.ESSAY?.[lv] || 0);
+          });
+        } else {
+          p1Count += Number(r.mcq_b || 0) + Number(r.mcq_h || 0) + Number(r.mcq_vd || 0);
+          p2FlatCount += Number(r.tf_b || 0) + Number(r.tf_h || 0) + Number(r.tf_vd || 0);
+          p3Count += Number(r.sa_b || 0) + Number(r.sa_h || 0) + Number(r.sa_vd || 0);
+          essayCount += Number(r.tl_b || 0) + Number(r.tl_h || 0) + Number(r.tl_vd || 0);
+        }
+      });
+
+      const p2Count = tfSubItems > 0 ? Math.ceil(tfSubItems / 4) : p2FlatCount;
+      const p1Pts = Math.round(p1Count * pr.MCQ * 100) / 100;
+      const p2Pts = tfSubItems > 0
+        ? Math.round(tfSubItems * pr.TF * 100) / 100
+        : Math.round(p2FlatCount * 1.0 * 100) / 100;
+      const p3Pts = Math.round(p3Count * pr.SA * 100) / 100;
+      const essayPts = explicitEssayPoints > 0
+        ? Math.round(explicitEssayPoints * 100) / 100
+        : Math.round(essayCount * pr.ESSAY * 100) / 100;
+      const calculatedTotal = Math.round((p1Pts + p2Pts + p3Pts + essayPts) * 100) / 100;
+      const totalScore = explicitRowPoints > 0 ? Math.round(explicitRowPoints * 100) / 100 : calculatedTotal;
+
+      return { p1Count, p2Count, tfSubItems, p3Count, essayCount, p1Pts, p2Pts, p3Pts, essayPts, totalScore };
+    }
+
+    function getActiveOmrStructureSummary() {
+      const keys = appState.omr?.answerKeysByCode || {};
+      const codes = Object.keys(keys);
+      const firstKey = codes[0] ? keys[codes[0]] : null;
+      const pr = appState.omr?.pointRules || { mcq: 0.25, tfStyle: getOmrTfStyle(), sa: 0.5 };
+
+      let p1Count = firstKey ? (firstKey.part1 || []).length : 0;
+      let p2Count = firstKey ? Object.keys(firstKey.part2 || {}).length : 0;
+      let p3Count = firstKey ? Object.keys(firstKey.part3 || {}).length : 0;
+      let essayCount = Number(appState.omr?.essayCount || 0);
+
+      if (!firstKey && (appState.matrix?.rows || []).length > 0) {
+        const ms = summarizeMatrixRows(appState.matrix.rows, appState.matrix.pointRules);
+        p1Count = ms.p1Count;
+        p2Count = ms.p2Count;
+        p3Count = ms.p3Count;
+        essayCount = ms.essayCount;
+      }
+
+      const mcqRule = Number(pr.mcq ?? 0.25);
+      const saRule = Number(pr.sa ?? 0.5);
+      const p1Pts = Math.round(p1Count * mcqRule * 100) / 100;
+      const p2Pts = Math.round(p2Count * 1.0 * 100) / 100;
+      const p3Pts = Math.round(p3Count * saRule * 100) / 100;
+      const maxOmrScore = Math.round((p1Pts + p2Pts + p3Pts) * 100) / 100;
+      const essayMax = appState.omr?.hasEssay ? Number(appState.omr?.essayMaxScore || 0) : 0;
+
+      const parts = [];
+      if (p1Count > 0) parts.push(`${p1Count}c TN`);
+      if (p2Count > 0) parts.push(`${p2Count}c Đ/S`);
+      if (p3Count > 0) parts.push(`${p3Count}c TLN`);
+      if (essayCount > 0 || essayMax > 0) {
+        parts.push(essayCount > 0 ? `${essayCount}c TL (${essayMax || Math.max(0, Math.round((10 - maxOmrScore) * 100) / 100)}đ)` : `TL ${essayMax}đ`);
+      }
+
+      return {
+        codes, p1Count, p2Count, p3Count, essayCount,
+        p1Pts, p2Pts, p3Pts, maxOmrScore, essayMax,
+        structureLabel: parts.join(' + ') || 'Chưa có câu hỏi'
+      };
+    }
+
+    function syncOmrTfStyleSelectors(val) {
+      ['omr-tf-style-selector', 'omr-tf-style-drawer-selector', 'omr-tf-style-inline-selector'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = val;
+      });
+    }
+
     function updateOmrSourceAndEssayPills() {
       const srcPill = document.getElementById('omr-active-source-pill');
       const src = appState.omr.activeKeySource || 'current_workflow';
@@ -7981,6 +8122,44 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         }
       }
 
+      const info = getActiveOmrStructureSummary();
+      const summaryCodesEl = document.getElementById('omr-summary-codes');
+      if (summaryCodesEl) {
+        summaryCodesEl.textContent = `${info.codes.length} Mã đề: ${info.codes.join(', ')}`;
+      }
+      const summaryPtsEl = document.getElementById('omr-summary-pts');
+      if (summaryPtsEl) {
+        const tlNote = info.essayMax > 0 ? ` • TL ${info.essayMax}đ` : '';
+        summaryPtsEl.textContent = `${info.maxOmrScore.toFixed(1)}đ OMR (${info.structureLabel})${tlNote}`;
+      }
+
+      const meta = appState.metadata || {};
+      const subjectGrade = `${meta.subject || 'Tin học'} ${meta.grade || ''}`.trim();
+      const idBanner = document.getElementById('omr-exam-identity-banner');
+      const idText = document.getElementById('omr-exam-identity-text');
+      if (idBanner && idText) {
+        if (src === 'external_file') {
+          const title = appState.omr.lastImportSource || appState.omr.selectedExamTitle || 'File đáp án ngoài';
+          idText.innerHTML = `📥 Đang chấm theo <b>File Đ/Á ngoài</b>: ${escapeHtml(title)} <span style="color:#475569; font-weight:600;">(${escapeHtml(info.structureLabel)} • OMR ${info.maxOmrScore.toFixed(1)}đ)</span>`;
+          idBanner.style.background = '#fffbeb';
+          idBanner.style.borderColor = '#fcd34d';
+        } else if (src === 'saved_profile') {
+          const title = appState.omr.selectedExamTitle || subjectGrade;
+          idText.innerHTML = `💾 Đang chấm theo <b>Kho Đề</b>: ${escapeHtml(title)} <span style="color:#475569; font-weight:600;">(${escapeHtml(info.structureLabel)} • OMR ${info.maxOmrScore.toFixed(1)}đ)</span>`;
+          idBanner.style.background = '#ecfdf5';
+          idBanner.style.borderColor = '#6ee7b7';
+        } else {
+          const sourceFile = String(appState.matrix?.sourceFile || appState.uploadedDocs?.[0]?.fileName || '');
+          const isDemo12 = /TIN\s*12\s*-\s*MA\s*TRAN/i.test(sourceFile) && !appState.savedExamProfileId;
+          const demoTag = isDemo12 ? ' <span style="color:#b45309; font-weight:700;">(Đề mẫu mặc định)</span>' : '';
+          idText.innerHTML = `📌 Đang chấm theo: <b>${escapeHtml(subjectGrade || 'Đề đang soạn')}</b>${demoTag} <span style="color:#475569; font-weight:600;">• ${escapeHtml(info.structureLabel)} (OMR ${info.maxOmrScore.toFixed(1)}đ)</span>`;
+          idBanner.style.background = 'rgba(255,255,255,0.92)';
+          idBanner.style.borderColor = '#c7d2fe';
+        }
+      }
+
+      syncOmrTfStyleSelectors(getOmrTfStyle());
+
       const warnPill = document.getElementById('omr-essay-warning-pill');
       if (warnPill) {
         if (appState.omr.hasEssay && Number(appState.omr.essayMaxScore || 0) > 0) {
@@ -7997,7 +8176,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       if (omrConfig.answerKeysByCode && Object.keys(omrConfig.answerKeysByCode).length > 0) {
         appState.omr.answerKeysByCode = JSON.parse(JSON.stringify(omrConfig.answerKeysByCode));
       }
-      const curTf = appState.omr.pointRules?.tfStyle || localStorage.getItem('matrixedu_omr_tfStyle') || 'fixed025';
+      const curTf = getOmrTfStyle();
       appState.omr.pointRules = {
         mcq: Number(omrConfig.pointRules?.MCQ ?? omrConfig.pointRules?.mcq ?? 0.25),
         tfStyle: curTf,
@@ -8011,9 +8190,6 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       if (metaInfo.examTitle !== undefined) appState.omr.selectedExamTitle = metaInfo.examTitle;
       if (metaInfo.source !== 'external_file') appState.omr.lastImportSource = null;
 
-      const codes = Object.keys(appState.omr.answerKeysByCode || {});
-      const summaryCodesEl = document.getElementById('omr-summary-codes');
-      if (summaryCodesEl) summaryCodesEl.textContent = `${codes.length} Mã đề: ${codes.join(', ')}`;
       updateOmrSourceAndEssayPills();
     }
 
@@ -8026,14 +8202,23 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         const profiles = data.ok && Array.isArray(data.profiles) ? data.profiles : [];
         const curVariants = appState.variants || [];
         const curCodes = curVariants.map(v => v.code).join(', ');
-        let html = `<option value="__CURRENT__">📝 Đề đang soạn hiện tại (Bước 4–5${curCodes ? ': ' + curCodes : ''})</option>`;
+        const meta = appState.metadata || {};
+        const subjectGrade = `${meta.subject || 'Tin học'} ${meta.grade || ''}`.trim();
+        let html = '';
+        if (appState.omr.activeKeySource === 'external_file') {
+          const extLabel = appState.omr.lastImportSource || 'File Đáp án ngoài';
+          html += `<option value="__EXTERNAL__" disabled>📥 Đ/Á ngoài: ${escapeHtml(extLabel)}</option>`;
+        }
+        html += `<option value="__CURRENT__">📝 Đề đang soạn: ${escapeHtml(subjectGrade)}${curCodes ? ' (' + escapeHtml(curCodes) + ')' : ''}</option>`;
         profiles.forEach(p => {
           const codeHint = Array.isArray(p.examCodes) && p.examCodes.length > 0 ? p.examCodes.join(', ') : `${p.variantsCount || 0} đề`;
           const essayHint = p.hasEssay ? ` • TL ${p.essayMaxScore || ''}đ` : '';
           html += `<option value="${escapeHtml(p.id)}">💾 ${escapeHtml(p.title)} (${escapeHtml(codeHint)}${essayHint})</option>`;
         });
         sel.innerHTML = html;
-        if (appState.omr.activeKeySource === 'saved_profile' && appState.omr.selectedExamProfileId) {
+        if (appState.omr.activeKeySource === 'external_file') {
+          sel.value = '__EXTERNAL__';
+        } else if (appState.omr.activeKeySource === 'saved_profile' && appState.omr.selectedExamProfileId) {
           const exists = profiles.some(p => p.id === appState.omr.selectedExamProfileId);
           sel.value = exists ? appState.omr.selectedExamProfileId : '__CURRENT__';
         } else {
@@ -8214,11 +8399,10 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       if (sel2) sel2.value = curTplId;
 
       // 1c. Đồng bộ giá trị chọn Thang điểm Phần II (Đúng/Sai)
-      const curTfStyle = appState.omr.pointRules?.tfStyle || localStorage.getItem('matrixedu_omr_tfStyle') || 'fixed025';
-      const selTf1 = document.getElementById('omr-tf-style-selector');
-      if (selTf1) selTf1.value = curTfStyle;
-      const selTf2 = document.getElementById('omr-tf-style-drawer-selector');
-      if (selTf2) selTf2.value = curTfStyle;
+      const curTfStyle = getOmrTfStyle();
+      if (!appState.omr.pointRules) appState.omr.pointRules = { mcq: 0.25, sa: 0.5 };
+      appState.omr.pointRules.tfStyle = curTfStyle;
+      syncOmrTfStyleSelectors(curTfStyle);
 
       // 2. Cập nhật thang điểm chia điểm từ Ma trận Bước 2 / Đề đã chọn
       updateOmrPointRulesFromMatrix();
@@ -8253,7 +8437,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
      * Cập nhật nhãn chia điểm động theo đúng Ma trận ở Bước 2 hoặc Đề đang chọn
      */
     function updateOmrPointRulesFromMatrix() {
-      const curTfStyle = appState.omr.pointRules?.tfStyle || localStorage.getItem('matrixedu_omr_tfStyle') || 'fixed025';
+      const curTfStyle = getOmrTfStyle();
       if ((appState.omr.activeKeySource === 'saved_profile' || appState.omr.activeKeySource === 'external_file')
         && Object.keys(appState.omr.answerKeysByCode || {}).length > 0) {
         const firstCode = Object.keys(appState.omr.answerKeysByCode)[0];
@@ -8267,6 +8451,12 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         const p2Pts = Math.round(p2Count * 1.0 * 100) / 100;
         const p3Pts = Math.round(p3Count * saRule * 100) / 100;
         const total = Math.round((p1Pts + p2Pts + p3Pts) * 100) / 100;
+        if (appState.omr.activeKeySource === 'external_file') {
+          const inferredEssay = total < 9.99 ? Math.max(0, Math.round((10 - total) * 100) / 100) : 0;
+          appState.omr.hasEssay = inferredEssay > 0;
+          appState.omr.essayMaxScore = inferredEssay;
+          appState.omr.essayCount = 0;
+        }
         const essaySuffix = appState.omr.hasEssay && appState.omr.essayMaxScore > 0 ? ` • Tự luận: ${appState.omr.essayMaxScore}đ` : '';
         const ruleText = `P.I (TN): ${p1Pts}đ (${p1Count}c) • P.II (Đ/S): ${p2Pts}đ (${p2Count}c) • P.III: ${p3Pts}đ (${p3Count}c)${essaySuffix} • Tối đa OMR: ${total}đ`;
         const el = document.getElementById('omr-point-rule-text');
@@ -8278,36 +8468,43 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       }
 
       const m = appState.matrix || {};
-      let p1Count = 0;
-      let p2Count = 0;
-      let p3Count = 0;
-      let essayCount = 0;
+      const ms = summarizeMatrixRows(m.rows || [], m.pointRules);
+      let p1Count = ms.p1Count;
+      let p2Count = ms.p2Count;
+      let p3Count = ms.p3Count;
+      const essayCount = ms.essayCount;
 
-      (m.rows || []).forEach(r => {
-        p1Count += (r.mcq_b || 0) + (r.mcq_h || 0) + (r.mcq_vd || 0);
-        p2Count += (r.tf_b || 0) + (r.tf_h || 0) + (r.tf_vd || 0);
-        p3Count += (r.sa_b || 0) + (r.sa_h || 0) + (r.sa_vd || 0);
-        essayCount += (r.tl_b || 0) + (r.tl_h || 0) + (r.tl_vd || 0);
-      });
-
-      // Nếu ma trận chưa có dòng nào, lấy mặc định môn Tin học 12 (24 MCQ, 4 TF)
+      // Nếu ma trận chưa có dòng nào, kiểm tra đáp án hiện có trước khi fallback Tin học 12 (24 MCQ, 4 TF)
       if (p1Count === 0 && p2Count === 0 && p3Count === 0 && essayCount === 0) {
-        p1Count = 24;
-        p2Count = 4;
-        p3Count = 0;
+        const firstCode = Object.keys(appState.omr?.answerKeysByCode || {})[0];
+        if (firstCode) {
+          const k = appState.omr.answerKeysByCode[firstCode];
+          p1Count = (k.part1 || []).length;
+          p2Count = Object.keys(k.part2 || {}).length;
+          p3Count = Object.keys(k.part3 || {}).length;
+        } else {
+          p1Count = 24;
+          p2Count = 4;
+          p3Count = 0;
+        }
       }
 
-      const mcqRule = m.pointRules?.MCQ || 0.25;
-      const tfRule = 1.0; // 1.0đ/câu theo quy chuẩn Bộ GD&ĐT 2025
-      const saRule = m.pointRules?.SA || 0.5;
+      const mcqRule = Number(m.pointRules?.MCQ ?? 0.25);
+      const tfSubRule = Number(m.pointRules?.TF ?? 0.25);
+      const saRule = Number(m.pointRules?.SA ?? 0.5);
 
       const p1Pts = Math.round(p1Count * mcqRule * 100) / 100;
-      const p2Pts = Math.round(p2Count * tfRule * 100) / 100;
+      const p2Pts = ms.tfSubItems > 0
+        ? Math.round(ms.tfSubItems * tfSubRule * 100) / 100
+        : Math.round(p2Count * 1.0 * 100) / 100;
       const p3Pts = Math.round(p3Count * saRule * 100) / 100;
       const total = Math.round((p1Pts + p2Pts + p3Pts) * 100) / 100;
-      const essayMax = essayCount > 0 ? Math.max(0, Math.round((10 - total) * 100) / 100) : 0;
+      const essayMax = essayCount > 0
+        ? (ms.essayPts > 0 ? ms.essayPts : Math.max(0, Math.round((10 - total) * 100) / 100))
+        : 0;
 
       appState.omr.hasEssay = essayCount > 0 || essayMax > 0;
+      appState.omr.essayCount = essayCount;
       appState.omr.essayMaxScore = essayMax;
       appState.omr.maxOmrScore = total;
 
@@ -8332,17 +8529,14 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
     async function onOmrTfStyleChanged(val) {
       if (!appState.omr.pointRules) appState.omr.pointRules = {};
       appState.omr.pointRules.tfStyle = val;
-      localStorage.setItem('matrixedu_omr_tfStyle', val);
-
-      const sel1 = document.getElementById('omr-tf-style-selector');
-      if (sel1) sel1.value = val;
-      const sel2 = document.getElementById('omr-tf-style-drawer-selector');
-      if (sel2) sel2.value = val;
+      localStorage.setItem(OMR_TF_STYLE_STORAGE_KEY, val);
+      syncOmrTfStyleSelectors(val);
 
       const styleLabel = val === 'fixed025' ? 'Chia đều 0.25đ / mỗi ý đúng (Không điểm lẻ)' : 'Lũy tiến chuẩn Bộ GD&ĐT 2025';
       showToast(`⚖️ Đã chuyển thang điểm Phần II sang: ${styleLabel}`, 'info');
 
       await regradeCurrentPapersBatch();
+      updateOmrSourceAndEssayPills();
     }
 
     /**
@@ -8754,16 +8948,23 @@ Phần III:
         </tr>`;
       }
 
-      // Header Nhóm Phần II (Đúng/Sai)
-      const p2Count = 4; // Mặc định 4 câu đúng sai theo chuẩn Bộ GD 2025
+      // Header Nhóm Phần II (Đúng/Sai) — đọc số câu thực tế theo biểu đáp án
+      let maxP2 = 0;
+      codes.forEach(c => {
+        const p2Keys = Object.keys(keys[c]?.part2 || {});
+        if (p2Keys.length > maxP2) maxP2 = p2Keys.length;
+      });
+      const p2Count = maxP2 > 0 ? maxP2 : (appState.omr.activeKeySource === 'external_file' ? 0 : 4);
 
-      html += `
-        <tr style="background:#f1f5f9; font-weight:700; color:#1e293b; border-bottom:1px solid #cbd5e1; border-top:2px solid #cbd5e1;">
-          <td colspan="${codes.length + 1}" style="padding:6px 10px; font-size:0.8rem; background:#f8fafc;">
-            🔹 PHẦN II: TRẮC NGHIỆM ĐÚNG / SAI (${p2Count} CÂU × 4 Ý)
-          </td>
-        </tr>
-      `;
+      if (p2Count > 0) {
+        html += `
+          <tr style="background:#f1f5f9; font-weight:700; color:#1e293b; border-bottom:1px solid #cbd5e1; border-top:2px solid #cbd5e1;">
+            <td colspan="${codes.length + 1}" style="padding:6px 10px; font-size:0.8rem; background:#f8fafc;">
+              🔹 PHẦN II: TRẮC NGHIỆM ĐÚNG / SAI (${p2Count} CÂU × 4 Ý)
+            </td>
+          </tr>
+        `;
+      }
 
       for (let q = 1; q <= p2Count; q++) {
         ['a', 'b', 'c', 'd'].forEach(sub => {
@@ -8796,21 +8997,23 @@ Phần III:
         });
       }
 
-      // Header Nhóm Phần III: Trả lời ngắn (nếu có dữ liệu hoặc theo mẫu 2025)
+      // Header Nhóm Phần III: Trả lời ngắn (chỉ hiển thị khi đề thực sự có câu Phần III)
       let maxP3 = 0;
       codes.forEach(c => {
         const p3Keys = Object.keys(keys[c]?.part3 || {});
         if (p3Keys.length > maxP3) maxP3 = p3Keys.length;
       });
-      const p3Count = maxP3 > 0 ? Math.max(maxP3, 6) : 6;
+      const p3Count = maxP3;
 
-      html += `
-        <tr style="background:#f1f5f9; font-weight:700; color:#1e293b; border-bottom:1px solid #cbd5e1; border-top:2px solid #cbd5e1;">
-          <td colspan="${codes.length + 1}" style="padding:6px 10px; font-size:0.8rem; background:#f8fafc;">
-            🔹 PHẦN III: TRẢ LỜI NGẮN (${p3Count} CÂU - ĐIỀN SỐ NGUYÊN / THẬP PHÂN)
-          </td>
-        </tr>
-      `;
+      if (p3Count > 0) {
+        html += `
+          <tr style="background:#f1f5f9; font-weight:700; color:#1e293b; border-bottom:1px solid #cbd5e1; border-top:2px solid #cbd5e1;">
+            <td colspan="${codes.length + 1}" style="padding:6px 10px; font-size:0.8rem; background:#f8fafc;">
+              🔹 PHẦN III: TRẢ LỜI NGẮN (${p3Count} CÂU - ĐIỀN SỐ NGUYÊN / THẬP PHÂN)
+            </td>
+          </tr>
+        `;
+      }
 
       for (let q = 1; q <= p3Count; q++) {
         html += `<tr style="border-bottom:1px solid #e2e8f0;">
@@ -8903,17 +9106,22 @@ Phần III:
     }
 
     function updateCustomPointSummary() {
-      const mcqPt = parseFloat(document.getElementById('ak-cfg-mcq-point')?.value || '0.25');
+      const mcqPt = parseFloat(document.getElementById('ak-cfg-mcq-point')?.value || String(appState.omr.pointRules?.mcq ?? 0.25));
+      const saPt = Number(appState.omr.pointRules?.sa ?? 0.5);
       const keys = appState.omr.tempAnswerKeys || appState.omr.answerKeysByCode || {};
       const firstCode = Object.keys(keys)[0];
       const p1Len = firstCode ? (keys[firstCode]?.part1 || []).length : 24;
+      const p2Len = firstCode ? Object.keys(keys[firstCode]?.part2 || {}).length : 4;
+      const p3Len = firstCode ? Object.keys(keys[firstCode]?.part3 || {}).length : 0;
       const p1Total = Math.round(p1Len * mcqPt * 100) / 100;
-      const p2Total = 4.0; // 4 câu đúng sai = 4.0đ
-      const total = Math.round((p1Total + p2Total) * 100) / 100;
+      const p2Total = Math.round(p2Len * 1.0 * 100) / 100;
+      const p3Total = Math.round(p3Len * saPt * 100) / 100;
+      const total = Math.round((p1Total + p2Total + p3Total) * 100) / 100;
+      const essayNote = total < 9.99 ? ` (Tự luận còn ${Math.round((10 - total) * 100) / 100}đ)` : '';
 
       const el = document.getElementById('ak-point-summary-text');
       if (el) {
-        el.textContent = `Thang điểm: Phần I: ${p1Total}đ (${p1Len} câu × ${mcqPt}đ) + Phần II: ${p2Total}đ (4 câu) = Tổng ${total} điểm`;
+        el.textContent = `Thang điểm: P.I: ${p1Total}đ (${p1Len}c × ${mcqPt}đ) + P.II: ${p2Total}đ (${p2Len}c)${p3Len ? ` + P.III: ${p3Total}đ (${p3Len}c)` : ''} = ${total}đ OMR${essayNote}`;
       }
     }
 
@@ -8998,10 +9206,8 @@ Phần III:
       const keepExternal = appState.omr.activeKeySource === 'external_file' && appState.omr.lastImportSource;
       const keepSaved = appState.omr.activeKeySource === 'saved_profile' && appState.omr.selectedExamProfileId;
       if (!forceFromStep4 && (keepExternal || keepSaved) && appState.omr.answerKeysByCode && Object.keys(appState.omr.answerKeysByCode).length > 0) {
-        const codes = Object.keys(appState.omr.answerKeysByCode);
-        const summaryCodesEl = document.getElementById('omr-summary-codes');
-        if (summaryCodesEl) summaryCodesEl.textContent = `${codes.length} Mã đề: ${codes.join(', ')}`;
-        updateOmrSourceAndEssayPills();
+        if (typeof updateOmrPointRulesFromMatrix === 'function') updateOmrPointRulesFromMatrix();
+        else updateOmrSourceAndEssayPills();
         return;
       }
       if (forceFromStep4 && appState.omr.activeKeySource !== 'saved_profile') {
@@ -9070,29 +9276,10 @@ Phần III:
 
       appState.omr.answerKeysByCode = keys;
 
-      const summaryCodesEl = document.getElementById('omr-summary-codes');
-      if (summaryCodesEl) {
-        const codes = Object.keys(keys);
-        summaryCodesEl.textContent = `${codes.length} Mã đề: ${codes.join(', ')}`;
+      if (typeof updateOmrPointRulesFromMatrix === 'function') {
+        updateOmrPointRulesFromMatrix();
       } else {
-        const badge = document.getElementById('omr-keys-badge');
-        const codes = Object.keys(keys);
-        if (badge) badge.innerHTML = `<span>🎯</span> <span id="omr-summary-codes">${codes.length} Mã đề: ${codes.join(', ')}</span>`;
-      }
-
-      const summaryPtsEl = document.getElementById('omr-summary-pts');
-      if (summaryPtsEl) {
-        const p1Rule = appState.omr.pointRules?.mcq || 0.25;
-        const firstCode = Object.keys(keys)[0];
-        const p1Len = firstCode ? (keys[firstCode]?.part1 || []).length : 24;
-        const p2Len = firstCode ? Object.keys(keys[firstCode]?.part2 || {}).length : 4;
-        const p3Len = firstCode ? Object.keys(keys[firstCode]?.part3 || {}).length : 0;
-        const p3Rule = appState.omr.pointRules?.sa || 0.5;
-        const p1Total = Math.round(p1Len * p1Rule * 100) / 100;
-        const p2Total = Math.round(p2Len * 1.0 * 100) / 100;
-        const p3Total = Math.round(p3Len * p3Rule * 100) / 100;
-        const grandTotal = Math.round((p1Total + p2Total + p3Total) * 100) / 100;
-        summaryPtsEl.textContent = `${grandTotal.toFixed(1)}đ (${p1Len}c TN${p2Len ? ` + ${p2Len}c Đ/S` : ''}${p3Len ? ` + ${p3Len}c TLN` : ''})`;
+        updateOmrSourceAndEssayPills();
       }
     }
 
@@ -9298,6 +9485,7 @@ Phần III:
             </td>
           </tr>
         `;
+        renderOmrBatchDiagnosticAlert([]);
         return;
       }
 
@@ -9369,6 +9557,138 @@ Phần III:
           </tr>
         `;
       }).join('');
+      renderOmrBatchDiagnosticAlert(allPapers);
+    }
+
+    function renderOmrBatchDiagnosticAlert(papers) {
+      const box = document.getElementById('omr-batch-diagnostic-alert');
+      if (!box) return;
+      if (!Array.isArray(papers) || papers.length === 0) {
+        box.style.display = 'none';
+        box.innerHTML = '';
+        return;
+      }
+
+      const info = typeof getActiveOmrStructureSummary === 'function'
+        ? getActiveOmrStructureSummary()
+        : { codes: [], p1Count: 24, p2Count: 4, p3Count: 0, maxOmrScore: 10, structureLabel: '' };
+      const tfStyle = typeof getOmrTfStyle === 'function' ? getOmrTfStyle() : 'fixed025';
+      const meta = appState.metadata || {};
+      const subjectGrade = `${meta.subject || 'Tin học'} ${meta.grade || ''}`.trim();
+      const clsName = appState.omr?.selectedClassName || '12A1';
+
+      const nonBlank = papers.filter(p => !p.isBlankPaper && (
+        Object.keys(p.answers?.part1 || {}).length > 0
+        || Object.keys(p.answers?.part2 || {}).length > 0
+        || Object.keys(p.answers?.part3 || {}).length > 0
+      ));
+
+      // Thống kê câu thực tế học sinh tô (lọc nhiễu đơn lẻ bằng ngưỡng >= 25% số phiếu)
+      const minVote = nonBlank.length >= 3 ? Math.max(2, Math.ceil(nonBlank.length * 0.25)) : 1;
+      const p1Votes = {};
+      const p2Votes = {};
+      let lowScoreCount = 0;
+      let totalScoreSum = 0;
+      let moetDecimalCount = 0;
+      let unmatchedSbdCount = 0;
+      let unknownCodeList = [];
+
+      nonBlank.forEach(p => {
+        const s = typeof p.result?.totalScore === 'number' ? p.result.totalScore : 0;
+        totalScoreSum += s;
+        if (s < (info.maxOmrScore || 10) * 0.5) lowScoreCount++;
+        if (tfStyle === 'moet2025' && Math.round(s * 100) % 25 !== 0) moetDecimalCount++;
+        if (p.sbd && (!p.studentName || /chưa định danh/i.test(p.studentName))) unmatchedSbdCount++;
+
+        const code = String(p.scannedExamCode || '').trim();
+        if (code && info.codes.length > 0 && !info.codes.includes(code) && !unknownCodeList.includes(code)) {
+          unknownCodeList.push(code);
+        }
+
+        Object.entries(p.answers?.part1 || {}).forEach(([q, val]) => {
+          if (val && String(val).trim() && val !== 'MULTI') p1Votes[q] = (p1Votes[q] || 0) + 1;
+        });
+        Object.entries(p.answers?.part2 || {}).forEach(([q, subs]) => {
+          const hasMark = subs && typeof subs === 'object' && Object.values(subs).some(v => v === 'Đ' || v === 'S');
+          if (hasMark) p2Votes[q] = (p2Votes[q] || 0) + 1;
+        });
+      });
+
+      const detectedStudentP1 = Object.keys(p1Votes).reduce((mx, q) => p1Votes[q] >= minVote ? Math.max(mx, Number(q) || 0) : mx, 0);
+      const detectedStudentP2 = Object.keys(p2Votes).reduce((mx, q) => p2Votes[q] >= minVote ? Math.max(mx, Number(q) || 0) : mx, 0);
+
+      const mismatchLess = nonBlank.length >= 2 && (
+        (detectedStudentP1 > 0 && info.p1Count > 0 && detectedStudentP1 < info.p1Count) ||
+        (detectedStudentP2 > 0 && info.p2Count > 0 && detectedStudentP2 < info.p2Count)
+      );
+      const mismatchMore = nonBlank.length >= 2 && (
+        (detectedStudentP1 > info.p1Count && info.p1Count > 0) ||
+        (detectedStudentP2 > info.p2Count && info.p2Count > 0)
+      );
+      const avgScore = nonBlank.length > 0 ? totalScoreSum / nonBlank.length : 0;
+      const severeLowRate = nonBlank.length >= 5 && (lowScoreCount / nonBlank.length) >= 0.8 && (avgScore / Math.max(1, info.maxOmrScore || 10)) < 0.35;
+
+      const cards = [];
+
+      if (mismatchLess || mismatchMore || severeLowRate) {
+        const activeTitle = appState.omr?.activeKeySource === 'current_workflow'
+          ? `${subjectGrade} — Đề đang soạn`
+          : (appState.omr?.selectedExamTitle || appState.omr?.lastImportSource || subjectGrade);
+        const sheetPattern = `${detectedStudentP1 > 0 ? `${detectedStudentP1}c TN` : ''}${detectedStudentP1 > 0 && detectedStudentP2 > 0 ? ' + ' : ''}${detectedStudentP2 > 0 ? `${detectedStudentP2}c Đ/S` : ''}`;
+        cards.push(`
+          <div style="background:#fef2f2; border:1px solid #fca5a5; border-left:4px solid #dc2626; border-radius:6px; padding:7px 9px; color:#7f1d1d;">
+            <div style="font-weight:800; margin-bottom:2px;">⚠️ Cảnh báo nghi ngờ lệch Đề / Biểu Đáp án!</div>
+            <div>• Hệ thống đang chấm bằng: <b>${escapeHtml(activeTitle)}</b> (<code>${escapeHtml(info.structureLabel)}</code>, mã ${escapeHtml(info.codes.join(', '))}).</div>
+            ${sheetPattern ? `<div>• Trên phiếu học sinh chỉ tô đến: <b>${escapeHtml(sheetPattern)}</b>${mismatchLess ? ' (ít hơn số câu của biểu đáp án hiện tại — nhiều khả năng phiếu đang chấm là đề lớp/khối khác, nên tỉ lệ trùng đáp án chỉ ~25% dẫn tới nhiều bài dưới 5đ).' : '.'}</div>` : ''}
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
+              <button class="btn btn-sm" onclick="openManageAnswerKeysModal('import')" style="font-size:0.71rem; font-weight:700; padding:2px 8px; background:#dc2626; color:#fff; border:none; border-radius:5px; cursor:pointer;">📥 Nạp Đáp án đúng (Word/Excel)</button>
+              <button class="btn btn-sm" onclick="openManageAnswerKeysModal('matrix')" style="font-size:0.71rem; font-weight:700; padding:2px 8px; background:#fff; color:#991b1b; border:1px solid #fca5a5; border-radius:5px; cursor:pointer;">👁️ Xem đáp án đang chấm</button>
+            </div>
+          </div>
+        `);
+      }
+
+      if (moetDecimalCount > 0 && tfStyle === 'moet2025') {
+        cards.push(`
+          <div style="background:#fffbeb; border:1px solid #fcd34d; border-left:4px solid #d97706; border-radius:6px; padding:6px 9px; color:#78350f;">
+            <div style="font-weight:800;">⚖️ Điểm lẻ (.10, .35, .60) do Thang Phần II Lũy tiến Bộ GD 2025</div>
+            <div>Có <b>${moetDecimalCount}</b> bài bị lẻ (đúng 1 ý = 0.10đ). Nếu trường chấm <b>0.25đ/mỗi ý</b>, bấm nút bên dưới để đổi & chấm lại ngay:</div>
+            <div style="margin-top:5px;">
+              <button class="btn btn-sm" onclick="onOmrTfStyleChanged('fixed025')" style="font-size:0.71rem; font-weight:700; padding:2px 8px; background:#d97706; color:#fff; border:none; border-radius:5px; cursor:pointer;">⚖️ Đổi ngay sang 0.25đ/ý (Hết điểm lẻ)</button>
+            </div>
+          </div>
+        `);
+      }
+
+      if (nonBlank.length >= 2 && unmatchedSbdCount >= Math.ceil(nonBlank.length * 0.7)) {
+        cards.push(`
+          <div style="background:#f0f9ff; border:1px solid #7dd3fc; border-left:4px solid #0284c7; border-radius:6px; padding:6px 9px; color:#0c4a6e;">
+            <div style="font-weight:800;">👥 SBD trên phiếu không khớp Danh sách lớp "${escapeHtml(clsName)}"</div>
+            <div><b>${unmatchedSbdCount}/${nonBlank.length}</b> phiếu có SBD chưa có trong danh sách lớp đang chọn nên toàn bộ bị gắn nhãn <i>"Cần kiểm tra"</i>.</div>
+            <div style="margin-top:5px;">
+              <button class="btn btn-sm" onclick="openOmrRosterModal()" style="font-size:0.71rem; font-weight:700; padding:2px 8px; background:#0284c7; color:#fff; border:none; border-radius:5px; cursor:pointer;">👥 Nạp / Chọn đúng DS Lớp</button>
+            </div>
+          </div>
+        `);
+      }
+
+      if (unknownCodeList.length > 0) {
+        cards.push(`
+          <div style="background:#f8fafc; border:1px solid #cbd5e1; border-left:4px solid #475569; border-radius:6px; padding:5px 9px; color:#334155;">
+            🏷️ Phát hiện mã đề chưa có trong đáp án: <b>${escapeHtml(unknownCodeList.join(', '))}</b> (những phiếu này nhận 0.00đ — hãy kiểm tra ô tô mã đề trên phiếu).
+          </div>
+        `);
+      }
+
+      if (cards.length > 0) {
+        box.style.display = 'flex';
+        box.style.flexDirection = 'column';
+        box.style.gap = '5px';
+        box.innerHTML = cards.join('');
+      } else {
+        box.style.display = 'none';
+        box.innerHTML = '';
+      }
     }
 
     /**
@@ -9386,7 +9706,9 @@ Phần III:
       const banner = document.getElementById('omr-status-banner-text');
       const score = typeof paper.result?.totalScore === 'number' ? paper.result.totalScore.toFixed(2) : '0.00';
       if (banner) {
-        banner.textContent = `Đã lưu sửa phiếu: mã ${paper.scannedExamCode}, điểm ${score} đ`;
+        banner.textContent = paper.isCorrected
+          ? `Đã lưu sửa phiếu: mã ${paper.scannedExamCode || '---'}, điểm ${score} đ`
+          : `Đang xem phiếu: mã ${paper.scannedExamCode || '---'}, điểm ${score} đ`;
       }
 
       // Cập nhật chi tiết đáy panel trái
