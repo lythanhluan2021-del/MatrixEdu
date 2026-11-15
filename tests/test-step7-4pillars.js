@@ -61,10 +61,27 @@ async function runTests() {
     console.log('🧪 RUNNING STEP 7 (4-PILLAR OMR UPGRADE) VERIFICATION SUITE');
     console.log('================================================================\n');
 
+    const dataDir = path.join(__dirname, '..', 'data');
+    const trackedFiles = [
+        path.join(dataDir, 'omr_rosters.json'),
+        path.join(dataDir, 'omr_active_roster.json'),
+        path.join(dataDir, 'omr_audit_logs.json'),
+        path.join(dataDir, 'omr_database.json')
+    ];
+    const snaps = trackedFiles.map(fp => ({
+        fp,
+        existed: fs.existsSync(fp),
+        content: fs.existsSync(fp) ? fs.readFileSync(fp) : null
+    }));
+    const dbDir = path.join(dataDir, 'omr_database');
+    const existingDbFiles = new Set(fs.existsSync(dbDir) ? fs.readdirSync(dbDir) : []);
+
     // Khởi tạo máy chủ HTTP ephemeral để kiểm thử REST API
     const server = http.createServer(requestHandler);
     await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
     testServerPort = server.address().port;
+
+    try {
 
     // -----------------------------------------------------------------
     // TEST 1: PILLAR 2 — Student Roster Parser & Smart SBD Matching
@@ -265,9 +282,19 @@ async function runTests() {
         assert.ok(html.includes(token), `index.html must contain ${token}`);
     }
     console.log('  ✅ All Frontend UI components & functions verified in index.html!\n');
-
-    server.close();
     console.log('🎉 ALL STEP 7 (4-PILLAR UPGRADE) TESTS PASSED 100%!');
+    } finally {
+        await new Promise(resolve => server.close(resolve));
+        for (const s of snaps) {
+            if (s.existed) fs.writeFileSync(s.fp, s.content);
+            else if (fs.existsSync(s.fp)) fs.unlinkSync(s.fp);
+        }
+        if (fs.existsSync(dbDir)) {
+            for (const f of fs.readdirSync(dbDir)) {
+                if (!existingDbFiles.has(f)) fs.unlinkSync(path.join(dbDir, f));
+            }
+        }
+    }
 }
 
 runTests().catch(err => {

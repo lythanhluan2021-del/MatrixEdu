@@ -2416,7 +2416,7 @@
                         <span style="font-size:0.74rem; font-weight:800; color:#065f46; white-space:nowrap;">🏫 Lớp chấm:</span>
                         <select id="omr-active-class-select" onchange="onOmrActiveClassSelected(this.value)"
                           style="flex:1; min-width:120px; font-size:0.75rem; font-weight:600; padding:4px 8px; border:1px solid #6ee7b7; border-radius:6px; background:#fff; color:#064e3b;">
-                          <option value="12A1">Lớp 12A1</option>
+                          <option value="">-- Chưa nạp danh sách lớp --</option>
                         </select>
                       </div>
                       <button class="btn btn-sm" onclick="prepareNextClassGrading()"
@@ -2434,17 +2434,17 @@
                     style="padding:8px 12px; background:#f8fafc; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap;">
                     <div style="display:flex; align-items:center; gap:5px; flex-wrap:wrap; min-width:0;">
                       <span id="omr-keys-badge"
-                        style="font-size:0.72rem; font-weight:700; color:#0369a1; background:#e0f2fe; padding:3px 7px; border-radius:6px; border:1px solid #bae6fd; display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">
-                        <span>🎯</span> <span id="omr-summary-codes">4 Mã đề: 101, 102, 103, 104</span>
+                        style="font-size:0.72rem; font-weight:700; color:#92400e; background:#fffbeb; padding:3px 7px; border-radius:6px; border:1px solid #fde68a; display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">
+                        <span>🎯</span> <span id="omr-summary-codes">⚠️ Chưa có Đáp án đề (0 mã)</span>
                       </span>
                       <span id="omr-roster-badge" onclick="openOmrRosterModal()"
-                        style="font-size:0.72rem; font-weight:700; color:#15803d; background:#f0fdf4; padding:3px 7px; border-radius:6px; border:1px solid #bbf7d0; cursor:pointer; white-space:nowrap;"
+                        style="font-size:0.72rem; font-weight:700; color:#92400e; background:#fffbeb; padding:3px 7px; border-radius:6px; border:1px solid #fde68a; cursor:pointer; white-space:nowrap;"
                         title="Click để xem hoặc nạp Danh sách Học sinh nhiều lớp">
-                        👥 35 HS (12A1)
+                        👥 Chưa nạp DS Lớp (0 HS)
                       </span>
                       <span id="omr-summary-pts"
                         style="font-size:0.70rem; font-weight:600; color:#475569; background:#fff; padding:3px 6px; border-radius:6px; border:1px solid #e2e8f0; white-space:nowrap;">
-                        10.0đ
+                        0.0đ
                       </span>
                       <select id="omr-tf-style-inline-selector" onchange="onOmrTfStyleChanged(this.value)"
                         style="font-size:0.70rem; font-weight:700; color:#0f172a; background:#fff; padding:2px 5px; border-radius:6px; border:1px solid #cbd5e1; cursor:pointer;"
@@ -2509,15 +2509,14 @@
                       </div>
                     </div>
                     <div style="margin-bottom:6px;">
-                      <label style="font-weight:700; color:#475569; display:block; margin-bottom:2px;">Thư mục CSDL lưu
-                        kết quả:</label>
+                      <label style="font-weight:700; color:#475569; display:block; margin-bottom:2px;">Nơi lưu CSDL & Nhật ký:</label>
                       <div style="display:flex; gap:4px;">
                         <input type="text" id="omr-result-dir-input" class="form-control"
-                          value="D:\WEB-APP\MT-DE-DA\data\omr_database"
+                          value="data/omr_database (Máy chủ / Tải về máy)"
                           style="font-size:0.72rem; font-family:monospace; height:26px; padding:2px 6px; background:#fff;"
                           readonly>
                         <button class="btn btn-outline btn-sm" onclick="browseOmrDatabaseDir()"
-                          style="padding:2px 6px; font-size:0.72rem;">Duyệt</button>
+                          style="padding:2px 6px; font-size:0.72rem;">Thông tin</button>
                       </div>
                     </div>
                     <div
@@ -3058,9 +3057,9 @@
             <div style="font-size:0.82rem; font-weight:800; color:#065f46;">🏫 Danh sách Các Lớp đã lưu (click để chọn sửa / nạp riêng từng lớp):</div>
             <div style="display:flex; align-items:center; gap:6px;">
               <label style="font-size:0.76rem; font-weight:700; color:#0f766e;">Tên lớp mặc định khi nạp:</label>
-              <input type="text" id="omr-roster-target-class" class="form-control" value="12A1"
-                style="width:92px; padding:3px 8px; font-size:0.78rem; font-weight:700;"
-                placeholder="VD: 12A2" />
+              <input type="text" id="omr-roster-target-class" class="form-control" value=""
+                style="width:110px; padding:3px 8px; font-size:0.78rem; font-weight:700;"
+                placeholder="VD: 10A1, 12A2" />
             </div>
           </div>
           <div id="omr-roster-class-pills" style="display:flex; gap:6px; flex-wrap:wrap;"></div>
@@ -3109,13 +3108,15 @@
         <!-- Thanh công cụ bảng danh sách hiện tại -->
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
           <div style="font-size:0.84rem; font-weight:700; color:#1e293b;">
-            📋 Danh sách Học sinh đang áp dụng (<span id="omr-roster-modal-count">35</span> học sinh):
+            📋 Danh sách Học sinh đang áp dụng (<span id="omr-roster-modal-count">0</span> học sinh):
           </div>
-          <div style="display:flex; gap:6px;">
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
             <button class="btn btn-outline btn-sm" onclick="addOmrRosterRow()" style="font-size:0.75rem;">+ Thêm học
               sinh</button>
+            <button class="btn btn-outline btn-sm" onclick="clearAllOmrRostersFromModal()"
+              style="font-size:0.75rem; color:#dc2626; border-color:#fecaca;">🧹 Xóa tất cả DS</button>
             <button class="btn btn-outline btn-sm" onclick="resetOmrRosterToDefault()"
-              style="font-size:0.75rem; color:#64748b;">🔄 Khôi phục 35 HS mẫu (12A1)</button>
+              style="font-size:0.75rem; color:#64748b;" title="Chỉ dùng để nạp danh sách mẫu chạy thử Demo">🧪 Nạp thử 35 HS mẫu (Demo)</button>
           </div>
         </div>
 
@@ -3959,7 +3960,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       }
       clone.omrSettings = {
         selectedTemplateId: appState.omr?.selectedTemplateId || 'bgd_2025_4code',
-        selectedClassName: appState.omr?.selectedClassName || '12A1',
+        selectedClassName: appState.omr?.selectedClassName || '',
         tfStyle: appState.omr?.pointRules?.tfStyle || 'fixed025'
       };
       return clone;
@@ -4033,7 +4034,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
               tfStyle: restoredTfStyle
             },
             selectedTemplateId: snapshot.appState.omrSettings?.selectedTemplateId || prevOmr.selectedTemplateId || 'bgd_2025_4code',
-            selectedClassName: snapshot.appState.omrSettings?.selectedClassName || prevOmr.selectedClassName || '12A1',
+            selectedClassName: snapshot.appState.omrSettings?.selectedClassName || prevOmr.selectedClassName || '',
             activeKeySource: prevOmr.activeKeySource === 'external_file' ? 'external_file' : 'current_workflow',
             selectedExamProfileId: appState.savedExamProfileId || null,
             lastImportSource: prevOmr.activeKeySource === 'external_file' ? (prevOmr.lastImportSource || null) : null
@@ -4120,7 +4121,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         const omr = appState.omr || {};
         const gradedCount = (omr.gradedPapers || []).length;
         const activeCodes = Object.keys(omr.answerKeysByCode || {}).length;
-        const clsLabel = omr.selectedClassName === '__ALL__' ? 'Toàn khối' : (omr.selectedClassName || '12A1');
+        const clsLabel = omr.selectedClassName === '__ALL__' ? 'Toàn khối' : (omr.selectedClassName || 'Chưa chọn lớp');
         setNavPill(7,
           gradedCount > 0
             ? `✓ ${gradedCount} bài (${clsLabel})`
@@ -6676,7 +6677,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
           activeFilter: 'all',
           roster: prevOmr.roster || [],
           rostersSummary: prevOmr.rostersSummary || [],
-          selectedClassName: prevOmr.selectedClassName || '12A1',
+          selectedClassName: prevOmr.selectedClassName || '',
           editingPaperId: null,
           answerKeysByCode: prevOmr.answerKeysByCode || {},
           selectedTemplateId: data.profile.omrSettings?.selectedTemplateId || prevOmr.selectedTemplateId || 'bgd_2025_4code',
@@ -7764,7 +7765,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         activeFilter: 'all',
         roster: [],
         rostersSummary: [],
-        selectedClassName: '12A1',
+        selectedClassName: '',
         editingPaperId: null,
         answerKeysByCode: {},
         selectedTemplateId: 'bgd_2025_4code',
@@ -7781,8 +7782,8 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
     if (!appState.omr.selectedTemplateId) {
       appState.omr.selectedTemplateId = 'bgd_2025_4code';
     }
-    if (!appState.omr.selectedClassName) {
-      appState.omr.selectedClassName = '12A1';
+    if (typeof appState.omr.selectedClassName !== 'string') {
+      appState.omr.selectedClassName = '';
     }
     if (!appState.omr.activeKeySource) {
       appState.omr.activeKeySource = appState.omr.lastImportSource ? 'external_file' : 'current_workflow';
@@ -7979,10 +7980,20 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       const roster = appState.omr.roster || [];
       const badge = document.getElementById('omr-roster-badge');
       if (badge) {
-        const cls = appState.omr.selectedClassName === '__ALL__'
-          ? 'Toàn khối'
-          : (appState.omr.selectedClassName || roster[0]?.className || '12A1');
-        badge.textContent = `👥 ${roster.length} HS (${cls})`;
+        if (roster.length === 0) {
+          badge.textContent = '👥 Chưa nạp DS Lớp (0 HS)';
+          badge.style.color = '#92400e';
+          badge.style.background = '#fffbeb';
+          badge.style.borderColor = '#fde68a';
+        } else {
+          const cls = appState.omr.selectedClassName === '__ALL__'
+            ? 'Toàn khối'
+            : (appState.omr.selectedClassName || roster[0]?.className || 'Chưa rõ lớp');
+          badge.textContent = `👥 ${roster.length} HS (${cls})`;
+          badge.style.color = '#15803d';
+          badge.style.background = '#f0fdf4';
+          badge.style.borderColor = '#bbf7d0';
+        }
       }
       const clsSel = document.getElementById('omr-active-class-select');
       if (clsSel && appState.omr.selectedClassName) {
@@ -8123,14 +8134,30 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       }
 
       const info = getActiveOmrStructureSummary();
+      const keysBadgeEl = document.getElementById('omr-keys-badge');
       const summaryCodesEl = document.getElementById('omr-summary-codes');
       if (summaryCodesEl) {
-        summaryCodesEl.textContent = `${info.codes.length} Mã đề: ${info.codes.join(', ')}`;
+        summaryCodesEl.textContent = info.codes.length > 0
+          ? `${info.codes.length} Mã đề: ${info.codes.join(', ')}`
+          : '⚠️ Chưa có Đáp án đề (0 mã)';
+      }
+      if (keysBadgeEl && src === 'current_workflow') {
+        if (info.codes.length === 0) {
+          keysBadgeEl.style.color = '#92400e';
+          keysBadgeEl.style.background = '#fffbeb';
+          keysBadgeEl.style.borderColor = '#fde68a';
+        } else {
+          keysBadgeEl.style.color = '#15803d';
+          keysBadgeEl.style.background = '#f0fdf4';
+          keysBadgeEl.style.borderColor = '#bbf7d0';
+        }
       }
       const summaryPtsEl = document.getElementById('omr-summary-pts');
       if (summaryPtsEl) {
         const tlNote = info.essayMax > 0 ? ` • TL ${info.essayMax}đ` : '';
-        summaryPtsEl.textContent = `${info.maxOmrScore.toFixed(1)}đ OMR (${info.structureLabel})${tlNote}`;
+        summaryPtsEl.textContent = info.codes.length > 0
+          ? `${info.maxOmrScore.toFixed(1)}đ OMR (${info.structureLabel})${tlNote}`
+          : '0.0đ (Chờ đáp án Bước 4 hoặc Đáp án ngoài)';
       }
 
       const meta = appState.metadata || {};
@@ -8213,7 +8240,8 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         profiles.forEach(p => {
           const codeHint = Array.isArray(p.examCodes) && p.examCodes.length > 0 ? p.examCodes.join(', ') : `${p.variantsCount || 0} đề`;
           const essayHint = p.hasEssay ? ` • TL ${p.essayMaxScore || ''}đ` : '';
-          html += `<option value="${escapeHtml(p.id)}">💾 ${escapeHtml(p.title)} (${escapeHtml(codeHint)}${essayHint})</option>`;
+          const iconPrefix = p.isSampleProfile ? '🧪 [Đề mẫu]' : '💾';
+          html += `<option value="${escapeHtml(p.id)}">${iconPrefix} ${escapeHtml(p.title)} (${escapeHtml(codeHint)}${essayHint})</option>`;
         });
         sel.innerHTML = html;
         if (appState.omr.activeKeySource === 'external_file') {
@@ -8280,10 +8308,14 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
         const classes = data.classes || [];
         appState.omr.rostersSummary = classes;
 
-        const targetCls = preferredClass || appState.omr.selectedClassName || data.activeClass || (classes[0]?.className || '12A1');
+        const targetCls = classes.length > 0
+          ? (preferredClass || appState.omr.selectedClassName || data.activeClass || classes[0].className)
+          : '';
         appState.omr.selectedClassName = targetCls;
 
-        if (targetCls === '__ALL__') {
+        if (classes.length === 0) {
+          appState.omr.roster = [];
+        } else if (targetCls === '__ALL__') {
           appState.omr.roster = data.allRoster || [];
         } else if (data.classesMap && data.classesMap[targetCls]) {
           appState.omr.roster = data.classesMap[targetCls];
@@ -8293,10 +8325,15 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
 
         const sel = document.getElementById('omr-active-class-select');
         if (sel) {
-          let html = classes.map(c => `<option value="${escapeHtml(c.className)}">🏫 Lớp ${escapeHtml(c.className)} (${c.count} HS)</option>`).join('');
-          html += `<option value="__ALL__">📚 Toàn khối (${data.totalStudents || 0} HS • ${classes.length} lớp)</option>`;
-          sel.innerHTML = html;
-          sel.value = Array.from(sel.options).some(o => o.value === targetCls) ? targetCls : (classes[0]?.className || '__ALL__');
+          if (classes.length === 0) {
+            sel.innerHTML = '<option value="">-- Chưa nạp danh sách lớp --</option>';
+            sel.value = '';
+          } else {
+            let html = classes.map(c => `<option value="${escapeHtml(c.className)}">🏫 Lớp ${escapeHtml(c.className)} (${c.count} HS)</option>`).join('');
+            html += `<option value="__ALL__">📚 Toàn khối (${data.totalStudents || 0} HS • ${classes.length} lớp)</option>`;
+            sel.innerHTML = html;
+            sel.value = Array.from(sel.options).some(o => o.value === targetCls) ? targetCls : classes[0].className;
+          }
         }
         updateOmrRosterBadge();
       } catch (_) { }
@@ -8326,7 +8363,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
 
     async function prepareNextClassGrading() {
       const classes = appState.omr.rostersSummary || [];
-      let nextClass = appState.omr.selectedClassName || '12A1';
+      let nextClass = appState.omr.selectedClassName || (classes[0]?.className || '');
       if (classes.length > 1) {
         const idx = classes.findIndex(c => c.className === nextClass);
         nextClass = classes[(idx + 1) % classes.length].className;
@@ -8338,6 +8375,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       appState.omr.statistics = null;
       appState.omr.activePaperId = null;
       appState.omr.currentSessionId = null;
+      appState.omr.isDemoMode = false;
 
       switchOmrTab('grade');
       renderOmrPapersTable();
@@ -8346,13 +8384,16 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       const scanBadge = document.getElementById('omr-scans-badge');
       if (scanBadge) scanBadge.textContent = 'Chưa có bài chấm';
       const banner = document.getElementById('omr-status-banner-text');
+      const codeStr = Object.keys(appState.omr.answerKeysByCode || {}).join(', ') || 'chưa có mã';
       if (banner) {
-        banner.textContent = `Sẵn sàng chấm Lớp ${nextClass} với nguyên bộ Đáp án hiện tại (${Object.keys(appState.omr.answerKeysByCode || {}).join(', ')}). Hãy nạp thư mục/ảnh scan bài làm!`;
+        banner.textContent = nextClass
+          ? `Sẵn sàng chấm Lớp ${nextClass} với nguyên bộ Đáp án hiện tại (${codeStr}). Hãy nạp thư mục/ảnh scan bài làm!`
+          : `Sẵn sàng nạp Danh sách Lớp & ảnh scan bài làm (Đáp án: ${codeStr}).`;
       }
       refreshWorkflowReadiness();
 
       if (classes.length <= 1) {
-        showToast(`➡️ Đã giữ nguyên bộ đáp án & xóa bài quét cũ! Hiện chỉ có 1 danh sách lớp — mở Quản lý DS Lớp để nạp thêm lớp tiếp theo (VD: 12A2, 12A4...).`, 'info');
+        showToast('➡️ Đã giữ nguyên bộ đáp án & xóa bài quét cũ! Mở Quản lý DS Lớp để nạp danh sách lớp cần chấm.', 'info');
         openOmrRosterModal();
       } else {
         showToast(`➡️ Đã chuyển sang Lớp ${nextClass} và giữ nguyên bộ đáp án! Hãy nạp ảnh/PDF bài thi Lớp ${nextClass}.`, 'success');
@@ -8372,7 +8413,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       const firstPaperClass = (appState.omr.papers || appState.omr.gradedPapers || [])[0]?.className;
       const className = (appState.omr.selectedClassName && appState.omr.selectedClassName !== '__ALL__')
         ? appState.omr.selectedClassName
-        : (firstPaperClass || appState.omr.roster?.[0]?.className || '12A1');
+        : (firstPaperClass || appState.omr.roster?.[0]?.className || 'Chưa_chọn_lớp');
 
       return {
         examId,
@@ -8474,7 +8515,7 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       let p3Count = ms.p3Count;
       const essayCount = ms.essayCount;
 
-      // Nếu ma trận chưa có dòng nào, kiểm tra đáp án hiện có trước khi fallback Tin học 12 (24 MCQ, 4 TF)
+      // Nếu ma trận chưa có dòng nào, kiểm tra đáp án hiện có (KHÔNG tự bịa 24 MCQ + 4 TF mặc định)
       if (p1Count === 0 && p2Count === 0 && p3Count === 0 && essayCount === 0) {
         const firstCode = Object.keys(appState.omr?.answerKeysByCode || {})[0];
         if (firstCode) {
@@ -8482,10 +8523,6 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
           p1Count = (k.part1 || []).length;
           p2Count = Object.keys(k.part2 || {}).length;
           p3Count = Object.keys(k.part3 || {}).length;
-        } else {
-          p1Count = 24;
-          p2Count = 4;
-          p3Count = 0;
         }
       }
 
@@ -8508,8 +8545,11 @@ Mã đề 102: 1B 2C 3D 4A 5B 6C 7D 8A..."></textarea>
       appState.omr.essayMaxScore = essayMax;
       appState.omr.maxOmrScore = total;
 
+      const hasStructure = (p1Count + p2Count + p3Count + essayCount) > 0;
       const essaySuffix = essayCount > 0 ? ` • Tự luận: ${essayMax}đ (${essayCount}c)` : '';
-      const ruleText = `P.I (TN): ${p1Pts}đ (${p1Count}c) • P.II (Đ/S): ${p2Pts}đ (${p2Count}c) • P.III: ${p3Pts}đ (${p3Count}c)${essaySuffix} • Tối đa OMR: ${total}đ`;
+      const ruleText = hasStructure
+        ? `P.I (TN): ${p1Pts}đ (${p1Count}c) • P.II (Đ/S): ${p2Pts}đ (${p2Count}c) • P.III: ${p3Pts}đ (${p3Count}c)${essaySuffix} • Tối đa OMR: ${total}đ`
+        : 'Chưa có Ma trận / Đáp án (0đ) — Hãy soạn đề hoặc Nạp Đáp án ngoài';
       const el = document.getElementById('omr-point-rule-text');
       if (el) el.value = ruleText;
 
@@ -9218,60 +9258,57 @@ Phần III:
       const keys = {};
       const variants = appState.variants || [];
 
+      const extractOmrKeyFromQuestions = (questionsList = []) => {
+        const p1 = [];
+        const p2 = {};
+        const p3 = {};
+
+        const resolveTfVal = (item) => {
+          if (!item) return '';
+          if (typeof item.isTrue === 'boolean') return item.isTrue ? 'Đ' : 'S';
+          if (typeof item.isCorrect === 'boolean') return item.isCorrect ? 'Đ' : 'S';
+          const raw = String(item.correctAnswer ?? item.answer ?? '').trim().toUpperCase();
+          if (['S', 'SAI', 'F', 'FALSE', '0'].includes(raw) || raw.startsWith('SAI') || raw.startsWith('FALSE')) return 'S';
+          if (['Đ', 'D', 'ĐÚNG', 'DUNG', 'T', 'TRUE', '1', 'X'].includes(raw) || raw.startsWith('Đ') || raw.startsWith('TRUE')) return 'Đ';
+          return '';
+        };
+
+        (questionsList || []).forEach(q => {
+          if (q.format === 'mcq' || q.type === 'MCQ' || (!q.format && q.options?.length === 4)) {
+            const rawAns = String(q.answer ?? q.correctAnswer ?? '').trim().toUpperCase();
+            p1.push(['A', 'B', 'C', 'D'].includes(rawAns) ? rawAns : '');
+          } else if (q.format === 'tf' || q.type === 'TF' || (!q.format && (q.statements?.length === 4 || q.subItems?.length === 4))) {
+            const stmts = q.statements || q.subItems || [];
+            p2[String(Object.keys(p2).length + 1)] = {
+              a: resolveTfVal(stmts[0]),
+              b: resolveTfVal(stmts[1]),
+              c: resolveTfVal(stmts[2]),
+              d: resolveTfVal(stmts[3])
+            };
+          } else if (q.format === 'short_answer' || q.type === 'SA') {
+            p3[String(Object.keys(p3).length + 1)] = String(q.answer ?? q.correctAnswer ?? '');
+          }
+        });
+        return { part1: p1, part2: p2, part3: p3 };
+      };
+
       if (variants.length > 0) {
         variants.forEach(v => {
           const code = String(v.code || '101');
-          const p1 = [];
-          const p2 = {};
-          const p3 = {};
-
-          (v.questions || []).forEach((q, idx) => {
-            if (q.format === 'mcq' || q.type === 'MCQ' || (!q.format && q.options?.length === 4)) {
-              const rawAns = String(q.answer || q.correctAnswer || 'A').trim().toUpperCase();
-              p1.push(['A', 'B', 'C', 'D'].includes(rawAns) ? rawAns : 'A');
-            } else if (q.format === 'tf' || q.type === 'TF' || (!q.format && (q.statements?.length === 4 || q.subItems?.length === 4))) {
-              const stmts = q.statements || q.subItems || [];
-              const resolveTf = (item, fallback) => {
-                if (!item) return fallback;
-                if (typeof item.isTrue === 'boolean') return item.isTrue ? 'Đ' : 'S';
-                if (typeof item.correctAnswer === 'string') return item.correctAnswer.toUpperCase().startsWith('S') ? 'S' : 'Đ';
-                if (typeof item.answer === 'string') return item.answer.toUpperCase().startsWith('S') ? 'S' : 'Đ';
-                return fallback;
-              };
-              p2[String(Object.keys(p2).length + 1)] = {
-                a: resolveTf(stmts[0], 'Đ'),
-                b: resolveTf(stmts[1], 'S'),
-                c: resolveTf(stmts[2], 'Đ'),
-                d: resolveTf(stmts[3], 'S')
-              };
-            } else if (q.format === 'short_answer' || q.type === 'SA') {
-              p3[String(Object.keys(p3).length + 1)] = String(q.answer ?? q.correctAnswer ?? '');
-            }
-          });
-
-          keys[code] = { part1: p1, part2: p2, part3: p3 };
+          keys[code] = extractOmrKeyFromQuestions(v.questions || []);
         });
 
         const input = document.getElementById('omr-excel-keys-input');
         if (input) input.value = `Đã lấy ${variants.length} mã đề từ Bước 4 (${variants.map(v => v.code).join(', ')})`;
+      } else if (Array.isArray(appState.questions) && appState.questions.length > 0) {
+        const baseCode = String(appState.metadata?.examCode || '001').trim() || '001';
+        keys[baseCode] = extractOmrKeyFromQuestions(appState.questions);
+        const input = document.getElementById('omr-excel-keys-input');
+        if (input) input.value = `Đã lấy đáp án đề gốc từ Bước 4 (Mã ${baseCode})`;
       } else {
-        // Mặc định tạo bộ đáp án cho các mã đề 101, 102, 103, 104 chuẩn
-        const sampleCodes = ['101', '102', '103', '104'];
-        const baseAnswers = ['A', 'B', 'C', 'D', 'A', 'B', 'C', 'D', 'B', 'C', 'A', 'D', 'C', 'B', 'A', 'D', 'C', 'A', 'D', 'B', 'A', 'C', 'B', 'D'];
-        sampleCodes.forEach((code, cIdx) => {
-          const letters = ['A', 'B', 'C', 'D'];
-          const p1 = baseAnswers.map((ans, qIdx) => letters[(letters.indexOf(ans) + cIdx + qIdx) % 4]);
-          keys[code] = {
-            part1: p1,
-            part2: {
-              '1': { a: 'Đ', b: 'S', c: 'Đ', d: 'S' },
-              '2': { a: 'S', b: 'Đ', c: 'S', d: 'Đ' },
-              '3': { a: 'Đ', b: 'Đ', c: 'S', d: 'S' },
-              '4': { a: 'S', b: 'S', c: 'Đ', d: 'Đ' }
-            },
-            part3: {}
-          };
-        });
+        // KHÔNG tự bịa bộ đáp án mẫu ảo (101..104) khi người dùng chưa có đề/đáp án
+        const input = document.getElementById('omr-excel-keys-input');
+        if (input) input.value = 'Chưa có Đáp án đề — hãy hoàn thành Bước 4, Chọn Đề đã lưu hoặc Nạp Đáp án ngoài';
       }
 
       appState.omr.answerKeysByCode = keys;
@@ -9283,13 +9320,43 @@ Phần III:
       }
     }
 
+    function clearDemoOmrSession() {
+      appState.omr.isDemoMode = false;
+      appState.omr.papers = [];
+      appState.omr.gradedPapers = [];
+      appState.omr.statistics = null;
+      appState.omr.activePaperId = null;
+      appState.omr.currentSessionId = null;
+      renderOmrPapersTable();
+      drawOmrCanvas(null);
+      const badge = document.getElementById('omr-scans-badge');
+      if (badge) badge.textContent = 'Chưa nạp bài';
+      const banner = document.getElementById('omr-status-banner-text');
+      if (banner) banner.textContent = 'Sẵn sàng chấm phiếu thật';
+      showToast('🧹 Đã thoát Chế độ Chấm thử Mẫu (Demo) và làm sạch danh sách bài mô phỏng!', 'info');
+    }
+
     /**
      * Bắt đầu chấm lô bài thi (Chấm thật với quét điểm ảnh OMR trên ảnh scan và các mã đề thực tế)
      */
     async function runOmrBatchGrading(useSample = false) {
       syncOmrAnswerKeys();
       updateOmrPointRulesFromMatrix();
-      showToast('Đang quét nhận dạng OMR và chấm bài trắc nghiệm theo mã đề...', 'info');
+
+      if (!useSample) {
+        const keyCodes = Object.keys(appState.omr.answerKeysByCode || {});
+        if (keyCodes.length === 0) {
+          showToast('⚠️ Chưa có Đáp án đề thi để đối chiếu! Hãy soạn đề ở Bước 4, Chọn Đề đã lưu hoặc bấm [Nạp Đáp án ngoài].', 'warning');
+          return;
+        }
+        if (!Array.isArray(appState.omr.papers) || appState.omr.papers.length === 0) {
+          showToast('📂 Chưa có bài scan OMR nào được nạp! Hãy kéo thả ảnh/PDF thật vào khung bên dưới (hoặc dùng nút Chấm thử Mẫu để xem thử).', 'warning');
+          return;
+        }
+      }
+
+      appState.omr.isDemoMode = Boolean(useSample);
+      showToast(useSample ? '🧪 Đang chạy chế độ Chấm thử Mẫu (Mô phỏng Demo)...' : 'Đang quét nhận dạng OMR và chấm bài trắc nghiệm theo mã đề...', 'info');
 
       try {
         const threshold = parseFloat(document.getElementById('omr-threshold-val')?.value || '0.35');
@@ -9297,10 +9364,10 @@ Phần III:
         // Nếu chấm bài tải lên thực tế có ảnh scan, quét lại mật độ điểm ảnh theo ngưỡng tô hiện tại
         if (!useSample && Array.isArray(appState.omr.papers) && appState.omr.papers.length > 0) {
           const validCodes = Object.keys(appState.omr.answerKeysByCode || {});
-          const firstKey = appState.omr.answerKeysByCode[validCodes[0]] || {};
-          const expectedP1Count = (firstKey.part1 || []).length || 24;
-          const expectedP2Count = Object.keys(firstKey.part2 || {}).length || 4;
-          const expectedP3Count = Object.keys(firstKey.part3 || {}).length || 0;
+          const firstKey = validCodes.length > 0 ? (appState.omr.answerKeysByCode[validCodes[0]] || {}) : null;
+          const expectedP1Count = firstKey ? (firstKey.part1 || []).length : 40;
+          const expectedP2Count = firstKey ? Object.keys(firstKey.part2 || {}).length : 8;
+          const expectedP3Count = firstKey ? Object.keys(firstKey.part3 || {}).length : 6;
 
           for (const p of appState.omr.papers) {
             if (p.imageElement && p.imageElement.complete && p.imageElement.naturalWidth > 0 && typeof scanOmrSheetFromImageElement === 'function') {
@@ -9367,6 +9434,8 @@ Phần III:
           return;
         }
 
+        appState.omr.isDemoMode = Boolean(data.isDemoSimulation || useSample);
+
         const clientPapersMap = new Map((appState.omr.papers || []).map(p => [p.id, p]));
         (data.gradedPapers || []).forEach(gp => {
           const orig = clientPapersMap.get(gp.id);
@@ -9385,8 +9454,8 @@ Phần III:
         appState.omr.gradedPapers = data.gradedPapers || [];
         appState.omr.statistics = data.statistics;
         const sid = data.sessionId || data.savedSession?.id;
-        if (sid) appState.omr.currentSessionId = sid;
-        if (Array.isArray(data.roster) && data.roster.length > 0 && appState.omr.selectedClassName !== '__ALL__') {
+        appState.omr.currentSessionId = sid;
+        if (!useSample && Array.isArray(data.roster) && data.roster.length > 0 && appState.omr.selectedClassName !== '__ALL__') {
           appState.omr.roster = data.roster;
           updateOmrRosterBadge();
         }
@@ -9402,9 +9471,18 @@ Phần III:
         refreshWorkflowReadiness();
 
         const badge = document.getElementById('omr-scans-badge');
-        if (badge) badge.textContent = `Đã chấm ${data.totalPapers} bài (${ctx.className})`;
+        if (badge) {
+          badge.textContent = appState.omr.isDemoMode
+            ? `🧪 DEMO: ${data.totalPapers} bài mẫu`
+            : `Đã chấm ${data.totalPapers} bài (${ctx.className})`;
+        }
 
-        showToast(`✅ Đã chấm xong ${data.totalPapers} bài lớp ${ctx.className} (${data.validCount} hợp lệ, ${data.warningCount} cần kiểm tra)!`, 'success');
+        showToast(
+          appState.omr.isDemoMode
+            ? `🧪 [DEMO MÔ PHỎNG] Đã tạo ${data.totalPapers} bài chấm thử (KHÔNG lưu vào CSDL thi thật)!`
+            : `✅ Đã chấm xong ${data.totalPapers} bài lớp ${ctx.className} (${data.validCount} hợp lệ, ${data.warningCount} cần kiểm tra)!`,
+          appState.omr.isDemoMode ? 'info' : 'success'
+        );
       } catch (err) {
         showToast('Lỗi kết nối máy chủ chấm bài: ' + err.message, 'error');
       }
@@ -9480,7 +9558,7 @@ Phần III:
                 Kéo thả thư mục scan của cả lớp vào ô phía trên hoặc nhấn nút bên dưới để thử nghiệm nhanh:
               </div>
               <button class="btn btn-primary btn-sm" onclick="runOmrBatchGrading(true)" style="font-size:0.76rem; font-weight:700; background:#2563eb; padding:5px 14px; border-radius:20px;">
-                🎯 Chấm thử 35 bài làm mẫu chuẩn
+                🧪 Chấm thử 35 bài mẫu (Chế độ Demo)
               </button>
             </td>
           </tr>
@@ -9575,7 +9653,19 @@ Phần III:
       const tfStyle = typeof getOmrTfStyle === 'function' ? getOmrTfStyle() : 'fixed025';
       const meta = appState.metadata || {};
       const subjectGrade = `${meta.subject || 'Tin học'} ${meta.grade || ''}`.trim();
-      const clsName = appState.omr?.selectedClassName || '12A1';
+      const clsName = (appState.omr?.selectedClassName && appState.omr.selectedClassName !== '__ALL__')
+        ? appState.omr.selectedClassName
+        : (appState.omr?.selectedClassName === '__ALL__' ? 'Toàn khối' : 'Chưa nạp DS');
+
+      const demoCards = [];
+      if (appState.omr?.isDemoMode) {
+        demoCards.push(`
+          <div style="background:#eef2ff; border:1px solid #818cf8; border-left:4px solid #4f46e5; border-radius:6px; padding:6px 9px; color:#312e81; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+            <div><b>🧪 ĐANG Ở CHẾ ĐỘ CHẤM THỬ MẪU (DEMO MÔ PHỎNG)</b> — Kết quả này KHÔNG lưu vào CSDL chấm thi thật.</div>
+            <button class="btn btn-sm" onclick="clearDemoOmrSession()" style="font-size:0.71rem; font-weight:700; padding:2px 8px; background:#4f46e5; color:#fff; border:none; border-radius:5px; cursor:pointer;">🧹 Thoát Demo & Xóa dữ liệu mẫu</button>
+          </div>
+        `);
+      }
 
       const nonBlank = papers.filter(p => !p.isBlankPaper && (
         Object.keys(p.answers?.part1 || {}).length > 0
@@ -9680,11 +9770,11 @@ Phần III:
         `);
       }
 
-      if (cards.length > 0) {
+      if (cards.length > 0 || demoCards.length > 0) {
         box.style.display = 'flex';
         box.style.flexDirection = 'column';
         box.style.gap = '5px';
-        box.innerHTML = cards.join('');
+        box.innerHTML = [...demoCards, ...cards].join('');
       } else {
         box.style.display = 'none';
         box.innerHTML = '';
@@ -9994,7 +10084,7 @@ Phần III:
           const stuName = (paper.studentName && paper.studentName !== 'Chưa định danh')
             ? paper.studentName
             : 'Chưa định danh (Kiểm tra SBD)';
-          const className = paper.className || '12A1';
+          const className = paper.className || '---';
           const dobStr = paper.dob || '15 / 08 / 2008';
 
           ctx.save();
@@ -10808,13 +10898,18 @@ Phần III:
           })
         });
         const data = await res.json();
-        if (data.ok && data.updatedPaper) {
-          paper.result = data.updatedPaper.result;
-          paper.isCorrected = true;
-          paper.warnings = [];
-          if (data.statistics) appState.omr.statistics = data.statistics;
+        if (!res.ok || !data.ok || !data.updatedPaper) {
+          showToast(data?.message || `Lỗi lưu hiệu chỉnh bài thi (${res.status})!`, 'error');
+          return;
         }
-      } catch (_) { }
+        paper.result = data.updatedPaper.result;
+        paper.isCorrected = Boolean(data.updatedPaper.isCorrected);
+        paper.warnings = Array.isArray(data.updatedPaper.warnings) ? data.updatedPaper.warnings : [];
+        if (data.statistics) appState.omr.statistics = data.statistics;
+      } catch (err) {
+        showToast('Lỗi kết nối máy chủ khi lưu sửa phiếu: ' + err.message, 'error');
+        return;
+      }
 
       renderOmrPapersTable();
       selectOmrPaper(paper.id);
@@ -11275,7 +11370,7 @@ Phần III:
       const nameInput = document.getElementById('edit-paper-name');
       if (nameInput) {
         if (found) {
-          nameInput.value = `${found.name || found.fullName} (Lớp ${found.className || '12A1'})`;
+          nameInput.value = `${found.name || found.fullName} (Lớp ${found.className || 'Chưa rõ'})`;
           nameInput.style.color = '#15803d';
         } else {
           nameInput.value = clean ? 'Chưa có trong DS lớp hiện tại' : 'Chưa định danh';
@@ -11476,25 +11571,30 @@ Phần III:
           })
         });
         const data = await res.json();
-        if (data.ok && data.updatedPaper) {
-          paper.sbd = data.updatedPaper.sbd;
-          paper.studentName = data.updatedPaper.studentName;
-          paper.className = data.updatedPaper.className;
-          paper.dob = data.updatedPaper.dob;
-          paper.scannedExamCode = data.updatedPaper.scannedExamCode;
-          paper.answers = data.updatedPaper.answers;
-          paper.essayScore = data.updatedPaper.essayScore;
-          paper.result = data.updatedPaper.result;
-          paper.isCorrected = true;
-          paper.warnings = [];
-          if (data.statistics) appState.omr.statistics = data.statistics;
+        if (!res.ok || !data.ok || !data.updatedPaper) {
+          showToast(data?.message || `Không thể lưu hiệu chỉnh phiếu (${res.status})!`, 'error');
+          return;
         }
-      } catch (_) { }
+        paper.sbd = data.updatedPaper.sbd;
+        paper.studentName = data.updatedPaper.studentName;
+        paper.className = data.updatedPaper.className;
+        paper.dob = data.updatedPaper.dob;
+        paper.scannedExamCode = data.updatedPaper.scannedExamCode;
+        paper.answers = data.updatedPaper.answers;
+        paper.essayScore = data.updatedPaper.essayScore;
+        paper.result = data.updatedPaper.result;
+        paper.isCorrected = Boolean(data.updatedPaper.isCorrected);
+        paper.warnings = Array.isArray(data.updatedPaper.warnings) ? data.updatedPaper.warnings : [];
+        if (data.statistics) appState.omr.statistics = data.statistics;
+      } catch (err) {
+        showToast('Lỗi kết nối máy chủ khi lưu sửa phiếu: ' + err.message, 'error');
+        return;
+      }
 
       closePaperEditModal();
       renderOmrPapersTable();
       selectOmrPaper(paper.id);
-      showToast(`✅ Đã lưu sửa phiếu (SBD: ${paper.sbd}, Mã đề: ${paper.scannedExamCode}) • Điểm mới: ${(paper.result?.totalScore || 0).toFixed(2)} đ`, 'success');
+      showToast(`✅ Đã lưu sửa phiếu (SBD: ${paper.sbd || 'trống'}, Mã đề: ${paper.scannedExamCode || 'trống'}) • Điểm mới: ${(paper.result?.totalScore || 0).toFixed(2)} đ`, 'success');
     }
 
     function markPaperConfirmed() {
@@ -11512,7 +11612,7 @@ Phần III:
     }
 
     function browseOmrDatabaseDir() {
-      showToast('Thư mục CSDL: D:\\WEB-APP\\MT-DE-DA\\data\\omr_database (Lưu trữ an toàn trên ổ đĩa D)', 'info');
+      showToast('CSDL chấm thi được lưu tại data/omr_database (khi chạy cục bộ) hoặc tự động tải file JSON/CSV về máy khi bấm Lưu CSDL.', 'info');
     }
 
     function openPointRuleSettings() {
@@ -11655,10 +11755,12 @@ Phần III:
       ];
 
       const blockSize = Math.max(6, Math.round(W / 120));
+      const ringMargin = Math.max(4, Math.round(blockSize * 0.8));
       const detectedFiducials = {};
 
       for (const q of quads) {
-        let bestScore = 0;
+        let bestCombined = 0;
+        let bestCoreScore = 0;
         let bestX = -1;
         let bestY = -1;
         for (let y = q.y0; y < q.y1 - blockSize; y += 3) {
@@ -11671,19 +11773,44 @@ Phần III:
                 const r = imgData[idx];
                 const g = imgData[idx + 1];
                 const b = imgData[idx + 2];
-                if (r < 75 && g < 75 && b < 75) blackCount++;
+                if (r < 80 && g < 80 && b < 80) blackCount++;
                 total++;
               }
             }
-            const score = total > 0 ? (blackCount / total) : 0;
-            if (score > 0.82 && score > bestScore) {
-              bestScore = score;
+            const coreScore = total > 0 ? (blackCount / total) : 0;
+            if (coreScore <= 0.78) continue;
+
+            // Kiểm tra viền sáng xung quanh điểm định vị để loại nhiễu viền đen máy photocopy
+            let ringLight = 0;
+            let ringTotal = 0;
+            const ringPts = [
+              [x - ringMargin, y + blockSize / 2],
+              [x + blockSize + ringMargin, y + blockSize / 2],
+              [x + blockSize / 2, y - ringMargin],
+              [x + blockSize / 2, y + blockSize + ringMargin]
+            ];
+            for (const [rxRaw, ryRaw] of ringPts) {
+              const rx = Math.round(rxRaw);
+              const ry = Math.round(ryRaw);
+              if (rx < 0 || rx >= W || ry < 0 || ry >= H) continue;
+              const rIdx = (ry * W + rx) * 4;
+              const lum = (0.299 * imgData[rIdx] + 0.587 * imgData[rIdx + 1] + 0.114 * imgData[rIdx + 2]) / 255.0;
+              if (lum > 0.55) ringLight++;
+              ringTotal++;
+            }
+            const ringRatio = ringTotal > 0 ? (ringLight / ringTotal) : 0;
+            if (ringRatio < 0.45) continue;
+
+            const combined = coreScore * 0.65 + ringRatio * 0.35;
+            if (combined > bestCombined) {
+              bestCombined = combined;
+              bestCoreScore = coreScore;
               bestX = x + blockSize / 2;
               bestY = y + blockSize / 2;
             }
           }
         }
-        if (bestScore > 0.82) {
+        if (bestCoreScore > 0.78) {
           // Tinh chỉnh trọng tâm (Center of Mass) của khối đen định vị để đạt độ chính xác sub-pixel
           let sumX = 0;
           let sumY = 0;
@@ -11709,9 +11836,22 @@ Phần III:
         }
       }
 
-      const hasAlignedFiducials = Boolean(
+      let hasAlignedFiducials = Boolean(
         detectedFiducials.tl && detectedFiducials.tr && detectedFiducials.bl && detectedFiducials.br
       );
+      if (hasAlignedFiducials) {
+        const topW = detectedFiducials.tr.x - detectedFiducials.tl.x;
+        const botW = detectedFiducials.br.x - detectedFiducials.bl.x;
+        const leftH = detectedFiducials.bl.y - detectedFiducials.tl.y;
+        const rightH = detectedFiducials.br.y - detectedFiducials.tr.y;
+        const geomOk = topW > W * 0.55 && botW > W * 0.55
+          && leftH > H * 0.55 && rightH > H * 0.55
+          && Math.abs(topW - botW) < W * 0.12
+          && Math.abs(leftH - rightH) < H * 0.12;
+        if (!geomOk) {
+          hasAlignedFiducials = false;
+        }
+      }
 
       const scaleX = W / tpl.width;
       const scaleY = H / tpl.height;
@@ -11773,6 +11913,12 @@ Phần III:
 
       let totalFilledBubbles = 0;
       const warnings = [];
+      if (!hasAlignedFiducials) {
+        warnings.push({
+          type: 'FIDUCIAL_ALIGNMENT_FAILED',
+          message: '⚠️ Không định vị chuẩn xác đủ 4 ô vuông đen ở 4 góc phiếu (ảnh scan lệch/mất góc/viền đen photocopy). Thầy/Cô cần kiểm tra khớp ô tròn trên mặt phiếu!'
+        });
+      }
       const answers = { part1: {}, part2: {}, part3: {} };
       const confidences = { part1: {}, part2: {}, part3: {} };
       const ambiguous = { part1: {}, part2: {}, part3: {} };
@@ -11799,6 +11945,18 @@ Phần III:
           sbdDigits += String(best.d);
           totalFilledBubbles++;
         }
+      }
+
+      if (sbdDigits.length === 0) {
+        warnings.push({
+          type: 'MISSING_SBD',
+          message: `Thí sinh chưa tô Số báo danh (${numSbdCols} chữ số)! Cần kiểm tra phiếu gốc để nhập SBD chính xác.`
+        });
+      } else if (sbdDigits.length < numSbdCols) {
+        warnings.push({
+          type: 'INCOMPLETE_SBD',
+          message: `Thí sinh mới tô ${sbdDigits.length}/${numSbdCols} chữ số SBD ("${sbdDigits}"). Cần kiểm tra phiếu gốc để đối chiếu SBD.`
+        });
       }
 
       // 2. QUÉT MÃ ĐỀ THI (Theo tọa độ mẫu phiếu, 3 số hoặc 4 số)
@@ -11829,7 +11987,7 @@ Phần III:
       if (codeDigits.length === 0) {
         warnings.push({
           type: 'MISSING_EXAM_CODE',
-          message: `Thí sinh chưa tô Mã đề thi (${numCodeCols} chữ số)! Hệ thống tạm dùng mã mặc định 101. Thầy/Cô cần kiểm tra phiếu gốc và chọn đúng mã đề.`
+          message: `Thí sinh chưa tô Mã đề thi (${numCodeCols} chữ số)! Phiếu không thể chấm tự động (0.00đ) — Thầy/Cô cần kiểm tra phiếu gốc và chọn đúng mã đề.`
         });
       } else if (codeDigits.length < numCodeCols) {
         warnings.push({
@@ -12225,7 +12383,7 @@ Phần III:
         const matchedStudent = roster.find(r => r.sbd === sbd || r.sbd === sbd.padStart(6, '0'));
         const studentName = matchedStudent ? (matchedStudent.name || matchedStudent.fullName) : 'Chưa định danh';
         const activeCls = (appState.omr.selectedClassName && appState.omr.selectedClassName !== '__ALL__') ? appState.omr.selectedClassName : '';
-        const className = matchedStudent?.className || activeCls || roster[0]?.className || '12A1';
+        const className = matchedStudent?.className || activeCls || roster[0]?.className || '';
         const dob = matchedStudent?.dob || '';
 
         scannedPapers.push({
@@ -12277,10 +12435,14 @@ Phần III:
       const tpl = getActiveOmrTemplate();
       syncOmrAnswerKeys();
       const validCodes = Object.keys(appState.omr.answerKeysByCode || {});
-      const code = validCodes[0] || '101';
+      if (validCodes.length === 0) {
+        showToast('⚠️ Chưa có bộ Đáp án đề thi nào để tô phiếu mẫu! Hãy tạo đề Bước 4 hoặc Nạp Đáp án ngoài trước.', 'warning');
+        return;
+      }
+      const code = validCodes[0];
       const key = appState.omr.answerKeysByCode[code] || {};
       const roster = appState.omr.roster || [];
-      const student = roster[5] || roster[0] || { sbd: '120006', name: 'Đặng Tuấn Hải', className: '12A1', dob: '30/04/2008' };
+      const student = roster[5] || roster[0] || { sbd: '000001', name: 'Thí sinh mẫu OMR', className: appState.omr.selectedClassName || 'Demo', dob: '' };
 
       const W = tpl.width;
       const H = tpl.height;
@@ -12296,9 +12458,9 @@ Phần III:
       if (tpl.id === 'bgd_2025_4code' || tpl.id === 'bgd_2025_3code') {
         ctx.fillStyle = '#1e3a8a';
         ctx.font = 'italic 28px "Times New Roman", serif';
-        ctx.fillText(student.name || student.fullName || 'Đặng Tuấn Hải', 1015, 731);
-        ctx.fillText(student.dob || '30/04/2008', 915, 834);
-        ctx.fillText(`Phòng ${student.className || '12A1'}`, 935, 624);
+        ctx.fillText(student.name || student.fullName || 'Thí sinh mẫu OMR', 1015, 731);
+        if (student.dob) ctx.fillText(student.dob, 915, 834);
+        if (student.className) ctx.fillText(`Phòng ${student.className}`, 935, 624);
       }
 
       // Hàm tô bút chì đen vào ô tròn (x, y)
@@ -12417,22 +12579,20 @@ Phần III:
     // QUẢN LÝ & NẠP DANH SÁCH HỌC SINH NHIỀU LỚP (ROSTER EXCEL / CSV / PASTE)
     // ========================================================================
     let tempModalRoster = [];
-    let modalRostersCache = { activeClass: '12A1', classes: [], classesMap: {} };
+    let modalRostersCache = { activeClass: '', classes: [], classesMap: {} };
 
     function renderOmrRosterClassPills() {
       const box = document.getElementById('omr-roster-class-pills');
       if (!box) return;
       const classes = modalRostersCache.classes || [];
-      const curTarget = document.getElementById('omr-roster-target-class')?.value.trim() || modalRostersCache.activeClass || '12A1';
+      const curTarget = document.getElementById('omr-roster-target-class')?.value.trim() || modalRostersCache.activeClass || classes[0]?.className || '';
       if (classes.length === 0) {
-        box.innerHTML = '<span style="font-size:0.75rem; color:#64748b;">Chưa có lớp nào được lưu.</span>';
+        box.innerHTML = '<span style="font-size:0.75rem; color:#92400e; font-weight:600;">Chưa có lớp nào được nạp. Hãy tải file Excel/CSV hoặc dán danh sách học sinh thật của bạn.</span>';
         return;
       }
       box.innerHTML = classes.map(c => {
         const isActive = c.className === curTarget;
-        const delBtn = classes.length > 1
-          ? `<span onclick="event.stopPropagation(); deleteRosterClassFromModal('${escapeHtml(c.className)}')" title="Xóa lớp ${escapeHtml(c.className)}" style="margin-left:5px; color:#dc2626; font-weight:800;">✕</span>`
-          : '';
+        const delBtn = `<span onclick="event.stopPropagation(); deleteRosterClassFromModal('${escapeHtml(c.className)}')" title="Xóa lớp ${escapeHtml(c.className)}" style="margin-left:5px; color:#dc2626; font-weight:800;">✕</span>`;
         return `<button type="button" onclick="selectRosterClassInModal('${escapeHtml(c.className)}')"
           style="padding:3px 10px; border-radius:999px; font-size:0.75rem; font-weight:700; cursor:pointer; border:1px solid ${isActive ? '#059669' : '#cbd5e1'}; background:${isActive ? '#d1fae5' : '#fff'}; color:${isActive ? '#065f46' : '#334155'};">
           🏫 ${escapeHtml(c.className)} (${c.count} HS)${delBtn}
@@ -12475,10 +12635,10 @@ Phần III:
           modalRostersCache = data;
           const target = preferredClass
             || (appState.omr.selectedClassName && appState.omr.selectedClassName !== '__ALL__' ? appState.omr.selectedClassName : data.activeClass)
-            || (data.classes?.[0]?.className || '12A1');
+            || (data.classes?.[0]?.className || '');
           const inp = document.getElementById('omr-roster-target-class');
           if (inp) inp.value = target;
-          tempModalRoster = JSON.parse(JSON.stringify(data.classesMap?.[target] || data.activeRoster || appState.omr.roster || []));
+          tempModalRoster = JSON.parse(JSON.stringify((target && data.classesMap?.[target]) || data.activeRoster || []));
           renderOmrRosterClassPills();
           renderOmrRosterModalTable();
           return;
@@ -12519,10 +12679,10 @@ Phần III:
             <input type="text" class="form-control" value="${r.name || r.fullName || ''}" oninput="tempModalRoster[${idx}].name = this.value; tempModalRoster[${idx}].fullName = this.value;" style="height:26px; padding:2px 6px; font-weight:600; font-size:0.78rem;" />
           </td>
           <td style="padding:5px 8px;">
-            <input type="text" class="form-control" value="${r.className || '12A1'}" oninput="tempModalRoster[${idx}].className = this.value.trim()" style="height:26px; padding:2px 6px; font-size:0.78rem;" />
+            <input type="text" class="form-control" value="${escapeHtml(r.className || '')}" oninput="tempModalRoster[${idx}].className = this.value.trim()" style="height:26px; padding:2px 6px; font-size:0.78rem;" />
           </td>
           <td style="padding:5px 8px;">
-            <input type="text" class="form-control" value="${r.dob || ''}" oninput="tempModalRoster[${idx}].dob = this.value.trim()" style="height:26px; padding:2px 6px; font-size:0.78rem;" />
+            <input type="text" class="form-control" value="${escapeHtml(r.dob || '')}" oninput="tempModalRoster[${idx}].dob = this.value.trim()" style="height:26px; padding:2px 6px; font-size:0.78rem;" />
           </td>
           <td style="padding:5px 8px; text-align:center;">
             <button class="btn btn-outline btn-sm" onclick="removeOmrRosterRow(${idx})" style="padding:1px 6px; color:#dc2626; border-color:#fecaca; font-size:0.72rem;">✕</button>
@@ -12532,14 +12692,14 @@ Phần III:
     }
 
     function addOmrRosterRow() {
-      const nextNum = 120001 + tempModalRoster.length;
-      const defaultCls = tempModalRoster[0]?.className || '12A1';
+      const nextNum = 100001 + tempModalRoster.length;
+      const defaultCls = document.getElementById('omr-roster-target-class')?.value.trim() || tempModalRoster[0]?.className || '';
       tempModalRoster.push({
         sbd: String(nextNum),
         name: `Học sinh mới ${tempModalRoster.length + 1}`,
         fullName: `Học sinh mới ${tempModalRoster.length + 1}`,
         className: defaultCls,
-        dob: '01/01/2008'
+        dob: ''
       });
       renderOmrRosterModalTable();
     }
@@ -12626,7 +12786,32 @@ Phần III:
       }
     }
 
+    async function clearAllOmrRostersFromModal() {
+      if (!confirm('Xóa sạch toàn bộ Danh sách lớp đang lưu (tránh lẫn DS ảo/mẫu với phiếu thật)?')) return;
+      try {
+        const res = await fetch('/api/omr/rosters/clear', { method: 'POST' });
+        const data = await res.json();
+        if (data.ok) {
+          tempModalRoster = [];
+          const inp = document.getElementById('omr-roster-target-class');
+          if (inp) inp.value = '';
+          appState.omr.selectedClassName = '';
+          appState.omr.roster = [];
+          appState.omr.rostersSummary = [];
+          await syncModalRostersFromServer('');
+          await refreshOmrRostersDropdown('');
+          refreshWorkflowReadiness();
+          showToast('🧹 Đã xóa toàn bộ Danh sách lớp tạm/mẫu!', 'info');
+        } else {
+          showToast(data.message || 'Không thể xóa danh sách lớp!', 'error');
+        }
+      } catch (err) {
+        showToast('Lỗi xóa danh sách lớp: ' + err.message, 'error');
+      }
+    }
+
     async function resetOmrRosterToDefault() {
+      if (!confirm('Chức năng này chỉ nạp 35 học sinh MẪU (12A1) để chạy thử Demo. Bạn có chắc muốn nạp không?')) return;
       try {
         const res = await fetch('/api/omr/parse-roster', {
           method: 'POST',
@@ -12637,17 +12822,21 @@ Phần III:
         if (data.ok && Array.isArray(data.roster)) {
           await syncModalRostersFromServer('12A1');
           await refreshOmrRostersDropdown('12A1');
-          showToast('🔄 Đã khôi phục danh sách 35 học sinh mẫu (Lớp 12A1)!', 'info');
+          showToast('🧪 Đã nạp 35 học sinh MẪU (Lớp 12A1) phục vụ chạy thử Demo!', 'info');
         }
       } catch (_) { }
     }
 
     async function saveOmrRosterFromModal() {
       if (tempModalRoster.length === 0) {
-        showToast('Danh sách học sinh không được để trống!', 'warning');
+        showToast('Danh sách học sinh đang trống — hãy thêm ít nhất 1 học sinh hoặc nhấn [Xóa tất cả DS]!', 'warning');
         return;
       }
-      const targetClass = (document.getElementById('omr-roster-target-class')?.value || tempModalRoster[0]?.className || '12A1').trim();
+      const targetClass = (document.getElementById('omr-roster-target-class')?.value || tempModalRoster[0]?.className || '').trim();
+      if (!targetClass) {
+        showToast('⚠️ Vui lòng nhập Tên lớp (VD: 10A1, 12A2...) trước khi lưu danh sách!', 'warning');
+        return;
+      }
 
       try {
         const res = await fetch('/api/omr/parse-roster', {
@@ -12661,8 +12850,8 @@ Phần III:
           closeModal('modalOmrRoster');
           showToast(`✅ Đã lưu danh sách ${data.totalStudents} học sinh (Lớp ${data.className})!`, 'success');
 
-          // Nếu đang có bài đã chấm trên màn hình, tự động đối chiếu lại SBD -> Họ tên học sinh ngay lập tức
-          if (appState.omr.gradedPapers && appState.omr.gradedPapers.length > 0) {
+          // Nếu đang có bài thi thật đã chấm trên màn hình, tự động đối chiếu lại SBD -> Họ tên học sinh ngay lập tức
+          if (!appState.omr.isDemoMode && appState.omr.gradedPapers && appState.omr.gradedPapers.length > 0) {
             appState.omr.papers = appState.omr.gradedPapers;
             await runOmrBatchGrading(false);
           }
@@ -12675,8 +12864,14 @@ Phần III:
     }
 
     function downloadSampleRosterCsv() {
+      const source = (appState.omr.roster && appState.omr.roster.length > 0)
+        ? appState.omr.roster.slice(0, 15)
+        : [
+            { sbd: '100001', name: 'Nguyễn Văn An', className: '10A1', dob: '15/03/2010' },
+            { sbd: '100002', name: 'Trần Thị Bình', className: '10A1', dob: '22/07/2010' }
+          ];
       const sampleCsv = '\uFEFFSTT,Số báo danh,Họ và tên,Lớp,Ngày sinh\n' +
-        (appState.omr.roster || []).slice(0, 15).map((r, i) => `${i + 1},"${r.sbd}","${r.name || r.fullName}","${r.className || '12A1'}","${r.dob || '01/01/2008'}"`).join('\n');
+        source.map((r, i) => `${i + 1},"${r.sbd || ''}","${r.name || r.fullName || ''}","${r.className || ''}","${r.dob || ''}"`).join('\n');
       const blob = new Blob([sampleCsv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -12697,41 +12892,74 @@ Phần III:
     }
 
     async function syncOmrToGoogleDrive() {
-      showToast('Đang lưu CSDL vào ổ cứng và đồng bộ lên Google Drive...', 'info');
+      if (appState.omr.isDemoMode) {
+        showToast('⚠️ Đang ở chế độ Chấm thử Mẫu (Demo) — không xuất kết quả mô phỏng làm CSDL thi thật!', 'warning');
+        return;
+      }
+      const cleanPapers = (appState.omr.gradedPapers || []).map(p => {
+        const c = { ...p };
+        delete c.imageElement;
+        delete c.imageUrl;
+        return c;
+      });
+      if (cleanPapers.length === 0) {
+        showToast('Chưa có bài thi thật đã chấm để lưu CSDL!', 'warning');
+        return;
+      }
+
+      showToast('Đang đóng gói CSDL Bảng điểm & Nhật ký Lưu vết...', 'info');
       try {
-        const cleanPapers = (appState.omr.gradedPapers || []).map(p => {
-          const c = { ...p };
-          delete c.imageElement;
-          delete c.imageUrl;
-          return c;
-        });
+        const driveInputVal = document.getElementById('gdrive-folder-url')?.value
+          || (() => { try { return localStorage.getItem('gdrive_folder_url') || ''; } catch (_) { return ''; } })();
+        const folderIdMatch = String(driveInputVal || '').match(/\/folders\/([a-zA-Z0-9_-]+)/);
+        const resolvedFolderId = folderIdMatch ? folderIdMatch[1] : String(driveInputVal || '').trim();
+        const activeCls = (appState.omr.selectedClassName && appState.omr.selectedClassName !== '__ALL__')
+          ? appState.omr.selectedClassName
+          : (cleanPapers[0]?.className || 'Chưa_chọn_lớp');
+
         const res = await fetch('/api/omr/sync-gdrive', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            folderId: '1wcSRCsZ9wzjO9ypblF_9L4si9kPm_uop',
+            folderId: resolvedFolderId,
             gradedPapers: cleanPapers,
             answerKeysByCode: appState.omr.answerKeysByCode,
             pointRules: appState.omr.pointRules,
             metadata: {
-              schoolName: 'TRƯỜNG THPT NGUYỄN SINH SẮC',
-              subject: appState.metadata?.subject || 'Tin học',
-              grade: appState.metadata?.grade || '12',
-              className: cleanPapers[0]?.className || '12A1'
+              schoolName: appState.metadata?.schoolName || 'TRƯỜNG THPT',
+              subject: appState.metadata?.subject || 'Môn học',
+              grade: appState.metadata?.grade || '',
+              className: activeCls
             }
           })
         });
         const data = await res.json();
         if (data.ok) {
-          showToast('☁️ ' + data.message, 'success');
+          if (Array.isArray(data.files) && data.files.length > 0 && !data.remoteDriveUploaded) {
+            data.files.forEach((f, fIdx) => {
+              if (!f || !f.content || !f.name) return;
+              setTimeout(() => {
+                const blob = new Blob([f.content], { type: f.mime || 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = f.name;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+              }, fIdx * 220);
+            });
+          }
+          showToast('💾 ' + data.message, 'success');
           if (document.getElementById('omr-reports-tab-content')?.style.display !== 'none') {
             renderOmrReportsView();
           }
         } else {
-          showToast(data.message || 'Lỗi đồng bộ Google Drive!', 'error');
+          showToast(data.message || 'Lỗi xuất & lưu CSDL OMR!', 'error');
         }
       } catch (err) {
-        showToast('Lỗi kết nối máy chủ Google Drive: ' + err.message, 'error');
+        showToast('Lỗi kết nối máy chủ khi lưu CSDL OMR: ' + err.message, 'error');
       }
     }
 

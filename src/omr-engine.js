@@ -184,8 +184,9 @@ function isShortAnswerMatch(studentVal, expectedVal) {
  * - Phần III (Trả lời ngắn, nếu có): mỗi câu đúng = 0.5 điểm.
  */
 function gradeSinglePaper(paper, answerKey, pointRules = {}) {
-  const p1Rule = pointRules.mcq || 0.25;
+  const p1Rule = pointRules.mcq !== undefined && pointRules.mcq !== null ? Number(pointRules.mcq) : 0.25;
   const p2Style = pointRules.tfStyle || 'fixed025'; // 'fixed025' chia đều (0.25đ/ý) hoặc 'moet2025' lũy tiến (0.1 - 0.25 - 0.5 - 1.0đ)
+  const p2SubPoint = pointRules.tfSubPoint !== undefined && pointRules.tfSubPoint !== null ? Number(pointRules.tfSubPoint) : 0.25;
 
   // 1. Chấm Phần I (MCQ) — hỗ trợ cả dạng Mảng ['A', 'B'] và dạng Object { '1': 'A', '2': 'B' }
   let p1CorrectCount = 0;
@@ -250,7 +251,7 @@ function gradeSinglePaper(paper, answerKey, pointRules = {}) {
       else if (matchedSubCount === 3) qPts = 0.50;
       else if (matchedSubCount === 4) qPts = 1.00;
     } else {
-      qPts = matchedSubCount * 0.25;
+      qPts = matchedSubCount * p2SubPoint;
     }
     p2Pts += qPts;
 
@@ -269,9 +270,6 @@ function gradeSinglePaper(paper, answerKey, pointRules = {}) {
   const p3Details = [];
   const p3Key = answerKey.part3 || {};
   const p3Total = Object.keys(p3Key).length;
-  if (p3Total === 0 && paper.answers && paper.answers.part3) {
-    paper.answers.part3 = {};
-  }
   const p3Rule = pointRules.sa !== undefined ? pointRules.sa : 0.5;
 
   for (const [qNumStr, correctVal] of Object.entries(p3Key)) {
@@ -335,31 +333,32 @@ function gradeSinglePaper(paper, answerKey, pointRules = {}) {
 /**
  * Chuẩn hóa một bản ghi học sinh
  */
-function normalizeRosterStudent(r, idx = 0, fallbackClass = '12A1') {
-  const cls = String(r?.className || fallbackClass || '12A1').replace(/\s+/g, ' ').trim() || '12A1';
+function normalizeRosterStudent(r, idx = 0, fallbackClass = '') {
+  const cls = String(r?.className || fallbackClass || '').replace(/\s+/g, ' ').trim();
   const name = String(r?.name || r?.fullName || `Học sinh ${idx + 1}`).replace(/\s+/g, ' ').trim();
   const fullName = String(r?.fullName || r?.name || `Học sinh ${idx + 1}`).replace(/\s+/g, ' ').trim();
   return {
-    sbd: String(r?.sbd || (120001 + idx)).trim(),
+    sbd: String(r?.sbd ?? '').trim(),
     name,
     fullName,
-    className: cls,
-    dob: String(r?.dob || '01/01/2008').trim(),
+    className: cls || 'Chưa phân lớp',
+    dob: String(r?.dob || '').trim(),
     gender: String(r?.gender || '').trim()
   };
 }
 
 /**
- * Đọc Kho Danh sách Nhiều Lớp (tương thích ngược với omr_active_roster.json)
+ * Đọc Kho Danh sách Nhiều Lớp (KHÔNG tự động bơm 35 học sinh ảo 12A1 nếu chưa có danh sách thật)
  */
 function readMultiClassRostersStore() {
   for (const candidate of [OMR_ROSTERS_FILE, BUNDLED_ROSTERS_FILE]) {
     if (fs.existsSync(candidate)) {
       try {
         const parsed = JSON.parse(fs.readFileSync(candidate, 'utf8'));
-        if (parsed && parsed.classes && typeof parsed.classes === 'object' && Object.keys(parsed.classes).length > 0) {
+        if (parsed && parsed.classes && typeof parsed.classes === 'object') {
+          const classNames = Object.keys(parsed.classes).filter(k => Array.isArray(parsed.classes[k]) && parsed.classes[k].length > 0);
           return {
-            activeClass: parsed.activeClass || Object.keys(parsed.classes)[0],
+            activeClass: parsed.activeClass !== undefined ? parsed.activeClass : (classNames[0] || ''),
             classes: parsed.classes,
             updatedAt: parsed.updatedAt || new Date().toISOString()
           };
@@ -368,7 +367,7 @@ function readMultiClassRostersStore() {
     }
   }
 
-  let legacyList = DEFAULT_CLASS_ROSTER;
+  let legacyList = [];
   for (const candidate of [OMR_ROSTER_FILE, BUNDLED_ROSTER_FILE]) {
     if (fs.existsSync(candidate)) {
       try {
@@ -389,7 +388,7 @@ function readMultiClassRostersStore() {
   });
   const classNames = Object.keys(classes);
   return {
-    activeClass: classNames.length > 1 ? '__ALL__' : (classNames[0] || '12A1'),
+    activeClass: classNames.length > 1 ? '__ALL__' : (classNames[0] || ''),
     classes,
     updatedAt: new Date().toISOString()
   };
@@ -406,7 +405,7 @@ function writeMultiClassRostersStore(store) {
 
   const activeList = store.activeClass === '__ALL__'
     ? Object.values(store.classes || {}).flat()
-    : (store.classes?.[store.activeClass] || Object.values(store.classes || {})[0] || DEFAULT_CLASS_ROSTER);
+    : (store.classes?.[store.activeClass] || Object.values(store.classes || {})[0] || []);
   try {
     fs.writeFileSync(OMR_ROSTER_FILE, JSON.stringify(activeList, null, 2), 'utf8');
   } catch (_) { }
@@ -430,6 +429,7 @@ function listClassRostersSummary() {
   const allRoster = classNames.flatMap(cls => store.classes[cls] || []);
   return {
     activeClass: store.activeClass,
+    totalClasses: classNames.length,
     classes,
     totalStudents: allRoster.length,
     activeRoster: getActiveRoster(),
@@ -443,18 +443,19 @@ function listClassRostersSummary() {
  */
 function getActiveRoster(classNameOverride = null) {
   const store = readMultiClassRostersStore();
-  const target = classNameOverride || store.activeClass;
+  const target = classNameOverride !== null && classNameOverride !== undefined ? classNameOverride : store.activeClass;
+  if (!target) {
+    return [];
+  }
   if (target === '__ALL__') {
-    const combined = Object.keys(store.classes || {})
+    return Object.keys(store.classes || {})
       .sort((a, b) => a.localeCompare(b, 'vi', { numeric: true }))
       .flatMap(cls => store.classes[cls] || []);
-    return combined.length > 0 ? combined : DEFAULT_CLASS_ROSTER;
   }
   if (store.classes?.[target] && store.classes[target].length > 0) {
     return store.classes[target];
   }
-  const firstKey = Object.keys(store.classes || {})[0];
-  return (firstKey && store.classes[firstKey].length > 0) ? store.classes[firstKey] : DEFAULT_CLASS_ROSTER;
+  return [];
 }
 
 /**
@@ -467,7 +468,7 @@ function saveClassRoster({ className = '', roster = [], autoSplitByClass = true,
 
   const targetFallback = String(className || '').replace(/\s+/g, ' ').trim();
   const normalized = roster.map((r, idx) => {
-    const norm = normalizeRosterStudent(r, idx, targetFallback || '12A1');
+    const norm = normalizeRosterStudent(r, idx, targetFallback);
     if (targetFallback && !autoSplitByClass) {
       norm.className = targetFallback;
     }
@@ -488,7 +489,7 @@ function saveClassRoster({ className = '', roster = [], autoSplitByClass = true,
       store.activeClass = newClassNames.length > 1 ? '__ALL__' : (newClassNames[0] || store.activeClass);
     }
   } else {
-    const finalCls = targetFallback || normalized[0]?.className || '12A1';
+    const finalCls = targetFallback || normalized[0]?.className || 'Lớp thi';
     store.classes[finalCls] = normalized.map(s => ({ ...s, className: finalCls }));
     if (setActive) {
       store.activeClass = finalCls;
@@ -521,10 +522,10 @@ function deleteClassRoster(className) {
   if (store.classes && store.classes[target]) {
     delete store.classes[target];
   }
-  const remaining = Object.keys(store.classes || {});
+  const remaining = Object.keys(store.classes || {}).sort((a, b) => a.localeCompare(b, 'vi', { numeric: true }));
   if (remaining.length === 0) {
-    store.classes = { '12A1': DEFAULT_CLASS_ROSTER.map((r, i) => normalizeRosterStudent(r, i, '12A1')) };
-    store.activeClass = '12A1';
+    store.classes = {};
+    store.activeClass = '';
   } else if (store.activeClass === target) {
     store.activeClass = remaining[0];
   }
@@ -539,7 +540,7 @@ function saveActiveRoster(roster, options = {}) {
   if (!Array.isArray(roster)) return [];
   const store = readMultiClassRostersStore();
   const targetClass = String(options.className || '').replace(/\s+/g, ' ').trim();
-  const normalized = roster.map((r, idx) => normalizeRosterStudent(r, idx, targetClass || '12A1'));
+  const normalized = roster.map((r, idx) => normalizeRosterStudent(r, idx, targetClass || (options.isDefaultReset ? '12A1' : '')));
 
   if (options.isDefaultReset) {
     store.classes['12A1'] = normalized;
@@ -575,7 +576,7 @@ function saveActiveRoster(roster, options = {}) {
  */
 function buildSmartRosterMap(roster) {
   const map = new Map();
-  const list = Array.isArray(roster) && roster.length > 0 ? roster : getActiveRoster();
+  const list = Array.isArray(roster) ? roster : getActiveRoster();
   list.forEach(r => {
     const rawSbd = String(r.sbd || '').trim();
     if (!rawSbd) return;
@@ -594,6 +595,20 @@ function buildSmartRosterMap(roster) {
     }
   });
   return map;
+}
+
+/**
+ * Tra cứu học sinh trong rosterMap theo SBD gốc, pad 6 số, hoặc bỏ số 0 ở đầu
+ */
+function lookupStudentInRosterMap(rosterMap, rawSbd) {
+  const clean = String(rawSbd || '').trim();
+  if (!clean || !rosterMap || rosterMap.size === 0) return null;
+  return (
+    rosterMap.get(clean)
+    || rosterMap.get(clean.padStart(6, '0'))
+    || rosterMap.get(clean.replace(/^0+/, ''))
+    || null
+  );
 }
 
 /**
@@ -755,12 +770,12 @@ function findAnswerKeyByCode(answerKeysByCode, codeVal) {
 /**
  * Thực hiện chấm toàn bộ lô bài thi (Batch Grading)
  */
-function gradeBatchPapers({ papers = [], answerKeysByCode = {}, pointRules = {}, roster = [], targetClassName = '' }) {
-  const safeRoster = Array.isArray(roster) && roster.length > 0 ? roster : getActiveRoster();
+function gradeBatchPapers({ papers = [], answerKeysByCode = {}, pointRules = {}, roster = null, targetClassName = '', persistDbState = true }) {
+  const safeRoster = Array.isArray(roster) ? roster : getActiveRoster(targetClassName && targetClassName !== '__ALL__' ? targetClassName : null);
   const rosterMap = buildSmartRosterMap(safeRoster);
   const safeKeys = answerKeysByCode && typeof answerKeysByCode === 'object' ? answerKeysByCode : {};
   const availableCodes = Object.keys(safeKeys);
-  const fallbackClass = String(targetClassName || '').trim() || safeRoster[0]?.className || '12A1';
+  const fallbackClass = String(targetClassName || '').trim() || safeRoster[0]?.className || '';
   const gradedPapers = [];
   let validCount = 0;
   let warningCount = 0;
@@ -769,7 +784,7 @@ function gradeBatchPapers({ papers = [], answerKeysByCode = {}, pointRules = {},
     try {
       const rawSbd = String(paper?.sbd || '').trim();
       const studentInfo = (rawSbd && rawSbd !== 'chưa tô')
-        ? (rosterMap.get(rawSbd) || rosterMap.get(rawSbd.padStart(6, '0')) || rosterMap.get(rawSbd.replace(/^0+/, '')) || null)
+        ? lookupStudentInRosterMap(rosterMap, rawSbd)
         : null;
       const rawCode = String(paper?.scannedExamCode || '').trim();
       const answerKey = findAnswerKeyByCode(safeKeys, rawCode);
@@ -825,7 +840,7 @@ function gradeBatchPapers({ papers = [], answerKeysByCode = {}, pointRules = {},
         sbd: rawSbd || 'chưa tô',
         scannedExamCode: rawCode,
         studentName: resolvedName,
-        className: studentInfo?.className || (paper.className && paper.className !== '12A1' ? paper.className : '') || fallbackClass,
+        className: studentInfo?.className || fallbackClass || paper.className || '',
         dob: studentInfo?.dob || paper.dob || '',
         hasError,
         warnings: currentWarnings,
@@ -852,8 +867,10 @@ function gradeBatchPapers({ papers = [], answerKeysByCode = {}, pointRules = {},
   // Tính toán thống kê toàn diện
   const stats = calculateBatchStatistics(gradedPapers);
 
-  // Tự động lưu bản chụp phiên chấm vào ổ cứng để mở lại bất cứ lúc nào
-  saveDatabaseState(gradedPapers);
+  // Tự động lưu bản chụp phiên chấm vào ổ cứng (trừ chế độ Demo mô phỏng)
+  if (persistDbState) {
+    saveDatabaseState(gradedPapers);
+  }
 
   return {
     totalPapers: gradedPapers.length,
@@ -1095,16 +1112,47 @@ function updatePaperAndAudit({ paperId, updates, allPapers, answerKeysByCode, po
     }
   }
 
-  // Đánh dấu đã sửa và làm sạch các cảnh báo đã giải quyết
-  paper.isCorrected = true;
-  paper.warnings = []; // đã giải quyết xong
-  paper.hasError = false;
-
-  // Chấm lại bài này với đáp án mã đề mới
+  // Chấm lại bài này với đáp án mã đề mới và đánh giá lại cảnh báo trung thực
   const activeCode = String(paper.scannedExamCode || '').trim();
   const answerKey = findAnswerKeyByCode(answerKeysByCode, activeCode);
+  const nextWarnings = [];
+  if (!activeCode || /^(chưa|---|unknown)/i.test(activeCode)) {
+    nextWarnings.push({
+      type: 'MISSING_EXAM_CODE',
+      message: 'Chưa xác định Mã đề hợp lệ trên phiếu.'
+    });
+  } else if (!answerKey) {
+    nextWarnings.push({
+      type: 'UNKNOWN_EXAM_CODE',
+      message: `Mã đề "${activeCode}" không tồn tại trong biểu đáp án hiện tại (${Object.keys(answerKeysByCode || {}).join(', ')}).`
+    });
+  }
+  if (Array.isArray(roster) && roster.length > 0) {
+    const cleanSbd = String(paper.sbd || '').trim();
+    const rosterMap = buildSmartRosterMap(roster);
+    if (!cleanSbd || /^(chưa|unknown|---)/i.test(cleanSbd)) {
+      nextWarnings.push({ type: 'MISSING_SBD', message: 'Chưa có Số báo danh trên phiếu.' });
+    } else if (!lookupStudentInRosterMap(rosterMap, cleanSbd)) {
+      nextWarnings.push({ type: 'UNMATCHED_SBD', message: `SBD "${cleanSbd}" chưa có trong Danh sách lớp đang chọn.` });
+    }
+  }
+
+  paper.isCorrected = nextWarnings.length === 0;
+  paper.warnings = nextWarnings;
+  paper.hasError = nextWarnings.length > 0;
+
   if (answerKey) {
     paper.result = gradeSinglePaper(paper, answerKey, pointRules);
+  } else {
+    paper.result = {
+      totalScore: 0,
+      part1Score: 0, part2Score: 0, part3Score: 0,
+      part1Correct: 0, part1Total: 0,
+      part2CorrectSubs: 0, part2TotalSubs: 0,
+      part3Correct: 0, part3Total: 0,
+      details: { part1: {}, part2: {}, part3: {} },
+      hasKey: false
+    };
   }
 
   // Lưu CSDL phiên chấm mới nhất
@@ -1603,23 +1651,33 @@ function exportAuditLogsToCsv() {
 }
 
 /**
- * Đồng bộ CSDL và Nhật ký Lưu vết vào thư mục Google Drive & Lưu ca chấm vào data/omr_database
+ * Đóng gói CSDL Chấm thi & Nhật ký Lưu vết:
+ * - Lưu snapshot trên máy chủ (`data/omr_database` hoặc `/tmp/matrixedu_data` trên Vercel)
+ * - Trả về nội dung JSON/CSV thật để trình duyệt tải xuống / đẩy vào Google Drive của giáo viên (KHÔNG giả vờ đã upload Drive khi không có OAuth token)
  */
-function syncOmrDatabaseToGoogleDrive({ folderId = '1wcSRCsZ9wzjO9ypblF_9L4si9kPm_uop', gradedPapers = [], metadata = {}, answerKeysByCode = {}, pointRules = {} }) {
+function syncOmrDatabaseToGoogleDrive({ folderId = '', gradedPapers = [], metadata = {}, answerKeysByCode = {}, pointRules = {} }) {
   const now = new Date();
   const dateStr = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
-  const subjectSlug = (metadata.subject || 'Tin_hoc').replace(/\s+/g, '_');
-  const gradeSlug = metadata.grade || '12';
+  const subjectSlug = (metadata.subject || 'De_Thi').replace(/\s+/g, '_');
+  const gradeSlug = metadata.grade || '';
+  const cleanFolderId = String(folderId || '').trim();
 
-  // Lưu snapshot vào thư mục data/omr_database
-  const savedSnap = saveGradingSessionSnapshot({ gradedPapers, answerKeysByCode, pointRules, metadata });
+  // Lưu snapshot vào thư mục CSDL
+  const savedSnap = saveGradingSessionSnapshot({
+    gradedPapers,
+    answerKeysByCode,
+    pointRules,
+    metadata,
+    examTitle: metadata.examTitle || '',
+    className: metadata.className || ''
+  });
 
   // 1. Tạo file CSDL JSON
-  const dbFileName = `CSDL_CHAM_THI_${subjectSlug}_Lop${gradeSlug}_${dateStr}.json`;
+  const dbFileName = `CSDL_CHAM_THI_${subjectSlug}${gradeSlug ? '_Lop' + gradeSlug : ''}_${dateStr}.json`;
   const dbPayload = {
     id: savedSnap.id,
     exportedAt: now.toISOString(),
-    folderId,
+    folderId: cleanFolderId,
     metadata,
     totalPapers: gradedPapers.length,
     statistics: calculateBatchStatistics(gradedPapers),
@@ -1635,12 +1693,14 @@ function syncOmrDatabaseToGoogleDrive({ folderId = '1wcSRCsZ9wzjO9ypblF_9L4si9kP
   };
   const dbFilePath = path.join(DATA_DIR, dbFileName);
   const dbJsonStr = JSON.stringify(dbPayload, null, 2);
+  let savedLocalFiles = false;
   try {
     fs.writeFileSync(dbFilePath, dbJsonStr, 'utf8');
+    savedLocalFiles = true;
   } catch (_) { }
 
   // 2. Tạo file Bảng điểm CSV
-  const csvFileName = `BANG_DIEM_${subjectSlug}_Lop${gradeSlug}_${dateStr}.csv`;
+  const csvFileName = `BANG_DIEM_${subjectSlug}${gradeSlug ? '_Lop' + gradeSlug : ''}_${dateStr}.csv`;
   const csvContent = exportRosterToCsv(gradedPapers, metadata);
   const csvFilePath = path.join(DATA_DIR, csvFileName);
   try {
@@ -1655,18 +1715,31 @@ function syncOmrDatabaseToGoogleDrive({ folderId = '1wcSRCsZ9wzjO9ypblF_9L4si9kP
     fs.writeFileSync(auditFilePath, auditContent, 'utf8');
   } catch (_) { }
 
+  const isVercelEphemeral = Boolean(process.env.VERCEL);
+  const msg = isVercelEphemeral
+    ? `Đã lưu tạm trên Vercel (/tmp) và xuất tệp CSDL (${dbFileName}, ${csvFileName}). Hệ thống không tự upload lên Google Drive cá nhân (không có OAuth) — trình duyệt sẽ tự tải về bản sao để bạn lưu vào Drive.`
+    : `Đã lưu CSDL & bảng điểm vào máy chủ (${DATA_DIR}) và chuẩn bị tệp tải về (${csvFileName}). Lưu ý: upload tự động lên Google Drive cá nhân yêu cầu tải tệp lên thư mục Drive của bạn.`;
+
   return {
     ok: true,
+    syncMode: isVercelEphemeral ? 'ephemeral_server_plus_download' : 'local_disk_plus_download',
+    isVercelEphemeral,
+    remoteDriveUploaded: false,
     sessionId: savedSnap.id,
-    message: `Đã lưu ca chấm vào ổ cứng (data/omr_database) và đồng bộ CSDL Chấm thi vào Google Drive (Folder ID: ${folderId})`,
-    folderId,
+    message: msg,
+    folderId: cleanFolderId,
     files: [
-      { name: dbFileName, path: dbFilePath, size: fs.existsSync(dbFilePath) ? fs.statSync(dbFilePath).size : Buffer.byteLength(dbJsonStr, 'utf8') },
-      { name: csvFileName, path: csvFilePath, size: fs.existsSync(csvFilePath) ? fs.statSync(csvFilePath).size : Buffer.byteLength(csvContent, 'utf8') },
-      { name: auditFileName, path: auditFilePath, size: fs.existsSync(auditFilePath) ? fs.statSync(auditFilePath).size : Buffer.byteLength(auditContent, 'utf8') }
+      { name: dbFileName, path: dbFilePath, size: savedLocalFiles && fs.existsSync(dbFilePath) ? fs.statSync(dbFilePath).size : Buffer.byteLength(dbJsonStr, 'utf8'), content: dbJsonStr, mime: 'application/json' },
+      { name: csvFileName, path: csvFilePath, size: fs.existsSync(csvFilePath) ? fs.statSync(csvFilePath).size : Buffer.byteLength(csvContent, 'utf8'), content: csvContent, mime: 'text/csv;charset=utf-8' },
+      { name: auditFileName, path: auditFilePath, size: fs.existsSync(auditFilePath) ? fs.statSync(auditFilePath).size : Buffer.byteLength(auditContent, 'utf8'), content: auditContent, mime: 'text/csv;charset=utf-8' }
     ],
     syncedAt: now.toISOString()
   };
+}
+
+function clearAllRosters() {
+  writeMultiClassRostersStore({ activeClass: '', classes: {} });
+  return listClassRostersSummary();
 }
 
 module.exports = {
@@ -1677,6 +1750,7 @@ module.exports = {
   saveClassRoster,
   setActiveRosterClass,
   deleteClassRoster,
+  clearAllRosters,
   buildSmartRosterMap,
   findAnswerKeyByCode,
   getAuditLogs,

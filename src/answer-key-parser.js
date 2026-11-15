@@ -132,6 +132,14 @@ function parseXlsxBuffer(buffer) {
   return parseMatrix2DToKeys(matrix2D);
 }
 
+function normalizeTfAnswerToken(rawVal) {
+  const vUp = String(rawVal || '').trim().toUpperCase();
+  if (!vUp) return '';
+  if (/^(?:S|F|SAI|FALSE|0)(?:$|[\s.,;:)!?\-\/])/.test(vUp)) return 'S';
+  if (/^(?:Đ|D|T|ĐÚNG|DUNG|TRUE|1|X)(?:$|[\s.,;:)!?\-\/])/.test(vUp)) return 'Đ';
+  return '';
+}
+
 /**
  * Phân tích ma trận 2D (từ Excel hoặc CSV) thành answerKeysByCode
  */
@@ -204,12 +212,11 @@ function parseMatrix2DToKeys(matrix2D) {
         const subQ = subMatch[2].toLowerCase();
 
         codeCols.forEach(cc => {
-          const rawVal = String(row[cc.colIdx] || '').trim();
-          if (!rawVal) return;
-          const vUp = rawVal.toUpperCase();
-          const tfVal = (vUp === 'S' || vUp === 'F' || vUp === 'SAI' || vUp === 'FALSE' || vUp.startsWith('S') || vUp.startsWith('F')) ? 'S' : 'Đ';
-          if (!result[cc.code].part2[mainQ]) result[cc.code].part2[mainQ] = {};
-          result[cc.code].part2[mainQ][subQ] = tfVal;
+          const tfVal = normalizeTfAnswerToken(row[cc.colIdx]);
+          if (tfVal) {
+            if (!result[cc.code].part2[mainQ]) result[cc.code].part2[mainQ] = {};
+            result[cc.code].part2[mainQ][subQ] = tfVal;
+          }
         });
       } else if (currentSection === 'part3' || /^(?:p3|iii)[_\s\.\-]?([1-6])\b/i.test(firstCell)) {
         // PHẦN III: TRẢ LỜI NGẮN (ĐIỀN SỐ NGUYÊN / THẬP PHÂN / PHÂN SỐ)
@@ -239,11 +246,10 @@ function parseMatrix2DToKeys(matrix2D) {
 
           if (['A', 'B', 'C', 'D'].includes(val)) {
             result[cc.code].part1[qNum - 1] = val;
-          } else if (val.includes('Đ') || val.includes('S') || /^[T|F|D|S]/i.test(val)) {
-            // Trường hợp file không có phân đoạn nhưng dòng có chứa Đ/S
-            const tfVal = (val.includes('S') || val === 'F') ? 'S' : 'Đ';
+          } else {
+            const tfVal = normalizeTfAnswerToken(val);
             const m = firstCell.match(/([0-9]{1,2})\s*([a-d])/i);
-            if (m) {
+            if (tfVal && m) {
               const mainQ = m[1];
               const subQ = m[2].toLowerCase();
               if (!result[cc.code].part2[mainQ]) result[cc.code].part2[mainQ] = {};
@@ -285,10 +291,11 @@ function parseMatrix2DToKeys(matrix2D) {
         // Phần II
         const mainQ = subMatch ? subMatch[1] : (qCell.match(/([0-9]{1,2})/)?.[1] || '1');
         const subQ = subMatch ? subMatch[2].toLowerCase() : (qCell.match(/([a-d])/i)?.[1]?.toLowerCase() || 'a');
-        const vUp = ansVal.toUpperCase();
-        const tfVal = (vUp === 'S' || vUp === 'F' || vUp === 'SAI') ? 'S' : 'Đ';
-        if (!result[code].part2[mainQ]) result[code].part2[mainQ] = {};
-        result[code].part2[mainQ][subQ] = tfVal;
+        const tfVal = normalizeTfAnswerToken(ansVal);
+        if (tfVal) {
+          if (!result[code].part2[mainQ]) result[code].part2[mainQ] = {};
+          result[code].part2[mainQ][subQ] = tfVal;
+        }
       } else if (partCell.includes('iii') || partCell.includes('ngắn')) {
         // Phần III
         const qNum = parseInt(qCell.match(/([1-6])/)?.[1] || '1', 10);
@@ -440,11 +447,11 @@ function parseTextAnswerKey(rawText) {
     }
   });
 
-  // Điền giá trị rỗng cho các vị trí còn thiếu trong part1 nếu cần
+  // Giữ nguyên các vị trí chưa có đáp án là chuỗi rỗng '' (không tự ý bịa 'A' gây chấm sai)
   for (const code of Object.keys(result)) {
     const p1 = result[code].part1;
     for (let i = 0; i < p1.length; i++) {
-      if (!p1[i]) p1[i] = 'A';
+      if (!p1[i]) p1[i] = '';
     }
   }
 
@@ -557,7 +564,7 @@ function extractMatrix2DFromXlsxBuffer(buffer) {
  * [{ sbd: '120001', fullName: 'Nguyễn Văn An', className: '12A1', dob: '15/03/2008' }, ...]
  */
 function parseMatrix2DToRoster(matrix2D, options = {}) {
-  const defaultClassName = String(options.defaultClassName || '12A1').trim() || '12A1';
+  const defaultClassName = String(options.defaultClassName || '').trim();
   const roster = [];
   if (!Array.isArray(matrix2D) || matrix2D.length === 0) return roster;
 
@@ -655,19 +662,19 @@ function parseMatrix2DToRoster(matrix2D, options = {}) {
     // Bỏ qua dòng tiêu đề lặp lại hoặc dòng trống không có tên
     if (!fullName || /^(họ và tên|họ tên|stt|số báo danh)$/i.test(fullName)) continue;
 
-    // Chuẩn hóa SBD (nếu chưa có SBD thì tự đánh SBD 6 số từ 120001)
+    // Chuẩn hóa SBD thực tế (không tự ý bịa SBD 120001+ nếu cột SBD trống)
     const cleanSbdDigits = sbd.replace(/[^0-9]/g, '');
     if (cleanSbdDigits) {
       sbd = cleanSbdDigits.length < 6 ? cleanSbdDigits.padStart(6, '0') : cleanSbdDigits;
     } else {
-      sbd = String(120001 + roster.length);
+      sbd = sbd.trim();
     }
 
     roster.push({
       sbd,
       fullName: fullName.replace(/\s+/g, ' ').trim(),
-      className: (className || defaultClassName).replace(/\s+/g, ' ').trim(),
-      dob: dob || '01/01/2008'
+      className: (className || defaultClassName || '').replace(/\s+/g, ' ').trim(),
+      dob: dob || ''
     });
   }
 
@@ -680,7 +687,7 @@ function parseMatrix2DToRoster(matrix2D, options = {}) {
 function summarizeRosterByClass(roster) {
   const counts = {};
   (Array.isArray(roster) ? roster : []).forEach(r => {
-    const cls = String(r?.className || '12A1').replace(/\s+/g, ' ').trim() || '12A1';
+    const cls = String(r?.className || '').replace(/\s+/g, ' ').trim() || 'Chưa phân lớp';
     counts[cls] = (counts[cls] || 0) + 1;
   });
   const classes = Object.keys(counts).sort((a, b) => a.localeCompare(b, 'vi', { numeric: true }));

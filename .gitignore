@@ -11,6 +11,8 @@ data/ai_config.json
 *.tmp
 .DS_Store
 Thumbs.db
+index.html.bak
+extracted_sheet_0.jpg
 
 # Runtime generated exports & logs
 data/exports/
@@ -22,5 +24,6 @@ data/omr_audit_logs.json
 data/omr_database.json
 data/omr_rosters.json
 data/profiles/exam_*.json
+data/deleted_profiles.json
 scripts/*.txt
 

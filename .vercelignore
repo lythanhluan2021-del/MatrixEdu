@@ -1,0 +1,28 @@
+# Dependencies & env
+node_modules/
+.git/
+.env
+.env.*
+
+# Secret config & test suites
+data/ai_config.json
+tests/
+QA_REPORT.md
+DESIGN.md
+README.md
+prompt.docx
+index.html.bak
+extracted_sheet_0.jpg
+scripts/
+
+# Runtime generated OMR / Grading / Export DB (must stay clean in deployment)
+data/exports/
+data/omr_database/
+data/BANG_DIEM_*.csv
+data/CSDL_CHAM_THI_*.json
+data/NHAT_KY_LUU_VET_*.csv
+data/omr_audit_logs.json
+data/omr_database.json
+data/omr_rosters.json
+data/profiles/exam_*.json
+data/deleted_profiles.json

@@ -80,7 +80,8 @@ function computeMatrixStatistics(matrix, metadata = {}) {
   rows.forEach(row => {
     let rowComputedPts = 0;
     for (const qt of qTypes) {
-      const ptUnit = Number(pointRules[qt] || (qt === 'MCQ' ? 0.25 : qt === 'TF' ? 0.25 : qt === 'SA' ? 0.5 : 1.0));
+      const defaultPt = qt === 'MCQ' ? 0.25 : qt === 'TF' ? 0.25 : qt === 'SA' ? 0.5 : 1.0;
+      const ptUnit = Number(pointRules[qt] ?? defaultPt);
       for (const lv of levels) {
         const cnt = Number(row.counts && row.counts[qt] && row.counts[qt][lv]) || 0;
         if (cnt > 0) {
@@ -396,6 +397,17 @@ function generateShuffledVariants(baseQuestions, numVariants = 4, startCode = 10
     return copy;
   }
 
+  const resolveQuestionType = (q) => {
+    const raw = String(q?.type || q?.format || '').trim().toUpperCase();
+    if (raw === 'MCQ') return 'MCQ';
+    if (raw === 'TF') return 'TF';
+    if (raw === 'SA' || raw === 'SHORT_ANSWER') return 'SA';
+    if (raw === 'ESSAY' || raw === 'TL') return 'ESSAY';
+    if (Array.isArray(q?.options) && q.options.length === 4) return 'MCQ';
+    if (Array.isArray(q?.statements) || Array.isArray(q?.subItems)) return 'TF';
+    return 'MCQ';
+  };
+
   for (let vIdx = 0; vIdx < count; vIdx++) {
     const code = userCodes[vIdx] || String(startCode + vIdx);
     const clonedQuestions = JSON.parse(JSON.stringify(baseQuestions || []));
@@ -406,14 +418,15 @@ function generateShuffledVariants(baseQuestions, numVariants = 4, startCode = 10
       const seed0 = hashString(code) + 101;
       const rand0 = createSeededRandom(seed0);
       const balancedFirst = clonedQuestions.map(q => {
-        if (q.type === 'MCQ' && Array.isArray(q.options) && q.options.length === 4) {
+        if (resolveQuestionType(q) === 'MCQ' && Array.isArray(q.options) && q.options.length === 4) {
           const isPositional = hasPositionalOptions(q.options) || Boolean(q.keepOptionOrder);
           if (!isPositional) {
             const labels = ['A', 'B', 'C', 'D'];
-            const ansIdx = Math.max(0, labels.indexOf(String(q.answer || 'A').toUpperCase()));
+            const cleanAns = String(q.answer || '').trim().toUpperCase();
+            const ansIdx = labels.indexOf(cleanAns);
             const indexedOpts = q.options.map((text, idx) => ({
               text: String(text).replace(/^[A-D][\.\)]\s*/, ''),
-              isCorrect: idx === ansIdx
+              isCorrect: idx === (ansIdx >= 0 ? ansIdx : 0)
             }));
             const newOpts = shuffleArray(indexedOpts, rand0);
             q.options = newOpts.map(item => item.text);
@@ -431,20 +444,21 @@ function generateShuffledVariants(baseQuestions, numVariants = 4, startCode = 10
     const rand = createSeededRandom(seedVal);
 
     // Tách theo nhóm dạng câu hỏi để chỉ trộn trong cùng Phần
-    const mcqs = clonedQuestions.filter(q => q.type === 'MCQ');
-    const tfs = clonedQuestions.filter(q => q.type === 'TF');
-    const sas = clonedQuestions.filter(q => q.type === 'SA');
-    const essays = clonedQuestions.filter(q => q.type === 'ESSAY'); // Giữ nguyên thứ tự Tự luận
+    const mcqs = clonedQuestions.filter(q => resolveQuestionType(q) === 'MCQ');
+    const tfs = clonedQuestions.filter(q => resolveQuestionType(q) === 'TF');
+    const sas = clonedQuestions.filter(q => resolveQuestionType(q) === 'SA');
+    const essays = clonedQuestions.filter(q => resolveQuestionType(q) === 'ESSAY'); // Giữ nguyên thứ tự Tự luận
 
     // Hoán vị câu MCQ và đảo 4 phương án A, B, C, D (NGOẠI TRỪ CÂU CÓ PHƯƠNG ÁN CHỈ ĐỊNH VỊ TRÍ)
     const shuffledMcqs = shuffleArray(mcqs, rand).map(q => {
       const isPositional = hasPositionalOptions(q.options) || Boolean(q.keepOptionOrder);
       if (!isPositional && Array.isArray(q.options) && q.options.length === 4) {
         const labels = ['A', 'B', 'C', 'D'];
-        const ansIdx = Math.max(0, labels.indexOf(String(q.answer || 'A').toUpperCase()));
+        const cleanAns = String(q.answer || '').trim().toUpperCase();
+        const ansIdx = labels.indexOf(cleanAns);
         const indexedOpts = q.options.map((text, idx) => ({
           text: String(text).replace(/^[A-D][\.\)]\s*/, ''),
-          isCorrect: idx === ansIdx
+          isCorrect: idx === (ansIdx >= 0 ? ansIdx : 0)
         }));
         const newOpts = shuffleArray(indexedOpts, rand);
         q.options = newOpts.map(item => item.text);

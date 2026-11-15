@@ -7,6 +7,7 @@
  */
 
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const assert = require('assert');
 
@@ -22,7 +23,7 @@ const {
 } = require('../src/ai-engine');
 const { validateExamProfile } = require('../src/qa-validator');
 
-const DATA_DIR = path.join(__dirname, '..', 'data');
+const DATA_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'matrixedu_qa_tests_'));
 const SAMPLE_DOCS_DIR = path.join(DATA_DIR, 'sample_docs');
 const EXPORTS_DIR = path.join(DATA_DIR, 'exports');
 const PROFILES_DIR = path.join(DATA_DIR, 'profiles');
@@ -191,8 +192,12 @@ async function runAllTests() {
   console.log('================================================================================');
 }
 
-runAllTests().catch(err => {
-  console.error('❌ KIỂM THỬ THẤT BẠI:', err);
-  process.exit(1);
-});
+runAllTests()
+  .finally(() => {
+    try { fs.rmSync(DATA_DIR, { recursive: true, force: true }); } catch (_) {}
+  })
+  .catch(err => {
+    console.error('❌ KIỂM THỬ THẤT BẠI:', err);
+    process.exit(1);
+  });
 

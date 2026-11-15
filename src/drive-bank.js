@@ -6,13 +6,41 @@
  */
 
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const https = require('https');
 const { parseDocxBuffer } = require('./zip-docx');
 
-const BANK_DIR = path.join(__dirname, '..', 'data', 'google_drive_bank');
+const BUNDLED_BANK_DIR = path.join(__dirname, '..', 'data', 'google_drive_bank');
+const BUNDLED_ACTIVE_BANK_FILE = path.join(__dirname, '..', 'data', 'active_drive_bank.json');
+const RUNTIME_DATA_DIR = process.env.VERCEL ? path.join(os.tmpdir(), 'matrixedu_data') : path.join(__dirname, '..', 'data');
+const BANK_DIR = path.join(RUNTIME_DATA_DIR, 'google_drive_bank');
 const MAP_FILE = path.join(__dirname, '..', 'data', 'drive_files_map.json');
-const ACTIVE_BANK_FILE = path.join(__dirname, '..', 'data', 'active_drive_bank.json');
+const ACTIVE_BANK_FILE = path.join(RUNTIME_DATA_DIR, 'active_drive_bank.json');
+
+function resolveBankFolderDir(folderId) {
+  if (folderId) {
+    const cleanId = String(folderId).replace(/[^a-zA-Z0-9_-]/g, '');
+    for (const rootDir of [BANK_DIR, BUNDLED_BANK_DIR]) {
+      const candidate = path.join(rootDir, cleanId);
+      if (fs.existsSync(candidate) && fs.readdirSync(candidate).some(f => f.toLowerCase().endsWith('.docx'))) {
+        return candidate;
+      }
+    }
+  }
+  return fs.existsSync(BUNDLED_BANK_DIR) ? BUNDLED_BANK_DIR : BANK_DIR;
+}
+
+function readActiveBankState() {
+  for (const fp of [ACTIVE_BANK_FILE, BUNDLED_ACTIVE_BANK_FILE]) {
+    if (fs.existsSync(fp)) {
+      try {
+        return JSON.parse(fs.readFileSync(fp, 'utf8'));
+      } catch (_) {}
+    }
+  }
+  return null;
+}
 
 // Metadata mapping filename -> Subject / Grade / Topics
 const FILE_TOPIC_CONFIG = {
@@ -956,12 +984,16 @@ async function syncGoogleDriveFolder(folderUrl) {
     throw new Error('Đường link Google Drive không hợp lệ. Vui lòng dán link dạng: https://drive.google.com/drive/folders/ID');
   }
 
-  const targetDir = path.join(BANK_DIR, folderId);
-  if (!fs.existsSync(targetDir)) fs.mkdirSync(targetDir, { recursive: true });
+  const cleanFolderId = String(folderId).replace(/[^a-zA-Z0-9_-]/g, '');
+  const runtimeTargetDir = path.join(BANK_DIR, cleanFolderId);
+  const bundledTargetDir = path.join(BUNDLED_BANK_DIR, cleanFolderId);
+  if (!fs.existsSync(runtimeTargetDir)) fs.mkdirSync(runtimeTargetDir, { recursive: true });
 
   let folderName = 'Ngân hàng câu hỏi Google Drive';
+  let netErrorMsg = null;
+  let downloadedCount = 0;
   try {
-    const html = await fetchHttps(`https://drive.google.com/drive/folders/${folderId}`);
+    const html = await fetchHttps(`https://drive.google.com/drive/folders/${cleanFolderId}`);
     const titleMatch = html.match(/<title>([^<]+)<\/title>/i);
     if (titleMatch) {
       folderName = titleMatch[1].replace(/\s*-\s*Google Drive\s*$/i, '').trim();
@@ -972,24 +1004,39 @@ async function syncGoogleDriveFolder(folderUrl) {
     let m;
     while ((m = fileRegex.exec(html)) !== null) {
       const cleanId = m[2].replace(/-\d+-\d+$/, '');
-      filesFound.push({ fileName: m[1], fileId: cleanId });
+      const safeName = path.basename(String(m[1] || '').trim()).replace(/[\\/:*?"<>|]+/g, '_');
+      if (safeName && safeName.toLowerCase().endsWith('.docx')) {
+        filesFound.push({ fileName: safeName, fileId: cleanId });
+      }
     }
 
     for (const f of filesFound) {
-      const destPath = path.join(targetDir, f.fileName);
+      const destPath = path.join(runtimeTargetDir, f.fileName);
       if (!fs.existsSync(destPath) || fs.statSync(destPath).size === 0) {
         try {
           await downloadHttpsBinary(`https://drive.google.com/uc?export=download&id=${f.fileId}`, destPath);
+          downloadedCount++;
         } catch (err) {
           console.warn(`[syncGoogleDriveFolder] Failed downloading ${f.fileName}:`, err.message);
         }
       }
     }
   } catch (netErr) {
+    netErrorMsg = netErr.message;
     console.warn(`[syncGoogleDriveFolder] Network fetch warning:`, netErr.message);
   }
 
-  const bankData = loadQuestionsFromFolder(targetDir);
+  const effectiveDir = fs.readdirSync(runtimeTargetDir).some(f => f.toLowerCase().endsWith('.docx'))
+    ? runtimeTargetDir
+    : (fs.existsSync(bundledTargetDir) && fs.readdirSync(bundledTargetDir).some(f => f.toLowerCase().endsWith('.docx'))
+      ? bundledTargetDir
+      : runtimeTargetDir);
+
+  const bankData = loadQuestionsFromFolder(effectiveDir);
+  if (bankData.files.length === 0 && bankData.totalQuestions === 0) {
+    const detail = netErrorMsg ? ` (${netErrorMsg})` : ' (Thư mục phải được chia sẻ công khai "Bất kỳ ai có liên kết đều xem được" và chứa các tệp .docx)';
+    throw new Error(`Không tải được tệp câu hỏi .docx nào từ thư mục Google Drive "${cleanFolderId}"${detail}`);
+  }
   const totalUnderline = bankData.mcqQuestions.filter(q => q.hasUnderlineAnswer).length;
   const underlinePct = bankData.mcqQuestions.length > 0
     ? Math.round((totalUnderline / bankData.mcqQuestions.length) * 1000) / 10
@@ -1026,6 +1073,8 @@ async function syncGoogleDriveFolder(folderUrl) {
     updatedAt: new Date().toISOString()
   };
 
+  const activeDir = path.dirname(ACTIVE_BANK_FILE);
+  if (!fs.existsSync(activeDir)) fs.mkdirSync(activeDir, { recursive: true });
   fs.writeFileSync(ACTIVE_BANK_FILE, JSON.stringify(activeBankState, null, 2));
 
   cachedBank = {
@@ -1047,10 +1096,10 @@ async function syncGoogleDriveFolder(folderUrl) {
 }
 
 function getDriveBankStatus() {
-  if (fs.existsSync(ACTIVE_BANK_FILE)) {
+  const activeState = readActiveBankState();
+  if (activeState && activeState.folderId) {
     try {
-      const activeState = JSON.parse(fs.readFileSync(ACTIVE_BANK_FILE, 'utf8'));
-      const targetDir = path.join(BANK_DIR, activeState.folderId);
+      const targetDir = resolveBankFolderDir(activeState.folderId);
       if (fs.existsSync(targetDir)) {
         const bankData = loadDriveQuestionBank();
         return {
@@ -1117,19 +1166,8 @@ function loadDriveQuestionBank(forceReload = false) {
     return cachedBank;
   }
 
-  let activeDir = BANK_DIR;
-  let activeState = null;
-  if (fs.existsSync(ACTIVE_BANK_FILE)) {
-    try {
-      activeState = JSON.parse(fs.readFileSync(ACTIVE_BANK_FILE, 'utf8'));
-      if (activeState && activeState.folderId) {
-        const customDir = path.join(BANK_DIR, activeState.folderId);
-        if (fs.existsSync(customDir) && fs.readdirSync(customDir).filter(f => f.endsWith('.docx')).length > 0) {
-          activeDir = customDir;
-        }
-      }
-    } catch (_) {}
-  }
+  const activeState = readActiveBankState();
+  const activeDir = resolveBankFolderDir(activeState?.folderId);
 
   const bankData = loadQuestionsFromFolder(activeDir);
   const totalUnderline = bankData.mcqQuestions.filter(q => q.hasUnderlineAnswer).length;

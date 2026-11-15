@@ -117,11 +117,13 @@ async function testDriveBankIntegration() {
   }
   assert(qa.isValid, 'Kiểm định QA phải ĐẠT');
 
-  // 7. Xuất file Word (.docx)
+  // 7. Xuất file Word (.docx) vào thư mục tạm để không làm bẩn data/
+  const os = require('os');
   const docxBuf = generateExamDocx(examData, 'full', '101');
-  const exportPath = path.join(__dirname, '..', 'data', 'exports', 'DeKT_Tin12_GoogleDriveBank.docx');
+  const exportPath = path.join(os.tmpdir(), 'DeKT_Tin12_GoogleDriveBank.docx');
   fs.writeFileSync(exportPath, docxBuf);
   console.log('✔ Xuất file Word thành công:', exportPath, `(${docxBuf.length} bytes)`);
+  fs.rmSync(exportPath, { force: true });
 
   console.log('\n========================================================================');
   console.log(' TẤT CẢ KIỂM THỬ TÍCH HỢP NGÂN HÀNG GOOGLE DRIVE THÀNH CÔNG 100%!');
