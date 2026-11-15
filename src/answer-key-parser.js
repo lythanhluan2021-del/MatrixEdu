@@ -475,11 +475,11 @@ function parseMatrix2DToKeys(rawMatrix2D) {
     });
 
     if (foundCodes.length === 0) continue;
-    if (foundCodes.length === 1 && matrix2D.length <= 5) continue;
 
     const firstCodeCol = foundCodes[0].colIdx;
     const leftCells = row.slice(0, firstCodeCol).map(c => String(c || '').trim().toLowerCase());
     const hasQLabel = leftCells.some(s => /^(?:câu|câu\s*hỏi|stt|tt|question|q\.?|mã\s*câu|#)$/i.test(s));
+    if (foundCodes.length === 1 && !hasQLabel && !foundCodes[0].explicit && matrix2D.length <= 5) continue;
     const rowBannerStr = row.map(c => String(c || '')).join(' ').toLowerCase();
     const looksLikeTitleBanner = /(?:năm\s*học|học\s*kỳ|trường\s*thpt|sở\s*gd|school\s*year)/i.test(rowBannerStr) &&
       !foundCodes.some(fc => fc.explicit) && !hasQLabel;

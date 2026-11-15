@@ -223,7 +223,15 @@ assert.strictEqual(htmlKeys['302'].part2['1']['a'], 'S');
 
 const ole2Header = Buffer.from([0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1, 0x00, 0x00]);
 assert.throws(() => parseAnyAnswerKeyFile('legacy.xls', ole2Header), /97-2003|\.xlsx/i);
-console.log('  ✅ Test 7 Passed: Horizontal table, HTML .xls, and binary .xls guard verified!');
+
+const singleCodeXlsx = createZipBuffer({
+  'xl/sharedStrings.xml': Buffer.from('<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><si><t>Câu</t></si><si><t>A</t></si></sst>', 'utf8'),
+  'xl/worksheets/sheet1.xml': Buffer.from('<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData><row r="1"><c t="s" r="A1"><v>0</v></c><c r="B1"><v>501</v></c></row><row r="2"><c r="A2"><v>1</v></c><c t="s" r="B2"><v>1</v></c></row></sheetData></worksheet>', 'utf8')
+});
+const singleKeys = parseAnyAnswerKeyFile('single_501.xlsx', singleCodeXlsx);
+assert.deepStrictEqual(Object.keys(singleKeys), ['501']);
+assert.strictEqual(singleKeys['501'].part1[0], 'A');
+console.log('  ✅ Test 7 Passed: Horizontal table, HTML .xls, binary .xls guard, and single-code small .xlsx verified!');
 
 console.log('\n🎉 ALL 7 EXTERNAL ANSWER KEY TESTS PASSED 100%!');
 

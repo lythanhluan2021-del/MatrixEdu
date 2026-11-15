@@ -10231,6 +10231,191 @@ Phần III:
         ctx.fillRect(16, 1133 - 36, 20, 20);
         ctx.fillRect(780 - 36, 1133 - 36, 20, 20);
 
+        // Tiêu đề chính
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold 16px "Times New Roman", serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('PHIẾU TRẢ LỜI TRẮC NGHIỆM', 780 / 2 - 40, 48);
+        ctx.font = 'italic 11px "Times New Roman", serif';
+        ctx.fillText('Kỳ thi: ...................................................................................', 780 / 2 - 40, 68);
+
+        // Khung điểm và giám thị bên trái
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(36, 96, 170, 210);
+        ctx.font = '11px "Times New Roman", serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Điểm', 121, 114);
+        ctx.beginPath();
+        ctx.moveTo(36, 126); ctx.lineTo(206, 126);
+        ctx.moveTo(36, 180); ctx.lineTo(206, 180);
+        ctx.moveTo(36, 245); ctx.lineTo(206, 245);
+        ctx.stroke();
+        ctx.fillText('Cán bộ coi thi 1', 121, 198);
+        ctx.fillText('Cán bộ coi thi 2', 121, 263);
+
+        // Khung thông tin thí sinh ở giữa
+        ctx.strokeRect(214, 96, 305, 210);
+        ctx.textAlign = 'left';
+        ctx.fillText('1. Hội đồng thi: ....................................', 224, 118);
+        ctx.fillText('2. Điểm thi: ..............................................', 224, 148);
+        ctx.fillText('3. Phòng thi số: .......................................', 224, 178);
+        ctx.fillText('4. Họ và tên thí sinh: ..............................', 224, 208);
+        ctx.fillText('5. Ngày sinh: ....../....../...... (Nam/ Nữ)', 224, 238);
+        ctx.fillText('6. Chữ ký thí sinh: .................................', 224, 268);
+        ctx.restore();
+      }
+
+      // 2. VẼ DỮ LIỆU ĐÁP ÁN & ĐIỂM SỐ NẾU CÓ BÀI THI
+      if (paper) {
+        // Hệ tọa độ chuẩn hóa chính xác theo Mẫu phiếu đang chọn
+        const tpl = getActiveOmrTemplate();
+        const scaleX = width / tpl.width;
+        const scaleY = height / tpl.height;
+
+        // Nếu bài thi có ảnh scan và đã căn chỉnh fiducials -> ánh xạ bilinear để vòng tròn nằm khớp 100% trên ô tròn của ảnh scan
+        const fidTpl = tpl.fiducials || {
+          tl: { x: 50, y: 60 },
+          tr: { x: tpl.width - 50, y: 60 },
+          bl: { x: 50, y: tpl.height - 60 },
+          br: { x: tpl.width - 50, y: tpl.height - 60 }
+        };
+        const W_SCAN = 1164;
+        const H_SCAN = Math.round(W_SCAN * (tpl.height / tpl.width));
+        const scanToCanvasX = width / W_SCAN;
+        const scanToCanvasY = height / H_SCAN;
+
+        const mapCanvasCoord = (origX, origY) => {
+          if (hasStudentScanImage && paper.detectedFiducials) {
+            const df = paper.detectedFiducials;
+            const u = (origX - fidTpl.tl.x) / (fidTpl.tr.x - fidTpl.tl.x);
+            const v = (origY - fidTpl.tl.y) / (fidTpl.bl.y - fidTpl.tl.y);
+            const topX = df.tl.x + u * (df.tr.x - df.tl.x);
+            const topY = df.tl.y + u * (df.tr.y - df.tl.y);
+            const botX = df.bl.x + u * (df.br.x - df.bl.x);
+            const botY = df.bl.y + u * (df.br.y - df.bl.y);
+            return {
+              x: (topX + v * (botX - topX)) * scanToCanvasX,
+              y: (topY + v * (botY - topY)) * scanToCanvasY
+            };
+          }
+          return {
+            x: origX * scaleX,
+            y: origY * scaleY
+          };
+        };
+
+        const hasValidKey = !paper.hasError && Boolean(appState.omr.answerKeysByCode[paper.scannedExamCode]);
+        const activeKey = hasValidKey
+          ? appState.omr.answerKeysByCode[paper.scannedExamCode]
+          : (paper.hasError ? {} : (appState.omr.answerKeysByCode['101'] || {}));
+        const p1KeyList = activeKey.part1 || [];
+        const p2Key = activeKey.part2 || {};
+        const p3Key = activeKey.part3 || {};
+
+        // 2.X. HIỂN THỊ CẢNH BÁO BÀI THI ĐỂ TRỐNG (NẾU THÍ SINH KHÔNG TÔ PHẦN I, II, III)
+        const isBlankExam = Boolean(
+          paper.isBlankPaper ||
+          (Number(paper.result?.totalScore || 0) === 0 && Object.keys(paper.answers?.part1 || {}).length === 0 && Object.keys(paper.answers?.part2 || {}).length === 0)
+        );
+        if (isBlankExam) {
+          ctx.save();
+          const bannerY = Math.round(18 * scaleY);
+          const bannerH = Math.round(62 * scaleY);
+          ctx.fillStyle = 'rgba(239, 68, 68, 0.94)';
+          ctx.fillRect(width * 0.05, bannerY, width * 0.9, bannerH);
+          ctx.strokeStyle = '#b91c1c';
+          ctx.lineWidth = Math.max(2, 3 * scaleX);
+          ctx.strokeRect(width * 0.05, bannerY, width * 0.9, bannerH);
+
+          ctx.fillStyle = '#ffffff';
+          ctx.textAlign = 'center';
+          ctx.font = `bold ${Math.round(23 * scaleY)}px Arial, sans-serif`;
+          ctx.fillText('⚠️ BÀI THI ĐỂ TRỐNG TOÀN BỘ (0/40 Phần I, 0/8 Phần II)', width / 2, bannerY + bannerH * 0.44);
+          ctx.font = `italic ${Math.round(16 * scaleY)}px Arial, sans-serif`;
+          ctx.fillText('Thí sinh không tô chì câu trả lời nào — Điểm số 0.00 đ là hoàn toàn chính xác theo bài thi', width / 2, bannerY + bannerH * 0.82);
+          ctx.restore();
+        }
+
+        // 2.0. ĐIỀN THÔNG TIN HÀNH CHÍNH CỦA THÍ SINH LÊN DÒNG CHẤM (KHI VẼ TRÊN PHÔI GỐC BGD 2025)
+        if (!hasStudentScanImage && (tpl.id === 'bgd_2025_4code' || tpl.id === 'bgd_2025_3code')) {
+          const examTitle = appState.metadata?.examTitle || 'KIỂM TRA ĐỊNH KỲ NĂM HỌC 2025 - 2026';
+          const schoolName = appState.metadata?.schoolName || 'TRƯỜNG THPT CHUYÊN';
+          const subjectName = appState.metadata?.subject || 'Môn học THPT';
+          const stuName = (paper.studentName && paper.studentName !== 'Chưa định danh')
+            ? paper.studentName
+            : 'Chưa định danh (Kiểm tra SBD)';
+          const className = paper.className || '---';
+          const dobStr = paper.dob || '15 / 08 / 2008';
+
+          ctx.save();
+          ctx.fillStyle = '#1e3a8a';
+          ctx.textAlign = 'left';
+          ctx.font = `bold ${Math.round(25 * scaleY)}px "Times New Roman", serif`;
+          ctx.fillText(`${examTitle} (${subjectName})`, 835 * scaleX, 290 * scaleY);
+
+          ctx.font = `italic ${Math.round(25 * scaleY)}px "Times New Roman", serif`;
+          ctx.fillText('08', 1055 * scaleX, 333 * scaleY);
+          ctx.fillText('11', 1175 * scaleX, 333 * scaleY);
+          ctx.fillText('26', 1358 * scaleX, 333 * scaleY);
+
+          ctx.font = `${Math.round(26 * scaleY)}px "Times New Roman", serif`;
+          ctx.fillText(schoolName, 955 * scaleX, 412 * scaleY);
+          ctx.fillText(`Điểm thi ${schoolName}`, 875 * scaleX, 518 * scaleY);
+          ctx.fillText(`Phòng ${className}`, 935 * scaleX, 624 * scaleY);
+
+          ctx.font = `bold ${Math.round(29 * scaleY)}px "Times New Roman", serif`;
+          ctx.fillStyle = (paper.studentName && paper.studentName !== 'Chưa định danh') ? '#0f172a' : '#dc2626';
+          ctx.fillText(stuName, 1015 * scaleX, 731 * scaleY);
+
+          ctx.font = `${Math.round(26 * scaleY)}px "Times New Roman", serif`;
+          ctx.fillStyle = '#1e3a8a';
+          ctx.fillText(dobStr, 915 * scaleX, 834 * scaleY);
+          ctx.restore();
+        }
+
+        // A. TÔ TRÒN & ĐIỀN Ô CHỮ NHẬT SỐ BÁO DANH THEO MẪU PHIẾU
+        const sbdCoords = tpl.coords.sbd;
+        const numSbdCols = sbdCoords.numCols || 6;
+        if (paper.sbd && paper.sbd !== 'chưa tô') {
+          const sbdStr = String(paper.sbd).padStart(numSbdCols, '0');
+          for (let c = 0; c < numSbdCols; c++) {
+            const digit = parseInt(sbdStr[c], 10);
+            const ptBox = mapCanvasCoord(sbdCoords.colBaseX + c * sbdCoords.colStepX, sbdCoords.boxY);
+
+            // In chữ số SBD vào ô chữ nhật phía trên
+            ctx.fillStyle = '#0f172a';
+            ctx.font = `bold ${Math.round(Math.max(12, sbdCoords.radius * 1.5 * scaleX))}px "Courier New", monospace`;
+            ctx.textAlign = 'center';
+            ctx.fillText(sbdStr[c], ptBox.x, ptBox.y);
+
+            if (!isNaN(digit) && digit >= 0 && digit <= 9) {
+              const ptCircle = mapCanvasCoord(sbdCoords.colBaseX + c * sbdCoords.colStepX, sbdCoords.rowBaseY + digit * sbdCoords.rowStepY);
+              const colX = ptCircle.x;
+              const bY = ptCircle.y;
+              const r = sbdCoords.radius * scaleX;
+
+              ctx.beginPath();
+              ctx.arc(colX, bY, r, 0, Math.PI * 2);
+              ctx.fillStyle = '#1e293b';
+              ctx.fill();
+              ctx.fillStyle = '#ffffff';
+              ctx.font = `bold ${Math.round(Math.max(10, r * 1.1))}px Arial, sans-serif`;
+              ctx.fillText(String(digit), colX, bY + (r * 0.35));
+            }
+          }
+        }
+
+        // B. TÔ TRÒN & ĐIỀN Ô CHỮ NHẬT MÃ ĐỀ THI THEO MẪU PHIẾU
+        const codeCoords = tpl.coords.code;
+        const numCodeCols = codeCoords.numCols || 4;
+        const codeStr = String(paper.scannedExamCode || '101').padStart(numCodeCols, '0');
+        for (let c = 0; c < numCodeCols; c++) {
+          const digit = parseInt(codeStr[c], 10);
+          const ptBox = mapCanvasCoord(codeCoords.colBaseX + c * codeCoords.colStepX, codeCoords.boxY);
+
+          // In chữ số Mã đề vào ô chữ nhật phía trên
+          ctx.fillStyle = paper.hasError ? '#dc2626' : '#0f172a';
           ctx.font = `bold ${Math.round(Math.max(12, codeCoords.radius * 1.5 * scaleX))}px "Courier New", monospace`;
           ctx.textAlign = 'center';
           ctx.fillText(codeStr[c], ptBox.x, ptBox.y);
