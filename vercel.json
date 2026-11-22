@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "functions": {
+    "api/**/*.js": {
+      "includeFiles": "{index.html,favicon.svg,favicon.ico,favicon*.png,apple-touch-icon.png,*.docx,*.pdf,*.jpg,*.png,src/**,data/**}"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/favicon:slug*",
+      "destination": "/api/[...slug]"
+    },
+    {
+      "source": "/apple-touch-icon:slug*",
+      "destination": "/api/[...slug]"
+    },
+    {
+      "source": "/api/:slug*",
+      "destination": "/api/[...slug]"
+    }
+  ]
+}

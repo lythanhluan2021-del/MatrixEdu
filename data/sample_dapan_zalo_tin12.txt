@@ -1,0 +1,21 @@
+BẢNG ĐÁP ÁN KIỂM TRA ĐỊNH KỲ TỔ CHUYÊN MÔN
+Mã đề 101:
+PHẦN I (Trắc nghiệm nhiều lựa chọn):
+1.A  2.B  3.C  4.D  5.A  6.B  7.C  8.D  9.A  10.B  11.C  12.D
+13.A 14.B 15.C 16.D 17.A 18.B 19.C 20.D 21.A 22.B  23.C  24.D
+PHẦN II (Trắc nghiệm Đúng/Sai):
+Câu 1: a-Đ, b-S, c-Đ, d-S
+Câu 2: a-S, b-Đ, c-S, d-Đ
+Câu 3: a-Đ, b-Đ, c-S, d-S
+Câu 4: a-S, b-S, c-Đ, d-Đ
+
+Mã đề 102:
+PHẦN I (Trắc nghiệm nhiều lựa chọn):
+1.B  2.C  3.D  4.A  5.B  6.C  7.D  8.A  9.B  10.C  11.D  12.A
+13.B 14.C 15.D 16.A 17.B 18.C 19.D 20.A 21.B 22.C  23.D  24.A
+PHẦN II (Trắc nghiệm Đúng/Sai):
+Câu 1: a-S, b-Đ, c-S, d-Đ
+Câu 2: a-Đ, b-S, c-Đ, d-S
+Câu 3: a-S, b-S, c-Đ, d-Đ
+Câu 4: a-Đ, b-Đ, c-S, d-S
+

@@ -1,0 +1,134 @@
+{
+  "folderId": "1MbQqovIMutXQP-qDRqehjAeRZzVqojF-",
+  "folderUrl": "https://drive.google.com/drive/folders/1MbQqovIMutXQP-qDRqehjAeRZzVqojF-?usp=sharing",
+  "folderName": "NHCH-Tin 10",
+  "totalQuestions": 162,
+  "mcqCount": 72,
+  "tfCount": 48,
+  "saCount": 42,
+  "filesCount": 13,
+  "files": [
+    "Dap_An_De_On_Tap_01_Tin_Hoc_10_ICT.docx",
+    "Dap_An_De_On_Tap_02_Tin_Hoc_10_ICT.docx",
+    "Dap_An_De_On_Tap_03_Tin_Hoc_10_ICT.docx",
+    "Dap_An_De_On_Tap_04_Tin_Hoc_10_ICT.docx",
+    "Dap_An_De_On_Tap_05_Tin_Hoc_10_ICT.docx",
+    "Dap_An_De_On_Tap_06_Tin_Hoc_10_ICT.docx",
+    "De_On_Tap_01_Tin_Hoc_10_ICT_Giua_HK1.docx",
+    "De_On_Tap_02_Tin_Hoc_10_ICT_Giua_HK1.docx",
+    "De_On_Tap_03_Tin_Hoc_10_ICT_Giua_HK1.docx",
+    "De_On_Tap_04_Tin_Hoc_10_ICT_Giua_HK1.docx",
+    "De_On_Tap_05_Tin_Hoc_10_ICT_Giua_HK1.docx",
+    "De_On_Tap_06_Tin_Hoc_10_ICT_Giua_HK1.docx",
+    "Tự luận-HKI-KTGKI.docx"
+  ],
+  "fileDetails": [
+    {
+      "fileName": "Dap_An_De_On_Tap_01_Tin_Hoc_10_ICT.docx",
+      "mcqCount": 0,
+      "tfCount": 4,
+      "saCount": 3,
+      "total": 7,
+      "underlineCount": 0
+    },
+    {
+      "fileName": "Dap_An_De_On_Tap_02_Tin_Hoc_10_ICT.docx",
+      "mcqCount": 0,
+      "tfCount": 4,
+      "saCount": 3,
+      "total": 7,
+      "underlineCount": 0
+    },
+    {
+      "fileName": "Dap_An_De_On_Tap_03_Tin_Hoc_10_ICT.docx",
+      "mcqCount": 0,
+      "tfCount": 4,
+      "saCount": 3,
+      "total": 7,
+      "underlineCount": 0
+    },
+    {
+      "fileName": "Dap_An_De_On_Tap_04_Tin_Hoc_10_ICT.docx",
+      "mcqCount": 0,
+      "tfCount": 4,
+      "saCount": 3,
+      "total": 7,
+      "underlineCount": 0
+    },
+    {
+      "fileName": "Dap_An_De_On_Tap_05_Tin_Hoc_10_ICT.docx",
+      "mcqCount": 0,
+      "tfCount": 4,
+      "saCount": 3,
+      "total": 7,
+      "underlineCount": 0
+    },
+    {
+      "fileName": "Dap_An_De_On_Tap_06_Tin_Hoc_10_ICT.docx",
+      "mcqCount": 0,
+      "tfCount": 4,
+      "saCount": 3,
+      "total": 7,
+      "underlineCount": 0
+    },
+    {
+      "fileName": "De_On_Tap_01_Tin_Hoc_10_ICT_Giua_HK1.docx",
+      "mcqCount": 12,
+      "tfCount": 4,
+      "saCount": 3,
+      "total": 19,
+      "underlineCount": 12
+    },
+    {
+      "fileName": "De_On_Tap_02_Tin_Hoc_10_ICT_Giua_HK1.docx",
+      "mcqCount": 12,
+      "tfCount": 4,
+      "saCount": 3,
+      "total": 19,
+      "underlineCount": 12
+    },
+    {
+      "fileName": "De_On_Tap_03_Tin_Hoc_10_ICT_Giua_HK1.docx",
+      "mcqCount": 12,
+      "tfCount": 4,
+      "saCount": 3,
+      "total": 19,
+      "underlineCount": 12
+    },
+    {
+      "fileName": "De_On_Tap_04_Tin_Hoc_10_ICT_Giua_HK1.docx",
+      "mcqCount": 12,
+      "tfCount": 4,
+      "saCount": 3,
+      "total": 19,
+      "underlineCount": 12
+    },
+    {
+      "fileName": "De_On_Tap_05_Tin_Hoc_10_ICT_Giua_HK1.docx",
+      "mcqCount": 12,
+      "tfCount": 4,
+      "saCount": 3,
+      "total": 19,
+      "underlineCount": 12
+    },
+    {
+      "fileName": "De_On_Tap_06_Tin_Hoc_10_ICT_Giua_HK1.docx",
+      "mcqCount": 12,
+      "tfCount": 4,
+      "saCount": 3,
+      "total": 19,
+      "underlineCount": 12
+    },
+    {
+      "fileName": "Tự luận-HKI-KTGKI.docx",
+      "mcqCount": 0,
+      "tfCount": 0,
+      "saCount": 6,
+      "total": 6,
+      "underlineCount": 0
+    }
+  ],
+  "underlineCount": 72,
+  "underlinePercent": 100,
+  "updatedAt": "2026-11-12T14:49:29.142Z"
+}
