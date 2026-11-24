@@ -2098,6 +2098,40 @@
     .drive-panel { border-radius: var(--radius-md); padding: 14px; background: var(--mx-surface); border: 1px solid var(--mx-line); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 8px; }
     #step-1 .grid-2 { align-items: stretch; }
     #step-1 .grid-2 > * { min-height: 220px; }
+
+    /* ================================================================== */
+    /* GĐ5c (UI-12): KHÔI PHỤC ĐỘ TƯƠNG PHẢN ĐẦU TRANG + TOAST + NHÃN    */
+    /* Nguyên nhân gốc: khối neumorphism cũ (dòng ~1443) đè nền header    */
+    /* thành trắng, đè nền toast thành trắng và nền badge "7 BƯỚC" thành  */
+    /* trắng, trong khi chữ của các phần tử đó vẫn là màu trắng (vốn dành */
+    /* cho nền tối) → tàng hình hoàn toàn trên Vercel. Lớp này đứng cuối  */
+    /* <style> nên thắng mọi quy tắc trước đó. Nền tối #0F172A + chữ     */
+    /* trắng: tương phản ~17.9:1; chữ phụ #CBD5E1 trên nền tối: ~11.4:1 — */
+    /* đều trên ngưỡng 4.5:1.                                             */
+    /* ================================================================== */
+    .app-header { background: var(--mx-dark); color: var(--mx-surface); border-bottom: 1px solid var(--mx-ink); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06); }
+    .brand-title h1 { color: var(--mx-surface); }
+    .brand-title p { color: var(--mx-line); }
+    /* Khôi phục nền tối cho header: định nghĩa gốc của .btn-ghost-light   */
+    /* (chữ trắng trên nền mờ trắng) vốn đúng trên nền tối, chỉ sai khi   */
+    /* khối neumorphism đè nền header thành trắng — nên không cần định    */
+    /* nghĩa lại .btn-ghost-light ở đây (tránh trùng định nghĩa UI-02).   */
+    #header-drive-bank-btn { background: rgba(255, 255, 255, 0.12) !important; border-color: rgba(255, 255, 255, 0.24) !important; color: var(--mx-surface) !important; }
+    #session-autosave-badge { background: rgba(255, 255, 255, 0.12) !important; border-color: rgba(255, 255, 255, 0.24) !important; box-shadow: none !important; }
+    .sidebar-title-badge { background: var(--mx-blue); color: var(--mx-surface); }
+    .toast { background: var(--mx-dark); color: var(--mx-surface); }
+
+    /* GĐ5c (UI-13): mục 1.1 luôn 2 cột (nhãn trên, ô nhập dưới), mỗi ô   */
+    /* tối thiểu đủ rộng để giá trị hiện đủ; nhãn không gãy dòng. Dưới    */
+    /* 768px xếp 1 cột. Tiêu đề bảng 1.3 không gãy dọc.                   */
+    #step-1 .meta-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    #step-1 .meta-grid .form-group { min-width: 0; }
+    #step-1 .meta-grid .form-group label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #step-1 .meta-grid .form-group input, #step-1 .meta-grid .form-group select { width: 100%; min-width: 0; }
+    #units-table th { white-space: nowrap; }
+    @media (max-width: 768px) {
+      #step-1 .meta-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 
@@ -2295,7 +2329,7 @@
                 <div class="card-title"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg> 1.1. Thông tin đề</div>
               </div>
 
-              <div class="grid-4" style="margin-bottom: 12px">
+              <div class="meta-grid" style="margin-bottom: 12px">
                 <div class="form-group">
                   <label>Trường / Đơn vị:</label>
                   <input type="text" id="meta-school" value="TRƯỜNG THPT NGUYỄN SINH SẮC"
@@ -2321,7 +2355,7 @@
                 </div>
               </div>
 
-              <div class="grid-4">
+              <div class="meta-grid">
                 <div class="form-group">
                   <label>Khối:</label>
                   <select id="meta-grade" onchange="syncMetadataFromInputs()">
@@ -2357,22 +2391,29 @@
                     oninput="onVariantsCountInput(this.value)" />
                 </div>
                 <div class="form-group" style="grid-column: span 2">
-                  <label style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px">
-                    <span>Danh sách mã đề:</span>
-                    <span style="display: flex; gap: 5px; flex-wrap: wrap">
-                      <button type="button" class="btn btn-secondary btn-sm"
-                        onclick="setQuickExamCodes('101, 102, 103, 104')"
-                        style="padding: 2px 8px; font-size: 0.75rem">101–104</button>
-                      <button type="button" class="btn btn-secondary btn-sm"
-                        onclick="setQuickExamCodes('0101, 0102, 0103, 0104')"
-                        style="padding: 2px 8px; font-size: 0.75rem">0101–0104</button>
-                      <button type="button" class="btn btn-secondary btn-sm"
-                        onclick="setQuickExamCodes('132, 209, 357, 485')"
-                        style="padding: 2px 8px; font-size: 0.75rem">132–485</button>
-                      <button type="button" class="btn btn-secondary btn-sm" onclick="setQuickExamCodes('01, 02, 03, 04')"
-                        style="padding: 2px 8px; font-size: 0.75rem">01–04</button>
-                    </span>
-                  </label>
+                  <!-- GĐ5c (UI-13): 4 nút dưới đây là MẪU NHANH để đặt mã đề, -->
+                  <!-- không phải danh sách mã đề đang dùng. Trước đây chúng nằm -->
+                  <!-- cạnh nhãn "Danh sách mã đề:" nên bị đọc nhầm thành 4     -->
+                  <!-- khoảng mã đề (101–104, 0101–0104, 132–485, 01–04).       -->
+                  <label>Danh sách mã đề:</label>
+                  <div style="display: flex; gap: 5px; flex-wrap: wrap; align-items: center; margin-bottom: 6px">
+                    <span style="font-size: 0.78rem; color: var(--mx-ink-2); font-weight: 600">Chọn nhanh:</span>
+                    <button type="button" class="btn btn-secondary btn-sm"
+                      onclick="setQuickExamCodes('101, 102, 103, 104')"
+                      title="Đặt mã đề thành 101, 102, 103, 104"
+                      style="padding: 2px 8px; font-size: 0.75rem">101–104</button>
+                    <button type="button" class="btn btn-secondary btn-sm"
+                      onclick="setQuickExamCodes('0101, 0102, 0103, 0104')"
+                      title="Đặt mã đề thành 0101, 0102, 0103, 0104"
+                      style="padding: 2px 8px; font-size: 0.75rem">0101–0104</button>
+                    <button type="button" class="btn btn-secondary btn-sm"
+                      onclick="setQuickExamCodes('132, 209, 357, 485')"
+                      title="Đặt mã đề thành 132, 209, 357, 485"
+                      style="padding: 2px 8px; font-size: 0.75rem">Ngẫu nhiên</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="setQuickExamCodes('01, 02, 03, 04')"
+                      title="Đặt mã đề thành 01, 02, 03, 04"
+                      style="padding: 2px 8px; font-size: 0.75rem">01–04</button>
+                  </div>
                   <input type="text" id="meta-custom-codes" value="101, 102, 103, 104"
                     placeholder="101, 102, 103, 104"
                     oninput="syncMetadataFromInputs()" style="font-weight: 800; color: var(--mx-blue-hover); font-size: 0.92rem" />
@@ -2620,7 +2661,6 @@
                     title="Tải file đề gốc Word (.docx) tự soạn để trộn mã đề — giữ nguyên 100% công thức Equation/MathType & Hình ảnh">
                     <svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Nạp đề gốc (.docx)
                   </button>
-                  <button class="btn btn-secondary btn-sm" onclick="saveCurrentProfile(false, true)" ><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Lưu kho</button>
                   <button class="btn btn-primary btn-sm" onclick="runStep4GenerateExam()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="8" width="14" height="10" rx="2"/><line x1="12" y1="8" x2="12" y2="4"/><circle cx="12" cy="3" r="1"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg> Sinh đề</button>
                   <button class="btn btn-secondary btn-sm" onclick="openShuffleVariantsModal()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg> Trộn mã đề</button>
                   <button class="btn btn-secondary btn-sm" id="toggle-preview-btn" onclick="toggleExamViewMode()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Bản in A4</button>
@@ -4796,7 +4836,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       if (stepNum === 2) renderMatrixTable();
       if (stepNum === 3) renderSpecTable();
       if (stepNum === 4) renderExamStep();
-      if (stepNum === 5) renderAnswersStep();
+      if (stepNum === 5) renderAnswerAndQaStep();
       if (stepNum === 6) renderExportStep();
       if (stepNum === 7 && typeof renderOmrStep === 'function') renderOmrStep();
       refreshWorkflowReadiness();
@@ -5093,7 +5133,8 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       const ptsApply = Math.max(0, totalPts - ptsKnow - ptsUnderstand);
       const pctKnow = totalPts > 0 ? Math.round((ptsKnow / totalPts) * 100) : 0;
       const pctUnderstand = totalPts > 0 ? Math.round((ptsUnderstand / totalPts) * 100) : 0;
-      const pctApply = Math.max(0, 100 - pctKnow - pctUnderstand);
+      const pctApply = totalPts > 0 ? Math.max(0, 100 - pctKnow - pctUnderstand) : 0;
+      const pctOfTen = totalPts > 0 ? Math.round((totalPts / 10) * 100) : 0;
 
       box.style.display = 'block';
       box.innerHTML = `
@@ -5154,7 +5195,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
                     <td style="text-align: center; color: var(--mx-ok)">${totalEssayVD}</td>
                   ` : ''}
                   <td style="text-align: center; font-size: 0.82rem">Biết: ${pctKnow}% | Hiểu: ${pctUnderstand}% | VD: ${pctApply}%</td>
-                  <td style="text-align: center; color: var(--primary); font-size: 0.95rem">${totalPts.toFixed(1).replace(/\.0$/, '.0')} điểm (100%)</td>
+                  <td style="text-align: center; color: var(--primary); font-size: 0.95rem">${totalPts.toFixed(1).replace(/\.0$/, '.0')} điểm (${pctOfTen}%)</td>
                 </tr>
                 <tr style="background: var(--mx-blue-soft); font-weight: 700; font-size: 0.86rem">
                   <td colspan="3" style="text-align: right; color: var(--mx-err)">TỔNG ĐIỂM (Thang 10):</td>
@@ -5343,7 +5384,14 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       syncMetadataFromInputs();
       if (!appState.units || appState.units.length === 0) {
         await runStep1Analysis();
-        if (!appState.units || appState.units.length === 0) return;
+        if (!appState.units || appState.units.length === 0) {
+        // GĐ5c (UI-14): trước đây nhánh này `return` lặng lẽ nên lần bấm
+        // đầu tiên vào "Bước 2: Ma trận →" không chuyển bước (người dùng
+        // tưởng nút hỏng). Nay vẫn sang Bước 2 và giải thích rõ lý do.
+        showToast('Chưa có đơn vị kiến thức — đã chuyển sang Bước 2, hãy nhập ma trận thủ công hoặc quay lại Bước 1 để phân tích tài liệu.', 'warn');
+        goToStep(2);
+        return;
+      }
       }
       await runStep2GenerateMatrix();
       goToStep(2);
@@ -5692,7 +5740,8 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       const ptsApply = Math.max(0, Math.round((totalPts - ptsKnow - ptsUnderstand) * 100) / 100);
       const pctKnow = totalPts > 0 ? Math.round((ptsKnow / totalPts) * 100) : 0;
       const pctUnderstand = totalPts > 0 ? Math.round((ptsUnderstand / totalPts) * 100) : 0;
-      const pctApply = Math.max(0, 100 - pctKnow - pctUnderstand);
+      const pctApply = totalPts > 0 ? Math.max(0, 100 - pctKnow - pctUnderstand) : 0;
+      const pctOfTen = totalPts > 0 ? Math.round((totalPts / 10) * 100) : 0;
 
       // ======================================================================
       // CHẾ ĐỘ 1: BẢNG MA TRẬN CHUẨN (KHỚP 100% FILE GỐC & BƯỚC 1 - HÌNH 1)
@@ -5819,7 +5868,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
               <td style="text-align: center; color: var(--mx-ok)">${totalEssayVD}</td>
             ` : ''}
             <td style="text-align: center; font-size: 0.82rem">Biết: ${pctKnow}% | Hiểu: ${pctUnderstand}% | VD: ${pctApply}%</td>
-            <td style="text-align: center; color: var(--primary); font-size: 0.95rem">${totalPts.toFixed(1).replace(/\.0$/, '.0')} điểm (100%)</td>
+            <td style="text-align: center; color: var(--primary); font-size: 0.95rem">${totalPts.toFixed(1).replace(/\.0$/, '.0')} điểm (${pctOfTen}%)</td>
           </tr>
           <tr style="background: var(--mx-blue-soft); font-weight: 700; font-size: 0.86rem">
             <td colspan="3" style="text-align: right; color: var(--mx-err)">TỔNG ĐIỂM (Thang 10):</td>
@@ -7024,6 +7073,9 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
           </div>
           ${mathHtml}
         `;
+      } else {
+        // GĐ5c (UI-14): trạng thái trống thay vì thẻ trắng trống.
+        qaEl.innerHTML = `<div class="alert" style="margin-bottom: 14px">Chưa có báo cáo kiểm định chất lượng (QA). Hãy hoàn thành Bước 4 (Soạn &amp; Trộn Sinh đề) rồi quay lại đây.</div>`;
       }
 
       // Render Bảng Đáp án & Hướng dẫn chấm
@@ -7089,6 +7141,11 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       }).join('')}
         </tbody>
       </table></div>`;
+
+      // GĐ5c (UI-14): trạng thái trống thay vì bảng trắng trống.
+      if (baseQs.length === 0) {
+        html = `<div class="alert" style="margin-bottom: 14px">Chưa có câu hỏi nào — hãy hoàn thành Bước 4 (Soạn &amp; Trộn Sinh đề) để tạo đề, rồi quay lại đây xem đáp án và hướng dẫn chấm.</div>`;
+      }
 
       ansEl.innerHTML = html;
     }
@@ -8303,9 +8360,20 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       const step4Badge = document.getElementById('step4-drive-bank-badge');
       if (step4Badge) step4Badge.textContent = `Ngân hàng Google Drive của Thầy/Cô (${total} câu hỏi gốc - ${folderName})`;
 
-      // GĐ5b (UI-10): chỉ báo "Đã đồng bộ" khi lần quét vừa rồi thành công;
-      // số câu hiện đúng tổng thật (0 câu khi trống).
-      setGdriveSyncBadge(true);
+      // GĐ5c (UI-13): chỉ báo "Đã đồng bộ" khi lần quét vừa rồi thành công
+      // VÀ có dữ liệu; quét xong mà 0 tệp/0 câu thì vẫn là "Chưa đồng bộ"
+      // (ngân hàng trống) — không dùng chữ "Đã đồng bộ" gây hiểu lầm.
+      const hasBankData = files > 0 || total > 0;
+      setGdriveSyncBadge(hasBankData);
+      const syncPillHtml = hasBankData
+        ? `<span class="badge" style="background: var(--mx-ok); color: var(--mx-surface); font-size: 0.75rem; white-space: nowrap; flex-shrink: 0"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> ĐÃ ĐỒNG BỘ ${files} TỆP WORD</span>`
+        : `<span class="badge" style="background: var(--mx-bg); color: var(--mx-ink-2); border: 1px solid var(--mx-line); font-size: 0.75rem; white-space: nowrap; flex-shrink: 0">ĐÃ QUÉT: 0 TỆP — NGÂN HÀNG TRỐNG</span>`;
+      const commitHtml = total > 0
+        ? `<div style="background: var(--mx-ok-soft); border: 1px solid var(--mx-line); border-radius: 6px; padding: 6px 10px; font-size: 0.78rem; color: var(--mx-ok); margin-bottom: 8px; display: flex; align-items: center; gap: 6px"><span><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span><strong>Cam kết nguồn gốc:</strong> Đề thi được bốc tách 100% từ các file Word trong thư mục Drive trên. Tuyệt đối không tự bịa đặt kiến thức, không tìm kiếm web gây mất kiểm soát.</span></div>`
+        : `<div style="background: var(--mx-amber-soft); border: 1px solid var(--mx-amber); border-radius: 6px; padding: 6px 10px; font-size: 0.78rem; color: var(--mx-warn); margin-bottom: 8px"><strong>Ngân hàng đang trống:</strong> chưa có câu hỏi nào — hãy thêm file Word (.docx) vào thư mục Drive rồi bấm Quét.</div>`;
+      const totalLineHtml = total > 0
+        ? `Tổng cộng: <strong style="color: var(--mx-blue)">${total} câu hỏi</strong> đã sẵn sàng tạo <strong>4 đề thi</strong> bám sát ma trận`
+        : `Ngân hàng đang trống — chưa có câu hỏi nào để tạo đề.`;
       const gdriveCount = document.getElementById('gdrive-count-badge');
       if (gdriveCount) gdriveCount.textContent = `${total} câu`;
 
@@ -8313,12 +8381,12 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
 
       reportBox.innerHTML = `
         <div style="font-size: 0.86rem; color: var(--mx-dark)">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid var(--mx-blue-soft); padding-bottom: 6px">
-            <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; border-bottom: 1px solid var(--mx-blue-soft); padding-bottom: 6px">
+            <div style="min-width: 0; overflow: hidden; text-overflow: ellipsis">
               <span style="font-weight: 700; color: var(--mx-blue-hover); font-size: 0.92rem"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Thư mục Google Drive:</span>
               <span style="font-weight: 600; color: var(--mx-dark); font-size: 0.9rem"> ${escapeHtml(folderName)}</span>
             </div>
-            <span class="badge" style="background: var(--mx-ok); color: var(--mx-surface); font-size: 0.75rem"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> ĐỒNG BỘ ${files} TỆP WORD</span>
+            ${syncPillHtml}
           </div>
 
           <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 8px">
@@ -8339,14 +8407,12 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
             </div>
           </div>
 
-          <div style="background: var(--mx-ok-soft); border: 1px solid var(--mx-line); border-radius: 6px; padding: 6px 10px; font-size: 0.78rem; color: var(--mx-ok); margin-bottom: 8px; display: flex; align-items: center; gap: 6px">
-            <span><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
-            <span><strong>Cam kết nguồn gốc:</strong> Đề thi được bốc tách 100% từ các file Word trong thư mục Drive trên. Tuyệt đối không tự bịa đặt kiến thức, không tìm kiếm web gây mất kiểm soát.</span>
+          ${commitHtml}
           </div>
 
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px">
             <span style="font-size: 0.78rem; color: var(--mx-ink-2)">
-              Tổng cộng: <strong style="color: var(--mx-blue)">${total} câu hỏi</strong> đã sẵn sàng tạo <strong>4 đề thi</strong> bám sát ma trận
+              ${totalLineHtml}
             </span>
             <div style="display: flex; gap: 6px">
               <a href="${folderUrl}" target="_blank" class="btn btn-secondary btn-sm" style="font-size: 0.76rem; padding: 4px 8px; color: var(--mx-blue-hover); border-color: var(--mx-line)">
@@ -11635,7 +11701,7 @@ Phần III:
           <tr>
             <td colspan="4" style="text-align: center; padding: 22px 12px; color: var(--mx-ink-2)">
               <div style="font-size: 1.6rem; margin-bottom: 4px"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
-              <div style="font-size: 0.80rem; font-weight: 700; color: var(--mx-ink); margin-bottom: 8px">Chưa có bài thi — chọn hoặc kéo thả phiếu ở Bước 3</div>
+              <div style="font-size: 0.80rem; font-weight: 700; color: var(--mx-ink); margin-bottom: 8px">Chưa có bài thi — chấm phiếu ở Bước 7 (quét phiếu OMR hoặc nhập tay), rồi xem báo cáo tại đây</div>
               <button class="btn btn-primary btn-sm" onclick="runOmrBatchGrading(true)" style="font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 20px">
                 <svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6L4.5 19a2 2 0 0 0 1.8 3h11.4a2 2 0 0 0 1.8-3L14 9V3"/><line x1="7.5" y1="14" x2="16.5" y2="14"/></svg> Chấm thử 35 bài mẫu
               </button>
