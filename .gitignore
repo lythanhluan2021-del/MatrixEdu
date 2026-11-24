@@ -14,6 +14,11 @@ Thumbs.db
 index.html.bak
 extracted_sheet_0.jpg
 
+# Windows Portable Build & Runtime Cache
+MatrixEdu.exe
+dist/
+data/ooxml_sources/
+
 # Runtime generated exports & logs
 data/exports/
 data/omr_database/

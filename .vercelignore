@@ -3,6 +3,9 @@ node_modules/
 .git/
 .env
 .env.*
+dist/
+MatrixEdu.exe
+src/desktop-launcher.cs
 
 # Secret config & test suites
 data/ai_config.json
@@ -18,6 +21,7 @@ scripts/
 # Runtime generated OMR / Grading / Export DB (must stay clean in deployment)
 data/exports/
 data/omr_database/
+data/ooxml_sources/
 data/BANG_DIEM_*.csv
 data/CSDL_CHAM_THI_*.json
 data/NHAT_KY_LUU_VET_*.csv

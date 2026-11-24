@@ -334,9 +334,52 @@ function parseXlsxBuffer(buffer) {
 function normalizeTfAnswerToken(rawVal) {
   const vUp = String(rawVal || '').trim().toUpperCase();
   if (!vUp) return '';
-  if (/^(?:S|F|SAI|FALSE|0)(?:$|[\s.,;:)!?\-\/])/.test(vUp)) return 'S';
-  if (/^(?:Đ|D|T|ĐÚNG|DUNG|TRUE|1|X)(?:$|[\s.,;:)!?\-\/])/.test(vUp)) return 'Đ';
+  if (/^(?:S|F|SAI|FALSE|0)(?:$|[\s.,;:)!?\-\/(])/.test(vUp)) return 'S';
+  if (/^(?:Đ|D|T|ĐÚNG|DUNG|TRUE|1|X)(?:$|[\s.,;:)!?\-\/(])/.test(vUp)) return 'Đ';
   return '';
+}
+
+/**
+ * Tách ô Đúng/Sai dạng gộp 4 ý trong 1 ô (chuẩn TNMaker 2025, McMIX, Azota, SmartTest):
+ * VD: "ĐSĐS", "DSDS", "TFFT", "Đ-S-Đ-S", "Đ, S, Đ, S", "Đúng, Sai, Đúng, Sai", "a) Đ b) S c) Đ d) S", "a-Đ, b-S, c-Đ, d-S"
+ */
+function parseCompactTfCell(rawVal) {
+  const s = String(rawVal || '').trim();
+  if (!s || s.length < 4) return null;
+
+  // 1. Dạng có nhãn a, b, c, d: "a) Đ b) S c) Đ d) S" hoặc "a-Đ, b-S, c-Đ, d-S"
+  const labeled = [...s.matchAll(/\b([a-d])\s*[\)\.\-:\s]\s*(đúng|dung|sai|true|false|[đdstf])\b/gi)];
+  if (labeled.length >= 2) {
+    const out = {};
+    labeled.forEach(m => {
+      const val = normalizeTfAnswerToken(m[2]);
+      if (val) out[m[1].toLowerCase()] = val;
+    });
+    if (Object.keys(out).length >= 2) return out;
+  }
+
+  // 2. Dạng 4 chữ cái viết liền không khoảng trắng: "ĐSĐS", "DSDS", "TFFT", "đsđs"
+  const bare4 = s.toUpperCase().replace(/[\s\-_,;|\/]+/g, '');
+  if (/^[ĐDSTF]{4}$/.test(bare4)) {
+    const letters = ['a', 'b', 'c', 'd'];
+    const out = {};
+    for (let i = 0; i < 4; i++) {
+      const ch = bare4[i];
+      out[letters[i]] = (ch === 'S' || ch === 'F') ? 'S' : 'Đ';
+    }
+    return out;
+  }
+
+  // 3. Dạng 4 từ phân cách: "Đúng, Sai, Đúng, Sai" hoặc "Đ - S - Đ - S"
+  const tokens = s.split(/[\s,;\-\/|]+/).map(t => t.trim()).filter(Boolean);
+  if (tokens.length === 4) {
+    const mapped = tokens.map(t => normalizeTfAnswerToken(t));
+    if (mapped.every(Boolean)) {
+      return { a: mapped[0], b: mapped[1], c: mapped[2], d: mapped[3] };
+    }
+  }
+
+  return null;
 }
 
 function trimLeadingEmptyColumns(rawMatrix2D) {
@@ -377,32 +420,126 @@ function normalizeMcqAnswerToken(rawVal) {
   return ['A', 'B', 'C', 'D'].includes(val) ? val : '';
 }
 
+function normalizePart3AnswerToken(rawVal) {
+  let val = String(rawVal || '').trim().replace(/\s+/g, '').replace(/,/g, '.');
+  if (!val) return '';
+  // Chấp nhận số nguyên, số âm, số thập phân, phân số (VD: 12.5, -3, 0.25, 100, 1/2, 4)
+  if (/^-?\d+(?:\.\d+)?$/.test(val) || /^-?\d+\/\d+$/.test(val)) {
+    return val;
+  }
+  return '';
+}
+
 function parseHorizontalMatrixToKeys(matrix2D) {
   const result = {};
   if (!matrix2D || matrix2D.length < 2) return result;
 
+  // Dạng TNMaker chuỗi đáp án gộp theo từng dòng: [Mã đề | Chuỗi P1 (ABCD...) | Chuỗi P2 (ĐSĐS...) | Chuỗi P3 (12.5;-3;0.25;100)]
+  const compactResult = {};
+  let compactMatched = 0;
+  for (let r = 0; r < matrix2D.length; r++) {
+    const row = matrix2D[r] || [];
+    let code = '';
+    let codeCol = -1;
+    for (let c = 0; c < Math.min(3, row.length); c++) {
+      const cand = extractHeaderCodeCandidate(row[c]);
+      if (cand) { code = cand.code; codeCol = c; break; }
+    }
+    if (!code) continue;
+    const restCells = row.slice(codeCol + 1).map(x => String(x || '').trim()).filter(Boolean);
+    const mcqStrCell = restCells.find(c => /^[A-Da-d\s\-_,;]{6,}$/.test(c) && c.replace(/[^A-Da-d]/g, '').length >= 6);
+    if (mcqStrCell) {
+      const letters = mcqStrCell.toUpperCase().replace(/[^A-D]/g, '').split('');
+      if (!compactResult[code]) compactResult[code] = { part1: [], part2: {}, part3: {} };
+      compactResult[code].part1 = letters;
+      compactMatched++;
+      let nextP3Idx = 1;
+      // Kiểm tra các ô còn lại xem có Phần II gộp (VD: "ĐSĐS SĐSĐ" hoặc "1:ĐSĐS; 2:SĐSĐ") hoặc Phần III (VD: "12.5; -3; 0.25; 100") không
+      restCells.forEach(cell => {
+        if (cell === mcqStrCell) return;
+        const tfChunks = cell.split(/[\s,;\/|]+/).map(t => t.trim()).filter(Boolean);
+        let qIdx = 1;
+        let matchedAnyTf = false;
+        tfChunks.forEach(ch => {
+          const m = ch.match(/^(?:(?:câu|c)?\s*([1-8])\s*[:\.\-=])?([ĐDSTFđdstf]{4})$/i);
+          if (m) {
+            const qNum = m[1] ? parseInt(m[1], 10) : qIdx++;
+            const parsed = parseCompactTfCell(m[2]);
+            if (parsed) {
+              compactResult[code].part2[qNum] = parsed;
+              matchedAnyTf = true;
+            }
+          }
+        });
+        if (matchedAnyTf) return;
+
+        // Nếu không phải Phần II -> kiểm tra Phần III (Trả lời ngắn): "12.5; -3; 0.25; 100" hoặc "1:12.5; 2:-3" hoặc từng ô số riêng lẻ
+        const singleNum = normalizePart3AnswerToken(cell);
+        if (singleNum && nextP3Idx <= 6) {
+          compactResult[code].part3[nextP3Idx++] = singleNum;
+          return;
+        }
+        const p3Chunks = cell.split(/[;|\t]+/).map(t => t.trim()).filter(Boolean);
+        const tokensToCheck = p3Chunks.length > 1 ? p3Chunks : cell.split(/\s+/).map(t => t.trim()).filter(Boolean);
+        tokensToCheck.forEach(tk => {
+          if (nextP3Idx > 6) return;
+          const labeled = tk.match(/^(?:(?:câu|c|p3\.?|iii\.?)?\s*([1-6])\s*[:=])\s*(.+)$/i);
+          if (labeled) {
+            const qNum = parseInt(labeled[1], 10);
+            const numVal = normalizePart3AnswerToken(labeled[2]);
+            if (numVal) {
+              compactResult[code].part3[qNum] = numVal;
+              nextP3Idx = Math.max(nextP3Idx, qNum + 1);
+            }
+          } else {
+            const numVal = normalizePart3AnswerToken(tk);
+            if (numVal) {
+              compactResult[code].part3[nextP3Idx++] = numVal;
+            }
+          }
+        });
+      });
+    }
+  }
+  if (compactMatched > 0) {
+    return pruneAndNormalizeAnswerKeys(compactResult);
+  }
+
   for (let r = 0; r < Math.min(8, matrix2D.length - 1); r++) {
     const headerRow = matrix2D[r] || [];
     const qCols = [];
+    const seenP1Nums = new Set();
 
     headerRow.forEach((cell, cIdx) => {
       if (cIdx === 0) return;
       const s = String(cell || '').trim();
       if (!s) return;
-      // VD: "1a", "Câu 1a", "II.1a", "1", "Câu 1", "I.1", "III.1"
-      const tfMatch = s.match(/^(?:(?:phần|p)?\s*(?:ii|2)\s*[\.\-\/:]?\s*)?(?:câu\s*)?([0-9]{1,2})\s*([a-d])$/i);
-      if (tfMatch) {
-        qCols.push({ colIdx: cIdx, part: 'part2', qNum: parseInt(tfMatch[1], 10), sub: tfMatch[2].toLowerCase() });
+      // VD: "1a", "1.a", "1_a", "Câu 1a", "II.1a", "P2.1a", "P2_1a", "TF1a", "ĐS1a", "DS1a"
+      const tfSubMatch = s.match(/^(?:(?:phần|p)?\s*(?:ii|2)\s*[\.\-\/:_]?|(?:tf|đs|ds)\s*[\.\-\/:_]?)?\s*(?:câu|c)?\s*([0-9]{1,2})\s*[\.\-_]?\s*([a-d])$/i);
+      if (tfSubMatch) {
+        qCols.push({ colIdx: cIdx, part: 'part2', qNum: parseInt(tfSubMatch[1], 10), sub: tfSubMatch[2].toLowerCase() });
         return;
       }
-      const p3Match = s.match(/^(?:p(?:hần)?\s*(?:iii|3)|iii)\s*[\.\-\/:_]?\s*(?:câu\s*)?([1-6])$/i);
+      // VD: "P2.1", "P2_1", "II.1", "TF1", "ĐS1", "DS1" (ô chứa chuỗi gộp ĐSĐS)
+      const tfCompactMatch = s.match(/^(?:p(?:hần)?\s*(?:ii|2)|ii|tf|đs|ds)\s*[\.\-\/:_]?\s*(?:câu|c)?\s*([1-8])$/i);
+      if (tfCompactMatch) {
+        qCols.push({ colIdx: cIdx, part: 'part2_compact', qNum: parseInt(tfCompactMatch[1], 10) });
+        return;
+      }
+      // VD: "P3.1", "P3_1", "III.1", "TLN1", "SA1", "Điền khuyết 1"
+      const p3Match = s.match(/^(?:p(?:hần)?\s*(?:iii|3)|iii|tln|sa|điền\s*khuyết)\s*[\.\-\/:_]?\s*(?:câu|c)?\s*([1-6])$/i);
       if (p3Match) {
         qCols.push({ colIdx: cIdx, part: 'part3', qNum: parseInt(p3Match[1], 10) });
         return;
       }
-      const p1Match = s.match(/^(?:(?:phần\s*)?(?:i|1)\s*[\.\-\/:]?\s*)?(?:câu|c|q)?\s*[\.\-\/:]?\s*([0-9]{1,2})$/i);
+      // VD: "1", "Câu 1", "I.1", "P1.1", "P1_1", "TN1", "MCQ1", "C1"
+      const p1Match = s.match(/^(?:(?:p(?:hần)?\s*(?:i|1)|tn|mcq)\s*[\.\-\/:_]?\s*)?(?:câu|c|q)?\s*[\.\-\/:_]?\s*([0-9]{1,2})$/i);
       if (p1Match) {
-        qCols.push({ colIdx: cIdx, part: 'part1', qNum: parseInt(p1Match[1], 10) });
+        const qNum = parseInt(p1Match[1], 10);
+        // Nếu số thứ tự câu lặp lại từ 1 sau khi đã có Phần I (TNMaker gộp P1 + P2/P3 trong 1 bảng ngang)
+        const isRepeatedNum = seenP1Nums.has(qNum);
+        if (!isRepeatedNum) seenP1Nums.add(qNum);
+        qCols.push({ colIdx: cIdx, part: isRepeatedNum ? 'auto_extra' : 'part1', qNum });
       }
     });
 
@@ -435,11 +572,28 @@ function parseHorizontalMatrixToKeys(matrix2D) {
             if (!result[code].part2[qc.qNum]) result[code].part2[qc.qNum] = {};
             result[code].part2[qc.qNum][qc.sub] = tfVal;
           }
+        } else if (qc.part === 'part2_compact') {
+          const parsedTf = parseCompactTfCell(rawCell);
+          if (parsedTf) result[code].part2[qc.qNum] = parsedTf;
         } else if (qc.part === 'part3') {
           result[code].part3[qc.qNum] = rawCell.replace(',', '.');
+        } else if (qc.part === 'auto_extra') {
+          const parsedTf = parseCompactTfCell(rawCell);
+          if (parsedTf) {
+            result[code].part2[qc.qNum] = parsedTf;
+          } else if (qc.qNum >= 1 && qc.qNum <= 6 && /^[+\-]?\d+(?:[.,]\d+)?(?:\/\d+)?$/.test(rawCell)) {
+            result[code].part3[qc.qNum] = rawCell.replace(',', '.');
+          }
         } else {
           const mcq = normalizeMcqAnswerToken(rawCell);
-          if (mcq) result[code].part1[qc.qNum - 1] = mcq;
+          if (mcq) {
+            result[code].part1[qc.qNum - 1] = mcq;
+          } else {
+            const parsedTf = parseCompactTfCell(rawCell);
+            if (parsedTf) {
+              result[code].part2[qc.qNum] = parsedTf;
+            }
+          }
         }
       }
     }
@@ -454,7 +608,7 @@ function parseHorizontalMatrixToKeys(matrix2D) {
 /**
  * Phân tích ma trận 2D (từ Excel, HTML table, Word table hoặc CSV) thành answerKeysByCode
  */
-function parseMatrix2DToKeys(rawMatrix2D) {
+function parseMatrix2DToKeys(rawMatrix2D, options = {}) {
   const result = {};
   const matrix2D = trimLeadingEmptyColumns(rawMatrix2D);
   if (!matrix2D || matrix2D.length === 0) return result;
@@ -529,7 +683,7 @@ function parseMatrix2DToKeys(rawMatrix2D) {
       }
     }
 
-    // Tự động nhận diện bảng Word chỉ chứa riêng Phần III (<= 6 dòng số liệu, không có A-D/Đ-S, có số âm/thập phân/số lớn)
+    // Tự động nhận diện bảng Word chỉ chứa riêng Phần III (<= 6 dòng số liệu, không có A-D/Đ-S, có số âm/thập phân/số lớn/5..9)
     let looksLikeStandalonePart3 = false;
     let p3IndicatorCount = 0;
     let mcqOrTfIndicatorCount = 0;
@@ -544,7 +698,7 @@ function parseMatrix2DToKeys(rawMatrix2D) {
         if (!val) continue;
         if (/^[A-Da-d]$/.test(val) || /^(?:Đ|D|S|F|ĐÚNG|SAI|TRUE|FALSE)$/i.test(val)) {
           mcqOrTfIndicatorCount++;
-        } else if (/^(?:-\d+(?:[.,]\d+)?|\d+[.,]\d+|\d+\/\d+|0|\d{2,})$/.test(val)) {
+        } else if (/^(?:-\d+(?:[.,]\d+)?|\d+[.,]\d+|\d+\/\d+|0|[5-9]|\d{2,})$/.test(val)) {
           p3IndicatorCount++;
         }
       }
@@ -553,7 +707,10 @@ function parseMatrix2DToKeys(rawMatrix2D) {
       looksLikeStandalonePart3 = true;
     }
 
-    let currentSection = looksLikeStandalonePart3 ? 'part3' : 'part1'; // 'part1', 'part2', 'part3'
+    let currentSection = (options && options.defaultSection)
+      ? options.defaultSection
+      : (looksLikeStandalonePart3 ? 'part3' : 'part1'); // 'part1', 'part2', 'part3', 'essay'
+    let lastP2MainQ = 0;
 
     for (let r = headerRowIdx + 1; r < matrix2D.length; r++) {
       const row = matrix2D[r] || [];
@@ -564,12 +721,15 @@ function parseMatrix2DToKeys(rawMatrix2D) {
       // Bỏ qua dòng hoàn toàn rỗng
       if (!qCellRaw && row.every(c => !String(c || '').trim())) continue;
 
-      // Nhận diện dòng chuyển phân đoạn đề thi (Phần I, Phần II, Phần III)
+      // Nhận diện dòng chuyển phân đoạn đề thi (Phần I, Phần II, Phần III, Tự luận)
       if (qCellRaw.startsWith('#') || qCellRaw.startsWith('//') ||
-        /phần\s*(?:iii|3)\b|trả\s*lời\s*ngắn/i.test(rowFullStr) ||
+        /(?:phần\s*(?:iii|iv|3|4)\b.*tự\s*luận|hướng\s*dẫn\s*chấm\s*tự\s*luận|^tự\s*luận\b)/i.test(rowFullStr) ||
+        /phần\s*(?:iii|3)\b|trả\s*lời\s*ngắn|điền\s*khuyết/i.test(rowFullStr) ||
         /phần\s*(?:ii|2)\b|đúng[\s\/\-]sai/i.test(rowFullStr) ||
         /phần\s*(?:i|1)\b|trắc\s*nghiệm/i.test(rowFullStr)) {
-        if (/phần\s*(?:iii|3)\b|trả\s*lời\s*ngắn/i.test(rowFullStr)) {
+        if (/(?:tự\s*luận)/i.test(rowFullStr)) {
+          currentSection = 'essay';
+        } else if (/phần\s*(?:iii|3)\b|trả\s*lời\s*ngắn|điền\s*khuyết/i.test(rowFullStr)) {
           currentSection = 'part3';
         } else if (/phần\s*(?:ii|2)\b|đúng[\s\/\-]sai/i.test(rowFullStr)) {
           currentSection = 'part2';
@@ -579,21 +739,27 @@ function parseMatrix2DToKeys(rawMatrix2D) {
         continue;
       }
 
+      if (currentSection === 'essay') continue;
+
       // Bỏ qua dòng lặp lại tiêu đề cột giữa bảng (VD: "Câu | Ý | 101 | 102")
       if (/^(?:câu|câu\s*hỏi|stt|tt|question|#)$/i.test(qCellRaw) && !normalizeMcqAnswerToken(row[codeCols[0].colIdx])) {
         continue;
       }
 
-      // Cột phụ (a, b, c, d) khi có cột riêng trước cột mã đề đầu tiên
-      const hasSeparateSubCol = firstCodeCol >= 2 && /^[a-d]$/i.test(adjCellRaw);
-      const subMatch = qCellRaw.match(/([0-9]{1,2})\s*([a-d])\b/i) ||
-        (hasSeparateSubCol && /^[0-9]{1,2}$/.test(qCellRaw) ? [null, qCellRaw, adjCellRaw] : null) ||
-        (hasSeparateSubCol && /^(?:câu\s*)?([0-9]{1,2})/i.test(qCellRaw) ? [null, qCellRaw.match(/([0-9]{1,2})/)[1], adjCellRaw] : null);
+      // Cột phụ (a, a), b), c), d) hoặc Ý a) khi có cột riêng trước cột mã đề đầu tiên (kể cả ô Câu bị trộn dọc trong Word!)
+      const adjSubMatch = firstCodeCol >= 2 ? adjCellRaw.match(/^(?:ý\s*)?([a-d])[\)\.\:]?$/i) : null;
+      const hasSeparateSubCol = Boolean(adjSubMatch);
+      const qMainNumMatch = qCellRaw.match(/(?:câu\s*)?([0-9]{1,2})/i);
+      const resolvedMainQForSub = qMainNumMatch ? parseInt(qMainNumMatch[1], 10) : (lastP2MainQ > 0 ? lastP2MainQ : 1);
+
+      const subMatch = qCellRaw.match(/([0-9]{1,2})\s*[\.\-_]?\s*([a-d])[\)\.]?\b/i) ||
+        (hasSeparateSubCol ? [null, String(resolvedMainQForSub), adjSubMatch[1]] : null);
 
       if (subMatch) {
-        // PHẦN II: CÂU HỎI ĐÚNG / SAI
+        // PHẦN II: CÂU HỎI ĐÚNG / SAI (từng dòng a, b, c, d)
         const mainQ = parseInt(subMatch[1], 10);
         const subQ = subMatch[2].toLowerCase();
+        lastP2MainQ = mainQ;
 
         codeCols.forEach(cc => {
           const tfVal = normalizeTfAnswerToken(row[cc.colIdx]);
@@ -603,40 +769,51 @@ function parseMatrix2DToKeys(rawMatrix2D) {
           }
         });
       } else if (currentSection === 'part3' || /^(?:p3|iii)[_\s\.\-]?([1-6])\b/i.test(qCellRaw)) {
-        // PHẦN III: TRẢ LỜI NGẮN (ĐIỀN SỐ NGUYÊN / THẬP PHÂN / PHÂN SỐ)
+        // PHẦN III: TRẢ LỜI NGẮN (ĐIỀN SỐ NGUYÊN / THẬP PHÂN / PHÂN SỐ — kể cả số 1 chữ số 1..4!)
         const p3Match = qCellRaw.match(/([1-6])/);
         if (p3Match) {
           const qNum = parseInt(p3Match[1], 10);
           codeCols.forEach(cc => {
-            const rawVal = String(row[cc.colIdx] || '').trim().replace(',', '.');
-            if (rawVal) {
-              result[cc.code].part3[qNum] = rawVal;
+            const normVal = normalizePart3AnswerToken(row[cc.colIdx]);
+            if (normVal) {
+              result[cc.code].part3[qNum] = normVal;
             }
           });
         }
       } else {
-        // PHẦN I: TRẮC NGHIỆM 4 LỰA CHỌN (A, B, C, D)
+        // PHẦN I (MCQ) HOẶC PHẦN II DẠNG GỘP 4 Ý TRONG 1 Ô (TNMaker: Câu 1 | ĐSĐS | SĐSĐ)
         const qMatch = qCellRaw.match(/([0-9]{1,2})/);
         const qNum = qMatch ? parseInt(qMatch[1], 10) : (r - headerRowIdx);
+        const isCompactP2Row = currentSection === 'part2' ||
+          codeCols.some(cc => Boolean(parseCompactTfCell(row[cc.colIdx])));
 
-        codeCols.forEach(cc => {
-          const rawCellVal = String(row[cc.colIdx] || '').trim();
-          const mcq = normalizeMcqAnswerToken(rawCellVal);
-          if (mcq) {
-            result[cc.code].part1[qNum - 1] = mcq;
-          } else {
-            const tfVal = normalizeTfAnswerToken(rawCellVal);
-            const m = qCellRaw.match(/([0-9]{1,2})\s*([a-d])/i);
-            if (tfVal && m) {
-              const mainQ = m[1];
-              const subQ = m[2].toLowerCase();
-              if (!result[cc.code].part2[mainQ]) result[cc.code].part2[mainQ] = {};
-              result[cc.code].part2[mainQ][subQ] = tfVal;
-            } else if (/^(?:-\d+(?:[.,]\d+)?|\d+[.,]\d+|\d+\/\d+|0|\d{2,})$/.test(rawCellVal) && qNum >= 1 && qNum <= 6) {
-              result[cc.code].part3[qNum] = rawCellVal.replace(',', '.');
+        if (isCompactP2Row && qNum >= 1 && qNum <= 8) {
+          codeCols.forEach(cc => {
+            const parsedTf = parseCompactTfCell(row[cc.colIdx]);
+            if (parsedTf) {
+              result[cc.code].part2[qNum] = { ...(result[cc.code].part2[qNum] || {}), ...parsedTf };
             }
-          }
-        });
+          });
+        } else {
+          codeCols.forEach(cc => {
+            const rawCellVal = String(row[cc.colIdx] || '').trim();
+            const mcq = normalizeMcqAnswerToken(rawCellVal);
+            if (mcq) {
+              result[cc.code].part1[qNum - 1] = mcq;
+            } else {
+              const tfVal = normalizeTfAnswerToken(rawCellVal);
+              const m = qCellRaw.match(/([0-9]{1,2})\s*([a-d])/i);
+              if (tfVal && m) {
+                const mainQ = m[1];
+                const subQ = m[2].toLowerCase();
+                if (!result[cc.code].part2[mainQ]) result[cc.code].part2[mainQ] = {};
+                result[cc.code].part2[mainQ][subQ] = tfVal;
+              } else if (/^(?:-\d+(?:[.,]\d+)?|\d+[.,]\d+|\d+\/\d+|0|[5-9]|\d{2,})$/.test(rawCellVal) && qNum >= 1 && qNum <= 6) {
+                result[cc.code].part3[qNum] = normalizePart3AnswerToken(rawCellVal);
+              }
+            }
+          });
+        }
       }
     }
 
@@ -798,7 +975,7 @@ function parseTextAnswerKey(rawText) {
       return;
     }
 
-    // 3.2. Tìm Phần II (Đúng/Sai): VD "1a: Đ 1b: S" hoặc "Câu 1: a-Đ, b-S, c-Đ, d-S"
+    // 3.2. Tìm Phần II (Đúng/Sai): VD "1a: Đ 1b: S", "Câu 1: a-Đ, b-S, c-Đ, d-S", hoặc dạng TNMaker gộp "Câu 1: ĐSĐS" / "1: Đ-S-Đ-S"
     const tfSubPairs = [...line.matchAll(/([0-9]{1,2})\s*([a-d])\s*[\.:\-_=\s]\s*([ĐDSđdsTFtf]|đúng|sai|true|false)/gi)];
     if (tfSubPairs.length > 0) {
       tfSubPairs.forEach(p => {
@@ -811,32 +988,51 @@ function parseTextAnswerKey(rawText) {
       });
       return; // Dòng này là phân đoạn Đúng/Sai, không quét Trắc nghiệm Phần I
     } else if (isPart2Context) {
-      // Dạng "Câu 1: a: Đ, b: S..."
-      const mainQMatch = line.match(/(?:câu|bài)\s*([0-9]{1,2})/i);
+      // Dạng "Câu 1: a: Đ, b: S..." hoặc "Câu 1: ĐSĐS" / "1: Đ-S-Đ-S"
+      const mainQMatch = line.match(/(?:câu|bài|c)?\s*([1-8])\s*[:\.\-=\s]\s*(.+)$/i);
       if (mainQMatch) {
         const qNum = mainQMatch[1];
-        const subs = [...line.matchAll(/([a-d])\s*[\.:\-_=\s]\s*([ĐDSđdsTFtf]|đúng|sai|true|false)/gi)];
-        if (subs.length > 0) {
-          if (!result[currentCode].part2[qNum]) result[currentCode].part2[qNum] = {};
-          subs.forEach(s => {
-            const sub = s[1].toLowerCase();
-            const rawV = s[2].toUpperCase();
-            const val = (rawV === 'S' || rawV === 'F' || rawV === 'SAI' || rawV === 'FALSE') ? 'S' : 'Đ';
-            result[currentCode].part2[qNum][sub] = val;
-          });
+        const rest = mainQMatch[2].trim();
+        const compactParsed = parseCompactTfCell(rest);
+        if (compactParsed) {
+          result[currentCode].part2[qNum] = { ...(result[currentCode].part2[qNum] || {}), ...compactParsed };
+        } else {
+          const subs = [...line.matchAll(/([a-d])\s*[\.:\-_=\s]\s*([ĐDSđdsTFtf]|đúng|sai|true|false)/gi)];
+          if (subs.length > 0) {
+            if (!result[currentCode].part2[qNum]) result[currentCode].part2[qNum] = {};
+            subs.forEach(s => {
+              const sub = s[1].toLowerCase();
+              const rawV = s[2].toUpperCase();
+              const val = (rawV === 'S' || rawV === 'F' || rawV === 'SAI' || rawV === 'FALSE') ? 'S' : 'Đ';
+              result[currentCode].part2[qNum][sub] = val;
+            });
+          }
         }
       }
       return;
     }
 
-    // 3.3. Tìm Trắc nghiệm Phần I: 1A, 2.B, 3-C, 4: D, 5A, 6B (McMIX, TnMaker, SmartTest)
+    // 3.3. Tìm Trắc nghiệm Phần I: 1A, 2.B, 3-C, 4: D, 5A, 6B hoặc chuỗi liền TNMaker "101: ABCDABCD..."
     if (!isPart2Context && !isPart3Context) {
       const pairs = [...line.matchAll(/([0-9]{1,2})\s*[\.:\-_]?\s*([A-D])\b/gi)];
-      pairs.forEach(p => {
-        const qNum = parseInt(p[1], 10);
-        const opt = p[2].toUpperCase();
-        result[currentCode].part1[qNum - 1] = opt;
-      });
+      if (pairs.length > 0) {
+        pairs.forEach(p => {
+          const qNum = parseInt(p[1], 10);
+          const opt = p[2].toUpperCase();
+          result[currentCode].part1[qNum - 1] = opt;
+        });
+      } else {
+        // Dạng chuỗi liền TNMaker: "Mã đề 101: ABCDABCD..." hoặc dòng chỉ chứa "A B C D A B C D..."
+        const afterColon = line.includes(':') ? line.split(':').slice(1).join(':').trim() : line;
+        const stripped = afterColon.replace(/[\s,;\-\|]+/g, '');
+        if (/^[A-Da-d]{6,50}$/.test(stripped)) {
+          const letters = stripped.toUpperCase().split('');
+          const startIdx = result[currentCode].part1.length;
+          letters.forEach((opt, i) => {
+            result[currentCode].part1[startIdx + i] = opt;
+          });
+        }
+      }
     }
   });
 
@@ -852,10 +1048,232 @@ function parseTextAnswerKey(rawText) {
 }
 
 /**
+ * Đọc toàn bộ bảng trong file Word (.docx) kèm ngữ cảnh tiêu đề đứng ngay trước bảng:
+ * - Nhận diện phân đoạn PHẦN I (TN), PHẦN II (Đúng/Sai), PHẦN III (Trả lời ngắn) và bỏ qua bảng PHẦN TỰ LUẬN
+ * - Hỗ trợ bảng đa mã đề (Câu | 101 | 102 |...) kèm ngữ cảnh Phần III (kể cả đáp án 1 chữ số 1..4)
+ * - Hỗ trợ bảng Phần II riêng từng mã đề (| Câu | Ý a) | Ý b) | Ý c) | Ý d) | hoặc dọc | Câu | Ý | Đáp án |)
+ * - Hỗ trợ bảng Phần I & Phần III ngang 2 dòng nối tiếp theo từng mã đề (| Câu | 1 | 2 |...| và | Đáp án | ... |)
+ * - Hỗ trợ bảng Phần I & Phần III dọc 2 cột theo từng mã đề (| Câu | Đáp án |)
+ */
+function parseDocxContextualParagraphs(paragraphs = [], metaOut = null) {
+  const result = {};
+  if (!Array.isArray(paragraphs) || paragraphs.length === 0) return result;
+
+  let activeCode = '';
+  let activeSection = ''; // '', 'part1', 'part2', 'part3', 'essay'
+  let tablesSeen = 0;
+  let i = 0;
+
+  while (i < paragraphs.length) {
+    const line = String(paragraphs[i] || '').trim();
+    if (!line) { i++; continue; }
+
+    // Nếu không phải dòng bảng "| ... |", kiểm tra tiêu đề chuyển Phần / Mã đề
+    if (!(line.startsWith('|') && line.endsWith('|'))) {
+      const lower = line.toLowerCase();
+      const isEssayHeading = /(?:phần\s*(?:iii|iv|3|4)\b[^\n]*tự\s*luận|hướng\s*dẫn\s*chấm\s*(?:phần\s*)?tự\s*luận|đáp\s*án\s*(?:phần\s*)?tự\s*luận|^(?:[ivx]+\.\s*)?tự\s*luận\b)/i.test(lower);
+      const isPart3Heading = !isEssayHeading && /(?:phần\s*(?:iii|3)\b|trả\s*lời\s*ngắn|điền\s*khuyết)/i.test(lower);
+      const isPart2Heading = /(?:phần\s*(?:ii|2)\b|đúng[\s\/\-]sai)/i.test(lower);
+      const isPart1Heading = /(?:phần\s*(?:i|1)\b|trắc\s*nghiệm\s*nhiều|nhiều\s*(?:phương\s*án|lựa\s*chọn))/i.test(lower);
+
+      if (isEssayHeading) activeSection = 'essay';
+      else if (isPart3Heading) activeSection = 'part3';
+      else if (isPart2Heading) activeSection = 'part2';
+      else if (isPart1Heading) activeSection = 'part1';
+
+      const allCodesInLine = [...line.matchAll(/\b([0-9]{3,4})\b/g)].map(m => m[1]).filter(c => {
+        const n = parseInt(c, 10);
+        return !(n >= 2020 && n <= 2035);
+      });
+      const explicitCode = line.match(/(?:mã\s*đề(?:\s*thi)?|mã\s*số|đề\s*số|mã)\s*[:\.\-#]?\s*([0-9]{3,4})\b/i);
+      if (explicitCode && allCodesInLine.length === 1) {
+        activeCode = explicitCode[1];
+        if (activeSection === 'essay' && !isEssayHeading) {
+          activeSection = '';
+        }
+      }
+      i++;
+      continue;
+    }
+
+    // Gom toàn bộ các dòng liên tiếp thuộc cùng một bảng Word
+    const tableRows = [];
+    while (i < paragraphs.length) {
+      const tLine = String(paragraphs[i] || '').trim();
+      if (!(tLine.startsWith('|') && tLine.endsWith('|'))) break;
+      const cells = tLine.slice(1, -1).split('|').map(c => c.trim());
+      tableRows.push(cells);
+      i++;
+    }
+    tablesSeen++;
+
+    if (tableRows.length < 2) continue;
+    if (activeSection === 'essay') continue;
+
+    // Ưu tiên kiểm tra bảng đa mã đề (kèm ngữ cảnh defaultSection từ tiêu đề đứng ngay phía trên!)
+    const multiCodeKeys = parseMatrix2DToKeys(tableRows, {
+      defaultSection: activeSection || undefined
+    });
+    if (Object.keys(multiCodeKeys).length > 0) {
+      mergeAnswerKeyMaps(result, multiCodeKeys);
+      continue;
+    }
+
+    if (!activeCode) continue;
+
+    const header = tableRows[0].map(c => String(c || '').trim());
+
+    // DẠNG 1: Bảng Phần II theo cột Ý a) | Ý b) | Ý c) | Ý d) (Chuẩn MatrixEdu & Bộ GD 2025)
+    const subColMap = {};
+    let qColIdx = 0;
+    header.forEach((h, cIdx) => {
+      const m = h.match(/^(?:ý\s*)?([a-d])[\)\.\:]?$/i);
+      if (m) subColMap[m[1].toLowerCase()] = cIdx;
+      else if (/^(?:câu|câu\s*hỏi|stt|tt)$/i.test(h)) qColIdx = cIdx;
+    });
+    if (subColMap.a !== undefined && subColMap.b !== undefined && subColMap.c !== undefined && subColMap.d !== undefined) {
+      if (!result[activeCode]) result[activeCode] = { part1: [], part2: {}, part3: {} };
+      let autoQ = 1;
+      for (let r = 1; r < tableRows.length; r++) {
+        const row = tableRows[r] || [];
+        const qNumMatch = String(row[qColIdx] || '').match(/([0-9]{1,2})/);
+        const qNum = qNumMatch ? parseInt(qNumMatch[1], 10) : autoQ;
+        autoQ = qNum + 1;
+        const entry = {};
+        ['a', 'b', 'c', 'd'].forEach(sub => {
+          const tf = normalizeTfAnswerToken(row[subColMap[sub]]);
+          if (tf) entry[sub] = tf;
+        });
+        if (Object.keys(entry).length > 0) {
+          result[activeCode].part2[qNum] = { ...(result[activeCode].part2[qNum] || {}), ...entry };
+        }
+      }
+      continue;
+    }
+
+    // DẠNG 2: Bảng ngang 2 dòng nối tiếp (Câu | 1 | 2 |...| N  /  Đáp án | ... |) cho cả Phần I và Phần III
+    const firstHeaderLabel = String(header[0] || '').toLowerCase();
+    const numericHeaders = header.slice(1).filter(h => /^(?:câu\s*)?[0-9]{1,2}$/i.test(h));
+    const minHorizCols = activeSection === 'part3' ? 2 : 4;
+    if (numericHeaders.length >= minHorizCols && (/câu|stt|question/i.test(firstHeaderLabel) || /^[0-9]{1,2}$/.test(header[0]))) {
+      if (!result[activeCode]) result[activeCode] = { part1: [], part2: {}, part3: {} };
+      // Xác định đây là bảng Phần I (A/B/C/D) hay Phần III (Trả lời ngắn - số thực/nguyên)
+      let letterCnt = 0;
+      let p3NumCnt = 0;
+      let maxQ = 0;
+      for (let r = 0; r + 1 < tableRows.length; r += 2) {
+        const qRow = tableRows[r] || [];
+        const aRow = tableRows[r + 1] || [];
+        const startC = /^[0-9]{1,2}$/.test(qRow[0]) ? 0 : 1;
+        for (let c = startC; c < qRow.length; c++) {
+          const qNum = parseInt(String(qRow[c] || '').replace(/[^0-9]/g, ''), 10);
+          if (qNum > maxQ) maxQ = qNum;
+          const rawAns = String(aRow[c] || '').trim();
+          if (/^[A-Da-d]$/.test(rawAns)) letterCnt++;
+          else if (normalizePart3AnswerToken(rawAns)) p3NumCnt++;
+        }
+      }
+      const isPart3Horiz = (activeSection === 'part3' && letterCnt === 0 && p3NumCnt > 0) ||
+        (letterCnt === 0 && p3NumCnt > 0 && maxQ <= 6);
+
+      for (let r = 0; r + 1 < tableRows.length; r += 2) {
+        const qRow = tableRows[r] || [];
+        const aRow = tableRows[r + 1] || [];
+        const startC = /^[0-9]{1,2}$/.test(qRow[0]) ? 0 : 1;
+        for (let c = startC; c < qRow.length; c++) {
+          const qNum = parseInt(String(qRow[c] || '').replace(/[^0-9]/g, ''), 10);
+          if (isPart3Horiz) {
+            const p3Val = normalizePart3AnswerToken(aRow[c]);
+            if (qNum >= 1 && qNum <= 6 && p3Val) {
+              result[activeCode].part3[qNum] = p3Val;
+            }
+          } else {
+            const opt = normalizeMcqAnswerToken(aRow[c]);
+            if (qNum >= 1 && qNum <= 60 && opt) {
+              result[activeCode].part1[qNum - 1] = opt;
+            }
+          }
+        }
+      }
+      continue;
+    }
+
+    // DẠNG 3 & 4: Bảng dọc theo từng mã đề (Câu | Ý | Đáp án) hoặc (Câu | Đáp án)
+    let colSub = -1, colAns = -1, colQ = 0;
+    header.forEach((h, cIdx) => {
+      const hl = h.toLowerCase();
+      if (/^(?:ý|mục|sub)$/i.test(hl)) colSub = cIdx;
+      else if (/^(?:đáp\s*án|chọn|kết\s*quả|trả\s*lời|ans|key)$/i.test(hl)) colAns = cIdx;
+      else if (/^(?:câu|câu\s*hỏi|stt)$/i.test(hl)) colQ = cIdx;
+    });
+    if (colSub !== -1 && colAns !== -1) {
+      if (!result[activeCode]) result[activeCode] = { part1: [], part2: {}, part3: {} };
+      let lastQ = 1;
+      for (let r = 1; r < tableRows.length; r++) {
+        const row = tableRows[r] || [];
+        const qMatch = String(row[colQ] || '').match(/(?:câu\s*)?([0-9]{1,2})/i);
+        if (qMatch) lastQ = parseInt(qMatch[1], 10);
+        const sMatch = String(row[colSub] || '').match(/^(?:ý\s*)?([a-d])[\)\.\:]?$/i);
+        const tf = normalizeTfAnswerToken(row[colAns]);
+        if (sMatch && tf) {
+          if (!result[activeCode].part2[lastQ]) result[activeCode].part2[lastQ] = {};
+          result[activeCode].part2[lastQ][sMatch[1].toLowerCase()] = tf;
+        }
+      }
+      continue;
+    }
+
+    // DẠNG 4: Bảng dọc 2-3 cột (| Câu | Đáp án |) cho Phần III (hoặc Phần I/II gộp) theo từng mã đề
+    if (colSub === -1 && colAns !== -1) {
+      if (!result[activeCode]) result[activeCode] = { part1: [], part2: {}, part3: {} };
+      let letterCnt = 0, p3NumCnt = 0, compactTfCnt = 0;
+      for (let r = 1; r < tableRows.length; r++) {
+        const val = String((tableRows[r] || [])[colAns] || '').trim();
+        if (!val) continue;
+        if (/^[A-Da-d]$/.test(val)) letterCnt++;
+        else if (parseCompactTfCell(val)) compactTfCnt++;
+        else if (normalizePart3AnswerToken(val)) p3NumCnt++;
+      }
+      const isP3Vert = (activeSection === 'part3' && letterCnt === 0 && p3NumCnt > 0) ||
+        (letterCnt === 0 && compactTfCnt === 0 && p3NumCnt > 0 && (tableRows.length - 1) <= 6);
+
+      for (let r = 1; r < tableRows.length; r++) {
+        const row = tableRows[r] || [];
+        const qMatch = String(row[colQ] || '').match(/([0-9]{1,2})/);
+        if (!qMatch) continue;
+        const qNum = parseInt(qMatch[1], 10);
+        const rawAns = String(row[colAns] || '').trim();
+        if (isP3Vert) {
+          const p3Val = normalizePart3AnswerToken(rawAns);
+          if (qNum >= 1 && qNum <= 6 && p3Val) {
+            result[activeCode].part3[qNum] = p3Val;
+          }
+        } else if (compactTfCnt > 0) {
+          const parsedTf = parseCompactTfCell(rawAns);
+          if (qNum >= 1 && qNum <= 8 && parsedTf) {
+            result[activeCode].part2[qNum] = { ...(result[activeCode].part2[qNum] || {}), ...parsedTf };
+          }
+        } else {
+          const opt = normalizeMcqAnswerToken(rawAns);
+          if (qNum >= 1 && qNum <= 60 && opt) {
+            result[activeCode].part1[qNum - 1] = opt;
+          }
+        }
+      }
+    }
+  }
+
+  if (metaOut && typeof metaOut === 'object') {
+    metaOut.tablesSeen = tablesSeen;
+  }
+  return pruneAndNormalizeAnswerKeys(result);
+}
+
+/**
  * Phân tích tổng quát mọi loại file tải lên:
  * - Hỗ trợ Excel (.xlsx, .xls - gồm ZIP XML, HTML table, SpreadsheetML)
- * - Hỗ trợ Word (.docx) ghép tất cả các Bảng biểu (Phần I, II, III) & văn bản từ McMIX, SmartTest
- * - Hỗ trợ File Text (.csv, .tsv, .txt, .json) từ TnMaker, QM Test
+ * - Hỗ trợ Word (.docx) ghép tất cả các Bảng biểu (Phần I, II, III) & bảng tách theo mã đề từ MatrixEdu, TNMaker, McMIX, SmartTest
+ * - Hỗ trợ File Text (.csv, .tsv, .txt, .json) từ TNMaker, QM Test, Zalo
  */
 function parseAnyAnswerKeyFile(filename, buffer) {
   const ext = (filename || '').split('.').pop().toLowerCase();
@@ -868,8 +1286,19 @@ function parseAnyAnswerKeyFile(filename, buffer) {
     try {
       const docxData = parseDocxBuffer(buffer);
       const mergedDocxKeys = {};
-      // 1. Duyệt TẤT CẢ bảng trong Word để gộp Phần I, II, III (nhiều file xuất tách bảng riêng)
-      if (docxData.tables && docxData.tables.length > 0) {
+      const docParagraphs = Array.isArray(docxData.paragraphs) ? docxData.paragraphs : [];
+      const contextualMeta = { tablesSeen: 0 };
+
+      // 1. Ưu tiên duyệt toàn bộ file Word theo ngữ cảnh tiêu đề (PHẦN I/II/III, bỏ qua TỰ LUẬN, tách Mã đề)
+      if (docParagraphs.length > 0) {
+        const contextualKeys = parseDocxContextualParagraphs(docParagraphs, contextualMeta);
+        if (Object.keys(contextualKeys).length > 0) {
+          mergeAnswerKeyMaps(mergedDocxKeys, contextualKeys);
+        }
+      }
+      // 2. Fallback duyệt trực tiếp docxData.tables nếu có 2 bảng dính liền không có đoạn văn ngăn cách hoặc chưa đọc được từ ngữ cảnh
+      if (docxData.tables && docxData.tables.length > 0 &&
+        (Object.keys(mergedDocxKeys).length === 0 || docxData.tables.length > contextualMeta.tablesSeen)) {
         for (const tbl of docxData.tables) {
           const matrix2D = tbl.map(row => row.map(cell => (cell || '').trim()));
           const keys = parseMatrix2DToKeys(matrix2D);
@@ -878,10 +1307,10 @@ function parseAnyAnswerKeyFile(filename, buffer) {
           }
         }
       }
-      // 2. Nếu Word có thêm nội dung văn bản (hoặc không có bảng), phân tích thêm và gộp
-      if (docxData.lines && docxData.lines.length > 0) {
-        const textContent = docxData.lines.join('\n');
-        const textKeys = parseTextAnswerKey(textContent);
+      // 3. Nếu file Word không có bảng đáp án (chỉ viết dạng văn bản thuần), fallback đọc text
+      if (Object.keys(mergedDocxKeys).length === 0 && docParagraphs.length > 0) {
+        const plainLines = docParagraphs.filter(p => !(String(p).trim().startsWith('|') && String(p).trim().endsWith('|')));
+        const textKeys = parseTextAnswerKey(plainLines.join('\n'));
         if (Object.keys(textKeys).length > 0) {
           mergeAnswerKeyMaps(mergedDocxKeys, textKeys);
         }

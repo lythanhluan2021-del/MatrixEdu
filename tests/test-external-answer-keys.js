@@ -11,6 +11,7 @@ const {
   generateSampleAnswerKeyCsv
 } = require('../src/answer-key-parser');
 const { createZipBuffer } = require('../src/zip-docx');
+const { gradeBatchPapers } = require('../src/omr-engine');
 
 console.log('================================================================');
 console.log('🧪 TESTING EXTERNAL ANSWER KEY IMPORT ENGINE (McMIX, TnMaker, etc.)');
@@ -233,5 +234,189 @@ assert.deepStrictEqual(Object.keys(singleKeys), ['501']);
 assert.strictEqual(singleKeys['501'].part1[0], 'A');
 console.log('  ✅ Test 7 Passed: Horizontal table, HTML .xls, binary .xls guard, and single-code small .xlsx verified!');
 
-console.log('\n🎉 ALL 7 EXTERNAL ANSWER KEY TESTS PASSED 100%!');
+// Test 8: TNMaker 2025 formats (Compact ĐSĐS cells, Contiguous ABCD strings, Horizontal P1+P2+P3, Word Merged Cells)
+console.log('\n▶ [Test 8] Testing TNMaker 2025 & Word Per-Code Formats...');
+const tnmakerHorizontalCsv = [
+  'Mã đề,P1.1,P1.2,P1.3,P1.4,P2.1,P2.2,P3.1,P3.2',
+  '101,A,B,C,D,ĐSĐS,SĐSĐ,12.5,-3',
+  '102,B,C,D,A,SĐSĐ,ĐĐSS,0.25,2025'
+].join('\n');
+const tnm1 = parseTextAnswerKey(tnmakerHorizontalCsv);
+assert.deepStrictEqual(tnm1['101'].part1, ['A', 'B', 'C', 'D']);
+assert.deepStrictEqual(tnm1['101'].part2['1'], { a: 'Đ', b: 'S', c: 'Đ', d: 'S' });
+assert.deepStrictEqual(tnm1['102'].part2['2'], { a: 'Đ', b: 'Đ', c: 'S', d: 'S' });
+assert.strictEqual(tnm1['101'].part3['1'], '12.5');
+assert.strictEqual(tnm1['102'].part3['2'], '2025');
+
+const tnmakerStringCsv = [
+  'Mã đề,Đáp án P1,Đáp án P2',
+  '201,ABCDABCD,ĐSĐS SĐSĐ',
+  '202,DCBADCB A,1:ĐĐSS;2:SSĐĐ'
+].join('\n');
+const tnm2 = parseTextAnswerKey(tnmakerStringCsv);
+assert.strictEqual(tnm2['201'].part1.length, 8);
+assert.strictEqual(tnm2['201'].part1[0], 'A');
+assert.deepStrictEqual(tnm2['201'].part2['1'], { a: 'Đ', b: 'S', c: 'Đ', d: 'S' });
+assert.deepStrictEqual(tnm2['202'].part2['2'], { a: 'S', b: 'S', c: 'Đ', d: 'Đ' });
+
+const tnmakerTxt = `Mã đề 301: ABCDABCDABCD
+Phần II:
+Câu 1: Đ-S-Đ-S
+Câu 2: a) Sai, b) Đúng, c) Đúng, d) Sai
+Phần III:
+1: -4,5`;
+const tnm3 = parseTextAnswerKey(tnmakerTxt);
+assert.strictEqual(tnm3['301'].part1.length, 12);
+assert.deepStrictEqual(tnm3['301'].part2['1'], { a: 'Đ', b: 'S', c: 'Đ', d: 'S' });
+assert.deepStrictEqual(tnm3['301'].part2['2'], { a: 'S', b: 'Đ', c: 'Đ', d: 'S' });
+assert.strictEqual(tnm3['301'].part3['1'], '-4.5');
+
+const mergedWordMatrix = [
+  ['Câu', 'Ý', 'Mã 101', 'Mã 102'],
+  ['Câu 1 (1,0đ)', 'a)', 'Sai (Gốc C1.d)', 'Đúng (Gốc C2.a)'],
+  ['', 'b)', 'Đúng (Gốc C1.c)', 'Sai (Gốc C2.b)'],
+  ['', 'c)', 'Đúng (Gốc C1.a)', 'Đúng (Gốc C2.c)'],
+  ['', 'd)', 'Sai (Gốc C1.b)', 'Sai (Gốc C2.d)']
+];
+const tnm4 = parseMatrix2DToKeys(mergedWordMatrix);
+assert.deepStrictEqual(tnm4['101'].part2['1'], { a: 'S', b: 'Đ', c: 'Đ', d: 'S' });
+assert.deepStrictEqual(tnm4['102'].part2['1'], { a: 'Đ', b: 'S', c: 'Đ', d: 'S' });
+console.log('  ✅ Test 8 Passed: TNMaker 2025 compact ĐSĐS, contiguous ABCD strings, and merged Word cells verified!');
+
+// Test 9: Full 3-Part MoET 2025 (Phần I + Phần II + Phần III: single digits 1..4, decimals, essay ignore, TNMaker 3-part compact, Toán 0.5đ & KHTN 0.25đ grading)
+console.log('\n▶ [Test 9] Testing Full 3-Part MoET 2025 Word/TNMaker Import & Grading (Toán 0.5đ + KHTN 0.25đ)...');
+function makeDocxRowXml(cells) {
+  return `<w:tr>${cells.map(c => `<w:tc><w:p><w:r><w:t>${c}</w:t></w:r></w:p></w:tc>`).join('')}</w:tr>`;
+}
+function makeDocxParaXml(text) {
+  return `<w:p><w:r><w:t>${text}</w:t></w:r></w:p>`;
+}
+const fullMoetDocxXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>
+  ${makeDocxParaXml('PHẦN I. TRẮC NGHIỆM NHIỀU PHƯƠNG ÁN LỰA CHỌN')}
+  <w:tbl>
+    ${makeDocxRowXml(['Câu', '101', '102'])}
+    ${Array.from({ length: 12 }, (_, idx) => makeDocxRowXml([String(idx + 1), ['A','B','C','D'][idx % 4], ['B','C','D','A'][idx % 4]])).join('')}
+  </w:tbl>
+  ${makeDocxParaXml('PHẦN II. TRẮC NGHIỆM ĐÚNG SAI')}
+  <w:tbl>
+    ${makeDocxRowXml(['Câu', 'Ý', '101', '102'])}
+    ${[1,2,3,4].map(q => ['a','b','c','d'].map((s, si) => makeDocxRowXml([si === 0 ? `Câu ${q}` : '', `${s})`, si % 2 === 0 ? 'Đ' : 'S', si % 2 === 0 ? 'S' : 'Đ'])).join('')).join('')}
+  </w:tbl>
+  ${makeDocxParaXml('PHẦN III. TRẢ LỜI NGẮN')}
+  <w:tbl>
+    ${makeDocxRowXml(['Câu', '101', '102'])}
+    ${makeDocxRowXml(['1', '1', '4'])}
+    ${makeDocxRowXml(['2', '2', '3'])}
+    ${makeDocxRowXml(['3', '12,5', '-2,5'])}
+    ${makeDocxRowXml(['4', '-3', '0,25'])}
+    ${makeDocxRowXml(['5', '7', '9'])}
+    ${makeDocxRowXml(['6', '2025', '100'])}
+  </w:tbl>
+  ${makeDocxParaXml('PHẦN IV. HƯỚNG DẪN CHẤM TỰ LUẬN')}
+  <w:tbl>
+    ${makeDocxRowXml(['Câu', 'Nội dung', 'Điểm'])}
+    ${makeDocxRowXml(['1', 'Chứng minh...', '1,0'])}
+  </w:tbl>
+</w:body></w:document>`;
+const fullMoetDocxBuf = createZipBuffer({ 'word/document.xml': Buffer.from(fullMoetDocxXml, 'utf8') });
+const moetWordKeys = parseAnyAnswerKeyFile('Dap_an_Toan12_BGD2025.docx', fullMoetDocxBuf);
+assert.strictEqual(moetWordKeys['101'].part1.length, 12);
+assert.strictEqual(moetWordKeys['101'].part1[0], 'A', 'Part III single digit 1 must NOT overwrite Part I Q1');
+assert.strictEqual(Object.keys(moetWordKeys['101'].part2).length, 4);
+assert.strictEqual(moetWordKeys['101'].part3['1'], '1');
+assert.strictEqual(moetWordKeys['101'].part3['2'], '2');
+assert.strictEqual(moetWordKeys['101'].part3['3'], '12.5');
+assert.strictEqual(moetWordKeys['101'].part3['4'], '-3');
+assert.strictEqual(moetWordKeys['101'].part3['5'], '7');
+assert.strictEqual(moetWordKeys['101'].part3['6'], '2025');
+assert.strictEqual(moetWordKeys['102'].part3['3'], '-2.5');
+
+// Per-code Word Part III (horizontal 2-row + vertical 2-col)
+const perCodeP3DocxXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>
+  ${makeDocxParaXml('MÃ ĐỀ 201')}
+  ${makeDocxParaXml('PHẦN III. TRẢ LỜI NGẮN')}
+  <w:tbl>
+    ${makeDocxRowXml(['Câu', '1', '2', '3', '4', '5', '6'])}
+    ${makeDocxRowXml(['Đáp án', '1', '2', '12,5', '-3', '8', '0,25'])}
+  </w:tbl>
+  ${makeDocxParaXml('MÃ ĐỀ 202')}
+  ${makeDocxParaXml('PHẦN III. TRẢ LỜI NGẮN')}
+  <w:tbl>
+    ${makeDocxRowXml(['Câu', 'Đáp án'])}
+    ${makeDocxRowXml(['1', '4'])}
+    ${makeDocxRowXml(['2', '-1,5'])}
+  </w:tbl>
+</w:body></w:document>`;
+const perCodeP3Keys = parseAnyAnswerKeyFile('PerCode_P3.docx', createZipBuffer({ 'word/document.xml': Buffer.from(perCodeP3DocxXml, 'utf8') }));
+assert.strictEqual(perCodeP3Keys['201'].part3['1'], '1');
+assert.strictEqual(perCodeP3Keys['201'].part3['3'], '12.5');
+assert.strictEqual(perCodeP3Keys['201'].part3['6'], '0.25');
+assert.strictEqual(perCodeP3Keys['202'].part3['1'], '4');
+assert.strictEqual(perCodeP3Keys['202'].part3['2'], '-1.5');
+
+// 3-Part TNMaker compact CSV
+const tnmCompact3PartCsv = [
+  'Mã đề,P1,P2,P3',
+  '301,ABCDABCDABCD,ĐSĐS SĐSĐ ĐĐSS SSĐĐ,12.5; -3; 0.25; 100; 8; 4'
+].join('\n');
+const tnmCompact3 = parseTextAnswerKey(tnmCompact3PartCsv);
+assert.strictEqual(tnmCompact3['301'].part1.length, 12);
+assert.strictEqual(Object.keys(tnmCompact3['301'].part2).length, 4);
+assert.strictEqual(tnmCompact3['301'].part3['1'], '12.5');
+assert.strictEqual(tnmCompact3['301'].part3['2'], '-3');
+assert.strictEqual(tnmCompact3['301'].part3['6'], '4');
+
+// Verify Toán 12 (12 TN x 0.25 + 4 Đ/S x 1.0 + 6 TLN x 0.5 = 10.00) with comma decimal matching
+const toanP1Ans = {};
+moetWordKeys['101'].part1.forEach((opt, i) => { toanP1Ans[i + 1] = opt; });
+const toanGrade = gradeBatchPapers({
+  answerKeysByCode: moetWordKeys,
+  pointRules: { mcq: 0.25, tfStyle: 'moet2025', sa: 0.5 },
+  persistDbState: false,
+  papers: [{
+    id: 'toan-1',
+    sbd: '000001',
+    scannedExamCode: '101',
+    answers: {
+      part1: toanP1Ans,
+      part2: moetWordKeys['101'].part2,
+      part3: { '1': '1', '2': '2', '3': '12,5', '4': '-3', '5': '7', '6': '2025' }
+    }
+  }]
+});
+assert.strictEqual(toanGrade.gradedPapers[0].result.totalScore, 10, `Toán 12 must score 10.00, got ${toanGrade.gradedPapers[0].result.totalScore}`);
+assert.strictEqual(toanGrade.gradedPapers[0].result.part3Score, 3, 'Toán 12 Part III (6 x 0.5) must be 3.0');
+
+// Verify Lí/Hóa/Sinh/Địa (18 TN x 0.25 + 4 Đ/S x 1.0 + 6 TLN x 0.25 = 10.00)
+const khtnKeys = {
+  '401': {
+    part1: Array.from({ length: 18 }, (_, i) => ['A','B','C','D'][i % 4]),
+    part2: moetWordKeys['101'].part2,
+    part3: { '1': '1', '2': '-2.5', '3': '0.25', '4': '100', '5': '7', '6': '2025' }
+  }
+};
+const khtnP1Ans = {};
+khtnKeys['401'].part1.forEach((opt, i) => { khtnP1Ans[i + 1] = opt; });
+const khtnGrade = gradeBatchPapers({
+  answerKeysByCode: khtnKeys,
+  pointRules: { mcq: 0.25, tfStyle: 'moet2025', sa: 0.25 },
+  persistDbState: false,
+  papers: [{
+    id: 'khtn-1',
+    sbd: '000002',
+    scannedExamCode: '401',
+    answers: {
+      part1: khtnP1Ans,
+      part2: khtnKeys['401'].part2,
+      part3: { '1': '1', '2': '-2,5', '3': '0,25', '4': '100', '5': '7', '6': '2025' }
+    }
+  }]
+});
+assert.strictEqual(khtnGrade.gradedPapers[0].result.totalScore, 10, `KHTN 12 must score 10.00, got ${khtnGrade.gradedPapers[0].result.totalScore}`);
+assert.strictEqual(khtnGrade.gradedPapers[0].result.part3Score, 1.5, 'KHTN 12 Part III (6 x 0.25) must be 1.5');
+console.log('  ✅ Test 9 Passed: Full 3-Part MoET 2025 Word/TNMaker import & Toán (0.5đ) / KHTN (0.25đ) grading verified!');
+
+console.log('\n🎉 ALL 9 EXTERNAL ANSWER KEY TESTS PASSED 100%!');
 

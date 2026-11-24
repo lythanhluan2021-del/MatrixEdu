@@ -213,6 +213,8 @@ function detectMetadataFromTablesAndText(tables = [], paragraphs = [], fileName 
     [/môn\s*[:\-]?\s*lịch\s*sử\s*và\s*địa\s*l[íý]/i, 'Lịch sử và Địa lí'],
     [/môn\s*[:\-]?\s*lịch\s*sử/i, 'Lịch sử'],
     [/môn\s*[:\-]?\s*địa\s*l[íý]/i, 'Địa lí'],
+    [/môn\s*[:\-]?\s*(?:gdkt\s*&?\s*pl|giáo\s*dục\s*kinh\s*tế\s*và\s*pháp\s*luật)|\bgdkt&?pl\b/i, 'GDKT&PL'],
+    [/môn\s*[:\-]?\s*công\s*nghệ|\bcông\s*nghệ\s*1[012]\b/i, 'Công nghệ'],
     [/môn\s*[:\-]?\s*khoa\s*học\s*tự\s*nhiên|\bkhtn\b/i, 'Khoa học tự nhiên'],
     [/môn\s*[:\-]?\s*tiếng\s*việt/i, 'Tiếng Việt']
   ];
@@ -654,5 +656,6 @@ module.exports = {
   extractDocumentContent,
   analyzeEducationalText,
   parseSchoolMatrixAndSpecFromDocx,
-  parseOutcomesFromText
+  parseOutcomesFromText,
+  detectMetadataFromTablesAndText
 };

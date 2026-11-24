@@ -11,6 +11,7 @@ const path = require('path');
 const { URL } = require('url');
 
 const { generateExamDocx, createMaterialDocx } = require('./src/zip-docx');
+const { parseManualExamDocx, buildLosslessShuffledDocx } = require('./src/docx-exam-importer');
 const {
   DEFAULT_CLASS_ROSTER,
   getActiveRoster,
@@ -478,13 +479,79 @@ const requestHandler = async (req, res) => {
       return;
     }
 
-    // 10. Trộn & Nhân bản mã đề
+    // 9c. Nạp đề thi thủ công từ file Word (.docx) — BẢO TOÀN 100% OOXML (Equation, MathType, Hình ảnh, Bảng biểu) để trộn đề
+    if (req.method === 'POST' && pathname === '/api/import-manual-exam') {
+      try {
+        const raw = await readRequestBody(req, 35 * 1024 * 1024);
+        const body = JSON.parse(raw.toString('utf8') || '{}');
+        const fileName = String(body.fileName || 'de_goc.docx').trim();
+        const fileBase64 = String(body.fileBase64 || '').trim();
+        if (!fileBase64) {
+          sendJson(res, 400, { ok: false, message: 'Chưa nhận được nội dung file Word (.docx).' });
+          return;
+        }
+        if (!fileName.toLowerCase().endsWith('.docx')) {
+          sendJson(res, 400, { ok: false, message: 'Chỉ hỗ trợ nạp đề gốc định dạng Word (.docx) để bảo toàn công thức và hình ảnh.' });
+          return;
+        }
+
+        const buffer = Buffer.from(fileBase64, 'base64');
+        const parsed = parseManualExamDocx(buffer, fileName);
+        if (!parsed.questions || parsed.questions.length === 0) {
+          sendJson(res, 400, {
+            ok: false,
+            message: 'Không tìm thấy câu hỏi nào (Câu 1., Câu 2., ...) trong file Word. Vui lòng kiểm tra lại định dạng đề gốc!'
+          });
+          return;
+        }
+
+        const rawCodes = body.customCodes;
+        const customCodes = Array.isArray(rawCodes)
+          ? rawCodes
+          : (typeof rawCodes === 'string' ? rawCodes.split(/[,;\s]+/).filter(Boolean) : []);
+        const numVariants = Number(body.numVariants) || (customCodes.length > 0 ? customCodes.length : 4);
+        const variants = generateShuffledVariants(
+          parsed.questions,
+          numVariants,
+          Number(body.startCode) || 101,
+          customCodes,
+          {
+            keepFirstCodeOrder: body.keepFirstCodeOrder !== false,
+            shuffleTfStatements: Boolean(body.shuffleTfStatements)
+          }
+        );
+
+        sendJson(res, 200, {
+          ok: true,
+          sourceId: parsed.sourceId,
+          fileName: parsed.fileName,
+          detectedMetadata: parsed.detectedMetadata,
+          questions: parsed.questions,
+          variants,
+          stats: parsed.stats
+        });
+      } catch (err) {
+        sendJson(res, 500, { ok: false, message: 'Lỗi đọc file đề gốc (.docx): ' + err.message });
+      }
+      return;
+    }
+
+    // 10. Trộn & Nhân bản mã đề (hỗ trợ tùy chọn giữ mã gốc & đảo ý a/b/c/d Phần II)
     if (req.method === 'POST' && pathname === '/api/shuffle-variants') {
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
       const rawCodes = body.customCodes;
       const customCodes = Array.isArray(rawCodes) ? rawCodes : (typeof rawCodes === 'string' ? rawCodes.split(/[,;\s]+/).filter(Boolean) : []);
-      const variants = generateShuffledVariants(body.questions || [], body.numVariants || 4, body.startCode || 101, customCodes);
+      const variants = generateShuffledVariants(
+        body.questions || [],
+        body.numVariants || 4,
+        body.startCode || 101,
+        customCodes,
+        {
+          keepFirstCodeOrder: Boolean(body.keepFirstCodeOrder),
+          shuffleTfStatements: Boolean(body.shuffleTfStatements)
+        }
+      );
       sendJson(res, 200, { ok: true, variants });
       return;
     }
@@ -498,7 +565,7 @@ const requestHandler = async (req, res) => {
       return;
     }
 
-    // 12. Xuất file Word (.docx) chuẩn khổ A4, Times New Roman 13-14pt
+    // 12. Xuất file Word (.docx) chuẩn khổ A4 — ưu tiên chế độ Lossless OOXML khi đề có nguồn .docx thủ công
     if (req.method === 'POST' && pathname === '/api/export-docx') {
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
@@ -506,7 +573,13 @@ const requestHandler = async (req, res) => {
       const mode = body.mode || 'full'; // 'full' | 'matrix' | 'spec' | 'exam' | 'answer'
       const variantCode = body.variantCode || null;
 
-      const docxBuffer = generateExamDocx(examData, mode, variantCode);
+      let docxBuffer = null;
+      if (examData.ooxmlSourceId && (mode === 'exam' || mode === 'full' || mode === 'answer')) {
+        docxBuffer = buildLosslessShuffledDocx(examData, mode, variantCode);
+      }
+      if (!docxBuffer) {
+        docxBuffer = generateExamDocx(examData, mode, variantCode);
+      }
       const subj = (examData.metadata?.subject || 'DeKiemTra').replace(/\s+/g, '_');
       const grade = examData.metadata?.grade || '';
       const modeNames = {

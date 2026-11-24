@@ -167,25 +167,46 @@ function decodeXmlEntities(str) {
 
 function extractParagraphText(pXml) {
   let text = '';
-  const tokenRegex = /<w:t(?:\s[^>]*)?>([\s\S]*?)<\/w:t>|<w:tab\s*\/?>|<w:br\s*\/?>/g;
+  const tokenRegex = /<w:r\b[\s\S]*?<\/w:r>|<m:t(?:\s[^>]*)?>([\s\S]*?)<\/m:t>|<w:tab\s*\/?>|<w:br\s*\/?>/g;
   let match;
   while ((match = tokenRegex.exec(pXml)) !== null) {
-    if (match[0].startsWith('<w:tab')) text += '\t';
-    else if (match[0].startsWith('<w:br')) text += '\n';
-    else text += decodeXmlEntities(match[1]);
+    const tok = match[0];
+    if (tok.startsWith('<w:tab')) {
+      text += '\t';
+    } else if (tok.startsWith('<w:br')) {
+      text += '\n';
+    } else if (tok.startsWith('<m:t')) {
+      text += decodeXmlEntities(match[1]);
+    } else {
+      const vertMatch = tok.match(/<w:vertAlign\b[^>]*w:val="(superscript|subscript)"/i);
+      const vert = vertMatch ? vertMatch[1].toLowerCase() : '';
+      let rTxt = '';
+      const tRe = /<w:t(?:\s[^>]*)?>([\s\S]*?)<\/w:t>|<w:tab\s*\/?>|<w:br\s*\/?>/g;
+      let tm;
+      while ((tm = tRe.exec(tok)) !== null) {
+        if (tm[0].startsWith('<w:tab')) rTxt += '\t';
+        else if (tm[0].startsWith('<w:br')) rTxt += '\n';
+        else rTxt += decodeXmlEntities(tm[1]);
+      }
+      if (rTxt) {
+        if (vert === 'superscript') text += `^${rTxt}`;
+        else if (vert === 'subscript') text += `_${rTxt}`;
+        else text += rTxt;
+      }
+    }
   }
   return text.trim();
 }
 
 /**
- * Trích xuất chi tiết đoạn văn bản kèm định dạng gạch chân (<w:u>) để phát hiện đáp án chính xác
+ * Trích xuất chi tiết đoạn văn bản kèm định dạng gạch chân (<w:u>), công thức OMML (<m:t>) và chỉ số trên/dưới
  */
 function extractParagraphDetails(pXml) {
   let plainText = '';
   let taggedText = '';
   const underlinedParts = [];
 
-  const rRegex = /<w:r\b[\s\S]*?<\/w:r>|<w:tab\s*\/?>|<w:br\s*\/?>/g;
+  const rRegex = /<w:r\b[\s\S]*?<\/w:r>|<m:t(?:\s[^>]*)?>([\s\S]*?)<\/m:t>|<w:tab\s*\/?>|<w:br\s*\/?>/g;
   let rMatch;
   while ((rMatch = rRegex.exec(pXml)) !== null) {
     const item = rMatch[0];
@@ -199,8 +220,16 @@ function extractParagraphDetails(pXml) {
       taggedText += '\n';
       continue;
     }
+    if (item.startsWith('<m:t')) {
+      const mathTxt = decodeXmlEntities(rMatch[1]);
+      plainText += mathTxt;
+      taggedText += mathTxt;
+      continue;
+    }
 
     const isUnderlined = /<w:u\b/.test(item) && !/<w:u\s+w:val="none"/i.test(item);
+    const vertMatch = item.match(/<w:vertAlign\b[^>]*w:val="(superscript|subscript)"/i);
+    const vert = vertMatch ? vertMatch[1].toLowerCase() : '';
 
     let runText = '';
     const tRegex = /<w:t(?:\s[^>]*)?>([\s\S]*?)<\/w:t>/g;
@@ -210,12 +239,13 @@ function extractParagraphDetails(pXml) {
     }
 
     if (runText) {
-      plainText += runText;
+      const formatted = vert === 'superscript' ? `^${runText}` : (vert === 'subscript' ? `_${runText}` : runText);
+      plainText += formatted;
       if (isUnderlined) {
-        taggedText += `<u>${runText}</u>`;
-        underlinedParts.push(runText.trim());
+        taggedText += `<u>${formatted}</u>`;
+        underlinedParts.push(formatted.trim());
       } else {
-        taggedText += runText;
+        taggedText += formatted;
       }
     }
   }
@@ -577,9 +607,9 @@ function wBorderlessTable(rows, opts = {}) {
             <w:vAlign w:val="top"/>
           </w:tcPr>
           ${wParagraph([
-            { text: cell.label, bold: true, fontSizeHalfPt: 26, underline: cell.isUnderlined },
-            { text: cell.text, bold: false, fontSizeHalfPt: 26, underline: cell.isUnderlined }
-          ], { spaceBefore: 20, spaceAfter: 20, line: 260 })}
+        { text: cell.label, bold: true, fontSizeHalfPt: 26, underline: cell.isUnderlined },
+        { text: cell.text, bold: false, fontSizeHalfPt: 26, underline: cell.isUnderlined }
+      ], { spaceBefore: 20, spaceAfter: 20, line: 260 })}
         </w:tc>`;
     }
     bodyRowsXml += '</w:tr>';
@@ -1344,6 +1374,7 @@ function createMaterialDocx(title, paragraphs = [], tables = []) {
 module.exports = {
   readZipEntries,
   createZipBuffer,
+  decodeXmlEntities,
   parseDocxBuffer,
   generateExamDocx,
   createMaterialDocx,

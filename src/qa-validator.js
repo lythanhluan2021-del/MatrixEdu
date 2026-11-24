@@ -159,22 +159,35 @@ function validateExamProfile(examData) {
 
   const stats = computeMatrixStatistics(matrix, meta);
 
-  // 1. Kiểm tra quy định cấp học THPT (Thông tư 22/2021/TT-BGDĐT & Công văn 7991/BGDĐT-GDTrH)
-  passedChecks.push(`Đúng quy định cấp THPT (Thông tư 22/2021/TT-BGDĐT & Công văn 7991/BGDĐT-GDTrH) với các mức độ: ${stats.levels.join(', ')}.`);
+  const isManualExamMode = Boolean(
+    examData.manualExamMode ||
+    (examData.ooxmlSourceId && (!matrix.rows || matrix.rows.length === 0))
+  );
 
-  // 2. Kiểm tra tổng điểm Ma trận = 10.0 điểm
-  if (Math.abs(stats.totalPoints - 10.0) <= 0.01) {
-    passedChecks.push(`Tổng điểm Ma trận chính xác: ${stats.totalPoints.toFixed(1)} / 10.0 điểm.`);
+  // 1. Kiểm tra quy định cấp học THPT (Thông tư 22/2021/TT-BGDĐT & Công văn 7991/BGDĐT-GDTrH)
+  if (isManualExamMode) {
+    passedChecks.push(`Chế độ Nạp Đề Gốc Thủ Công (.docx) — Bảo toàn nguyên bản OOXML (Công thức Equation/MathType & Hình ảnh).`);
   } else {
-    issues.push(`Tổng điểm Ma trận hiện tại là ${stats.totalPoints.toFixed(2)} điểm (chưa khớp thang điểm 10.0).`);
+    passedChecks.push(`Đúng quy định cấp THPT (Thông tư 22/2021/TT-BGDĐT & Công văn 7991/BGDĐT-GDTrH) với các mức độ: ${stats.levels.join(', ')}.`);
+  }
+
+  // 2. Kiểm tra tổng điểm Ma trận = 10.0 điểm (chỉ bắt buộc khi có Ma trận)
+  if (!isManualExamMode) {
+    if (Math.abs(stats.totalPoints - 10.0) <= 0.01) {
+      passedChecks.push(`Tổng điểm Ma trận chính xác: ${stats.totalPoints.toFixed(1)} / 10.0 điểm.`);
+    } else {
+      issues.push(`Tổng điểm Ma trận hiện tại là ${stats.totalPoints.toFixed(2)} điểm (chưa khớp thang điểm 10.0).`);
+    }
   }
 
   // 3. Kiểm tra đối chiếu Ma trận ↔ Bản đặc tả
   const matrixRows = matrix.rows || [];
-  if (specs.length === matrixRows.length && matrixRows.length > 0) {
-    passedChecks.push(`Bản đặc tả khớp 1-1 với Ma trận (${specs.length}/${matrixRows.length} đơn vị kiến thức).`);
-  } else {
-    issues.push(`Số đơn vị kiến thức trong Bản đặc tả (${specs.length}) chưa khớp với Ma trận (${matrixRows.length}).`);
+  if (!isManualExamMode) {
+    if (specs.length === matrixRows.length && matrixRows.length > 0) {
+      passedChecks.push(`Bản đặc tả khớp 1-1 với Ma trận (${specs.length}/${matrixRows.length} đơn vị kiến thức).`);
+    } else {
+      issues.push(`Số đơn vị kiến thức trong Bản đặc tả (${specs.length}) chưa khớp với Ma trận (${matrixRows.length}).`);
+    }
   }
 
   // 4. Kiểm tra đối chiếu Ma trận ↔ Bộ câu hỏi trong Đề
@@ -185,24 +198,30 @@ function validateExamProfile(examData) {
     ESSAY: questions.filter(q => q.type === 'ESSAY').length
   };
 
-  const typeMismatch = [];
-  for (const qt of ['MCQ', 'TF', 'SA', 'ESSAY']) {
-    if ((stats.byType[qt] || 0) !== (qByType[qt] || 0)) {
-      typeMismatch.push(`${qt}: Ma trận=${stats.byType[qt] || 0}, Đề=${qByType[qt] || 0}`);
+  if (isManualExamMode) {
+    passedChecks.push(`Cấu trúc đề gốc nhận diện: ${qByType.MCQ} câu Phần I (TN), ${Math.ceil(qByType.TF / 4)} câu Phần II (${qByType.TF} ý Đ/S), ${qByType.SA} câu Phần III (TLN), ${qByType.ESSAY} câu Tự luận.`);
+  } else {
+    const typeMismatch = [];
+    for (const qt of ['MCQ', 'TF', 'SA', 'ESSAY']) {
+      if ((stats.byType[qt] || 0) !== (qByType[qt] || 0)) {
+        typeMismatch.push(`${qt}: Ma trận=${stats.byType[qt] || 0}, Đề=${qByType[qt] || 0}`);
+      }
     }
-  }
-  if (typeMismatch.length === 0 && questions.length > 0) {
-    passedChecks.push(`Số lượng câu hỏi/lệnh hỏi từng dạng thức trong Đề khớp tuyệt đối với Ma trận (MCQ: ${qByType.MCQ}, Đúng/Sai: ${qByType.TF} ý, Trả lời ngắn: ${qByType.SA}, Tự luận: ${qByType.ESSAY}).`);
-  } else if (typeMismatch.length > 0) {
-    issues.push(`Chênh lệch số lượng câu hỏi giữa Ma trận và Đề: ${typeMismatch.join('; ')}.`);
+    if (typeMismatch.length === 0 && questions.length > 0) {
+      passedChecks.push(`Số lượng câu hỏi/lệnh hỏi từng dạng thức trong Đề khớp tuyệt đối với Ma trận (MCQ: ${qByType.MCQ}, Đúng/Sai: ${qByType.TF} ý, Trả lời ngắn: ${qByType.SA}, Tự luận: ${qByType.ESSAY}).`);
+    } else if (typeMismatch.length > 0) {
+      issues.push(`Chênh lệch số lượng câu hỏi giữa Ma trận và Đề: ${typeMismatch.join('; ')}.`);
+    }
   }
 
   // 5. Kiểm tra tổng điểm các câu hỏi trong Đề
   const examTotalPoints = Math.round(questions.reduce((acc, q) => acc + Number(q.points || 0), 0) * 100) / 100;
-  if (Math.abs(examTotalPoints - stats.totalPoints) <= 0.01) {
-    passedChecks.push(`Tổng điểm các câu hỏi trong Đề kiểm tra (${examTotalPoints.toFixed(1)}đ) khớp tuyệt đối với Ma trận (${stats.totalPoints.toFixed(1)}đ).`);
-  } else {
-    issues.push(`Tổng điểm các câu hỏi trong Đề (${examTotalPoints.toFixed(2)}đ) lệch so với Ma trận (${stats.totalPoints.toFixed(2)}đ).`);
+  if (!isManualExamMode) {
+    if (Math.abs(examTotalPoints - stats.totalPoints) <= 0.01) {
+      passedChecks.push(`Tổng điểm các câu hỏi trong Đề kiểm tra (${examTotalPoints.toFixed(1)}đ) khớp tuyệt đối với Ma trận (${stats.totalPoints.toFixed(1)}đ).`);
+    } else {
+      issues.push(`Tổng điểm các câu hỏi trong Đề (${examTotalPoints.toFixed(2)}đ) lệch so với Ma trận (${stats.totalPoints.toFixed(2)}đ).`);
+    }
   }
 
   // 6. Kiểm tra từng câu hỏi: Mã liên kết Ma trận, Đáp án, Lời giải & Kiểm chứng phép tính độc lập
@@ -219,12 +238,14 @@ function validateExamProfile(examData) {
         issues.push(`${qLabel}: Câu trắc nghiệm nhiều lựa chọn phải có đủ 4 phương án A, B, C, D.`);
       }
       const uniqueOpts = new Set(opts.map(o => String(o).trim().toLowerCase()));
-      if (uniqueOpts.size < opts.length) {
+      if (uniqueOpts.size < opts.length && !q.formulaCount && !q.imageCount) {
         warnings.push(`${qLabel}: Có phương án trả lời bị trùng lặp nội dung.`);
       }
       if (!['A', 'B', 'C', 'D'].includes(String(q.answer || '').trim().toUpperCase())) {
         missingAnswerCount++;
         issues.push(`${qLabel}: Đáp án '${q.answer}' không hợp lệ (phải là A, B, C hoặc D).`);
+      } else if (q.answerUncertain) {
+        warnings.push(`${qLabel}: Chưa phát hiện gạch chân/bôi đỏ đáp án trong file gốc (đang tạm đặt '${q.answer}', vui lòng rà soát).`);
       }
     } else if (q.type === 'TF') {
       const stmts = q.statements || q.subItems || [];
@@ -241,9 +262,14 @@ function validateExamProfile(examData) {
       if (q.answer === undefined || q.answer === null || String(q.answer).trim() === '') {
         missingAnswerCount++;
         issues.push(`${qLabel}: Câu trả lời ngắn thiếu đáp số chuẩn.`);
+      } else {
+        const cleanSa = String(q.answer).replace(/\s+/g, '');
+        if (cleanSa.length > 4) {
+          warnings.push(`${qLabel}: Đáp số "${cleanSa}" dài ${cleanSa.length} ký tự (vượt giới hạn 4 cột tô của phiếu OMR BGD 2025).`);
+        }
       }
     } else if (q.type === 'ESSAY') {
-      if (!q.explanation && !q.rubric && !q.answer) {
+      if (!isManualExamMode && !q.explanation && !q.rubric && !q.answer) {
         missingAnswerCount++;
         issues.push(`${qLabel}: Câu tự luận thiếu hướng dẫn chấm / biểu điểm.`);
       }
@@ -354,11 +380,17 @@ function hasPositionalOptions(options) {
 }
 
 /**
- * Nhân bản & Trộn mã đề thực tế (Hoán vị câu hỏi trong cùng dạng thức và đảo phương án A/B/C/D, tự cập nhật đáp án)
+ * Nhân bản & Trộn mã đề thực tế:
+ * - Bảo toàn đồng bộ optionXmls & optionRichHtmls (Công thức Equation/MathType & Hình ảnh) khi đảo A/B/C/D
+ * - Giữ nguyên khối các câu hỏi dùng chung ngữ liệu (groupId) không bị tách rời
+ * - Hỗ trợ tùy chọn: keepFirstCodeOrder (giữ nguyên mã gốc đầu tiên), shuffleTfStatements (đảo 4 ý a/b/c/d Phần II)
  */
-function generateShuffledVariants(baseQuestions, numVariants = 4, startCode = 101, customCodes = []) {
+function generateShuffledVariants(baseQuestions, numVariants = 4, startCode = 101, customCodes = [], shuffleOptions = {}) {
   const variants = [];
-  // Chuẩn hóa danh sách mã đề tùy chỉnh nếu giáo viên chỉ định
+  const optsCfg = shuffleOptions && typeof shuffleOptions === 'object' ? shuffleOptions : {};
+  const keepFirstCodeOrder = Boolean(optsCfg.keepFirstCodeOrder);
+  const shuffleTfStatements = Boolean(optsCfg.shuffleTfStatements);
+
   const userCodes = (Array.isArray(customCodes) ? customCodes : [])
     .map(c => String(c || '').trim())
     .filter(Boolean);
@@ -376,7 +408,6 @@ function generateShuffledVariants(baseQuestions, numVariants = 4, startCode = 10
     return Math.abs(h);
   }
 
-  // Hàm PRNG có seed cố định theo mã đề để kết quả ổn định, tái lập được
   function createSeededRandom(seed) {
     let s = Math.abs(seed) % 2147483647;
     if (s <= 0) s += 2147483646;
@@ -397,6 +428,64 @@ function generateShuffledVariants(baseQuestions, numVariants = 4, startCode = 10
     return copy;
   }
 
+  // Trộn danh sách câu hỏi nhưng giữ các câu có cùng groupId luôn đứng liền kề nhau!
+  function shuffleQuestionsRespectingGroups(qList, rand) {
+    const blocks = [];
+    const seenGroups = new Map();
+    qList.forEach(q => {
+      if (q && q.groupId) {
+        if (!seenGroups.has(q.groupId)) {
+          const blk = [];
+          seenGroups.set(q.groupId, blk);
+          blocks.push(blk);
+        }
+        seenGroups.get(q.groupId).push(q);
+      } else {
+        blocks.push([q]);
+      }
+    });
+    return shuffleArray(blocks, rand).flat();
+  }
+
+  // Đảo 4 phương án A, B, C, D đồng bộ hoàn toàn cả text + optionXmls (OOXML) + optionRichHtmls
+  function shuffleMcqOptionsSync(q, rand) {
+    const isPositional = hasPositionalOptions(q.options) || Boolean(q.keepOptionOrder);
+    if (isPositional || !Array.isArray(q.options) || q.options.length !== 4) return q;
+    const labels = ['A', 'B', 'C', 'D'];
+    const cleanAns = String(q.answer || '').trim().toUpperCase();
+    const ansIdx = labels.indexOf(cleanAns);
+    const hasXmls = Array.isArray(q.optionXmls) && q.optionXmls.length === 4;
+    const hasRich = Array.isArray(q.optionRichHtmls) && q.optionRichHtmls.length === 4;
+
+    const indexedOpts = q.options.map((text, idx) => ({
+      text: String(text).replace(/^[A-D][\.\)]\s*/, ''),
+      xml: hasXmls ? q.optionXmls[idx] : undefined,
+      richHtml: hasRich ? q.optionRichHtmls[idx] : undefined,
+      isCorrect: idx === (ansIdx >= 0 ? ansIdx : 0)
+    }));
+    const newOpts = shuffleArray(indexedOpts, rand);
+    q.options = newOpts.map(item => item.text);
+    if (hasXmls) q.optionXmls = newOpts.map(item => item.xml);
+    if (hasRich) q.optionRichHtmls = newOpts.map(item => item.richHtml);
+    const newAnsIdx = newOpts.findIndex(item => item.isCorrect);
+    q.answer = labels[newAnsIdx >= 0 ? newAnsIdx : 0];
+    return q;
+  }
+
+  // Đảo 4 ý a, b, c, d trong câu Phần II Đúng/Sai (nếu bật tùy chọn)
+  function shuffleTfStatementsSync(q, rand) {
+    const stmts = Array.isArray(q.statements) ? q.statements : (Array.isArray(q.items) ? q.items : null);
+    if (!stmts || stmts.length !== 4) return q;
+    const subs = ['a', 'b', 'c', 'd'];
+    const shuffled = shuffleArray(stmts, rand).map((st, idx) => ({
+      ...st,
+      letter: subs[idx]
+    }));
+    q.statements = shuffled;
+    q.items = shuffled;
+    return q;
+  }
+
   const resolveQuestionType = (q) => {
     const raw = String(q?.type || q?.format || '').trim().toUpperCase();
     if (raw === 'MCQ') return 'MCQ';
@@ -413,26 +502,15 @@ function generateShuffledVariants(baseQuestions, numVariants = 4, startCode = 10
     const clonedQuestions = JSON.parse(JSON.stringify(baseQuestions || []));
 
     if (vIdx === 0) {
-      // Mã đề gốc (mã đầu tiên) giữ nguyên thứ tự câu hỏi chuẩn theo Ma trận,
-      // nhưng nếu các câu MCQ gốc đang để mặc định đáp án 'A' thì đảo phương án A/B/C/D để phân bố đều
+      if (keepFirstCodeOrder) {
+        variants.push({ code, questions: clonedQuestions });
+        continue;
+      }
       const seed0 = hashString(code) + 101;
       const rand0 = createSeededRandom(seed0);
       const balancedFirst = clonedQuestions.map(q => {
-        if (resolveQuestionType(q) === 'MCQ' && Array.isArray(q.options) && q.options.length === 4) {
-          const isPositional = hasPositionalOptions(q.options) || Boolean(q.keepOptionOrder);
-          if (!isPositional) {
-            const labels = ['A', 'B', 'C', 'D'];
-            const cleanAns = String(q.answer || '').trim().toUpperCase();
-            const ansIdx = labels.indexOf(cleanAns);
-            const indexedOpts = q.options.map((text, idx) => ({
-              text: String(text).replace(/^[A-D][\.\)]\s*/, ''),
-              isCorrect: idx === (ansIdx >= 0 ? ansIdx : 0)
-            }));
-            const newOpts = shuffleArray(indexedOpts, rand0);
-            q.options = newOpts.map(item => item.text);
-            const newAnsIdx = newOpts.findIndex(item => item.isCorrect);
-            q.answer = labels[newAnsIdx >= 0 ? newAnsIdx : 0];
-          }
+        if (resolveQuestionType(q) === 'MCQ') {
+          return shuffleMcqOptionsSync(q, rand0);
         }
         return q;
       });
@@ -443,34 +521,14 @@ function generateShuffledVariants(baseQuestions, numVariants = 4, startCode = 10
     const seedVal = hashString(code) + (vIdx * 997) + (parseInt(code, 10) || 101);
     const rand = createSeededRandom(seedVal);
 
-    // Tách theo nhóm dạng câu hỏi để chỉ trộn trong cùng Phần
     const mcqs = clonedQuestions.filter(q => resolveQuestionType(q) === 'MCQ');
     const tfs = clonedQuestions.filter(q => resolveQuestionType(q) === 'TF');
     const sas = clonedQuestions.filter(q => resolveQuestionType(q) === 'SA');
-    const essays = clonedQuestions.filter(q => resolveQuestionType(q) === 'ESSAY'); // Giữ nguyên thứ tự Tự luận
+    const essays = clonedQuestions.filter(q => resolveQuestionType(q) === 'ESSAY');
 
-    // Hoán vị câu MCQ và đảo 4 phương án A, B, C, D (NGOẠI TRỪ CÂU CÓ PHƯƠNG ÁN CHỈ ĐỊNH VỊ TRÍ)
-    const shuffledMcqs = shuffleArray(mcqs, rand).map(q => {
-      const isPositional = hasPositionalOptions(q.options) || Boolean(q.keepOptionOrder);
-      if (!isPositional && Array.isArray(q.options) && q.options.length === 4) {
-        const labels = ['A', 'B', 'C', 'D'];
-        const cleanAns = String(q.answer || '').trim().toUpperCase();
-        const ansIdx = labels.indexOf(cleanAns);
-        const indexedOpts = q.options.map((text, idx) => ({
-          text: String(text).replace(/^[A-D][\.\)]\s*/, ''),
-          isCorrect: idx === (ansIdx >= 0 ? ansIdx : 0)
-        }));
-        const newOpts = shuffleArray(indexedOpts, rand);
-        q.options = newOpts.map(item => item.text);
-        const newAnsIdx = newOpts.findIndex(item => item.isCorrect);
-        q.answer = labels[newAnsIdx >= 0 ? newAnsIdx : 0];
-      }
-      return q;
-    });
-
-    // Hoán vị thứ tự các câu Đúng/Sai và Trả lời ngắn
-    const shuffledTfs = shuffleArray(tfs, rand);
-    const shuffledSas = shuffleArray(sas, rand);
+    const shuffledMcqs = shuffleQuestionsRespectingGroups(mcqs, rand).map(q => shuffleMcqOptionsSync(q, rand));
+    const shuffledTfs = shuffleQuestionsRespectingGroups(tfs, rand).map(q => shuffleTfStatements ? shuffleTfStatementsSync(q, rand) : q);
+    const shuffledSas = shuffleQuestionsRespectingGroups(sas, rand);
 
     variants.push({
       code,

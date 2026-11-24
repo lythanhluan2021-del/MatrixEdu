@@ -141,6 +141,26 @@ const TOPIC_LEXICON = [
     triggers: [R('kim loai|hop kim|an mon')],
     keywords: [R('kim loai'), R('hop kim'), R('an mon'), R('tinh khu|day hoat dong')] },
 
+  // ============================== SINH HỌC ==============================
+  { id: 'bio_di_truyen_pt', subject: 'bio', label: 'Di truyền phân tử (DNA, RNA, Protein, Điều hòa biểu hiện gen)',
+    triggers: [R('di truyen phan tu|\\bdna\\b|\\badn\\b|\\brna\\b|\\barn\\b|phien ma|dich ma|nhan doi|bieu hien gen|operon')],
+    keywords: [R('\\bdna\\b|\\badn\\b|\\brna\\b|\\barn\\b|nucleotide|nucleotit'), R('phien ma|dich ma|nhan doi|ma di truyen'), R('ribosome|riboxom|codon|anticodon|operon|lac')] },
+  { id: 'bio_dot_bien', subject: 'bio', label: 'Đột biến gen và Đột biến NST',
+    triggers: [R('dot bien|nhiem sac the|\\bnst\\b|da boi|lech boi')],
+    keywords: [R('dot bien (gen|diem|cau truc|so luong)'), R('nhiem sac the|\\bnst\\b|mat doan|lap doan|dao doan|chuyen doan'), R('the ba|the mot|da boi|tu boi|di da boi|2n')] },
+  { id: 'bio_quy_luat_dt', subject: 'bio', label: 'Quy luật di truyền (Mendel, Liên kết gen, Hoán vị, Phả hệ)',
+    triggers: [R('quy luat di truyen|mendel|menden|phan li|lien ket gen|hoan vi gen|gioi tinh|pha he|quan the')],
+    keywords: [R('alen|allele|kieu gen|kieu hinh|phep lai|doi con|f1|f2'), R('phan li doc lap|lien ket gen|hoan vi gen|tan so hoan vi'), R('pha he|di truyen lien ket gioi tinh|hardy|weinberg')] },
+  { id: 'bio_tien_hoa', subject: 'bio', label: 'Tiến hóa',
+    triggers: [R('tien hoa|chon loc tu nhien|darwin|dac uyn|hinh thanh loai|nhan to tien hoa')],
+    keywords: [R('tien hoa|chon loc tu nhien|phieu bat di truyen|dong gen'), R('co quan tuong dong|co quan thoai hoa|bang chung'), R('cach li sinh san|hinh thanh loai')] },
+  { id: 'bio_sinh_thai', subject: 'bio', label: 'Sinh thái học',
+    triggers: [R('sinh thai|quan the|quan xa|he sinh thai|chuoi thuc an|luoi thuc an|sinh quyen')],
+    keywords: [R('quan the|quan xa|he sinh thai|sinh canh|o sinh thai'), R('chuoi thuc an|luoi thuc an|bac dinh duong|thap sinh thai'), R('cong sinh|hoi sinh|canh tranh|ki sinh|dien the sinh thai')] },
+  { id: 'bio_te_bao_chuyen_hoa', subject: 'bio', label: 'Sinh học tế bào & Chuyển hóa vật chất (Quang hợp, Hô hấp, Phân bào)',
+    triggers: [R('te bao|quang hop|ho hap|nguyen phan|giam phan|trao doi chat|chuyen hoa')],
+    keywords: [R('te bao|mang sinh chat|ti the|luc lap|atp|enzyme'), R('quang hop|ho hap te bao|chu trinh calvin|krebs'), R('nguyen phan|giam phan|ki giua|ki sau')] },
+
   // ============================== TIẾNG ANH ==============================
   { id: 'eng_listening', subject: 'eng', label: 'Listening',
     triggers: [R('listening|ky nang nghe|\\bnghe\\b')],
@@ -210,8 +230,13 @@ const SUBJECT_ALIASES = [
   { family: 'math', re: /toan/ },
   { family: 'phys', re: /vat li|vat ly|\bli\b|\bly\b/ },
   { family: 'chem', re: /hoa hoc|\bhoa\b/ },
+  { family: 'bio', re: /sinh hoc|\bsinh\b/ },
   { family: 'eng', re: /tieng anh|\banh\b|english/ },
-  { family: 'it', re: /tin hoc|\btin\b|cong nghe thong tin|khoa hoc may tinh/ }
+  { family: 'it', re: /tin hoc|\btin\b|cong nghe thong tin|khoa hoc may tinh/ },
+  { family: 'hist', re: /lich su|\bsu\b/ },
+  { family: 'geo', re: /dia li|dia ly|\bdia\b/ },
+  { family: 'civics', re: /gdkt|kinh te.*phap luat|gdcd/ },
+  { family: 'tech', re: /cong nghe(?! thong tin)/ }
 ];
 
 function detectSubjectFamily(subject = '') {

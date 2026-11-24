@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node tests/run-qa-tests.js"
+    "test": "node tests/run-qa-tests.js",
+    "build:exe": "powershell -ExecutionPolicy Bypass -File scripts/build-windows-exe.ps1",
+    "package:portable": "powershell -ExecutionPolicy Bypass -File scripts/package-portable-zip.ps1"
   },
   "engines": {
     "node": ">=18.0.0"
