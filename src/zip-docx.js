@@ -5,6 +5,9 @@
  */
 
 const zlib = require('zlib');
+// GĐ2 (P1-01, QĐ2): hướng dẫn chấm Đúng/Sai trong Word lấy từ cùng một hàm
+// tfQuestionScore với chấm OMR — không viết tay thang điểm ở đây nữa.
+const { tfQuestionScore } = require('./scoring');
 
 // ============================================================================
 // 1. CRC32 & ZIP ARCHIVE READER / WRITER
@@ -1086,7 +1089,7 @@ function buildAnswerKeySectionXml(examData) {
       for (const v of variants) {
         const vMcqs = (v.questions || []).filter(q => q.type === 'MCQ');
         const q = vMcqs[i];
-        row.push({ text: (q && q.answer) ? String(q.answer) : 'A', align: 'center', bold: true });
+        row.push({ text: (q && q.answer) ? String(q.answer) : '—', align: 'center', bold: true });
       }
       ansRows.push(row);
     }
@@ -1110,8 +1113,11 @@ function buildAnswerKeySectionXml(examData) {
         spaceAfter: 30,
         keepNext: true
       });
+      // GĐ2 (P1-01): câu chữ hướng dẫn chấm sinh từ hàm điểm chung — nếu
+      // thang điểm đổi thì câu này đổi theo, không lệch với chấm OMR.
+      const tfRubricText = `Quy tắc tính điểm mỗi câu Đúng/Sai (4 ý): Đúng 1 ý được ${tfQuestionScore(1).toFixed(1).replace('.', ',')} điểm; đúng 2 ý được ${tfQuestionScore(2).toFixed(2).replace('.', ',')} điểm; đúng 3 ý được ${tfQuestionScore(3).toFixed(1).replace('.', ',')} điểm; đúng cả 4 ý được ${tfQuestionScore(4).toFixed(1).replace('.', ',')} điểm.`;
       xml += wParagraph(
-        'Quy tắc tính điểm mỗi câu Đúng/Sai (4 ý): Đúng 1 ý được 0,1 điểm; đúng 2 ý được 0,25 điểm; đúng 3 ý được 0,5 điểm; đúng cả 4 ý được 1,0 điểm.',
+        tfRubricText,
         { italic: true, fontSizeHalfPt: 24, spaceBefore: 10, spaceAfter: 40 }
       );
 

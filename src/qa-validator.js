@@ -4,6 +4,10 @@
  * Đảm bảo sự thống nhất 4 chiều: Ma trận ↔ Bản đặc tả ↔ Đề kiểm tra ↔ Đáp án
  */
 
+const crypto = require('crypto');
+// GĐ2 (P1-01, QĐ2): quy ước điểm Đúng/Sai duy nhất sống ở src/scoring.js
+// (không phụ thuộc nội bộ — tránh vòng lặp require với drive-bank).
+const { TF_SCORE_BY_CORRECT, tfQuestionScore } = require('./scoring');
 const { evaluateAlignment, detectSubjectFamily } = require('./content-alignment');
 const { inferCognitiveLevel } = require('./drive-bank');
 
@@ -119,11 +123,25 @@ function computeMatrixStatistics(matrix, metadata = {}) {
   const tfQuestionsCount = Math.ceil(byType.TF / 4);
   totalQuestions = byType.MCQ + tfQuestionsCount + byType.SA + byType.ESSAY;
 
+  // GĐ2 (P1-05): làm tròn phần dư lớn nhất — tổng tỉ lệ luôn đúng 100%.
+  // Làm tròn xuống từng mức, rồi phát 1% còn lại cho các mức có phần lẻ
+  // lớn nhất (hòa thì mức đứng trước được phát trước — xác định).
   const levelPercentages = {};
-  for (const lv of levels) {
-    levelPercentages[lv] = totalPoints > 0
-      ? Math.round((pointsByLevel[lv] / totalPoints) * 100)
-      : 0;
+  if (totalPoints > 0) {
+    const rawPct = levels.map(lv => (pointsByLevel[lv] / totalPoints) * 100);
+    const floors = rawPct.map(v => Math.floor(v));
+    let remainder = 100 - floors.reduce((a, b) => a + b, 0);
+    const order = levels
+      .map((lv, i) => ({ i, frac: rawPct[i] - floors[i] }))
+      .sort((a, b) => (b.frac - a.frac) || (a.i - b.i))
+      .map(o => o.i);
+    const finalPct = floors.slice();
+    for (let k = 0; k < order.length && remainder > 0; k++, remainder--) {
+      finalPct[order[k]] += 1;
+    }
+    levels.forEach((lv, i) => { levelPercentages[lv] = finalPct[i]; });
+  } else {
+    levels.forEach(lv => { levelPercentages[lv] = 0; });
   }
 
   return {
@@ -393,6 +411,18 @@ function validateExamProfile(examData) {
     passedChecks.push(`Đã kiểm chứng độc lập ${mathVerifications.length} phép tính Toán/Khoa học: 100% kết quả trùng khớp tuyệt đối với đáp án.`);
   }
 
+  // GĐ2 (P1-02): số ý Đúng/Sai của mỗi dòng ma trận phải là bội của 4 —
+  // một câu Đúng/Sai luôn đủ 4 ý trong cùng một đơn vị kiến thức. Ý lẻ
+  // không được tự sinh thành câu ngoài ma trận (xem ai-engine.js).
+  if (!isManualExamMode) {
+    matrixRows.forEach((row, rIdx) => {
+      const tfItems = stats.levels.reduce((acc, lv) => acc + (Number(row.counts?.TF?.[lv]) || 0), 0);
+      if (tfItems % 4 !== 0) {
+        issues.push(`Dòng ${rIdx + 1} ("${row.unit || row.topic || ''}"): tổng số ý Đúng/Sai là ${tfItems}, không phải bội của 4 — hãy điều chỉnh Ma trận (thêm/bớt ý) thay vì để hệ thống tự sinh câu ngoài Ma trận.`);
+      }
+    });
+  }
+
   // 7. Kiểm tra các mã đề trộn (Variants)
   if (variants.length > 0) {
     const allSameCount = variants.every(v => (v.questions || []).length === questions.length);
@@ -400,6 +430,13 @@ function validateExamProfile(examData) {
       passedChecks.push(`Đã khởi tạo ${variants.length} mã đề (${variants.map(v => v.code).join(', ')}) đồng bộ số câu và bảng đáp án riêng.`);
     } else {
       issues.push('Một số mã đề nhân bản có số câu không khớp với đề gốc.');
+    }
+    // GĐ2 (P0-03): đối chiếu đáp án từng mã đề với đề gốc theo ID câu —
+    // nội dung câu, tập phương án và phương án đúng sau khi trộn phải khớp.
+    const variantIssues = validateVariantAnswers(questions, variants);
+    variantIssues.forEach(msg => issues.push(msg));
+    if (variantIssues.length === 0 && allSameCount && questions.length > 0) {
+      passedChecks.push(`Đối chiếu đáp án ${variants.length} mã đề với đề gốc: 100% khớp (nội dung, tập phương án, đáp án đúng sau trộn).`);
     }
   }
 
@@ -434,15 +471,140 @@ function hasPositionalOptions(options) {
 }
 
 /**
+ * GĐ2 (P0-03): Đối chiếu đáp án từng mã đề với đề gốc theo ID câu.
+ * Logic độc lập với khâu trộn: MCQ so bằng NỘI DUNG phương án đúng
+ * (không so nhãn A–D vì nhãn đổi sau khi đảo); TF so từng mệnh đề theo
+ * nội dung; TLN/Tự luận so đáp án nguyên văn. Trả về danh sách lỗi,
+ * mỗi lỗi nêu đúng mã đề và đúng câu — rỗng nghĩa là khớp 100%.
+ */
+function validateVariantAnswers(baseQuestions, variants) {
+  const issues = [];
+  const baseById = new Map();
+  (baseQuestions || []).forEach(q => {
+    if (q && q.id) baseById.set(q.id, q);
+  });
+
+  (variants || []).forEach(v => {
+    const code = v && v.code !== undefined ? String(v.code) : '?';
+    const vQuestions = (v && v.questions) || [];
+    const seenIds = new Set();
+    vQuestions.forEach((vq, vIdx) => {
+      const qLabel = `Mã đề ${code} câu ${vIdx + 1}`;
+      if (!vq || !vq.id) {
+        issues.push(`${qLabel}: thiếu ID câu hỏi, không đối chiếu được với đề gốc.`);
+        return;
+      }
+      seenIds.add(vq.id);
+      const bq = baseById.get(vq.id);
+      if (!bq) {
+        issues.push(`${qLabel} (id ${vq.id}): không có trong đề gốc.`);
+        return;
+      }
+      if (String(bq.type || '').toUpperCase() !== String(vq.type || '').toUpperCase()) {
+        issues.push(`${qLabel} (id ${vq.id}): loại câu đổi từ ${bq.type} thành ${vq.type}.`);
+        return;
+      }
+      const type = String(bq.type || '').toUpperCase();
+      if (type === 'MCQ') {
+        const baseOpts = (bq.options || []).map(o => String(o).trim());
+        const varOpts = (vq.options || []).map(o => String(o).trim());
+        // So sánh tập phương án (không phụ thuộc thứ tự sau khi đảo).
+        if (baseOpts.length !== varOpts.length ||
+            baseOpts.slice().sort().join('\n') !== varOpts.slice().sort().join('\n')) {
+          issues.push(`${qLabel} (id ${vq.id}): tập phương án sau trộn khác đề gốc.`);
+          return;
+        }
+        const labels = ['A', 'B', 'C', 'D'];
+        const baseAnsIdx = labels.indexOf(String(bq.answer || '').trim().toUpperCase());
+        const varAnsIdx = labels.indexOf(String(vq.answer || '').trim().toUpperCase());
+        if (baseAnsIdx < 0 || varAnsIdx < 0) {
+          issues.push(`${qLabel} (id ${vq.id}): đáp án không hợp lệ (gốc "${bq.answer}", mã đề "${vq.answer}").`);
+        } else if (baseOpts[baseAnsIdx] !== varOpts[varAnsIdx]) {
+          issues.push(`${qLabel} (id ${vq.id}): phương án đúng sau trộn ("${varOpts[varAnsIdx]}") khác đáp án gốc ("${baseOpts[baseAnsIdx]}").`);
+        }
+      } else if (type === 'TF') {
+        const baseStmts = bq.statements || bq.subItems || [];
+        const varStmts = vq.statements || vq.subItems || [];
+        if (baseStmts.length !== varStmts.length) {
+          issues.push(`${qLabel} (id ${vq.id}): số mệnh đề Đúng/Sai đổi từ ${baseStmts.length} thành ${varStmts.length}.`);
+          return;
+        }
+        const baseByText = new Map(baseStmts.map(st => [String(st.text || '').trim(), st]));
+        varStmts.forEach((st, sIdx) => {
+          const base = baseByText.get(String(st.text || '').trim());
+          if (!base) {
+            issues.push(`${qLabel} (id ${vq.id}) ý ${['a', 'b', 'c', 'd'][sIdx]}: mệnh đề "${String(st.text || '').slice(0, 40)}" không có trong đề gốc.`);
+            return;
+          }
+          const baseTruth = typeof base.isTrue === 'boolean' ? base.isTrue : (String(base.answer || '').toUpperCase().startsWith('Đ'));
+          const varTruth = typeof st.isTrue === 'boolean' ? st.isTrue : (String(st.answer || '').toUpperCase().startsWith('Đ'));
+          if (baseTruth !== varTruth) {
+            issues.push(`${qLabel} (id ${vq.id}) ý ${['a', 'b', 'c', 'd'][sIdx]}: tính Đúng/Sai của mệnh đề "${String(st.text || '').slice(0, 40)}" bị đổi sau khi trộn.`);
+          }
+        });
+      } else {
+        // SA / ESSAY: đáp án phải giữ nguyên văn sau trộn.
+        if (String(bq.answer ?? '').trim() !== String(vq.answer ?? '').trim()) {
+          issues.push(`${qLabel} (id ${vq.id}): đáp án sau trộn khác đề gốc.`);
+        }
+      }
+    });
+    // Kiểm tra mã đề có đủ mọi câu của đề gốc (không thừa, không thiếu).
+    if (seenIds.size !== baseById.size || ![...baseById.keys()].every(id => seenIds.has(id))) {
+      issues.push(`Mã đề ${code}: tập câu hỏi không khớp đề gốc (thiếu/thừa câu).`);
+    }
+  });
+
+  return issues;
+}
+
+/**
+ * GĐ2 (P0-02): câu nào thiếu đáp án hợp lệ thì dừng ngay và nêu rõ câu đó
+ * — không bao giờ mặc định thành A. Dùng trước khi trộn mã đề.
+ * MCQ: đáp án phải là A–D. TF: mỗi ý phải có isTrue boolean hoặc
+ * answer Đ/S xác định được. TLN/Tự luận do bước 4 và validator kiểm tra
+ * riêng (quy tắc GĐ3), ở đây không chặn.
+ */
+function assertValidQuestionAnswers(questions) {
+  const labels = ['A', 'B', 'C', 'D'];
+  (questions || []).forEach((q, idx) => {
+    if (!q) return;
+    const qLabel = `Câu ${idx + 1} (${q.type || '?'})${q.id ? ` [${q.id}]` : ''}${q.unit ? ` — ${q.unit}` : ''}`;
+    const type = String(q.type || '').toUpperCase();
+    if (type === 'MCQ') {
+      const ans = String(q.answer ?? '').trim().toUpperCase();
+      if (!labels.includes(ans)) {
+        throw new Error(`Không thể trộn đề: ${qLabel} thiếu đáp án hợp lệ (đáp án hiện tại: "${q.answer ?? ''}", phải là A, B, C hoặc D). Hãy bổ sung đáp án rồi trộn lại.`);
+      }
+    } else if (type === 'TF') {
+      const stmts = q.statements || q.subItems || [];
+      stmts.forEach((st, sIdx) => {
+        const ok = typeof st.isTrue === 'boolean' ||
+          (typeof st.answer === 'string' && /^(đ|d|s)/i.test(st.answer.trim()));
+        if (!ok) {
+          throw new Error(`Không thể trộn đề: ${qLabel} ý ${['a', 'b', 'c', 'd'][sIdx]} thiếu đáp án Đúng/Sai. Hãy bổ sung đáp án rồi trộn lại.`);
+        }
+      });
+    }
+  });
+}
+
+/**
  * Nhân bản & Trộn mã đề thực tế:
  * - Bảo toàn đồng bộ optionXmls & optionRichHtmls (Công thức Equation/MathType & Hình ảnh) khi đảo A/B/C/D
  * - Giữ nguyên khối các câu hỏi dùng chung ngữ liệu (groupId) không bị tách rời
- * - Hỗ trợ tùy chọn: keepFirstCodeOrder (giữ nguyên mã gốc đầu tiên), shuffleTfStatements (đảo 4 ý a/b/c/d Phần II)
+ * - Hỗ trợ tùy chọn: shuffleTfStatements (đảo 4 ý a/b/c/d Phần II).
+ *   GĐ2: mọi mã đề đều trộn thứ tự câu (kể cả mã đầu tiên); tùy chọn
+ *   keepFirstCodeOrder cũ đã bị bỏ — máy chủ luôn trộn tất cả các mã đề.
  */
 function generateShuffledVariants(baseQuestions, numVariants = 4, startCode = 101, customCodes = [], shuffleOptions = {}) {
   const variants = [];
   const optsCfg = shuffleOptions && typeof shuffleOptions === 'object' ? shuffleOptions : {};
-  const keepFirstCodeOrder = Boolean(optsCfg.keepFirstCodeOrder);
+  // GĐ2 (P0-04): không còn nhánh đặc biệt cho mã đề đầu tiên — mọi mã đề,
+  // kể cả mã 101, đều trộn thứ tự câu. Tùy chọn keepFirstCodeOrder cũ
+  // (giữ nguyên thứ tự mã gốc) đã bị bỏ theo kế hoạch: mã đề đầu tiên
+  // không trộn thì đáp án lộ theo thứ tự gốc. Giao diện vẫn gửi tùy chọn
+  // này nhưng máy chủ bỏ qua (xem server.js /api/shuffle-variants).
   const shuffleTfStatements = Boolean(optsCfg.shuffleTfStatements);
 
   const userCodes = (Array.isArray(customCodes) ? customCodes : [])
@@ -453,28 +615,12 @@ function generateShuffledVariants(baseQuestions, numVariants = 4, startCode = 10
     ? userCodes.length
     : Math.max(1, Math.min(12, Number(numVariants) || 1));
 
-  function hashString(str) {
-    let h = 0;
-    for (let i = 0; i < str.length; i++) {
-      h = ((h << 5) - h) + str.charCodeAt(i);
-      h |= 0;
-    }
-    return Math.abs(h);
-  }
-
-  function createSeededRandom(seed) {
-    let s = Math.abs(seed) % 2147483647;
-    if (s <= 0) s += 2147483646;
-    return function () {
-      s = (s * 16807) % 2147483647;
-      return (s - 1) / 2147483646;
-    };
-  }
-
-  function shuffleArray(arr, rand) {
+  // GĐ2 (P0-01): Fisher–Yates bằng crypto.randomInt — không hạt giống,
+  // không suy ra được thứ tự từ mã đề. Không lưu hạt giống ở đâu cả.
+  function shuffleArray(arr) {
     const copy = arr.slice();
     for (let i = copy.length - 1; i > 0; i--) {
-      const j = Math.floor(rand() * (i + 1));
+      const j = crypto.randomInt(0, i + 1);
       const tmp = copy[i];
       copy[i] = copy[j];
       copy[j] = tmp;
@@ -483,7 +629,7 @@ function generateShuffledVariants(baseQuestions, numVariants = 4, startCode = 10
   }
 
   // Trộn danh sách câu hỏi nhưng giữ các câu có cùng groupId luôn đứng liền kề nhau!
-  function shuffleQuestionsRespectingGroups(qList, rand) {
+  function shuffleQuestionsRespectingGroups(qList) {
     const blocks = [];
     const seenGroups = new Map();
     qList.forEach(q => {
@@ -498,16 +644,20 @@ function generateShuffledVariants(baseQuestions, numVariants = 4, startCode = 10
         blocks.push([q]);
       }
     });
-    return shuffleArray(blocks, rand).flat();
+    return shuffleArray(blocks).flat();
   }
 
   // Đảo 4 phương án A, B, C, D đồng bộ hoàn toàn cả text + optionXmls (OOXML) + optionRichHtmls
-  function shuffleMcqOptionsSync(q, rand) {
+  // GĐ2 (P0-02): đáp án không hợp lệ thì NÉM LỖI nêu rõ câu — không mặc định A.
+  function shuffleMcqOptionsSync(q) {
     const isPositional = hasPositionalOptions(q.options) || Boolean(q.keepOptionOrder);
     if (isPositional || !Array.isArray(q.options) || q.options.length !== 4) return q;
     const labels = ['A', 'B', 'C', 'D'];
     const cleanAns = String(q.answer || '').trim().toUpperCase();
     const ansIdx = labels.indexOf(cleanAns);
+    if (ansIdx < 0) {
+      throw new Error(`Không thể trộn đề: câu ${q.id || q.matrixRef || ''} thiếu đáp án hợp lệ (đáp án hiện tại: "${q.answer ?? ''}", phải là A, B, C hoặc D). Hãy bổ sung đáp án rồi trộn lại.`);
+    }
     const hasXmls = Array.isArray(q.optionXmls) && q.optionXmls.length === 4;
     const hasRich = Array.isArray(q.optionRichHtmls) && q.optionRichHtmls.length === 4;
 
@@ -515,23 +665,23 @@ function generateShuffledVariants(baseQuestions, numVariants = 4, startCode = 10
       text: String(text).replace(/^[A-D][\.\)]\s*/, ''),
       xml: hasXmls ? q.optionXmls[idx] : undefined,
       richHtml: hasRich ? q.optionRichHtmls[idx] : undefined,
-      isCorrect: idx === (ansIdx >= 0 ? ansIdx : 0)
+      isCorrect: idx === ansIdx
     }));
-    const newOpts = shuffleArray(indexedOpts, rand);
+    const newOpts = shuffleArray(indexedOpts);
     q.options = newOpts.map(item => item.text);
     if (hasXmls) q.optionXmls = newOpts.map(item => item.xml);
     if (hasRich) q.optionRichHtmls = newOpts.map(item => item.richHtml);
     const newAnsIdx = newOpts.findIndex(item => item.isCorrect);
-    q.answer = labels[newAnsIdx >= 0 ? newAnsIdx : 0];
+    q.answer = labels[newAnsIdx];
     return q;
   }
 
   // Đảo 4 ý a, b, c, d trong câu Phần II Đúng/Sai (nếu bật tùy chọn)
-  function shuffleTfStatementsSync(q, rand) {
+  function shuffleTfStatementsSync(q) {
     const stmts = Array.isArray(q.statements) ? q.statements : (Array.isArray(q.items) ? q.items : null);
     if (!stmts || stmts.length !== 4) return q;
     const subs = ['a', 'b', 'c', 'd'];
-    const shuffled = shuffleArray(stmts, rand).map((st, idx) => ({
+    const shuffled = shuffleArray(stmts).map((st, idx) => ({
       ...st,
       letter: subs[idx]
     }));
@@ -551,42 +701,30 @@ function generateShuffledVariants(baseQuestions, numVariants = 4, startCode = 10
     return 'MCQ';
   };
 
+  // GĐ2 (P0-02): kiểm tra đáp án hợp lệ TRƯỚC khi trộn — câu thiếu đáp
+  // án thì dừng và nêu rõ câu, không trộn rồi mới phát hiện.
+  assertValidQuestionAnswers(baseQuestions || []);
+
   for (let vIdx = 0; vIdx < count; vIdx++) {
     const code = userCodes[vIdx] || String(startCode + vIdx);
     const clonedQuestions = JSON.parse(JSON.stringify(baseQuestions || []));
 
-    if (vIdx === 0) {
-      if (keepFirstCodeOrder) {
-        variants.push({ code, questions: clonedQuestions });
-        continue;
-      }
-      const seed0 = hashString(code) + 101;
-      const rand0 = createSeededRandom(seed0);
-      const balancedFirst = clonedQuestions.map(q => {
-        if (resolveQuestionType(q) === 'MCQ') {
-          return shuffleMcqOptionsSync(q, rand0);
-        }
-        return q;
-      });
-      variants.push({ code, questions: balancedFirst });
-      continue;
-    }
-
-    const seedVal = hashString(code) + (vIdx * 997) + (parseInt(code, 10) || 101);
-    const rand = createSeededRandom(seedVal);
-
+    // GĐ2 (P0-04): MỌI mã đề — kể cả mã đầu tiên — đều trộn thứ tự câu
+    // trong từng phần, kể cả phần tự luận. Thứ tự các PHẦN (MCQ → TF →
+    // SA → ESSAY) giữ nguyên vì đó là cấu trúc đề thi, không phải thứ tự câu.
     const mcqs = clonedQuestions.filter(q => resolveQuestionType(q) === 'MCQ');
     const tfs = clonedQuestions.filter(q => resolveQuestionType(q) === 'TF');
     const sas = clonedQuestions.filter(q => resolveQuestionType(q) === 'SA');
     const essays = clonedQuestions.filter(q => resolveQuestionType(q) === 'ESSAY');
 
-    const shuffledMcqs = shuffleQuestionsRespectingGroups(mcqs, rand).map(q => shuffleMcqOptionsSync(q, rand));
-    const shuffledTfs = shuffleQuestionsRespectingGroups(tfs, rand).map(q => shuffleTfStatements ? shuffleTfStatementsSync(q, rand) : q);
-    const shuffledSas = shuffleQuestionsRespectingGroups(sas, rand);
+    const shuffledMcqs = shuffleQuestionsRespectingGroups(mcqs).map(q => shuffleMcqOptionsSync(q));
+    const shuffledTfs = shuffleQuestionsRespectingGroups(tfs).map(q => shuffleTfStatements ? shuffleTfStatementsSync(q) : q);
+    const shuffledSas = shuffleQuestionsRespectingGroups(sas);
+    const shuffledEssays = shuffleQuestionsRespectingGroups(essays);
 
     variants.push({
       code,
-      questions: [...shuffledMcqs, ...shuffledTfs, ...shuffledSas, ...essays]
+      questions: [...shuffledMcqs, ...shuffledTfs, ...shuffledSas, ...shuffledEssays]
     });
   }
 
@@ -599,6 +737,12 @@ module.exports = {
   validateExamProfile,
   generateShuffledVariants,
   hasPositionalOptions,
+  // GĐ2 (P1-01): quy ước điểm Đúng/Sai duy nhất (QĐ2)
+  TF_SCORE_BY_CORRECT,
+  tfQuestionScore,
+  // GĐ2 (P0-02/P0-03): kiểm tra đáp án trước trộn + đối chiếu mã đề
+  assertValidQuestionAnswers,
+  validateVariantAnswers,
   // GĐ3 (P1-07)
   isValidShortAnswer,
   ESSAY_MIN_CONTENT_CHARS

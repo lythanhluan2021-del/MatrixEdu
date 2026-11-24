@@ -37,7 +37,13 @@ const {
   exportRosterToCsv,
   exportMultiClassGradeCsv,
   exportAuditLogsToCsv,
-  exportOmrDatabaseLocalBackup
+  exportOmrDatabaseLocalBackup,
+  // GĐ2 (P0-09): chấm lại phía máy chủ — khóa đáp án + biểu điểm chuẩn.
+  SERVER_POINT_RULES,
+  buildStrictAnswerKeysFromExam,
+  saveExternalAnswerKeys,
+  loadExternalAnswerKeys,
+  loadLatestExternalAnswerKeys
 } = require('./src/omr-engine');
 const {
   OMR_TEMPLATES,
@@ -852,37 +858,11 @@ function extractOmrConfigFromProfile(profile = {}) {
       ? [{ code: profile.selectedVariantCode || '101', questions: profile.questions }]
       : []);
 
-  const answerKeysByCode = {};
-  variants.forEach(v => {
-    const code = String(v.code || '101').trim();
-    const p1 = [];
-    const p2 = {};
-    const p3 = {};
-    (v.questions || []).forEach(q => {
-      if (q.format === 'mcq' || q.type === 'MCQ' || (!q.format && q.options?.length === 4)) {
-        const rawAns = String(q.answer || q.correctAnswer || 'A').trim().toUpperCase();
-        p1.push(['A', 'B', 'C', 'D'].includes(rawAns) ? rawAns : 'A');
-      } else if (q.format === 'tf' || q.type === 'TF' || (!q.format && (q.statements?.length === 4 || q.subItems?.length === 4))) {
-        const stmts = q.statements || q.subItems || [];
-        const resolveTf = (item, fallback) => {
-          if (!item) return fallback;
-          if (typeof item.isTrue === 'boolean') return item.isTrue ? 'Đ' : 'S';
-          if (typeof item.correctAnswer === 'string') return item.correctAnswer.toUpperCase().startsWith('S') ? 'S' : 'Đ';
-          if (typeof item.answer === 'string') return item.answer.toUpperCase().startsWith('S') ? 'S' : 'Đ';
-          return fallback;
-        };
-        p2[String(Object.keys(p2).length + 1)] = {
-          a: resolveTf(stmts[0], 'Đ'),
-          b: resolveTf(stmts[1], 'S'),
-          c: resolveTf(stmts[2], 'Đ'),
-          d: resolveTf(stmts[3], 'S')
-        };
-      } else if (q.format === 'short_answer' || q.type === 'SA') {
-        p3[String(Object.keys(p3).length + 1)] = String(q.answer ?? q.correctAnswer ?? '');
-      }
-    });
-    answerKeysByCode[code] = { part1: p1, part2: p2, part3: p3 };
-  });
+  // GĐ2 (P0-02): dựng khóa đáp án bằng bộ dựng NGHIÊM NGẶT — câu thiếu
+  // đáp án hợp lệ thì khóa đó mang null (hiển thị là "chưa có đáp án"),
+  // không bao giờ mặc định thành A. Đường chấm bài dùng chính bộ này và
+  // từ chối chấm khi có lỗi (xem resolveServerAnswerKeys).
+  const { keys: answerKeysByCode } = buildStrictAnswerKeysFromExam(profile);
 
   const rows = profile.matrix?.rows || [];
   let essayCount = 0;
@@ -912,7 +892,10 @@ function extractOmrConfigFromProfile(profile = {}) {
   const existingOmrCfg = profile.omrConfig || {};
   const mcqRule = Number(existingOmrCfg.pointRules?.mcq ?? mRules.MCQ ?? 0.25);
   const saRule = Number(existingOmrCfg.pointRules?.sa ?? mRules.SA ?? 0.5);
-  const tfStyle = existingOmrCfg.pointRules?.tfStyle || 'fixed025';
+  // GĐ2 (P1-01, QĐ2): mặc định thang Đúng/Sai chung (moet2025) — không còn
+  // kiểu chia đều 0,25đ/ý. Hồ sơ cũ lưu tfStyle fixed025 vẫn được đọc ra
+  // để hiển thị, nhưng khi chấm máy chủ luôn dùng SERVER_POINT_RULES.
+  const tfStyle = existingOmrCfg.pointRules?.tfStyle === 'fixed025' ? 'moet2025' : (existingOmrCfg.pointRules?.tfStyle || 'moet2025');
   if (essayPts === 0 && essayCount > 0) {
     essayPts = Math.round(essayCount * Number(mRules.ESSAY || 1.0) * 100) / 100;
   }
@@ -933,6 +916,127 @@ function extractOmrConfigFromProfile(profile = {}) {
     essayMaxScore: Math.round(essayPts * 100) / 100,
     maxOmrScore: maxOmrScore || 10.0,
     recommendedTemplateId: existingOmrCfg.recommendedTemplateId || ''
+  };
+}
+
+/**
+ * GĐ2 (P0-09): Đọc một hồ sơ đề từ ổ cứng (tôn trọng tombstone đã xóa),
+ * dùng chung cho tra khóa đáp án phía máy chủ.
+ */
+function loadProfileById(id) {
+  const safeId = String(id || '').replace(/[^a-zA-Z0-9_\-]/g, '');
+  if (!safeId) return null;
+  if (readDeletedProfileIds().has(safeId)) return null;
+  const writablePath = path.join(PROFILES_DIR, `${safeId}.json`);
+  const bundledPath = path.join(BUNDLED_PROFILES_DIR, `${safeId}.json`);
+  const filePath = fs.existsSync(writablePath) ? writablePath : (fs.existsSync(bundledPath) ? bundledPath : null);
+  if (!filePath) return null;
+  try {
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  } catch (_) {
+    return null;
+  }
+}
+
+/**
+ * GĐ2 (P0-09): Tra khóa đáp án CHỈ từ dữ liệu máy chủ lưu giữ — không bao
+ * giờ tin body client. Thứ tự tra cứu:
+ *   1. sessionId → ca chấm đã lưu trên máy chủ;
+ *   2. examId (hồ sơ đề) → dựng khóa nghiêm ngặt từ variants của hồ sơ
+ *      (câu thiếu đáp án hợp lệ thì báo rõ và từ chối chấm);
+ *   3. examId dạng ext_* → kho khóa ngoài do /api/omr/parse-answer-key
+ *      đã trích xuất và lưu (rồi mới nhất nếu không khớp đúng tên);
+ *   4. Chưa có nguồn nào mà body kèm khóa đáp án hợp lệ về cấu trúc →
+ *      LƯU bộ khóa đó thành nguồn máy chủ cho examId này (lần xác lập đầu
+ *      tiên của giáo viên đã đăng nhập — tương đương việc nạp file đáp án),
+ *      từ lần sau trở đi chỉ đọc từ kho đã lưu, body gửi lại bị bỏ qua.
+ * Trả về { ok, keys, source } hoặc { ok: false, errorCode, message }.
+ */
+function resolveServerAnswerKeys({ examId = '', sessionId = '', bodyKeys = null, metadata = {} }) {
+  const safeExamId = String(examId || '').trim();
+  const safeSessionId = String(sessionId || '').trim();
+
+  // 1. Ca chấm đã lưu.
+  if (safeSessionId) {
+    const session = loadSavedOmrSession(safeSessionId);
+    if (session && session.answerKeysByCode && Object.keys(session.answerKeysByCode).length > 0) {
+      return { ok: true, keys: session.answerKeysByCode, source: `ca chấm đã lưu ${safeSessionId}` };
+    }
+  }
+
+  // 2. Hồ sơ đề đã lưu.
+  if (safeExamId && !safeExamId.startsWith('ext_') && safeExamId !== 'exam_current') {
+    const profile = loadProfileById(safeExamId);
+    if (profile) {
+      const built = buildStrictAnswerKeysFromExam(profile);
+      if (built.problems.length > 0) {
+        return {
+          ok: false,
+          errorCode: 'INVALID_ANSWER_KEY',
+          message: `Không thể chấm đề "${safeExamId}": biểu đáp án trong hồ sơ đề có lỗi — ${built.problems.slice(0, 3).join(' ')}`
+        };
+      }
+      if (Object.keys(built.keys).length > 0) {
+        return { ok: true, keys: built.keys, source: `hồ sơ đề ${safeExamId}` };
+      }
+    }
+  }
+
+  // 3. Khóa ngoài đã nạp qua parse-answer-key.
+  if (safeExamId.startsWith('ext_')) {
+    const stored = loadExternalAnswerKeys(safeExamId) || loadLatestExternalAnswerKeys();
+    if (stored && Object.keys(stored).length > 0) {
+      return { ok: true, keys: stored, source: `file đáp án ngoài đã nạp (${safeExamId})` };
+    }
+  }
+
+  // 3b. Kho khóa đã xác lập từ lần chấm trước cho cùng đề (xem bước 4).
+  const m = metadata || {};
+  const workflowId = `wf_${[safeExamId || 'exam', m.subject || '', m.grade || '', m.examPeriod || ''].join('_').replace(/[^a-zA-Z0-9_\-]+/g, '_').slice(0, 64)}`;
+  if (safeExamId) {
+    const established = loadExternalAnswerKeys(workflowId);
+    if (established && Object.keys(established).length > 0) {
+      return { ok: true, keys: established, source: `kho khóa đã xác lập cho ${safeExamId}` };
+    }
+  }
+
+  // 4. Xác lập lần đầu từ khóa body gửi lên (đã đăng nhập) — chỉ khi chưa
+  // có nguồn máy chủ nào. Từ lần sau, kho đã lưu thắng body.
+  if (bodyKeys && typeof bodyKeys === 'object' && Object.keys(bodyKeys).length > 0) {
+    const structuralProblems = [];
+    for (const [code, key] of Object.entries(bodyKeys)) {
+      if (!key || typeof key !== 'object') { structuralProblems.push(`mã đề ${code}: biểu đáp án không đúng định dạng.`); continue; }
+      (key.part1 || []).forEach((ans, i) => {
+        if (!['A', 'B', 'C', 'D'].includes(String(ans || '').trim().toUpperCase())) {
+          structuralProblems.push(`mã đề ${code} Phần I câu ${i + 1}: đáp án "${ans}" không phải A–D.`);
+        }
+      });
+      for (const [qNum, subs] of Object.entries(key.part2 || {})) {
+        for (const letter of ['a', 'b', 'c', 'd']) {
+          const v = String(subs?.[letter] || '').trim().toUpperCase();
+          if (v !== 'Đ' && v !== 'S') {
+            structuralProblems.push(`mã đề ${code} Phần II câu ${qNum}${letter}: đáp án Đúng/Sai "${subs?.[letter] ?? ''}" không xác định được.`);
+          }
+        }
+      }
+    }
+    if (structuralProblems.length > 0) {
+      return {
+        ok: false,
+        errorCode: 'INVALID_ANSWER_KEY',
+        message: `Không thể chấm: biểu đáp án gửi lên có lỗi — ${structuralProblems.slice(0, 3).join(' ')}`
+      };
+    }
+    const m = metadata || {};
+    const workflowId = `wf_${[safeExamId || 'exam', m.subject || '', m.grade || '', m.examPeriod || ''].join('_').replace(/[^a-zA-Z0-9_\-]+/g, '_').slice(0, 64)}`;
+    saveExternalAnswerKeys(workflowId, bodyKeys, `Xác lập từ lần chấm đầu (${safeExamId || 'chưa lưu hồ sơ'})`);
+    return { ok: true, keys: bodyKeys, source: `xác lập lần đầu cho ${safeExamId || 'đề chưa lưu hồ sơ'}` };
+  }
+
+  return {
+    ok: false,
+    errorCode: 'MISSING_ANSWER_KEYS',
+    message: 'Chưa có Biểu đáp án mã đề trên máy chủ! Vui lòng lưu Hồ sơ đề (Bước 4–5) hoặc nạp file Đáp án (Bước 7) trước khi bấm Chấm — máy chủ chỉ chấm bằng đáp án do chính mình lưu giữ.'
   };
 }
 
@@ -1275,10 +1379,44 @@ function extractOmrConfigFromProfile(profile = {}) {
       if (!requireAuth(req, res)) return;
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
+      // GĐ2 (P0-09): lưu ca chấm thì chấm lại bằng khóa đáp án + biểu điểm
+      // của MÁY CHỦ (khi tra được nguồn khóa và bài nào cũng còn phiếu tô).
+      // Bài không còn phiếu tô thì giữ nguyên kết quả cũ và ghi rõ là
+      // chưa chấm lại được — không tự chấm 0 điểm cho bài không có dữ liệu.
+      let gradedPapers = body.gradedPapers || [];
+      let answerKeysByCode = body.answerKeysByCode || {};
+      let pointRules = body.pointRules || {};
+      let serverRegraded = false;
+      const resolved = resolveServerAnswerKeys({
+        examId: body.examId || '',
+        sessionId: body.sessionId || '',
+        bodyKeys: body.answerKeysByCode || null,
+        metadata: body.metadata || {}
+      });
+      if (resolved.ok && gradedPapers.length > 0 && gradedPapers.every(p => p && p.answers && typeof p.answers === 'object')) {
+        const regraded = gradeBatchPapers({
+          papers: gradedPapers.map(p => {
+            const copy = { ...(p || {}) };
+            delete copy.result;
+            delete copy.totalScore;
+            delete copy.statistics;
+            return copy;
+          }),
+          answerKeysByCode: resolved.keys,
+          pointRules: { ...SERVER_POINT_RULES },
+          roster: getActiveRoster(body.className && body.className !== '__ALL__' ? body.className : null),
+          targetClassName: body.className || '',
+          persistDbState: false
+        });
+        gradedPapers = regraded.gradedPapers;
+        answerKeysByCode = resolved.keys;
+        pointRules = { ...SERVER_POINT_RULES };
+        serverRegraded = true;
+      }
       const snap = saveGradingSessionSnapshot({
-        gradedPapers: body.gradedPapers || [],
-        answerKeysByCode: body.answerKeysByCode || {},
-        pointRules: body.pointRules || {},
+        gradedPapers,
+        answerKeysByCode,
+        pointRules,
         metadata: body.metadata || {},
         title: body.title || '',
         examId: body.examId || '',
@@ -1291,6 +1429,7 @@ function extractOmrConfigFromProfile(profile = {}) {
       sendJson(res, 200, {
         ok: true,
         session: snap,
+        serverRegraded,
         sessions: listSavedOmrSessions()
       });
       return;
@@ -1439,9 +1578,34 @@ function extractOmrConfigFromProfile(profile = {}) {
           return;
         }
 
+        // GĐ2 (P0-09): LƯU bộ khóa vừa trích xuất xuống máy chủ để lần chấm
+        // sau tra được từ kho máy chủ — không phụ thuộc body client gửi lại.
+        // ID kho khớp đúng examId mà giao diện tính ra (ext_ + tên nguồn đã
+        // chuẩn hóa, giống hệt buildOmrGradingContext trong index.html).
+        let answerKeySetId = '';
+        try {
+          const crypto = require('crypto');
+          if (body.fileBase64 && body.fileName) {
+            const label = `File: ${body.fileName}`;
+            answerKeySetId = 'ext_' + label.replace(/[^a-zA-Z0-9_-]+/g, '_').slice(0, 32);
+            saveExternalAnswerKeys(answerKeySetId, answerKeys, label);
+          } else {
+            const label = 'Dán văn bản (Zalo/Email)';
+            answerKeySetId = 'ext_' + label.replace(/[^a-zA-Z0-9_-]+/g, '_').slice(0, 32);
+            saveExternalAnswerKeys(answerKeySetId, answerKeys, label);
+            // Lưu thêm theo hash nội dung để lần chấm sau tra được ngay cả
+            // khi giao diện đặt tên nguồn khác (vd. nạp văn bản mẫu).
+            const contentId = 'ext_content_' + crypto.createHash('sha256').update(String(body.rawText || '')).digest('hex').slice(0, 16);
+            saveExternalAnswerKeys(contentId, answerKeys, label);
+          }
+        } catch (storeErr) {
+          console.error('[POST /api/omr/parse-answer-key] Không lưu được biểu đáp án xuống máy chủ:', storeErr);
+        }
+
         sendJson(res, 200, {
           ok: true,
           answerKeysByCode: answerKeys,
+          answerKeySetId,
           detectedCodes: codes,
           totalCodes: codes.length,
           summary: `Đã nhận diện thành công ${codes.length} mã đề (${codes.join(', ')})`
@@ -1458,34 +1622,49 @@ function extractOmrConfigFromProfile(profile = {}) {
       if (!requireAuth(req, res)) return;
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
-      let answerKeysByCode = body.answerKeysByCode || {};
-      let pointRules = body.pointRules || { mcq: 0.25, tfStyle: 'fixed025' };
       const targetClassName = String(body.className || '').trim();
       const isDemoSimulation = body.useSampleBatch === true;
-      const roster = Array.isArray(body.roster)
-        ? body.roster
-        : getActiveRoster(targetClassName && targetClassName !== '__ALL__' ? targetClassName : null);
 
-      if (!isDemoSimulation && (!answerKeysByCode || Object.keys(answerKeysByCode).length === 0)) {
-        sendJson(res, 400, {
-          ok: false,
-          errorCode: 'MISSING_ANSWER_KEYS',
-          message: 'Chưa có Biểu đáp án mã đề! Vui lòng chọn một Đề thi từ Kho đề hoặc nạp file Đáp án trước khi bấm Chấm.'
-        });
-        return;
-      }
+      // GĐ2 (P0-09): MÁY CHỦ là nguồn sự thật duy nhất khi chấm.
+      // - Khóa đáp án: tra từ dữ liệu máy chủ lưu giữ (hồ sơ đề / ca chấm
+      //   đã lưu / file đáp án đã nạp / kho đã xác lập) — xem
+      //   resolveServerAnswerKeys. Khóa client gửi lên chỉ dùng để xác lập
+      //   lần đầu khi chưa có nguồn nào, từ lần sau bị bỏ qua.
+      // - Biểu điểm: luôn là bảng chuẩn của máy chủ (SERVER_POINT_RULES).
+      // - Roster: lấy từ máy chủ theo lớp. Điểm trong từng bài (result /
+      //   totalScore) do client tự tính đều bị xóa trước khi chấm lại.
+      const pointRules = { ...SERVER_POINT_RULES };
+      const serverRoster = getActiveRoster(targetClassName && targetClassName !== '__ALL__' ? targetClassName : null);
 
-      let papers = body.papers;
+      let answerKeysByCode;
+      let answerKeySource = 'mẫu mô phỏng';
       if (isDemoSimulation) {
-        // Chỉ sinh lô bài làm mẫu mô phỏng khi người dùng bấm rõ nút [Chấm thử 35 bài mẫu]
+        answerKeysByCode = body.answerKeysByCode || {};
         if (!answerKeysByCode || Object.keys(answerKeysByCode).length === 0) {
           answerKeysByCode = {
             '101': { part1: ['A','B','C','D','A','B','C','D','B','C','A','D','C','B','A','D','C','A','D','B','A','C','B','D'], part2: { '1': { a:'Đ',b:'S',c:'Đ',d:'S' }, '2': { a:'S',b:'Đ',c:'S',d:'Đ' } }, part3: {} },
             '102': { part1: ['B','C','D','A','B','C','D','A','C','D','B','A','D','C','B','A','D','B','A','C','B','D','C','A'], part2: { '1': { a:'S',b:'Đ',c:'S',d:'Đ' }, '2': { a:'Đ',b:'S',c:'Đ',d:'S' } }, part3: {} }
           };
         }
-        const simRoster = Array.isArray(roster) && roster.length > 0 ? roster : DEFAULT_CLASS_ROSTER;
-        papers = generateSampleBatchPapers(answerKeysByCode, simRoster);
+      } else {
+        const resolved = resolveServerAnswerKeys({
+          examId: body.examId || '',
+          sessionId: body.sessionId || '',
+          bodyKeys: body.answerKeysByCode || null,
+          metadata: body.metadata || {}
+        });
+        if (!resolved.ok) {
+          sendJson(res, 400, { ok: false, errorCode: resolved.errorCode, message: resolved.message });
+          return;
+        }
+        answerKeysByCode = resolved.keys;
+        answerKeySource = resolved.source;
+      }
+
+      let papers = body.papers;
+      if (isDemoSimulation) {
+        // Chấm thử chỉ dùng roster mẫu giả định — không đụng roster thật.
+        papers = generateSampleBatchPapers(answerKeysByCode, DEFAULT_CLASS_ROSTER);
       } else if (!Array.isArray(papers) || papers.length === 0) {
         sendJson(res, 400, {
           ok: false,
@@ -1493,13 +1672,22 @@ function extractOmrConfigFromProfile(profile = {}) {
           message: 'Chưa có bài scan phiếu thật nào được nạp! Tuyệt đối không tự sinh CSDL ảo khi chấm phiếu thật — hãy tải ảnh/PDF bài thi lên (hoặc nhấn "Chấm thử 35 bài mẫu chuẩn" nếu muốn chạy mô phỏng).'
         });
         return;
+      } else {
+        // Xóa mọi điểm client tự tính trong từng bài trước khi chấm lại.
+        papers = papers.map(p => {
+          const copy = { ...(p || {}) };
+          delete copy.result;
+          delete copy.totalScore;
+          delete copy.statistics;
+          return copy;
+        });
       }
 
       const gradeResult = gradeBatchPapers({
         papers,
         answerKeysByCode,
         pointRules,
-        roster: isDemoSimulation && (!roster || roster.length === 0) ? DEFAULT_CLASS_ROSTER : roster,
+        roster: isDemoSimulation ? DEFAULT_CLASS_ROSTER : serverRoster,
         targetClassName: isDemoSimulation && !targetClassName ? '12A1 (Mẫu thử)' : targetClassName,
         persistDbState: !isDemoSimulation
       });
@@ -1544,10 +1732,11 @@ function extractOmrConfigFromProfile(profile = {}) {
         ok: true,
         isDemoSimulation,
         demoMode: isDemoMode(),
+        answerKeySource,
         ...gradeResult,
         answerKeysByCode,
         pointRules,
-        roster,
+        roster: isDemoSimulation ? DEFAULT_CLASS_ROSTER : serverRoster,
         sessionId: savedSession ? savedSession.id : null,
         savedSession,
         persistence,
@@ -1562,7 +1751,9 @@ function extractOmrConfigFromProfile(profile = {}) {
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
       // GĐ1 (P0-09): tên người sửa lấy từ phiên đăng nhập, không lấy từ body client.
-      const { paperId, updates, allPapers, answerKeysByCode, pointRules, roster, sessionId } = body;
+      // GĐ2 (P0-09): chấm lại bằng khóa đáp án + biểu điểm + roster của MÁY
+      // CHỦ — khóa/biểu điểm/roster client gửi lên bị bỏ qua.
+      const { paperId, updates, allPapers, sessionId } = body;
       const user = 'Quản trị viên';
 
       if (!paperId || !updates || !Array.isArray(allPapers)) {
@@ -1570,13 +1761,24 @@ function extractOmrConfigFromProfile(profile = {}) {
         return;
       }
 
+      const resolved = resolveServerAnswerKeys({
+        examId: body.examId || '',
+        sessionId: sessionId || '',
+        bodyKeys: body.answerKeysByCode || null,
+        metadata: body.metadata || {}
+      });
+      if (!resolved.ok) {
+        sendJson(res, 400, { ok: false, errorCode: resolved.errorCode, message: resolved.message });
+        return;
+      }
+
       const result = updatePaperAndAudit({
         paperId,
         updates,
         allPapers,
-        answerKeysByCode: answerKeysByCode || {},
-        pointRules: pointRules || {},
-        roster: Array.isArray(roster) && roster.length > 0 ? roster : getActiveRoster(),
+        answerKeysByCode: resolved.keys,
+        pointRules: { ...SERVER_POINT_RULES },
+        roster: getActiveRoster(),
         user: user || 'Giáo viên bộ môn'
       });
 

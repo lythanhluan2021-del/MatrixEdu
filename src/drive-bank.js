@@ -639,8 +639,11 @@ function extractQuestionsFromFile(filename, buffer) {
         }
 
         // Bóc tách đáp án đúng gạch chân (<w:u>) thực tế của Giáo viên
+        // GĐ2 (P0-02): không phát hiện được đáp án gạch chân thì để
+        // correctAnswer = null (câu này không được chọn làm câu thi — xem
+        // bộ lọc MCQ trong ai-engine.js), KHÔNG mặc định thành A.
         const detectedAns = detectUnderlinedAnswer(combinedTagged, options, allUnderlined);
-        const finalAnswer = detectedAns || 'A';
+        const finalAnswer = detectedAns || null;
         const isUnderlineVerified = Boolean(detectedAns);
 
         mcqQuestions.push({
@@ -663,7 +666,7 @@ function extractQuestionsFromFile(filename, buffer) {
           subject: meta.subject,
           explanation: isUnderlineVerified
             ? `Đáp án đúng là ${finalAnswer} (Căn cứ theo đáp án được gạch chân trong tài liệu "${filename}").`
-            : `Đáp án chuẩn theo SGK và tài liệu chuyên môn "${filename}".`
+            : `Chưa xác định được đáp án gạch chân trong tài liệu "${filename}" — câu này chưa dùng được làm câu thi.`
         });
       } else {
         // Xử lý câu Trả lời ngắn / Tự luận (Part III)
@@ -885,9 +888,13 @@ function parseExamPair(deFile, dapAnFile, folderDir) {
               cleanOptionText(opts['C'] || ''),
               cleanOptionText(opts['D'] || '')
             ],
-            correctAnswer: mcqAnswers[qNum] || 'A',
+            // GĐ2 (P0-02): không trích được đáp án từ file nguồn thì để null
+            // (câu này không được chọn làm câu thi), không mặc định thành A.
+            correctAnswer: mcqAnswers[qNum] || null,
             hasUnderlineAnswer: Boolean(mcqAnswers[qNum]),
-            explanation: mcqExpls[qNum] || `Đáp án đúng là ${mcqAnswers[qNum] || 'A'} theo tài liệu chuẩn "${deFile}".`,
+            explanation: mcqExpls[qNum] || (mcqAnswers[qNum]
+              ? `Đáp án đúng là ${mcqAnswers[qNum]} theo tài liệu chuẩn "${deFile}".`
+              : `Chưa xác định được đáp án trong tài liệu chuẩn "${deFile}" — câu này chưa dùng được làm câu thi.`),
             sourceFile: deFile,
             topicTitle: 'Tin học 10 (ICT Giữa HK1)',
             topicCode: 'TIN 10',

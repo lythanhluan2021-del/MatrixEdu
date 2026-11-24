@@ -11,6 +11,15 @@ const os = require('os');
 const path = require('path');
 // GĐ3 (P1-08, QĐ4): ghi nguyên tử + sao lưu ngày + khóa ghi + chặn ghi demo.
 const { atomicWriteJson, atomicWriteFile } = require('./storage');
+// GĐ2 (P1-01, QĐ2): điểm Đúng/Sai chỉ có MỘT quy ước — hàm dùng chung
+// tfQuestionScore (1 ý 0,1đ; 2 ý 0,25đ; 3 ý 0,5đ; 4 ý 1,0đ).
+const { tfQuestionScore } = require('./scoring');
+
+/**
+ * GĐ2 (P0-09): Biểu điểm chuẩn phía MÁY CHỦ cho chấm OMR — client gửi
+ * pointRules nào lên cũng bị bỏ qua, máy chủ luôn chấm theo bảng này.
+ */
+const SERVER_POINT_RULES = Object.freeze({ mcq: 0.25, tfStyle: 'moet2025', sa: 0.5 });
 
 // Đường dẫn lưu trữ CSDL cục bộ và đồng bộ (Hỗ trợ cả môi trường Serverless Read-Only như Vercel)
 const BUNDLED_DATA_DIR = path.join(__dirname, '..', 'data');
@@ -37,6 +46,11 @@ const BUNDLED_ROSTER_FILE = path.join(BUNDLED_DATA_DIR, 'omr_active_roster.json'
 const OMR_ROSTERS_FILE = path.join(DATA_DIR, 'omr_rosters.json');
 const BUNDLED_ROSTERS_FILE = path.join(BUNDLED_DATA_DIR, 'omr_rosters.json');
 const OMR_SESSIONS_DIR = path.join(DATA_DIR, 'omr_database');
+// Thư mục lưu biểu đáp án ngoài do máy chủ tự trích xuất (parse-answer-key)
+// — khóa đáp án chấm bài chỉ lấy từ đây / hồ sơ đề / ca chấm đã lưu,
+// không bao giờ lấy từ body client gửi lên (xem server.js).
+const EXTERNAL_KEYS_DIR = path.join(DATA_DIR, 'omr_answer_keys');
+const EXTERNAL_KEYS_LATEST_FILE = path.join(EXTERNAL_KEYS_DIR, 'latest.json');
 
 // Khởi tạo thư mục data và omr_database an toàn
 try {
@@ -193,8 +207,9 @@ function isShortAnswerMatch(studentVal, expectedVal) {
  */
 function gradeSinglePaper(paper, answerKey, pointRules = {}) {
   const p1Rule = pointRules.mcq !== undefined && pointRules.mcq !== null ? Number(pointRules.mcq) : 0.25;
-  const p2Style = pointRules.tfStyle || 'fixed025'; // 'fixed025' chia đều (0.25đ/ý) hoặc 'moet2025' lũy tiến (0.1 - 0.25 - 0.5 - 1.0đ)
-  const p2SubPoint = pointRules.tfSubPoint !== undefined && pointRules.tfSubPoint !== null ? Number(pointRules.tfSubPoint) : 0.25;
+  // GĐ2 (P1-01, QĐ2): Đúng/Sai LUÔN chấm theo thang chung tfQuestionScore
+  // (1 ý 0,1đ; 2 ý 0,25đ; 3 ý 0,5đ; 4 ý 1,0đ). Không còn kiểu chia đều
+  // 0,25đ/ý ('fixed025') — pointRules.tfStyle do client gửi bị bỏ qua.
 
   // 1. Chấm Phần I (MCQ) — hỗ trợ cả dạng Mảng ['A', 'B'] và dạng Object { '1': 'A', '2': 'B' }
   let p1CorrectCount = 0;
@@ -251,16 +266,9 @@ function gradeSinglePaper(paper, answerKey, pointRules = {}) {
       };
     });
 
-    // Tính điểm câu lớn theo thang điểm chuẩn Bộ GD&ĐT 2025
-    let qPts = 0;
-    if (p2Style === 'moet2025') {
-      if (matchedSubCount === 1) qPts = 0.10;
-      else if (matchedSubCount === 2) qPts = 0.25;
-      else if (matchedSubCount === 3) qPts = 0.50;
-      else if (matchedSubCount === 4) qPts = 1.00;
-    } else {
-      qPts = matchedSubCount * p2SubPoint;
-    }
+    // Tính điểm câu lớn theo thang điểm chuẩn Bộ GD&ĐT 2025 (QĐ2) —
+    // một hàm duy nhất tfQuestionScore, khớp hướng dẫn chấm trong Word.
+    const qPts = tfQuestionScore(matchedSubCount);
     p2Pts += qPts;
 
     p2Details.push({
@@ -1349,7 +1357,7 @@ function listSavedOmrSessions() {
         minScore: stats.min ?? 0,
         medianScore: stats.median ?? 0,
         classification: stats.classification || {},
-        tfStyle: raw.pointRules?.tfStyle || 'fixed025',
+        tfStyle: 'moet2025',
         templateId: raw.templateId || raw.metadata?.templateId || '',
         className: firstClass,
         subject,
@@ -1410,6 +1418,131 @@ function loadSavedOmrSession(sessionId) {
     }
   }
   return null;
+}
+
+/**
+ * GĐ2 (P0-02 + P0-09): Dựng biểu đáp án từ hồ sơ đề một cách NGHIÊM NGẶT —
+ * không mặc định đáp án. Câu nào thiếu đáp án hợp lệ thì ghi vào problems
+ * (kèm mã đề + mã câu) và toàn bộ bộ khóa bị coi là không dùng được: máy
+ * chủ từ chối chấm thay vì chấm bằng đáp án A bịa ra.
+ * Trả về { keys, problems }: keys = { code: { part1: [], part2: {}, part3: {} } }.
+ */
+function buildStrictAnswerKeysFromExam(examData = {}) {
+  const variants = Array.isArray(examData.variants) && examData.variants.length > 0
+    ? examData.variants
+    : (Array.isArray(examData.questions) && examData.questions.length > 0
+      ? [{ code: examData.selectedVariantCode || '101', questions: examData.questions }]
+      : []);
+  const keys = {};
+  const problems = [];
+
+  variants.forEach(v => {
+    const code = String(v.code || '101').trim();
+    const p1 = [];
+    const p2 = {};
+    const p3 = {};
+    (v.questions || []).forEach((q, qi) => {
+      const qLabel = `mã đề ${code} câu ${qi + 1}${q.id ? ` [${q.id}]` : ''}`;
+      const type = String(q.type || '').toUpperCase();
+      if (type === 'MCQ' || (!type && Array.isArray(q.options) && q.options.length === 4)) {
+        const ans = String(q.answer ?? q.correctAnswer ?? '').trim().toUpperCase();
+        if (!['A', 'B', 'C', 'D'].includes(ans)) {
+          problems.push(`${qLabel}: đáp án trắc nghiệm không hợp lệ ("${q.answer ?? q.correctAnswer ?? ''}", phải là A, B, C hoặc D).`);
+          p1.push(null);
+        } else {
+          p1.push(ans);
+        }
+      } else if (type === 'TF' || (!type && (Array.isArray(q.statements) || Array.isArray(q.subItems)))) {
+        const stmts = q.statements || q.subItems || [];
+        const resolveTf = (item) => {
+          if (!item) return null;
+          if (typeof item.isTrue === 'boolean') return item.isTrue ? 'Đ' : 'S';
+          if (typeof item.correctAnswer === 'string') {
+            const c = item.correctAnswer.trim().toUpperCase();
+            if (c.startsWith('S')) return 'S';
+            if (c.startsWith('Đ') || c.startsWith('D')) return 'Đ';
+            return null;
+          }
+          if (typeof item.answer === 'string') {
+            const c = item.answer.trim().toUpperCase();
+            if (c.startsWith('S')) return 'S';
+            if (c.startsWith('Đ') || c.startsWith('D')) return 'Đ';
+            return null;
+          }
+          return null;
+        };
+        const entry = {};
+        ['a', 'b', 'c', 'd'].forEach((letter, sIdx) => {
+          const val = resolveTf(stmts[sIdx]);
+          if (val === null) {
+            problems.push(`${qLabel} ý ${letter}: thiếu đáp án Đúng/Sai xác định được.`);
+            entry[letter] = null;
+          } else {
+            entry[letter] = val;
+          }
+        });
+        p2[String(Object.keys(p2).length + 1)] = entry;
+      } else if (type === 'SA') {
+        const ans = q.answer ?? q.correctAnswer ?? '';
+        if (ans === undefined || ans === null || String(ans).trim() === '') {
+          problems.push(`${qLabel}: câu trả lời ngắn thiếu đáp số.`);
+          p3[String(Object.keys(p3).length + 1)] = '';
+        } else {
+          p3[String(Object.keys(p3).length + 1)] = String(ans);
+        }
+      }
+    });
+    keys[code] = { part1: p1, part2: p2, part3: p3 };
+  });
+
+  return { keys, problems };
+}
+
+/**
+ * GĐ2 (P0-09): Kho biểu đáp án ngoài do MÁY CHỦ trích xuất và lưu giữ.
+ * Chỉ route /api/omr/parse-answer-key (đã đăng nhập) mới được ghi vào đây;
+ * grade-batch/update-paper chỉ ĐỌC từ đây, không bao giờ lấy khóa từ body.
+ */
+function sanitizeExternalKeySetId(rawId) {
+  return String(rawId || '').replace(/[^a-zA-Z0-9_\-]/g, '_').slice(0, 64) || 'external_keys';
+}
+
+function saveExternalAnswerKeys(keySetId, answerKeysByCode, sourceLabel = '') {
+  const safeId = sanitizeExternalKeySetId(keySetId);
+  if (!fs.existsSync(EXTERNAL_KEYS_DIR)) fs.mkdirSync(EXTERNAL_KEYS_DIR, { recursive: true });
+  const payload = {
+    keySetId: safeId,
+    sourceLabel: String(sourceLabel || ''),
+    savedAt: new Date().toISOString(),
+    answerKeysByCode: answerKeysByCode || {}
+  };
+  atomicWriteJson(path.join(EXTERNAL_KEYS_DIR, `${safeId}.json`), payload);
+  atomicWriteJson(EXTERNAL_KEYS_LATEST_FILE, { keySetId: safeId, sourceLabel: payload.sourceLabel, savedAt: payload.savedAt });
+  return safeId;
+}
+
+function loadExternalAnswerKeys(keySetId) {
+  const safeId = sanitizeExternalKeySetId(keySetId);
+  const filePath = path.join(EXTERNAL_KEYS_DIR, `${safeId}.json`);
+  if (!fs.existsSync(filePath)) return null;
+  try {
+    const raw = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    if (!raw || typeof raw.answerKeysByCode !== 'object') return null;
+    return raw.answerKeysByCode;
+  } catch (_) {
+    return null;
+  }
+}
+
+function loadLatestExternalAnswerKeys() {
+  if (!fs.existsSync(EXTERNAL_KEYS_LATEST_FILE)) return null;
+  try {
+    const pointer = JSON.parse(fs.readFileSync(EXTERNAL_KEYS_LATEST_FILE, 'utf8'));
+    if (!pointer || !pointer.keySetId) return null;
+    return loadExternalAnswerKeys(pointer.keySetId);
+  } catch (_) {
+    return null;
+  }
 }
 
 /**
@@ -1788,6 +1921,12 @@ module.exports = {
   exportMultiClassGradeCsv,
   exportAuditLogsToCsv,
   exportOmrDatabaseLocalBackup,
+  // GĐ2 (P0-09): chấm lại phía máy chủ — khóa đáp án + biểu điểm chuẩn.
+  SERVER_POINT_RULES,
+  buildStrictAnswerKeysFromExam,
+  saveExternalAnswerKeys,
+  loadExternalAnswerKeys,
+  loadLatestExternalAnswerKeys,
   // Tên cũ, chỉ để tương thích — code mới dùng exportOmrDatabaseLocalBackup.
   syncOmrDatabaseToGoogleDrive
 };

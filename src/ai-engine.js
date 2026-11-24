@@ -12,7 +12,7 @@ const path = require('path');
 const { SAMPLE_DOCUMENTS } = require('./sample-materials');
 const { SUBJECT_POOLS } = require('./question-banks');
 const { analyzeEducationalText } = require('./doc-parser');
-const { computeMatrixStatistics, generateShuffledVariants, validateExamProfile, isValidShortAnswer } = require('./qa-validator');
+const { computeMatrixStatistics, generateShuffledVariants, validateExamProfile, isValidShortAnswer, tfQuestionScore } = require('./qa-validator');
 const { loadDriveQuestionBank, calculateRelevanceScore, resolveTargetBankFiles, inferCognitiveLevel } = require('./drive-bank');
 const { evaluateAlignment, evaluateAlignmentMultiRow, detectSubjectFamily } = require('./content-alignment');
 
@@ -304,6 +304,13 @@ async function step2GenerateMatrix({ metadata = {}, units = [], detectedMatrix =
 
   // Nếu là môn Ngữ văn: 100% Tự luận (Đọc hiểu 4đ + Viết 6đ)
   if (isLit) {
+    // GĐ2 (P1-04): điểm Viết chia đều cho các đơn vị Viết còn lại —
+    // KHÔNG viết cứng 2,0/4,0đ theo từng dòng. Với n đơn vị, mỗi dòng Viết
+    // được 6/(n-1) điểm, chia theo tỉ lệ Hiểu:Vận dụng = 1:2, sao cho tổng
+    // điểm toàn đề luôn đúng 10,0 (= 4đ Đọc hiểu + 6đ Viết).
+    const writeRowPts = Math.round((6.0 / Math.max(1, units.length - 1)) * 100) / 100;
+    const writeHieuPts = Math.round((writeRowPts / 3) * 100) / 100;
+    const writeVdPts = Math.round((writeRowPts - writeHieuPts) * 100) / 100;
     const rows = units.map((u, idx) => {
       const isReading = idx === 0;
       return {
@@ -320,8 +327,8 @@ async function step2GenerateMatrix({ metadata = {}, units = [], detectedMatrix =
         },
         essayPoints: isReading
           ? { [levels[0]]: 1.0, [levels[1]]: 2.0, [levels[2]]: 1.0 }
-          : { [levels[0]]: 0, [levels[1]]: 2.0, [levels[2]]: 4.0 },
-        points: isReading ? 4.0 : Math.round((6.0 / Math.max(1, units.length - 1)) * 100) / 100
+          : { [levels[0]]: 0, [levels[1]]: writeHieuPts, [levels[2]]: writeVdPts },
+        points: isReading ? 4.0 : writeRowPts
       };
     });
     const matrix = {
@@ -673,6 +680,12 @@ async function step4GenerateQuestionsAndAnswers({ metadata = {}, matrix = {}, sp
       list = list.filter(q => q.answer !== undefined && q.answer !== null && String(q.answer).trim() !== '');
     }
 
+    // GĐ2 (P0-02): câu MCQ trong ngân hàng mà đáp án không phải A–D thì
+    // không dùng được — bỏ qua để lấy câu khác, không mặc định thành A.
+    if (qt === 'MCQ') {
+      list = list.filter(q => ['A', 'B', 'C', 'D'].includes(String(q.correctAnswer || '').trim().toUpperCase()));
+    }
+
     const { targetFiles, forbiddenFiles, preferredKeywords, penaltyKeywords } = resolveTargetBankFiles(row, metadata);
 
     // 1. Loại bỏ các câu đã dùng
@@ -772,7 +785,7 @@ async function step4GenerateQuestionsAndAnswers({ metadata = {}, matrix = {}, sp
             level: lv,
             stem: driveItem.prompt,
             options: driveItem.options,
-            answer: driveItem.correctAnswer || 'A',
+            answer: String(driveItem.correctAnswer).trim().toUpperCase(),
             explanation: `Căn cứ theo tài liệu "${driveItem.sourceFile}" trong Ngân hàng câu hỏi Google Drive.`,
             sourceFile: driveItem.sourceFile,
             sourceBadge: `Ngân hàng Google Drive (${driveItem.sourceFile})`,
@@ -807,173 +820,124 @@ async function step4GenerateQuestionsAndAnswers({ metadata = {}, matrix = {}, sp
   });
 
   // 2. Sinh toàn bộ câu hỏi Trắc nghiệm Đúng - Sai (TF: gom mỗi 4 ý thành 1 câu hỏi lớn gồm a, b, c, d)
+  // GĐ2 (P1-02/P1-03): ý Đúng/Sai chỉ gom TRONG một dòng ma trận (một đơn
+  // vị kiến thức). Số ý mỗi dòng phải là bội của 4 — nếu lẻ thì DỪNG và yêu
+  // cầu điều chỉnh ma trận, không tự sinh câu ngoài ma trận.
   let tfIndex = 1;
-  let pendingTfItems = [];
-  rows.forEach((row, rIdx) => {
+  for (const [rIdx, row] of rows.entries()) {
+    const rowTfItems = [];
     for (const lv of levels) {
       const cnt = Number(row.counts?.TF?.[lv]) || 0;
-      for (let c = 0; c < cnt; c++) {
-        pendingTfItems.push({ row, rIdx, lv });
-        if (pendingTfItems.length === 4) {
-          const rowGroups = [];
-          pendingTfItems.forEach((item, idx) => {
-            const letter = ['a', 'b', 'c', 'd'][idx];
-            const existing = rowGroups.find(g => g.rIdx === item.rIdx);
-            if (existing) {
-              existing.items.push({ ...item, letter });
-            } else {
-              rowGroups.push({
-                row: item.row,
-                rIdx: item.rIdx,
-                items: [{ ...item, letter }]
-              });
-            }
-          });
+      for (let c = 0; c < cnt; c++) rowTfItems.push({ row, rIdx, lv });
+    }
+    if (rowTfItems.length === 0) continue;
+    if (rowTfItems.length % 4 !== 0) {
+      return {
+        ok: false,
+        errorCode: 'TF_ITEMS_NOT_MULTIPLE_OF_4',
+        message: `Không thể sinh đề: đơn vị "${row.unit || row.topic || `dòng ${rIdx + 1}`}" có ${rowTfItems.length} ý Đúng/Sai, không phải bội của 4 (mỗi câu Đúng/Sai gồm đủ 4 ý a, b, c, d trong cùng một đơn vị kiến thức). Hãy điều chỉnh Ma trận (thêm/bớt ý Đúng/Sai ở đơn vị này) rồi sinh đề lại.`
+      };
+    }
 
-          // Xây dựng matrixRef và unitTitle hiển thị chính xác mọi dòng tham gia
-          let refDetails = '';
-          let unitTitle = '';
-          if (rowGroups.length === 1) {
-            const g = rowGroups[0];
-            refDetails = `[Dòng ${g.rIdx + 1}: ${g.row.unit || `Bài ${g.rIdx + 1}`}]`;
-            unitTitle = g.row.unit || g.row.topic || '';
-          } else {
-            refDetails = '[' + rowGroups.map(g => {
-              const letStr = g.items.map(it => it.letter).join(',');
-              return `Dòng ${g.rIdx + 1}: ${g.row.unit || `Bài ${g.rIdx + 1}`} (${letStr})`;
-            }).join(' & ') + ']';
-            unitTitle = rowGroups.map(g => g.row.unit || `Bài ${g.rIdx + 1}`).join(' & ');
-          }
-          const refCode = `ĐS${tfIndex}(a,b,c,d) ${refDetails}`;
+    for (let g = 0; g < rowTfItems.length; g += 4) {
+      const groupItems = rowTfItems.slice(g, g + 4);
+      const refDetails = `[Dòng ${rIdx + 1}: ${row.unit || `Bài ${rIdx + 1}`}]`;
+      const unitTitle = row.unit || row.topic || '';
+      const refCode = `ĐS${tfIndex}(a,b,c,d) ${refDetails}`;
 
-          let picked = null;
+      let picked = null;
 
-          // 1. Nếu là dạng ghép bài (multi-row) hoặc có pool theo ma trận:
-          if (pool && Array.isArray(pool.TF)) {
-            const pIdx = pool.TF.findIndex((p, i) => {
-              if (usedIds.has(`TF_${i}`)) return false;
-              const isAligned = p.rowId === rowGroups[0].row.id || evaluateAlignment(p, rowGroups[0].row, metadata).aligned;
-              if (!isAligned) return false;
-              if (p.qCode && p.qCode.includes(`ĐS${tfIndex}`)) return true;
-              return true;
-            });
+      // 1. Nếu có pool theo ma trận:
+      if (pool && Array.isArray(pool.TF)) {
+        const pIdx = pool.TF.findIndex((p, i) => {
+          if (usedIds.has(`TF_${i}`)) return false;
+          const isAligned = p.rowId === row.id || evaluateAlignment(p, row, metadata).aligned;
+          if (!isAligned) return false;
+          if (p.qCode && p.qCode.includes(`ĐS${tfIndex}`)) return true;
+          return true;
+        });
 
-            if (pIdx !== -1) {
-              const poolCandidate = pool.TF[pIdx];
-              usedIds.add(`TF_${pIdx}`);
-              picked = {
-                ...poolCandidate,
-                stem: poolCandidate.stem,
-                statements: poolCandidate.statements.map((st, sIdx) => ({
-                  ...st,
-                  letter: ['a', 'b', 'c', 'd'][sIdx],
-                  level: pendingTfItems[sIdx] ? pendingTfItems[sIdx].lv : st.level,
-                  answer: st.isTrue ? 'Đúng' : 'Sai'
-                })),
-                items: poolCandidate.statements.map((st, sIdx) => ({
-                  ...st,
-                  letter: ['a', 'b', 'c', 'd'][sIdx],
-                  level: pendingTfItems[sIdx] ? pendingTfItems[sIdx].lv : st.level,
-                  answer: st.isTrue ? 'Đúng' : 'Sai'
-                })),
-                sourceBadge: 'Ngân hàng Google Drive & SGK Căn bản',
-                isZeroHallucination: true
-              };
-            }
-          }
-
-          // 2. Nếu chưa có từ pool và là câu đơn dòng (rowGroups.length === 1), tìm từ Drive Bank
-          if (!picked && rowGroups.length === 1) {
-            const primaryRow = rowGroups[0].row;
-            const primaryLv = pendingTfItems[2]?.lv || pendingTfItems[0]?.lv || 'Biết';
-            const driveCandidate = pickFromDriveBank('TF', primaryRow, primaryLv);
-            // Chỉ nhận nếu driveCandidate có cả ý đúng lẫn sai (tránh câu toàn Đúng hoặc toàn Sai)
-            if (driveCandidate && Array.isArray(driveCandidate.items) && driveCandidate.items.length >= 4) {
-              const hasTrue = driveCandidate.items.some(it => it.isCorrect);
-              const hasFalse = driveCandidate.items.some(it => !it.isCorrect);
-              if (hasTrue && hasFalse) {
-                const stmts = driveCandidate.items.slice(0, 4).map((it, sIdx) => ({
-                  letter: ['a', 'b', 'c', 'd'][sIdx],
-                  text: it.text,
-                  isTrue: Boolean(it.isCorrect),
-                  answer: it.isCorrect ? 'Đúng' : 'Sai',
-                  level: pendingTfItems[sIdx]?.lv || it.level || primaryLv
-                }));
-                picked = {
-                  qCode: `ĐS${tfIndex}`,
-                  rowId: primaryRow.id,
-                  level: primaryLv,
-                  stem: driveCandidate.prompt,
-                  statements: stmts,
-                  items: stmts,
-                  explanation: `Căn cứ theo tài liệu "${driveCandidate.sourceFile}" trong Ngân hàng câu hỏi Google Drive.`,
-                  sourceFile: driveCandidate.sourceFile,
-                  sourceBadge: `Ngân hàng Google Drive (${driveCandidate.sourceFile})`,
-                  isZeroHallucination: true,
-                  driveQuestionId: driveCandidate.id
-                };
-              }
-            }
-          }
-
-          // 3. Nếu vẫn chưa có, tổng hợp câu hỏi chuẩn mực bám sát ma trận
-          if (!picked) {
-            const primaryRow = rowGroups[0].row;
-            const primaryRIdx = rowGroups[0].rIdx;
-            const spec = specification.find(s => s.rowId === primaryRow.id) || specification[primaryRIdx];
-            const syn = synthesizeCustomQuestion({
-              row: primaryRow, qt: 'TF', level: pendingTfItems[0].lv, index: tfIndex, pointUnit: Number(pointRules.TF), spec
-            });
-            picked = syn;
-          }
-
-          // Gán thuộc tính chuẩn xác
-          questions.push({
-            ...picked,
-            id: `q_tf_${tfIndex}`,
-            type: 'TF',
-            rowId: rowGroups[0].row.id,
-            topic: rowGroups[0].row.topic,
-            unit: unitTitle,
-            level: pendingTfItems[2]?.lv || pendingTfItems[0]?.lv || 'Biết',
-            points: Math.round(Number(pointRules.TF) * 4 * 100) / 100,
-            matrixRef: refCode
-          });
-
-          tfIndex++;
-          pendingTfItems = [];
+        if (pIdx !== -1) {
+          const poolCandidate = pool.TF[pIdx];
+          usedIds.add(`TF_${pIdx}`);
+          picked = {
+            ...poolCandidate,
+            stem: poolCandidate.stem,
+            statements: poolCandidate.statements.map((st, sIdx) => ({
+              ...st,
+              letter: ['a', 'b', 'c', 'd'][sIdx],
+              level: groupItems[sIdx] ? groupItems[sIdx].lv : st.level,
+              answer: st.isTrue ? 'Đúng' : 'Sai'
+            })),
+            items: poolCandidate.statements.map((st, sIdx) => ({
+              ...st,
+              letter: ['a', 'b', 'c', 'd'][sIdx],
+              level: groupItems[sIdx] ? groupItems[sIdx].lv : st.level,
+              answer: st.isTrue ? 'Đúng' : 'Sai'
+            })),
+            sourceBadge: 'Ngân hàng Google Drive & SGK Căn bản',
+            isZeroHallucination: true
+          };
         }
       }
-    }
-  });
 
-  // Nếu còn dư ý TF lẻ (< 4 ý), gom thành 1 câu TF đủ 4 ý
-  if (pendingTfItems.length > 0) {
-    const primaryRow = pendingTfItems[0].row;
-    const primaryRIdx = pendingTfItems[0].rIdx;
-    const spec = specification.find(s => s.rowId === primaryRow.id) || specification[primaryRIdx];
-    const picked = pickFromPool('TF', primaryRow, levels[1]);
-    const refCode = `ĐS${tfIndex}(a,b,c,d) [Dòng ${primaryRIdx + 1}]`;
-    const pts = Math.round(Number(pointRules.TF) * pendingTfItems.length * 100) / 100;
-    if (picked) {
+      // 2. Nếu chưa có từ pool, tìm từ Drive Bank (cùng một dòng ma trận)
+      if (!picked) {
+        const primaryLv = groupItems[2]?.lv || groupItems[0]?.lv || 'Biết';
+        const driveCandidate = pickFromDriveBank('TF', row, primaryLv);
+        // Chỉ nhận nếu driveCandidate có cả ý đúng lẫn sai (tránh câu toàn Đúng hoặc toàn Sai)
+        if (driveCandidate && Array.isArray(driveCandidate.items) && driveCandidate.items.length >= 4) {
+          const hasTrue = driveCandidate.items.some(it => it.isCorrect);
+          const hasFalse = driveCandidate.items.some(it => !it.isCorrect);
+          if (hasTrue && hasFalse) {
+            const stmts = driveCandidate.items.slice(0, 4).map((it, sIdx) => ({
+              letter: ['a', 'b', 'c', 'd'][sIdx],
+              text: it.text,
+              isTrue: Boolean(it.isCorrect),
+              answer: it.isCorrect ? 'Đúng' : 'Sai',
+              level: groupItems[sIdx]?.lv || it.level || primaryLv
+            }));
+            picked = {
+              qCode: `ĐS${tfIndex}`,
+              rowId: row.id,
+              level: primaryLv,
+              stem: driveCandidate.prompt,
+              statements: stmts,
+              items: stmts,
+              explanation: `Căn cứ theo tài liệu "${driveCandidate.sourceFile}" trong Ngân hàng câu hỏi Google Drive.`,
+              sourceFile: driveCandidate.sourceFile,
+              sourceBadge: `Ngân hàng Google Drive (${driveCandidate.sourceFile})`,
+              isZeroHallucination: true,
+              driveQuestionId: driveCandidate.id
+            };
+          }
+        }
+      }
+
+      // 3. Nếu vẫn chưa có, tổng hợp câu hỏi chuẩn mực bám sát ma trận
+      if (!picked) {
+        const spec = specification.find(s => s.rowId === row.id) || specification[rIdx];
+        const syn = synthesizeCustomQuestion({
+          row, qt: 'TF', level: groupItems[0].lv, index: tfIndex, pointUnit: Number(pointRules.TF), spec
+        });
+        picked = syn;
+      }
+
+      // Gán thuộc tính chuẩn xác — điểm 1 câu Đúng/Sai = thang QĐ2 đủ 4 ý
+      // (tfQuestionScore(4) = 1,0đ); điểm từng ý khi chấm lấy từ cùng hàm.
       questions.push({
         ...picked,
         id: `q_tf_${tfIndex}`,
         type: 'TF',
-        rowId: primaryRow.id,
-        topic: primaryRow.topic,
-        unit: primaryRow.unit,
-        level: levels[1],
-        points: pts,
+        rowId: row.id,
+        topic: row.topic,
+        unit: unitTitle,
+        level: groupItems[2]?.lv || groupItems[0]?.lv || 'Biết',
+        points: tfQuestionScore(4),
         matrixRef: refCode
       });
-    } else {
-      const syn = synthesizeCustomQuestion({
-        row: primaryRow, qt: 'TF', level: levels[1], index: tfIndex, pointUnit: Number(pointRules.TF), spec
-      });
-      syn.points = pts;
-      syn.matrixRef = refCode;
-      questions.push(syn);
+
+      tfIndex++;
     }
   }
 
@@ -1117,8 +1081,16 @@ Trả về duy nhất 1 JSON object có cấu trúc:
           delete merged.placeholderNotice;
 
           if (item.q.type === 'MCQ' && Array.isArray(generated.options) && generated.options.length === 4) {
-            merged.options = generated.options;
-            merged.answer = String(generated.answer || 'A').trim().toUpperCase().charAt(0);
+            // GĐ2 (P0-02): đáp án AI trả về phải là A–D. Nếu AI trả đáp án
+            // ngoài tập hợp thì KHÔNG thay câu hỏi — giữ nguyên câu dự thảo
+            // để giáo viên/AI rà soát, thay vì mặc định thành A.
+            const aiAns = String(generated.answer || '').trim().toUpperCase().charAt(0);
+            if (['A', 'B', 'C', 'D'].includes(aiAns)) {
+              merged.options = generated.options;
+              merged.answer = aiAns;
+            } else {
+              continue;
+            }
           } else if (item.q.type === 'TF' && Array.isArray(generated.statements) && generated.statements.length === 4) {
             merged.statements = generated.statements.map((st, sIdx) => ({
               letter: ['a', 'b', 'c', 'd'][sIdx],
@@ -1165,13 +1137,12 @@ Trả về duy nhất 1 JSON object có cấu trúc:
   }
 
   // Nhân bản & Trộn các mã đề theo số lượng và danh sách mã đề tùy chỉnh của giáo viên
+  // GĐ2 (P0-03): KHÔNG thay đề gốc bằng mã đề đầu rồi mới kiểm tra — đề
+  // gốc giữ nguyên để validator đối chiếu mọi mã đề với đề gốc.
   const numVariants = Number(metadata.numVariants) || 4;
   const rawCodes = metadata.customCodes;
   const customCodes = Array.isArray(rawCodes) ? rawCodes : (typeof rawCodes === 'string' ? rawCodes.split(/[,;\s]+/).filter(Boolean) : []);
   const variants = generateShuffledVariants(questions, numVariants, 101, customCodes);
-  if (variants.length > 0 && Array.isArray(variants[0].questions)) {
-    questions.splice(0, questions.length, ...JSON.parse(JSON.stringify(variants[0].questions)));
-  }
 
   const examData = {
     metadata,
@@ -1261,13 +1232,18 @@ function getCandidateQuestionsForSwap({
 
       let normalized = null;
       if (qt === 'MCQ') {
+        // GĐ2 (P0-02): ứng viên MCQ không có đáp án A–D hợp lệ thì loại —
+        // không đưa đáp án mặc định A cho giáo viên chọn.
+        if (!['A', 'B', 'C', 'D'].includes(String(dq.correctAnswer || '').trim().toUpperCase())) {
+          return;
+        }
         normalized = {
           candidateId: dq.id || `drv_mcq_${candidates.length}`,
           driveQuestionId: dq.id,
           type: 'MCQ',
           stem: stemText,
           options: Array.isArray(dq.options) ? dq.options.slice(0, 4) : ['A', 'B', 'C', 'D'],
-          answer: dq.correctAnswer || 'A',
+          answer: String(dq.correctAnswer).trim().toUpperCase(),
           explanation: `Căn cứ theo tài liệu "${dq.sourceFile}" trong Ngân hàng câu hỏi Google Drive.`,
           level: dq.level || targetLevel,
           sourceFile: dq.sourceFile,
@@ -1528,7 +1504,16 @@ async function regenerateSingleQuestion({ question, existingQuestions = [], meta
     }
     if (Array.isArray(updated.options) && updated.options.length === 4) {
       const labels = ['A', 'B', 'C', 'D'];
-      const oldAnsIdx = Math.max(0, labels.indexOf(String(updated.answer || 'A').toUpperCase()));
+      // GĐ2 (P0-02): đáp án gốc không hợp lệ thì không đổi được phương án —
+      // dừng và báo rõ thay vì mặc định thành A rồi đảo sai.
+      const oldAnsIdx = labels.indexOf(String(updated.answer || '').trim().toUpperCase());
+      if (oldAnsIdx < 0) {
+        return {
+          ok: false,
+          errorCode: 'INVALID_MCQ_ANSWER',
+          message: `Không tạo được biến thể cho câu hỏi này: đáp án hiện tại "${updated.answer ?? ''}" không phải A, B, C hoặc D. Hãy sửa đáp án của câu hỏi rồi thử lại.`
+        };
+      }
       const newAnsIdx = (oldAnsIdx + 1) % 4;
       const tmp = updated.options[oldAnsIdx];
       updated.options[oldAnsIdx] = updated.options[newAnsIdx];
