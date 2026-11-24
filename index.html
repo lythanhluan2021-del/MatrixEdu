@@ -2053,9 +2053,6 @@
     .brand-name { color: #fff; font-weight: 900; letter-spacing: 0.3px; }
     .brand-sep { color: rgba(255, 255, 255, 0.55); font-weight: 400; }
     .drive-panel { border-radius: var(--radius-md); padding: 14px; background: var(--mx-surface); border: 1px solid var(--mx-line); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 8px; }
-    #step-1 .grid-2 { align-items: stretch; }
-    #step-1 .grid-2 > * { min-height: 220px; }
-
     /* ================================================================== */
     /* GĐ5c (UI-12): KHÔI PHỤC ĐỘ TƯƠNG PHẢN ĐẦU TRANG + TOAST + NHÃN    */
     /* Nguyên nhân gốc: khối neumorphism cũ (dòng ~1443) đè nền header    */
@@ -2101,13 +2098,13 @@
     /* tường minh thay thế: 1.1 full-width (8 trường 4 cột), 1.2 + 1.3  */
     /* 2 cột khi đủ rộng, xếp chồng khi hẹp. Mọi track dùng            */
     /* minmax(0, 1fr) để không bao giờ phình quá khung chứa.            */
+    /* GĐ5f (UI-23): hàng dưới #step-1-lower đã bị xóa — 1.2 chuyển sang */
+    /* Bước 2, 1.3 chuyển sang Bước 3 (theo quyết định của người dùng);  */
+    /* các quy tắc #step-1-lower / #step-1 .grid-2 dưới đây đã dọn sạch. */
     /* ================================================================== */
     #step-1 { display: block; }
     #step-1 .meta-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
     #step-1 .meta-grid .form-group label { white-space: normal; overflow: visible; text-overflow: clip; }
-    #step-1-lower { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: stretch; margin-top: 16px; }
-    #step-1-lower > * { min-width: 0; }
-    #step-1 .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     /* UI-17 Toast lên góc trên-phải (dưới header) để không che nút     */
     /* footer bước; giới hạn 3 toast cùng lúc (xem showToast).          */
     #toast-container { position: fixed; top: 76px; bottom: auto; right: 20px; z-index: 1200; }
@@ -2118,12 +2115,10 @@
     .matrix-table-wrap::-webkit-scrollbar-track { background: var(--mx-line-soft); border-radius: 5px; }
     .matrix-table { min-width: 860px; }
     @media (max-width: 1280px) {
-      #step-1-lower { grid-template-columns: 1fr; }
       #step-1 .meta-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 768px) {
       #step-1 .meta-grid { grid-template-columns: 1fr; }
-      #step-1 .grid-2 { grid-template-columns: 1fr; }
     }
     /* ================================================================== */
     /* GĐ5e (UI-22): THIẾT KẾ LẠI MỤC 1.2 — CÂN ĐỐI                     */
@@ -2154,6 +2149,14 @@
       .bank-sources { grid-template-columns: 1fr; }
       .bank-stats { grid-template-columns: 1fr; }
     }
+    /* ================================================================== */
+    /* GĐ5f (UI-23): TÁI CẤU TRÚC BƯỚC 1–3                            */
+    /* 1.1 ở lại Bước 1 (full-width, 4 cột). 1.2 chuyển sang Bước 2    */
+    /* (đặt trước thẻ Ma trận), 1.3 chuyển sang Bước 3 (đặt trước thẻ  */
+    /* Bản đặc tả) và tự hiển thị khi vào Bước 3 (goToStep gọi          */
+    /* renderUnitsTable()). Các thẻ trong Bước 2/3 xếp chồng theo     */
+    /* block, .card đã có margin-bottom: 20px nên không cần lưới riêng. */
+    /* ================================================================== */
   </style>
 </head>
 
@@ -2243,38 +2246,38 @@
         <!-- 7 Steps Navigation List -->
         <div class="sidebar-nav-list" role="navigation">
           <button class="sidebar-step-item active" id="nav-step-1" onclick="goToStep(1)"
-            title="Bước 1: Tài liệu & Drive">
+            title="Bước 1: Thông tin đề">
             <div class="step-icon-wrap icon-tint-1">
               <span class="step-icon"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
               <span class="step-number-dot">1</span>
             </div>
             <div class="step-meta">
-              <div class="step-title">1. Tài liệu</div>
-              <div class="step-desc">Thông tin &amp; Drive</div>
+              <div class="step-title">1. Thông tin đề</div>
+              <div class="step-desc">Nhập thông tin đề</div>
             </div>
           </button>
 
           <button class="sidebar-step-item" id="nav-step-2" onclick="goToStep(2)"
-            title="Bước 2: Ma trận đề">
+            title="Bước 2: Ma trận &amp; Ngân hàng">
             <div class="step-icon-wrap icon-tint-2">
               <span class="step-icon"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></span>
               <span class="step-number-dot">2</span>
             </div>
             <div class="step-meta">
               <div class="step-title">2. Ma trận</div>
-              <div class="step-desc">Cấu trúc &amp; Điểm</div>
+              <div class="step-desc">Ngân hàng &amp; Cấu trúc</div>
             </div>
           </button>
 
           <button class="sidebar-step-item" id="nav-step-3" onclick="goToStep(3)"
-            title="Bước 3: Bản đặc tả">
+            title="Bước 3: Đơn vị kiến thức &amp; Bản đặc tả">
             <div class="step-icon-wrap icon-tint-3">
               <span class="step-icon"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
               <span class="step-number-dot">3</span>
             </div>
             <div class="step-meta">
               <div class="step-title">3. Đặc tả</div>
-              <div class="step-desc">Yêu cầu đạt</div>
+              <div class="step-desc">Đơn vị &amp; Yêu cầu đạt</div>
             </div>
           </button>
 
@@ -2443,7 +2446,18 @@
               </div>
             </div>
 
-            <div id="step-1-lower">
+            <div class="step-footer" style="justify-content: flex-end">
+              <button class="btn btn-primary btn-lg" onclick="confirmStep1AndGoStep2()">
+                Bước 2: Ma trận →
+              </button>
+            </div>
+          </section>
+
+          <!-- ================================================================== -->
+          <!-- BƯỚC 2: LẬP MA TRẬN ĐỀ KIỂM TRA (CHUẨN GDPT 2018 - CV 7991)        -->
+          <!-- ================================================================== -->
+          <section id="step-2" class="step-section glass-zone-step-2" style="display: none">
+
             <!-- 1.2. NẠP MA TRẬN & GOOGLE DRIVE -->
             <div class="card">
               <div class="card-header">
@@ -2501,6 +2515,9 @@
               <div id="gdrive-scan-report"
                 style="background: rgba(255,255,255,0.62); border: 1px solid rgba(255,255,255,0.85); border-radius: 10px; padding: 8px 10px">
                 <div style="text-align: center; color: var(--mx-ink-2); padding: 4px; font-size: 0.82rem">Đang quét Drive...</div>
+
+              <!-- GĐ5f (UI-23): ô thông báo tải/phân tích chuyển từ thẻ 1.3 sang đây để phản hồi hiện ngay tại Bước 2, nơi diễn ra tải lên/phân tích -->
+              <div id="step1-status-msg"></div>
               </div>
 
               <textarea id="scope-raw-text" style="display: none"></textarea>
@@ -2508,49 +2525,6 @@
               <div id="detected-matrix-preview-box" style="display: none; margin-top: 14px"></div>
             </div>
 
-            <!-- 1.3. ĐƠN VỊ KIẾN THỨC -->
-            <div class="card hover-zone-indigo">
-              <div class="card-header">
-                <div class="card-title"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> 1.3. Đơn vị kiến thức</div>
-                <div style="display: flex; gap: 8px">
-                  <button class="btn btn-secondary btn-sm" onclick="addKnowledgeUnitRow()">+ Thêm dòng</button>
-                </div>
-              </div>
-
-              <div id="step1-status-msg"></div>
-
-              <div class="table-wrap">
-                <table class="data-table" id="units-table">
-                  <thead>
-                    <tr>
-                      <th style="width: 45px">TT</th>
-                      <th style="width: 24%">Chủ đề</th>
-                      <th style="width: 24%">Đơn vị kiến thức</th>
-                      <th>Yêu cầu cần đạt</th>
-                      <th style="width: 65px">Xóa</th>
-                    </tr>
-                  </thead>
-                  <tbody id="units-tbody">
-                    <tr>
-                      <td colspan="5" style="text-align: center; color: var(--muted); padding: 16px">Bấm <b>"Phân tích"</b> hoặc tải Ma trận ở trên.</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <div class="step-footer" style="justify-content: flex-end">
-                <button class="btn btn-primary btn-lg" onclick="confirmStep1AndGoStep2()">
-                  Bước 2: Ma trận →
-                </button>
-              </div>
-            </div>
-            </div>
-          </section>
-
-          <!-- ================================================================== -->
-          <!-- BƯỚC 2: LẬP MA TRẬN ĐỀ KIỂM TRA (CHUẨN GDPT 2018 - CV 7991)        -->
-          <!-- ================================================================== -->
-          <section id="step-2" class="step-section glass-zone-step-2" style="display: none">
             <div class="card hover-zone-purple" id="cardStep2">
               <div class="matran-toolbar">
                 <div class="matran-toolbar-group">
@@ -2573,7 +2547,6 @@
                   <button type="button" class="btn btn-secondary btn-sm" onclick="addMatrixRow()">+ Dòng</button>
                   <button type="button" class="btn btn-secondary btn-sm" onclick="runStep2GenerateMatrix()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Cân bằng 10đ</button>
                   <button type="button" class="btn btn-sm"
-                    class="drive-panel"
                     onclick="downloadMatrixAndSpecDocx(this)"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Xuất Word</button>
                   <button type="button" class="btn btn-primary btn-sm" onclick="confirmStep2AndGoStep4()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="8" width="14" height="10" rx="2"/><line x1="12" y1="8" x2="12" y2="4"/><circle cx="12" cy="3" r="1"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg> Sinh đề →</button>
                 </div>
@@ -2641,6 +2614,36 @@
           <!-- BƯỚC 3: BẢN ĐẶC TẢ                                                 -->
           <!-- ================================================================== -->
           <section id="step-3" class="step-section glass-zone-step-3" style="display: none">
+
+            <!-- 1.3. ĐƠN VỊ KIẾN THỨC -->
+            <div class="card hover-zone-indigo">
+              <div class="card-header">
+                <div class="card-title"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> 1.3. Đơn vị kiến thức</div>
+                <div style="display: flex; gap: 8px">
+                  <button class="btn btn-secondary btn-sm" onclick="addKnowledgeUnitRow()">+ Thêm dòng</button>
+                </div>
+              </div>
+
+              <div class="table-wrap">
+                <table class="data-table" id="units-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 45px">TT</th>
+                      <th style="width: 24%">Chủ đề</th>
+                      <th style="width: 24%">Đơn vị kiến thức</th>
+                      <th>Yêu cầu cần đạt</th>
+                      <th style="width: 65px">Xóa</th>
+                    </tr>
+                  </thead>
+                  <tbody id="units-tbody">
+                    <tr>
+                      <td colspan="5" style="text-align: center; color: var(--muted); padding: 16px">Tải Ma trận và bấm <b>"Phân tích"</b> ở Bước 2.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
             <div class="card hover-zone-indigo">
               <div class="card-header">
                 <div class="card-title"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> 3. Bản Đặc tả</div>
@@ -4770,8 +4773,11 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
           el.style.color = color;
         };
 
-        const unitsCount = (appState.units || []).length;
-        setNavPill(1, unitsCount > 0 ? ` ${unitsCount} bài học` : 'Chờ nhập tài liệu', unitsCount > 0 ? 'var(--mx-ok)' : 'var(--mx-ink-2)');
+        // GĐ5f (UI-23): đơn vị kiến thức đã chuyển sang Bước 3 nên pill Bước 1
+        // không còn đếm bài học nữa — phản ánh thông tin đề đã nhập hay chưa.
+        const _m = appState.metadata || {};
+        const metaReady = Boolean((_m.schoolName || '').trim() && (_m.subject || '').trim());
+        setNavPill(1, metaReady ? 'Đã nhập thông tin' : 'Chờ nhập thông tin', metaReady ? 'var(--mx-ok)' : 'var(--mx-ink-2)');
 
         const mRows = appState.matrix?.rows || [];
         let totalScore = Number(appState.matrix?.totalScore || 0);
@@ -4862,6 +4868,9 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       }
 
       if (stepNum === 2) renderMatrixTable();
+      // GĐ5f (UI-23): 1.3 (bảng đơn vị kiến thức) giờ ở Bước 3 — hiển thị
+      // tự động từ dữ liệu ma trận đã phân tích, không phân tích lại.
+      if (stepNum === 3) renderUnitsTable();
       if (stepNum === 3) renderSpecTable();
       if (stepNum === 4) renderExamStep();
       if (stepNum === 5) renderAnswerAndQaStep();
@@ -5347,7 +5356,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       const levels = getLevelsForCurrentMetadata();
 
       if (!appState.units || appState.units.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--muted); padding: 20px">Chưa có đơn vị kiến thức. Hãy tải tài liệu hoặc nhấn "+ Thêm đơn vị kiến thức".</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--muted); padding: 20px">Chưa có đơn vị kiến thức. Hãy tải ma trận ở Bước 2 rồi bấm "Phân tích", hoặc nhấn "+ Thêm dòng".</td></tr>`;
         return;
       }
 
@@ -5416,7 +5425,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         // GĐ5c (UI-14): trước đây nhánh này `return` lặng lẽ nên lần bấm
         // đầu tiên vào "Bước 2: Ma trận →" không chuyển bước (người dùng
         // tưởng nút hỏng). Nay vẫn sang Bước 2 và giải thích rõ lý do.
-        showToast('Chưa có đơn vị kiến thức — đã chuyển sang Bước 2, hãy nhập ma trận thủ công hoặc quay lại Bước 1 để phân tích tài liệu.', 'warn');
+        showToast('Chưa có đơn vị kiến thức — đã chuyển sang Bước 2. Hãy tải ma trận và bấm "Phân tích", hoặc nhập ma trận thủ công.', 'warn');
         goToStep(2);
         return;
       }

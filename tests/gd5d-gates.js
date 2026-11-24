@@ -19,6 +19,10 @@ function check(name, ok, detail) {
 }
 
 const style = html.split('<style>')[1].split('</style>')[0];
+// NOTE: a comment inside <style> contains the literal text "<style>", so
+// split('<style>') truncates `style` at that comment (the GĐ5c+ layers live
+// after it). Use allCss for any rule that may live in the override layers.
+const allCss = (html.match(/<style>([\s\S]*?)<\/style>/) || [])[1] || '';
 const gd5cIdx = html.indexOf('GĐ5c (UI-12)');
 const gd5dIdx = html.indexOf('GĐ5d (UI-15)');
 const gd5dCss = gd5dIdx > 0 ? html.slice(gd5dIdx) : '';
@@ -58,35 +62,38 @@ check('UI-15 1.1 title fits on one line (no wrap-forcing narrow column)',
   /1\.1\. Thông tin đề/.test(html) && /#step-1\s+\.meta-grid/.test(gd5dCss),
   'title/meta-grid missing');
 
-// --- 4. Lower row: 1.2 + 1.3 in 2 minmax(0,1fr) columns, stacked when narrow ---
-const lowerOpen = html.indexOf('id="step-1-lower"');
-const step1Close = html.indexOf('</section>', lowerOpen);
-const lowerSpan = lowerOpen > 0 ? html.slice(lowerOpen, step1Close) : '';
-check('UI-15 #step-1-lower wraps 1.2 and 1.3 (both inside, footer inside 1.3)',
-  lowerOpen > 0 && lowerSpan.includes('1.2. Ma trận') && lowerSpan.includes('1.3. Đơn vị kiến thức')
-  && lowerSpan.includes('Bước 2: Ma trận'),
-  '1.2/1.3 not wrapped by #step-1-lower');
-check('UI-15 #step-1-lower uses repeat(2, minmax(0, 1fr))',
-  /#step-1-lower\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/.test(gd5dCss),
-  'missing 2-col minmax(0,1fr) lower row');
-check('UI-15 lower row stacks to 1 column at <=1280px',
-  /@media\s*\(max-width:\s*1280px\)\s*\{[^}]*#step-1-lower\s*\{\s*grid-template-columns:\s*1fr;/.test(gd5dCss),
-  'missing 1280px stacking rule');
+// --- 4. Lower row (GĐ5f supersedes): #step-1-lower existed only to hold 1.2+1.3
+// inside Step 1. GĐ5f moved 1.2 to Step 2 and 1.3 to Step 3, so the wrapper
+// and its rules are gone by design; the gates below assert the NEW layout
+// instead (same gate count, updated expectations). ---
+check('UI-23 (GĐ5f, supersedes UI-15) 1.2 in Step 2 and 1.3 in Step 3, both out of Step 1',
+  html.indexOf('1.2. Ma trận') > html.indexOf('<section id="step-2"')
+  && html.indexOf('1.2. Ma trận') < html.indexOf('<section id="step-3"')
+  && html.indexOf('1.3. Đơn vị kiến thức') > html.indexOf('<section id="step-3"')
+  && html.indexOf('1.3. Đơn vị kiến thức') < html.indexOf('<section id="step-4"')
+  && !html.slice(html.indexOf('<section id="step-1"'), html.indexOf('<section id="step-2"')).includes('1.2. Ma trận'),
+  '1.2/1.3 not in their new steps');
+check('UI-23 (GĐ5f, supersedes UI-15) no #step-1-lower CSS rule left',
+  !/#step-1-lower\s*\{/.test(allCss),
+  '#step-1-lower rule still in <style>');
+check('UI-23 (GĐ5f, supersedes UI-15) 1.2 keeps its GĐ5e 2-col .bank-sources inside Step 2',
+  /\.bank-sources\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/.test(allCss),
+  'bank-sources 2-col rule lost');
 check('UI-15 meta-grid drops to 2 columns at <=1280px and 1 column at <=768px',
   /@media\s*\(max-width:\s*1280px\)[\s\S]*?#step-1\s+\.meta-grid\s*\{\s*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/.test(gd5dCss)
   && /@media\s*\(max-width:\s*768px\)[\s\S]*?#step-1\s+\.meta-grid\s*\{\s*grid-template-columns:\s*1fr;/.test(gd5dCss),
   'missing responsive meta-grid rules');
-check('UI-15 lower-row children can shrink below min-content',
-  /#step-1-lower\s*>\s*\*\s*\{\s*min-width:\s*0;/.test(gd5dCss),
-  'missing #step-1-lower > * min-width:0');
+check('UI-23 (GĐ5f, supersedes UI-15) no #step-1 .grid-2 rule left (dead min-height:220px gone)',
+  !/#step-1\s+\.grid-2\s*\{/.test(allCss) && !/#step-1\s+\.grid-2\s*>\s*\*\s*\{/.test(allCss),
+  'dead #step-1 .grid-2 rule still present');
 
 // --- 5. No horizontal overflow at >=1280px ---
 check('UI-16 no repeat(4, 1fr) grid applies to #step-1 anymore',
   !/#step-1[^{]*\{[^}]*grid-template-columns:\s*repeat\(4,\s*1fr\)/.test(style),
   'a 4-col 1fr grid still targets #step-1');
-check('UI-16 1.2 inner grid-2 also uses minmax(0, 1fr)',
-  /#step-1\s+\.grid-2\s*\{\s*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/.test(gd5dCss),
-  'missing #step-1 .grid-2 minmax(0,1fr)');
+check('UI-23 (GĐ5f, supersedes UI-16) Step 1 has its own footer button "Bước 2: Ma trận →"',
+  html.slice(html.indexOf('<section id="step-1"'), html.indexOf('<section id="step-2"')).includes('onclick="confirmStep1AndGoStep2()"'),
+  'Step-1 footer button missing after the move');
 check('UI-16 units table scrolls inside its wrap (overflow-x:auto present)',
   /\.table-wrap\s*\{[^}]*overflow-x:\s*auto/.test(style),
   'table-wrap lost overflow-x:auto');
