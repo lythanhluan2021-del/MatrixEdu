@@ -77,3 +77,28 @@ Khóa API được lưu trữ và gọi hoàn toàn ở phía máy chủ (`data/
 6. **Bước 6 – Xuất File Word (`.docx`) & Lưu Hồ sơ:**
    - Tải xuống **Trọn bộ Hồ sơ (`.docx`)** hoặc tải riêng **Đề Học sinh không đáp án (`.docx`)**, **Ma trận (`.docx`)**, **Bản đặc tả (`.docx`)**, **Đáp án & HDC (`.docx`)**.
 
+---
+
+## 5. ĐÓNG GÓI WINDOWS (BẢN CHẠY `.EXE` PORTABLE)
+
+Dự án hỗ trợ đóng gói thành bộ phần mềm chạy độc lập trên Windows (không cần cài Node.js ở máy đích) bằng kỹ thuật **C# WinForms Launcher (`.NET Framework 4.x`) + Portable Node.js (`v24.14.1 win-x64`)**.
+
+### Điều kiện cần có trên máy đóng gói
+- Hệ điều hành **Windows 10 / 11 (64-bit)** có sẵn **.NET Framework 4.x** (tích hợp sẵn `csc.exe` trong Windows, không cần cài Visual Studio).
+- **PowerShell 5.1+** và kết nối Internet ở lần chạy đầu tiên để script tự tải gói chính thức `node-v24.14.1-win-x64.zip` từ `nodejs.org` (lưu cache cục bộ tại `runtime/node.exe`, không commit lên Git).
+
+### Lệnh chạy đóng gói
+Mở PowerShell tại thư mục gốc của repo sau khi clone/sửa mã nguồn và chạy:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build-windows-exe.ps1
+```
+
+*(Có thể chỉ định phiên bản Node.js khác nếu cần: `.\scripts\build-windows-exe.ps1 -NodeVersion "24.14.1"`).*
+
+### Tệp đầu ra sau khi đóng gói
+- `MatrixEdu.exe`: tệp khởi chạy Desktop (gắn biểu tượng `favicon.ico`, quản lý máy chủ cục bộ `localhost:3000` và mở ứng dụng bằng Chrome/Edge App Mode).
+- `dist/MatrixEdu_Portable/`: thư mục chạy độc lập hoàn chỉnh (gồm `MatrixEdu.exe`, `runtime/node.exe`, `index.html`, `server.js`, `src/`, `public/`, và thư mục `data/` sạch không kèm `ai_config.json`, `.env`, danh sách lớp hay dữ liệu chấm thi thật).
+- `dist/MatrixEdu_Windows_Portable.zip`: tệp nén sạch sẵn sàng gửi sang máy Windows khác giải nén và chạy ngay.
+
+

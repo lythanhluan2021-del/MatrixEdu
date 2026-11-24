@@ -15,8 +15,10 @@ index.html.bak
 extracted_sheet_0.jpg
 
 # Windows Portable Build & Runtime Cache
-MatrixEdu.exe
 dist/
+runtime/
+*.exe
+*.zip
 data/ooxml_sources/
 data/omr_templates/custom/
 
@@ -29,6 +31,7 @@ data/NHAT_KY_LUU_VET_*.csv
 data/omr_audit_logs.json
 data/omr_database.json
 data/omr_rosters.json
+data/omr_active_roster.json
 data/profiles/exam_*.json
 data/deleted_profiles.json
 scripts/*.txt
