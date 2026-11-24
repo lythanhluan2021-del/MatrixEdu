@@ -90,7 +90,10 @@ function escapeHtml(str) {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/"/g, '&quot;')
+    // GĐ4 (P0-10): escape cả ' vì HTML do importer tạo có thể được chèn
+    // vào thuộc tính onclick='...' ở giao diện.
+    .replace(/'/g, '&#39;');
 }
 
 function escapeXml(str) {

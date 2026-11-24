@@ -4288,7 +4288,8 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
     </div>
   </div>
 
-  <!-- MODAL 5: NGÂN HÀNG CÂU HỎI GOOGLE DRIVE (804 CÂU HỎI TIN HỌC THPT) -->
+  <!-- MODAL 5: NGÂN HÀNG CÂU HỎI GOOGLE DRIVE — GĐ4 (P2-01): số liệu
+       hiển thị lấy từ API /api/drive-bank/status, không hard-code nữa -->
   <div class="modal-backdrop" id="modalDriveBank">
     <div class="modal-box" style="max-width: 920px; max-height: 90vh; display: flex; flex-direction: column">
       <div class="card-header"
@@ -4342,9 +4343,9 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.85rem; color: var(--mx-ink-2)">
         <div>Đang hiển thị: <strong id="drive-bank-count-label" style="color: var(--mx-blue)">0</strong> câu hỏi</div>
         <div style="display: flex; gap: 6px">
-          <span class="badge badge-blue">MCQ: 664</span>
-          <span class="badge" style="background: var(--mx-blue-soft); color: var(--mx-blue-hover)">Đúng/Sai: 106 câu</span>
-          <span class="badge badge-amber">Tự luận/TLN: 34 câu</span>
+          <span class="badge badge-blue" id="drive-bank-badge-mcq">MCQ: —</span>
+          <span class="badge" id="drive-bank-badge-tf" style="background: var(--mx-blue-soft); color: var(--mx-blue-hover)">Đúng/Sai: —</span>
+          <span class="badge badge-amber" id="drive-bank-badge-sa">Tự luận/TLN: —</span>
         </div>
       </div>
 
@@ -4526,12 +4527,28 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       setTimeout(() => el.remove(), 4200);
     }
 
+    // GĐ4 (P0-10): escape cả dấu nháy đơn ' — nhiều chỗ dùng onclick='...'
+    // nên thiếu ' là kẻ tấn công thoát khỏi chuỗi JS được. Thứ tự thay
+    // thế giữ nguyên: & trước để không escape đúp ký tự đã thay.
     function escapeHtml(str) {
       return String(str === null || str === undefined ? '' : str)
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // GĐ4 (P0-10): chỉ cho phép link thư mục Google Drive dạng chuẩn.
+    // folderUrl có thể đến từ ô nhập tay (#gdrive-folder-url) nên một
+    // chuỗi "javascript:..." hoặc chứa dấu " sẽ thoát khỏi href="...".
+    // Không đúng mẫu → trả về thư mục mặc định, không bao giờ trả '#'
+    // hay chuỗi người dùng nhập nguyên vẹn.
+    function safeDriveFolderUrl(url) {
+      const fallback = 'https://drive.google.com/drive/folders/1MbQqovIMutXQP-qDRqehjAeRZzVqojF-?usp=sharing';
+      const s = String(url || '').trim();
+      if (/^https:\/\/drive\.google\.com\/drive\/folders\/[A-Za-z0-9_-]+(\?[A-Za-z0-9_=&%-]*)?$/.test(s)) return s;
+      return fallback;
     }
 
     // GĐ5b-START formatMathForDisplay
@@ -5023,6 +5040,9 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
           });
           const data = await res.json();
           if (!data.ok) {
+            // GĐ4 (P2-05): /api/upload-doc nay yêu cầu đăng nhập — mở ngay
+            // modal đăng nhập để thầy/cô không bị kẹt ở thông báo lỗi.
+            if (res.status === 401) openAuthModal();
             showToast(data.message || 'Lỗi đọc file.', 'error');
             return;
           }
@@ -5047,6 +5067,8 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         });
         const data = await res.json();
         if (!data.ok) {
+          // GĐ4 (P2-05): /api/load-workspace-file nay yêu cầu đăng nhập.
+          if (res.status === 401) openAuthModal();
           showToast(data.message || 'Không tìm thấy file trong thư mục dự án.', 'error');
           return;
         }
@@ -8455,7 +8477,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
               ${totalLineHtml}
             </span>
             <div style="display: flex; gap: 6px">
-              <a href="${folderUrl}" target="_blank" class="btn btn-secondary btn-sm" style="font-size: 0.76rem; padding: 4px 8px; color: var(--mx-blue-hover); border-color: var(--mx-line)">
+              <a href="${escapeHtml(safeDriveFolderUrl(folderUrl))}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm" style="font-size: 0.76rem; padding: 4px 8px; color: var(--mx-blue-hover); border-color: var(--mx-line)">
                 <svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Xem Thư mục Drive
               </a>
               <button class="btn btn-primary btn-sm" onclick="openDriveBankModal()" style="font-size: 0.76rem; padding: 4px 10px; font-weight: 600">
@@ -8485,6 +8507,14 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       try {
         const res = await fetch('/api/drive-bank/status');
         const data = await res.json();
+        // GĐ4 (P2-01): huy hiệu MCQ/TF/SA lấy số thật từ /api/drive-bank/status
+        // (trước đây hard-code 664/106/34 — tổng 804 sai so với ngân hàng thật).
+        const badgeMcq = document.getElementById('drive-bank-badge-mcq');
+        const badgeTf = document.getElementById('drive-bank-badge-tf');
+        const badgeSa = document.getElementById('drive-bank-badge-sa');
+        if (badgeMcq) badgeMcq.textContent = `MCQ: ${data.ok ? (data.mcqCount || 0) : 0}`;
+        if (badgeTf) badgeTf.textContent = `Đúng/Sai: ${data.ok ? (data.tfCount || 0) : 0} câu`;
+        if (badgeSa) badgeSa.textContent = `Tự luận/TLN: ${data.ok ? (data.saCount || 0) : 0} câu`;
         if (data.ok && Array.isArray(data.files)) {
           const select = document.getElementById('drive-bank-file-filter');
           if (select) {
@@ -8497,10 +8527,17 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
           if (modalSub) modalSub.textContent = `Bóc tách từ thư mục: ${data.folderName || 'Google Drive'} (${data.folderId || ''}) — ${data.totalQuestions || 0} câu`;
         }
 
-        const qRes = await fetch('/api/drive-bank/questions?limit=200' + (window.__mxAuthed ? '&includeAnswers=1' : ''));
+        // GĐ4 (P2-01): limit 200 → 2000 (trần máy chủ cũng nâng 500 → 2000).
+        // Ngân hàng thật hiện ~162 câu nên tải đủ; nếu vượt 2000 thì ghi rõ
+        // ở phụ đề thay vì im lặng cắt bớt.
+        const qRes = await fetch('/api/drive-bank/questions?limit=2000' + (window.__mxAuthed ? '&includeAnswers=1' : ''));
         const qData = await qRes.json();
         if (qData.ok) {
           globalDriveBankData = qData.questions || [];
+          if ((qData.total || 0) > globalDriveBankData.length) {
+            const modalSub = document.getElementById('modal-drive-bank-subtitle');
+            if (modalSub) modalSub.textContent += ` — chỉ hiển thị ${globalDriveBankData.length}/${qData.total} câu đầu (giới hạn 2000)`;
+          }
           renderDriveBankList();
         }
       } catch (err) {
@@ -8572,7 +8609,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
           </div>`;
         } else if (q.format === 'true_false' && Array.isArray(q.items)) {
           bodyHtml = `<div style="display: flex; flex-direction: column; gap: 4px; margin-top: 6px; font-size: 0.83rem; background: var(--mx-surface); padding: 8px; border-radius: 6px">
-            ${q.items.map(it => `<div><strong>${it.letter})</strong> ${escapeHtml(it.text)}${it.isCorrect === undefined ? '' : ` <span style="font-weight: 700; color: ${it.isCorrect ? 'var(--mx-ok)' : 'var(--mx-err)'}">[${it.isCorrect ? 'ĐÚNG' : 'SAI'}]</span>`} (${it.level || 'Biết'})</div>`).join('')}
+            ${q.items.map(it => `<div><strong>${it.letter})</strong> ${escapeHtml(it.text)}${it.isCorrect === undefined ? '' : ` <span style="font-weight: 700; color: ${it.isCorrect ? 'var(--mx-ok)' : 'var(--mx-err)'}">[${it.isCorrect ? 'ĐÚNG' : 'SAI'}]</span>`} (${escapeHtml(it.level || 'Biết')})</div>`).join('')}
           </div>`;
         } else {
           bodyHtml = q.answer
@@ -10879,8 +10916,8 @@ Phần III:
       if (badgesContainer) {
         badgesContainer.innerHTML = codes.map(c => `
           <span style="font-size: 0.75rem; font-weight: 700; background: var(--mx-blue-soft); color: var(--mx-blue-hover); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--mx-line); display: inline-flex; align-items: center; gap: 4px">
-            Mã ${c}
-            <span onclick="removeAnswerKeyCode('${c}')" style="cursor: pointer; color: var(--mx-err); font-size: 0.8rem; margin-left: 2px" title="Xóa mã đề này"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+            Mã ${escapeHtml(c)}
+            <span onclick="removeAnswerKeyCode('${escapeHtml(c)}')" style="cursor: pointer; color: var(--mx-err); font-size: 0.8rem; margin-left: 2px" title="Xóa mã đề này"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
           </span>
         `).join('');
       }
@@ -10888,7 +10925,7 @@ Phần III:
       // Thead
       theadTr.innerHTML = `
         <th style="padding: 6px 10px; width: 70px; background: var(--mx-line-soft); color: var(--mx-ink)">Câu</th>
-        ${codes.map(c => `<th style="padding: 6px 8px; background: var(--mx-blue-soft); color: var(--mx-blue-hover); font-weight: 700">Mã ${c}</th>`).join('')}
+        ${codes.map(c => `<th style="padding: 6px 8px; background: var(--mx-blue-soft); color: var(--mx-blue-hover); font-weight: 700">Mã ${escapeHtml(c)}</th>`).join('')}
       `;
 
       // Xác định số câu Phần I (MCQ) lớn nhất
@@ -10920,7 +10957,7 @@ Phần III:
                 <div style="display: inline-flex; gap: 3px">
                   ${['A', 'B', 'C', 'D'].map(opt => `
                     <button type="button" 
-                            onclick="setAnswerMatrixP1('${c}', ${q - 1}, '${opt}')"
+                            onclick="setAnswerMatrixP1('${escapeHtml(c)}', ${q - 1}, '${opt}')"
                             style="width: 24px; height: 24px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; border: 1px solid ${currentOpt === opt ? 'var(--mx-blue)' : 'var(--mx-line)'}; cursor: pointer; padding: 0">
                       ${opt}
                     </button>
@@ -10963,12 +11000,12 @@ Phần III:
                 <td style="padding: 3px 6px; text-align: center">
                   <div style="display: inline-flex; gap: 4px">
                     <button type="button" 
-                            onclick="setAnswerMatrixP2('${c}', ${q}, '${sub}', 'Đ')"
+                            onclick="setAnswerMatrixP2('${escapeHtml(c)}', ${q}, '${sub}', 'Đ')"
                             style="width: 24px; height: 22px; border-radius: 3px; font-size: 0.75rem; font-weight: 700; border: 1px solid ${currentVal === 'Đ' ? 'var(--mx-ok)' : 'var(--mx-line)'}; cursor: pointer; padding: 0">
                       Đ
                     </button>
                     <button type="button" 
-                            onclick="setAnswerMatrixP2('${c}', ${q}, '${sub}', 'S')"
+                            onclick="setAnswerMatrixP2('${escapeHtml(c)}', ${q}, '${sub}', 'S')"
                             style="width: 24px; height: 22px; border-radius: 3px; font-size: 0.75rem; font-weight: 700; border: 1px solid ${currentVal === 'S' ? 'var(--mx-err)' : 'var(--mx-line)'}; cursor: pointer; padding: 0">
                       S
                     </button>
@@ -11008,9 +11045,9 @@ Phần III:
             const currentVal = keys[c].part3[q] !== undefined ? keys[c].part3[q] : '';
             return `
               <td style="padding: 3px 6px; text-align: center">
-                <input type="text" value="${currentVal}" 
+                <input type="text" value="${escapeHtml(currentVal)}" 
                        placeholder="Số/kết quả"
-                       onchange="setAnswerMatrixP3('${c}', ${q}, this.value)"
+                       onchange="setAnswerMatrixP3('${escapeHtml(c)}', ${q}, this.value)"
                        style="width: 85px; height: 24px; text-align: center; font-weight: 700; font-size: 0.78rem; border: 1px solid var(--mx-line); border-radius: 4px; padding: 2px 4px">
               </td>
             `;
@@ -11805,11 +11842,13 @@ Phần III:
           ? 'background:#eff6ff; border-left:3px solid #2563eb; cursor:pointer; box-shadow:inset 0 0 0 1px #bfdbfe;'
           : 'cursor:pointer; border-bottom:1px solid #f1f5f9; transition:background 0.12s ease;';
 
+        // GĐ4 (P0-10): p.id = `paper_${sbd}` (omr-engine.js) nên SBD chứa '
+        // sẽ thoát khỏi onclick; sbd/tên/mã đề là dữ liệu giáo viên nhập.
         return `
-          <tr  onclick="selectOmrPaper('${p.id}')">
+          <tr  onclick="selectOmrPaper('${escapeHtml(p.id)}')">
             <td style="padding: 6px 6px">
               <span style="font-family: monospace; font-weight: 700; font-size: 0.75rem; background: var(--mx-bg); color: var(--mx-ink); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--mx-line-soft)">
-                ${p.scannedExamCode || '---'}
+                ${escapeHtml(p.scannedExamCode || '---')}
               </span>
             </td>
             <td style="padding: 6px 6px; text-align: right">
@@ -11819,8 +11858,8 @@ Phần III:
             </td>
             <td style="padding: 6px 4px; text-align: center">${statusHtml}</td>
             <td style="padding: 6px 6px; font-size: 0.75rem">
-              <div style="font-weight: 700; color: var(--mx-dark); line-height: 1.2">${p.sbd || 'Chưa tô'}</div>
-              <div style="font-size: 0.75rem; color: var(--mx-ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 110px">${p.studentName || ''}</div>
+              <div style="font-weight: 700; color: var(--mx-dark); line-height: 1.2">${escapeHtml(p.sbd || 'Chưa tô')}</div>
+              <div style="font-size: 0.75rem; color: var(--mx-ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 110px">${escapeHtml(p.studentName || '')}</div>
             </td>
           </tr>
         `;
@@ -13434,10 +13473,10 @@ Phần III:
               </thead>
               <tbody>
                 ${papers.map(p => `
-                  <tr style="border-bottom: 1px solid var(--mx-bg); cursor: pointer" onclick="selectOmrPaper('${p.id}')" title="Click để soi mặt phiếu của học sinh này trên màn hình bên phải">
-                    <td style="padding: 4px; font-family: monospace; font-weight: 700">${p.sbd || '---'}</td>
-                    <td style="padding: 4px">${p.studentName || 'Học sinh'}</td>
-                    <td style="padding: 4px">${p.scannedExamCode}</td>
+                  <tr style="border-bottom: 1px solid var(--mx-bg); cursor: pointer" onclick="selectOmrPaper('${escapeHtml(p.id)}')" title="Click để soi mặt phiếu của học sinh này trên màn hình bên phải">
+                    <td style="padding: 4px; font-family: monospace; font-weight: 700">${escapeHtml(p.sbd || '---')}</td>
+                    <td style="padding: 4px">${escapeHtml(p.studentName || 'Học sinh')}</td>
+                    <td style="padding: 4px">${escapeHtml(p.scannedExamCode)}</td>
                     <td style="padding: 4px; text-align: right; font-weight: 700; color: var(--mx-blue)">${(p.result?.totalScore || 0).toFixed(2)}</td>
                     <td style="padding: 4px; text-align: center">${p.isCorrected ? 'Đã sửa' : (p.warnings?.length > 0 ? 'Cần ktra' : 'Đã chấm')}</td>
                   </tr>
@@ -13471,10 +13510,10 @@ Phần III:
                 <tbody>
                   ${logs.slice(0, 20).map(l => `
                     <tr style="border-bottom: 1px solid var(--mx-surface)">
-                      <td style="padding: 3px">${(l.timestamp || '').substring(11, 19)}</td>
-                      <td style="padding: 3px"><b>${l.sbd || l.paperId}</b> (${(l.studentName || '').split(' ').slice(-2).join(' ')})</td>
-                      <td style="padding: 3px">${l.field}</td>
-                      <td style="padding: 3px">${l.oldVal} → <b style="color: var(--mx-ok)">${l.newVal}</b></td>
+                      <td style="padding: 3px">${escapeHtml((l.timestamp || '').substring(11, 19))}</td>
+                      <td style="padding: 3px"><b>${escapeHtml(l.sbd || l.paperId)}</b> (${escapeHtml((l.studentName || '').split(' ').slice(-2).join(' '))})</td>
+                      <td style="padding: 3px">${escapeHtml(l.field)}</td>
+                      <td style="padding: 3px">${escapeHtml(l.oldVal)} → <b style="color: var(--mx-ok)">${escapeHtml(l.newVal)}</b></td>
                     </tr>
                   `).join('')}
                 </tbody>
@@ -13624,7 +13663,7 @@ Phần III:
       const validCodes = Object.keys(appState.omr.answerKeysByCode || {});
       if (codeSelect) {
         const allOptions = validCodes.includes(paper.scannedExamCode) ? validCodes : [paper.scannedExamCode, ...validCodes];
-        codeSelect.innerHTML = allOptions.map(c => `<option value="${c}" ${c === paper.scannedExamCode ? 'selected' : ''}>Mã đề ${c}</option>`).join('');
+        codeSelect.innerHTML = allOptions.map(c => `<option value="${escapeHtml(c)}" ${c === paper.scannedExamCode ? 'selected' : ''}>Mã đề ${escapeHtml(c)}</option>`).join('');
       }
 
       // 2. Điền SBD và Họ tên học sinh
@@ -13643,7 +13682,7 @@ Phần III:
         if (paper.warnings && paper.warnings.length > 0) {
           warnBox.innerHTML = paper.warnings.map(w => `
             <div style="background: var(--mx-amber-soft); border: 1px solid var(--mx-amber); color: var(--mx-warn); padding: 8px 12px; border-radius: 6px; font-size: 0.80rem; font-weight: 600; margin-bottom: 6px">
-              <svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ${w.message}
+              <svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ${escapeHtml(w.message)}
             </div>
           `).join('');
         } else {
@@ -13713,7 +13752,7 @@ Phần III:
           html += `
             <div style="display: flex; align-items: center; gap: 6px; border: 1px solid var(--mx-line); border-radius: 6px; padding: 6px 8px; background: var(--mx-surface)">
               <strong style="font-size: 0.78rem; color: var(--mx-ok); white-space: nowrap">Câu ${q}:</strong>
-              <input type="text" class="form-control edit-p3-input" data-q="${q}" maxlength="4" value="${val}" placeholder="VD: 12,5" style="height: 26px; padding: 2px 6px; font-family: monospace; font-weight: 700; font-size: 0.80rem" />
+              <input type="text" class="form-control edit-p3-input" data-q="${q}" maxlength="4" value="${escapeHtml(val)}" placeholder="VD: 12,5" style="height: 26px; padding: 2px 6px; font-family: monospace; font-weight: 700; font-size: 0.80rem" />
             </div>
           `;
         }
@@ -15813,10 +15852,10 @@ Phần III:
         <tr style="border-bottom: 1px solid var(--mx-bg)">
           <td style="padding: 5px 8px; text-align: center; color: var(--mx-ink-2); font-weight: 600">${idx + 1}</td>
           <td style="padding: 5px 8px">
-            <input type="text" class="form-control" value="${r.sbd || ''}" oninput="tempModalRoster[${idx}].sbd = this.value.trim()" style="height: 26px; padding: 2px 6px; font-family: monospace; font-weight: 700; font-size: 0.78rem" />
+            <input type="text" class="form-control" value="${escapeHtml(r.sbd || '')}" oninput="tempModalRoster[${idx}].sbd = this.value.trim()" style="height: 26px; padding: 2px 6px; font-family: monospace; font-weight: 700; font-size: 0.78rem" />
           </td>
           <td style="padding: 5px 8px">
-            <input type="text" class="form-control" value="${r.name || r.fullName || ''}" oninput="tempModalRoster[${idx}].name = this.value; tempModalRoster[${idx}].fullName = this.value;" style="height: 26px; padding: 2px 6px; font-weight: 600; font-size: 0.78rem" />
+            <input type="text" class="form-control" value="${escapeHtml(r.name || r.fullName || '')}" oninput="tempModalRoster[${idx}].name = this.value; tempModalRoster[${idx}].fullName = this.value;" style="height: 26px; padding: 2px 6px; font-weight: 600; font-size: 0.78rem" />
           </td>
           <td style="padding: 5px 8px">
             <input type="text" class="form-control" value="${escapeHtml(r.className || '')}" oninput="tempModalRoster[${idx}].className = this.value.trim()" style="height: 26px; padding: 2px 6px; font-size: 0.78rem" />

@@ -29,6 +29,23 @@ Vercel dashboard trước khi kết luận.
   Cần kiểm tra trên Vercel dashboard: Project Settings → Domains, Functions,
   và xem project đang deploy từ repo/branch nào.
 
+## Cập nhật GĐ4 (P2-05) — 2026-11-24
+
+- `server.js` nay có trang 404 thân thiện: mọi đường dẫn **không phải
+  `/api/*`** mà tới được `requestHandler` sẽ nhận trang HTML 404 tiếng Việt
+  (nút "Về trang chính MatrixEdu") thay vì JSON thô; `/api/*` lạ vẫn trả
+  JSON 404 như cũ để client xử lý bằng máy. Đường dẫn người dùng gõ được
+  escape trước khi in ra trang 404 (tránh XSS qua thanh địa chỉ).
+- **Giới hạn đã biết:** trang 404 này chỉ hiện khi request được rewrite tới
+  function. `vercel.json` trong repo vẫn chỉ rewrite `/api/*`, `/favicon*`,
+  `/apple-touch-icon*` — không đổi trong GĐ4 vì cấu hình deploy thực tế trên
+  Vercel vẫn chưa đối chiếu với dashboard (xem mục "Điểm lệch" ở trên). Trên
+  bản **localhost (bản chính theo QĐ1)** trang 404 luôn hoạt động. Nếu muốn
+  trang 404 cũng hiện trên Vercel cho mọi đường dẫn lạ, cần thêm rewrite
+  `{"source": "/:path*", "destination": "/api/[...slug]"}` vào `vercel.json`
+  **hoặc** cấu hình tương đương trên dashboard — quyết định này để cho đợt
+  đối chiếu dashboard, không tự sửa trong GĐ4 vì có thể đổi hành vi deploy.
+
 ## Quyết định theo kế hoạch (QĐ1)
 
 - Bản chính là **Windows portable chạy localhost**; Vercel chỉ là bản giới

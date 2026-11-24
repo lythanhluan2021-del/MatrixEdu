@@ -167,10 +167,22 @@ function ensureSampleDocxFiles() {
 ensureSampleDocxFiles();
 
 // GĐ1 (P0-05): tiêu đề bảo mật áp cho mọi phản hồi JSON/HTML.
-// Lưu ý: CSP vẫn cho 'unsafe-inline' vì index.html dùng script/style nội tuyến;
-// việc loại bỏ inline handler là việc của GĐ4 (P0-10).
+// GĐ4 (P0-10) rà soát lại CSP sau các lần viết lại giao diện:
+//  - GIỮ 'unsafe-inline' ở script-src/style-src: index.html là ứng dụng một
+//    file với ~150 onclick nội tuyến + <script>/<style> nội tuyến; bỏ nó
+//    đồng nghĩa viết lại toàn bộ giao diện sang JS ngoài + addEventListener
+//    (việc lớn, ngoài phạm vi GĐ4). XSS lúc này chặn bằng escapeHtml ở
+//    từng điểm chèn + CSP làm lớp thứ hai. Không thêm <meta CSP> trùng lặp:
+//    server đã gửi header này cho mọi phản hồi (sendJson và GET /).
+//  - THÊM form-action 'self': không form nào gửi dữ liệu ra ngoài.
+//  - THÊM font-src 'self' data:: không tải font ngoài (không có Google
+//    Fonts/CDN trong index.html — đã kiểm tra bằng grep).
+//  - THÊM frame-src 'none': ứng dụng không nhúng iframe nào.
+//  - GIỮ object-src 'none', base-uri 'self', frame-ancestors 'self' (có từ
+//    GĐ1), img-src 'self' data: blob: (ảnh canvas/upload), connect-src
+//    'self' (client chỉ fetch cùng origin; đồng bộ Drive chạy phía server).
 const SECURITY_HEADERS = {
-  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'",
+  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; font-src 'self' data:; frame-src 'none'; form-action 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'",
   'X-Content-Type-Options': 'nosniff',
   'Referrer-Policy': 'same-origin'
 };
@@ -183,6 +195,17 @@ function sendJson(res, statusCode, payload) {
     ...SECURITY_HEADERS
   });
   res.end(body);
+}
+
+// GĐ4 (P2-05): escape phía server cho trang 404 — pathname do người dùng
+// gõ trên thanh địa chỉ nên phải escape trước khi in ra HTML.
+function escapeHtmlServer(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 // GĐ1 (P0-05, P0-09): chặn API khi chưa đăng nhập quản trị.
@@ -477,14 +500,21 @@ const requestHandler = async (req, res) => {
     }
 
     // 3b. API Danh sách các file .docx có sẵn ngay trong thư mục gốc dự án (ví dụ: "TIN 12 - MA TRAN KTGK 1.docx")
+    // GĐ4 (P2-05): khóa bằng requireAuth — thư mục gốc trên máy localhost có
+    // thể chứa đề thi thật của giáo viên; chỉ liệt kê tên file thôi cũng lộ
+    // thông tin. Client mở modal đăng nhập khi gặp 401 (loadWorkspaceDocxFile).
     if (req.method === 'GET' && pathname === '/api/workspace-files') {
+      if (!requireAuth(req, res)) return;
       const rootFiles = fs.readdirSync(__dirname)
         .filter(f => f.toLowerCase().endsWith('.docx') && !f.startsWith('~$') && f.toLowerCase() !== 'prompt.docx');
       sendJson(res, 200, { ok: true, files: rootFiles });
       return;
     }
 
+    // GĐ4 (P2-05): khóa bằng requireAuth — đọc toàn văn file .docx trong thư
+    // mục dự án (có thể là đề thi thật). basename vẫn chặn path traversal.
     if (req.method === 'POST' && pathname === '/api/load-workspace-file') {
+      if (!requireAuth(req, res)) return;
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
       const safeName = path.basename(String(body.fileName || ''));
@@ -532,7 +562,9 @@ const requestHandler = async (req, res) => {
       const bank = loadDriveQuestionBank();
       const type = parsedUrl.searchParams.get('type') || 'all';
       const file = parsedUrl.searchParams.get('file') || '';
-      const limit = Math.min(500, Math.max(1, parseInt(parsedUrl.searchParams.get('limit') || '200', 10)));
+      // GĐ4 (P2-01): trần 500 → 2000 câu để modal ngân hàng tải đủ số câu
+      // thật (ngân hàng hiện ~162 câu; 2000 là giới hạn an toàn cho phản hồi).
+      const limit = Math.min(2000, Math.max(1, parseInt(parsedUrl.searchParams.get('limit') || '200', 10)));
       
       let list = [];
       if (type === 'mcq') list = bank.mcqQuestions;
@@ -583,7 +615,12 @@ const requestHandler = async (req, res) => {
     }
 
     // 4. API Tải lên và bóc tách tài liệu (.docx, .pdf, .txt, .md, hình ảnh)
+    // GĐ4 (P2-05): khóa bằng requireAuth — tuy không ghi dữ liệu, tuyến này
+    // cho phép bất kỳ ai dùng máy chủ làm dịch vụ bóc tách tài liệu miễn phí
+    // (tốn CPU/băng thông) và đọc được nội dung ma trận/đề thi tải lên.
+    // Client mở modal đăng nhập khi gặp 401 (handleFileUpload).
     if (req.method === 'POST' && pathname === '/api/upload-doc') {
+      if (!requireAuth(req, res)) return;
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
       const fileName = body.fileName || 'tailieu.txt';
@@ -1897,7 +1934,48 @@ function resolveServerAnswerKeys({ examId = '', sessionId = '', bodyKeys = null,
       return;
     }
 
-    sendJson(res, 404, { ok: false, message: `Không tìm thấy đường dẫn API: ${pathname}` });
+    // GĐ4 (P2-05): đường dẫn không tồn tại.
+    //  - /api/* giữ JSON 404 như cũ để client xử lý bằng máy.
+    //  - Đường dẫn thường (vd: /login, /khong-ton-tai) trả trang 404 thân
+    //    thiện bằng tiếng Việt, có nút về trang chính, thay vì JSON thô.
+    //    Lưu ý: trên Vercel, trang này chỉ hiện khi request được rewrite
+    //    tới function (vercel.json hiện chỉ rewrite /api/*, /favicon*,
+    //    /apple-touch-icon* — xem VERCEL-NOTE.md); bản localhost thì luôn
+    //    hiện trang này. pathname được escape trước khi in ra HTML.
+    if (pathname.startsWith('/api/')) {
+      sendJson(res, 404, { ok: false, message: `Không tìm thấy đường dẫn API: ${pathname}` });
+    } else {
+      const safePath = escapeHtmlServer(pathname);
+      const html404 = `<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>404 — Không tìm thấy trang | MatrixEdu</title>
+<style>
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: #f1f5f9; color: #0f172a; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+  .box { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 32px 36px; max-width: 520px; margin: 16px; text-align: center; box-shadow: 0 4px 24px rgba(15, 23, 42, 0.08); }
+  .code { font-size: 3rem; font-weight: 800; color: #2563eb; line-height: 1; }
+  h1 { font-size: 1.25rem; margin: 12px 0 8px; }
+  p { color: #475569; font-size: 0.95rem; line-height: 1.6; margin: 6px 0; }
+  code { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 4px; padding: 1px 6px; font-size: 0.85rem; word-break: break-all; }
+  a.btn { display: inline-block; margin-top: 16px; background: #2563eb; color: #fff; text-decoration: none; font-weight: 700; padding: 10px 22px; border-radius: 8px; }
+  a.btn:hover { background: #1d4ed8; }
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="code">404</div>
+  <h1>Không tìm thấy trang này</h1>
+  <p>Địa chỉ <code>${safePath}</code> không tồn tại trên MatrixEdu.</p>
+  <p>Có thể thầy/cô đã gõ nhầm địa chỉ, hoặc liên kết đã cũ.</p>
+  <a class="btn" href="/">Về trang chính MatrixEdu</a>
+</div>
+</body>
+</html>`;
+      res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8', ...SECURITY_HEADERS });
+      res.end(html404);
+    }
   } catch (err) {
     console.error('[requestHandler]', err);
     try {
