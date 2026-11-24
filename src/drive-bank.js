@@ -1,7 +1,7 @@
 /**
  * src/drive-bank.js
  * Ngân hàng câu hỏi bóc tách từ Google Drive
- * Nguồn: https://drive.google.com/drive/folders/1wcSRCsZ9wzjO9ypblF_9L4si9kPm_uop
+ * Nguồn: https://drive.google.com/drive/folders/1MbQqovIMutXQP-qDRqehjAeRZzVqojF-
  * Đảm bảo: 100% KHÔNG BỊA ĐẶT (Zero Hallucination), bám sát Ma trận GDPT 2018 (CV 7991 & TT 22).
  */
 
@@ -10,6 +10,11 @@ const os = require('os');
 const path = require('path');
 const https = require('https');
 const { parseDocxBuffer } = require('./zip-docx');
+const { atomicWriteJson } = require('./storage');
+
+// GĐ3 (P1-09): MỘT thư mục Drive duy nhất trong cấu hình. Thư mục dự phòng
+// cũ 1wcSRCsZ9wzjO9ypblF_9L4si9kPm_uop khác với thư mục đang dùng nên bị bỏ.
+const DEFAULT_DRIVE_FOLDER_ID = '1MbQqovIMutXQP-qDRqehjAeRZzVqojF-';
 
 const BUNDLED_BANK_DIR = path.join(__dirname, '..', 'data', 'google_drive_bank');
 const BUNDLED_ACTIVE_BANK_FILE = path.join(__dirname, '..', 'data', 'active_drive_bank.json');
@@ -696,11 +701,21 @@ function extractFolderId(url) {
   return null;
 }
 
-function fetchHttps(url) {
+// GĐ3 (P1-09): timeout 30 giây và giới hạn dung lượng cho mọi lần gọi
+// Google Drive — tránh treo vô hạn khi mạng chậm hoặc trang lỗi quá lớn.
+const DRIVE_FETCH_TIMEOUT_MS = 30 * 1000;
+const DRIVE_PAGE_MAX_BYTES = 10 * 1024 * 1024;
+const DRIVE_FILE_MAX_BYTES = 50 * 1024 * 1024;
+
+function fetchHttps(url, redirectDepth = 0) {
   return new Promise((resolve, reject) => {
-    https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' } }, (res) => {
+    const req = https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' } }, (res) => {
       if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-        fetchHttps(res.headers.location).then(resolve).catch(reject);
+        if (redirectDepth >= 5) {
+          reject(new Error('Quá nhiều lần chuyển hướng khi kết nối Google Drive'));
+          return;
+        }
+        fetchHttps(res.headers.location, redirectDepth + 1).then(resolve).catch(reject);
         return;
       }
       if (res.statusCode !== 200) {
@@ -708,17 +723,34 @@ function fetchHttps(url) {
         return;
       }
       let data = '';
-      res.on('data', chunk => data += chunk);
+      let received = 0;
+      res.on('data', chunk => {
+        received += chunk.length;
+        if (received > DRIVE_PAGE_MAX_BYTES) {
+          req.destroy(new Error(`Trang Google Drive vượt quá giới hạn ${DRIVE_PAGE_MAX_BYTES / 1024 / 1024} MB`));
+          return;
+        }
+        data += chunk;
+      });
       res.on('end', () => resolve(data));
-    }).on('error', reject);
+      res.on('error', reject);
+    });
+    req.setTimeout(DRIVE_FETCH_TIMEOUT_MS, () => {
+      req.destroy(new Error('Hết thời gian chờ 30 giây khi kết nối Google Drive'));
+    });
+    req.on('error', reject);
   });
 }
 
-function downloadHttpsBinary(url, destPath) {
+function downloadHttpsBinary(url, destPath, redirectDepth = 0) {
   return new Promise((resolve, reject) => {
-    https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' } }, (res) => {
+    const req = https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' } }, (res) => {
       if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-        downloadHttpsBinary(res.headers.location, destPath).then(resolve).catch(reject);
+        if (redirectDepth >= 5) {
+          reject(new Error('Quá nhiều lần chuyển hướng khi tải file từ Google Drive'));
+          return;
+        }
+        downloadHttpsBinary(res.headers.location, destPath, redirectDepth + 1).then(resolve).catch(reject);
         return;
       }
       if (res.statusCode !== 200) {
@@ -726,12 +758,36 @@ function downloadHttpsBinary(url, destPath) {
         return;
       }
       const stream = fs.createWriteStream(destPath);
+      let received = 0;
+      let failed = false;
+      const fail = (err) => {
+        if (failed) return;
+        failed = true;
+        try { stream.destroy(); } catch (_) {}
+        try { fs.unlinkSync(destPath); } catch (_) {} // xóa file tải dở
+        reject(err);
+      };
+      res.on('data', chunk => {
+        received += chunk.length;
+        if (received > DRIVE_FILE_MAX_BYTES) {
+          req.destroy();
+          fail(new Error(`File vượt quá giới hạn ${DRIVE_FILE_MAX_BYTES / 1024 / 1024} MB`));
+        }
+      });
+      res.on('error', fail);
+      stream.on('error', fail);
       res.pipe(stream);
       stream.on('finish', () => {
-        stream.close();
-        resolve(destPath);
+        if (!failed) {
+          stream.close();
+          resolve(destPath);
+        }
       });
-    }).on('error', reject);
+    });
+    req.setTimeout(DRIVE_FETCH_TIMEOUT_MS, () => {
+      req.destroy(new Error('Hết thời gian chờ 30 giây khi tải file từ Google Drive'));
+    });
+    req.on('error', reject);
   });
 }
 
@@ -992,6 +1048,7 @@ async function syncGoogleDriveFolder(folderUrl) {
   let folderName = 'Ngân hàng câu hỏi Google Drive';
   let netErrorMsg = null;
   let downloadedCount = 0;
+  let failedDownloads = [];
   try {
     const html = await fetchHttps(`https://drive.google.com/drive/folders/${cleanFolderId}`);
     const titleMatch = html.match(/<title>([^<]+)<\/title>/i);
@@ -1018,6 +1075,7 @@ async function syncGoogleDriveFolder(folderUrl) {
           downloadedCount++;
         } catch (err) {
           console.warn(`[syncGoogleDriveFolder] Failed downloading ${f.fileName}:`, err.message);
+          failedDownloads.push({ fileName: f.fileName, error: err.message });
         }
       }
     }
@@ -1057,10 +1115,13 @@ async function syncGoogleDriveFolder(folderUrl) {
     };
   });
 
+  // GĐ3 (P1-09): khi không kết nối được Drive thì giữ tên thư mục đã lưu
+  // trước đó (không ghi đè bằng tên mặc định).
+  const previousState = netErrorMsg ? readActiveBankState() : null;
   const activeBankState = {
     folderId,
     folderUrl: `https://drive.google.com/drive/folders/${folderId}?usp=sharing`,
-    folderName,
+    folderName: (netErrorMsg && previousState && previousState.folderName) || folderName,
     totalQuestions: bankData.totalQuestions,
     mcqCount: bankData.mcqQuestions.length,
     tfCount: bankData.tfQuestions.length,
@@ -1073,24 +1134,50 @@ async function syncGoogleDriveFolder(folderUrl) {
     updatedAt: new Date().toISOString()
   };
 
-  const activeDir = path.dirname(ACTIVE_BANK_FILE);
-  if (!fs.existsSync(activeDir)) fs.mkdirSync(activeDir, { recursive: true });
-  fs.writeFileSync(ACTIVE_BANK_FILE, JSON.stringify(activeBankState, null, 2));
+  // GĐ3 (P1-08): ghi trạng thái ngân hàng bằng ghi nguyên tử.
+  atomicWriteJson(ACTIVE_BANK_FILE, activeBankState);
 
   cachedBank = {
     ...bankData,
     folderId,
     folderUrl: activeBankState.folderUrl,
-    folderName,
+    folderName: activeBankState.folderName,
     fileDetails,
     underlineCount: totalUnderline,
     underlinePercent: underlinePct,
     updatedAt: activeBankState.updatedAt
   };
 
+  // GĐ3 (P1-09): trạng thái đồng bộ phản ánh ĐÚNG lần chạy vừa rồi.
+  // - Lỗi mạng: BÁO THẤT BẠI kèm nguyên nhân; vẫn giữ ngân hàng đã lưu
+  //   trước đó để dùng tiếp, nhưng không được báo "đồng bộ thành công".
+  if (netErrorMsg) {
+    return {
+      ok: false,
+      synced: false,
+      usedCachedData: true,
+      downloadedCount,
+      message: `Không kết nối được Google Drive (${netErrorMsg}). Đang dùng dữ liệu ngân hàng đã lưu trước đó (${bankData.totalQuestions} câu hỏi) — không có câu hỏi mới.`,
+      ...activeBankState
+    };
+  }
+  // - Một số tệp tải lỗi: đồng bộ chưa hoàn tất, báo thất bại kèm danh sách.
+  if (failedDownloads.length > 0) {
+    return {
+      ok: false,
+      synced: false,
+      partialSync: true,
+      downloadedCount,
+      failedFiles: failedDownloads,
+      message: `Đồng bộ chưa hoàn tất: ${failedDownloads.length} tệp tải lỗi (${failedDownloads.map(f => f.fileName).join(', ')}). Đã tải được ${downloadedCount} tệp mới; ngân hàng hiện có ${bankData.totalQuestions} câu hỏi.`,
+      ...activeBankState
+    };
+  }
   return {
     ok: true,
-    message: `Đã kết nối và đồng bộ thành công ${bankData.totalQuestions} câu hỏi từ ${bankData.files.length} tệp Google Drive (${folderName}).`,
+    synced: true,
+    downloadedCount,
+    message: `Đã kết nối và đồng bộ thành công ${bankData.totalQuestions} câu hỏi từ ${bankData.files.length} tệp Google Drive (${activeBankState.folderName}).`,
     ...activeBankState
   };
 }
@@ -1142,8 +1229,8 @@ function getDriveBankStatus() {
   return {
     ok: true,
     status: 'connected',
-    folderId: '1wcSRCsZ9wzjO9ypblF_9L4si9kPm_uop',
-    folderUrl: 'https://drive.google.com/drive/folders/1wcSRCsZ9wzjO9ypblF_9L4si9kPm_uop?usp=sharing',
+    folderId: DEFAULT_DRIVE_FOLDER_ID,
+    folderUrl: `https://drive.google.com/drive/folders/${DEFAULT_DRIVE_FOLDER_ID}?usp=sharing`,
     folderName: 'Ngân hàng câu hỏi Tin học THPT (Google Drive)',
     totalQuestions: bank.totalQuestions,
     mcqCount: bank.mcqQuestions.length,
@@ -1177,8 +1264,8 @@ function loadDriveQuestionBank(forceReload = false) {
 
   cachedBank = {
     ...bankData,
-    folderId: activeState?.folderId || '1wcSRCsZ9wzjO9ypblF_9L4si9kPm_uop',
-    folderUrl: activeState?.folderUrl || 'https://drive.google.com/drive/folders/1wcSRCsZ9wzjO9ypblF_9L4si9kPm_uop?usp=sharing',
+    folderId: activeState?.folderId || DEFAULT_DRIVE_FOLDER_ID,
+    folderUrl: activeState?.folderUrl || `https://drive.google.com/drive/folders/${DEFAULT_DRIVE_FOLDER_ID}?usp=sharing`,
     folderName: activeState?.folderName || 'Ngân hàng câu hỏi Tin học THPT (Google Drive)',
     underlineCount: totalUnderline,
     underlinePercent: underlinePct,

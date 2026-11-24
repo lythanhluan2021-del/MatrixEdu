@@ -11,6 +11,7 @@ data/admin_auth.json
 # Backup & temporary files
 *.bak
 *.tmp
+data/backups/
 .DS_Store
 Thumbs.db
 index.html.bak

@@ -4,7 +4,7 @@
  * Đảm bảo sự thống nhất 4 chiều: Ma trận ↔ Bản đặc tả ↔ Đề kiểm tra ↔ Đáp án
  */
 
-const { evaluateAlignment } = require('./content-alignment');
+const { evaluateAlignment, detectSubjectFamily } = require('./content-alignment');
 const { inferCognitiveLevel } = require('./drive-bank');
 
 /**
@@ -143,6 +143,40 @@ function computeMatrixStatistics(matrix, metadata = {}) {
 }
 
 /**
+ * GĐ3 (P1-07): đáp số TLN (trả lời ngắn) phải là đáp án ngắn, cụ thể.
+ * - Mặc định (Toán, Lý, Hóa, Tin, ...): phải là giá trị số — phiếu OMR
+ *   BGD 2025 tô đáp số bằng 4 cột số. Chấp nhận dấu thập phân "," hoặc ".",
+ *   dấu +/- đầu, và khoảng trắng phân cách nghìn (vd "12,5", "-3", "1 274").
+ * - Môn ngôn ngữ (family 'eng'): câu TLN điền từ có đáp án là cụm từ ngắn
+ *   ("about", "infrastructure", "cultural identity") — hợp lệ nếu ≤ 4 từ
+ *   và ≤ 40 ký tự. Đây là đáp án thật trong Ngân hàng chuyên môn nội bộ,
+ *   không phải câu chữ chung chung.
+ * - Câu chữ dài/chung chung ("Đáp án theo SGK...") bị loại ở cả hai trường hợp.
+ */
+function isValidShortAnswer(value, subjectFamily) {
+  if (value === undefined || value === null) return false;
+  const s = String(value).trim();
+  if (!s) return false;
+  const normalized = s.replace(/[\s_]/g, '').replace(',', '.');
+  if (/^-?\d+(\.\d+)?$/.test(normalized)) return true;
+  if (subjectFamily === 'eng') {
+    const words = s.split(/\s+/).filter(Boolean);
+    return words.length >= 1 && words.length <= 4 && s.length <= 40;
+  }
+  return false;
+}
+
+// GĐ3 (P1-07): nội dung tối thiểu cho tự luận — loại bỏ dòng trích nguồn
+// chung chung ("Căn cứ theo tài liệu ...") vốn không phải hướng dẫn chấm.
+const ESSAY_MIN_CONTENT_CHARS = 20;
+function stripGenericCitation(text) {
+  return String(text || '')
+    .replace(/Căn cứ theo tài liệu "[^"]*" trong Ngân hàng câu hỏi Google Drive\.?/g, '')
+    .replace(/Trình bày theo yêu cầu câu hỏi và tài liệu chuyên môn\.?/g, '')
+    .trim();
+}
+
+/**
  * Kiểm định toàn diện Hồ sơ đề kiểm tra (Ma trận ↔ Bản đặc tả ↔ Đề ↔ Đáp án & Phép tính độc lập)
  */
 function validateExamProfile(examData) {
@@ -259,19 +293,39 @@ function validateExamProfile(examData) {
         }
       });
     } else if (q.type === 'SA') {
+      // GĐ3 (P1-07): TLN phải có đáp số ngắn, cụ thể — số với môn tính
+      // toán, cụm từ ngắn với môn ngôn ngữ — không chấp nhận đáp án dạng
+      // câu chữ chung chung hay để trống.
+      const saFamily = detectSubjectFamily(meta.subject || '');
       if (q.answer === undefined || q.answer === null || String(q.answer).trim() === '') {
         missingAnswerCount++;
         issues.push(`${qLabel}: Câu trả lời ngắn thiếu đáp số chuẩn.`);
+      } else if (!isValidShortAnswer(q.answer, saFamily)) {
+        missingAnswerCount++;
+        issues.push(`${qLabel}: Câu trả lời ngắn phải có đáp số là giá trị số${saFamily === 'eng' ? ' hoặc cụm từ ngắn (tối đa 4 từ)' : ''} (hiện là "${String(q.answer).slice(0, 40)}").`);
       } else {
+        // Cảnh báo giới hạn 4 cột tô chỉ áp dụng cho đáp số dạng số.
         const cleanSa = String(q.answer).replace(/\s+/g, '');
-        if (cleanSa.length > 4) {
+        if (/^-?[\d.,]+$/.test(cleanSa) && cleanSa.length > 4) {
           warnings.push(`${qLabel}: Đáp số "${cleanSa}" dài ${cleanSa.length} ký tự (vượt giới hạn 4 cột tô của phiếu OMR BGD 2025).`);
         }
       }
     } else if (q.type === 'ESSAY') {
-      if (!isManualExamMode && !q.explanation && !q.rubric && !q.answer) {
-        missingAnswerCount++;
-        issues.push(`${qLabel}: Câu tự luận thiếu hướng dẫn chấm / biểu điểm.`);
+      // GĐ3 (P1-07): tự luận cần nội dung hướng dẫn chấm tối thiểu — dòng
+      // trích nguồn chung chung không được tính là hướng dẫn chấm.
+      if (!isManualExamMode) {
+        const essayContent = [q.answer, q.explanation, q.rubric]
+          .map(stripGenericCitation)
+          .join(' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+        if (!essayContent) {
+          missingAnswerCount++;
+          issues.push(`${qLabel}: Câu tự luận thiếu hướng dẫn chấm / biểu điểm.`);
+        } else if (essayContent.length < ESSAY_MIN_CONTENT_CHARS) {
+          missingAnswerCount++;
+          issues.push(`${qLabel}: Câu tự luận thiếu nội dung hướng dẫn chấm tối thiểu (cần ít nhất ${ESSAY_MIN_CONTENT_CHARS} ký tự nội dung thật).`);
+        }
       }
     }
 
@@ -544,6 +598,9 @@ module.exports = {
   computeMatrixStatistics,
   validateExamProfile,
   generateShuffledVariants,
-  hasPositionalOptions
+  hasPositionalOptions,
+  // GĐ3 (P1-07)
+  isValidShortAnswer,
+  ESSAY_MIN_CONTENT_CHARS
 };
 

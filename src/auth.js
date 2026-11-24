@@ -15,6 +15,8 @@ const crypto = require('crypto');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+// GĐ3 (P1-08, QĐ4): ghi file băm mật khẩu bằng ghi nguyên tử.
+const { atomicWriteJson } = require('./storage');
 
 const AUTH_FILE = process.env.VERCEL
   ? path.join(os.tmpdir(), 'matrixedu_data', 'admin_auth.json')
@@ -46,10 +48,11 @@ function setupAdminPassword(password) {
   const salt = crypto.randomBytes(16).toString('hex');
   const hash = crypto.scryptSync(password, salt, 64).toString('hex');
   const record = { salt, hash, createdAt: new Date().toISOString() };
-  const dir = path.dirname(AUTH_FILE);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(AUTH_FILE, JSON.stringify(record, null, 2), { encoding: 'utf8', mode: 0o600 });
-  try { fs.chmodSync(AUTH_FILE, 0o600); } catch (_) {}
+  // GĐ3 (P1-08): ghi nguyên tử, quyền 0600, lỗi ghi lộ ra cho route.
+  // allowInDemoMode: bản demo vẫn cần đăng nhập được (băm lưu tạm trong
+  // /tmp, mất khi redeploy — xem VERCEL-NOTE.md); chỉ riêng file băm mật
+  // khẩu được miễn chặn ghi demo, dữ liệu người dùng thì không.
+  atomicWriteJson(AUTH_FILE, record, { mode: 0o600, allowInDemoMode: true });
   return true;
 }
 

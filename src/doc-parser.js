@@ -7,6 +7,41 @@
 const zlib = require('zlib');
 const { parseDocxBuffer } = require('./zip-docx');
 
+// GĐ3 (P1-06): thông báo chuẩn khi PDF không trích được chữ.
+const PDF_UNREADABLE_MESSAGE = 'PDF dạng ảnh quét, cần bản Word hoặc chạy OCR trước';
+const PDF_PLACEHOLDER_PREFIX = '[Tài liệu PDF dạng ảnh quét';
+
+/**
+ * GĐ3 (P1-06): nhận diện chữ trích được từ PDF là chữ giữ chỗ hoặc quá ít
+ * chữ thật (PDF dạng ảnh quét / mã hóa font). Trả về { unreadable, reason }.
+ * Ngưỡng: dưới 8 từ thật (chuỗi chữ/số dài ≥ 2 ký tự), hoặc văn bản dài
+ * mà gần như không có khoảng trắng (dấu hiệu mã hóa font cho ra ký tự rác).
+ */
+function isPdfTextUnreadable(text) {
+  const t = String(text || '').trim();
+  if (!t || t.startsWith(PDF_PLACEHOLDER_PREFIX)) {
+    return {
+      unreadable: true,
+      reason: 'PDF không trích được chữ nào (dạng ảnh quét hoặc mã hóa font đặc biệt).'
+    };
+  }
+  const words = (t.match(/[\p{L}\p{N}]{2,}/gu) || []).length;
+  if (words < 8) {
+    return {
+      unreadable: true,
+      reason: `PDF chỉ trích được ${words} từ thật — quá ít để làm tài liệu (dạng ảnh quét hoặc mã hóa font).`
+    };
+  }
+  const spaces = (t.match(/ /g) || []).length;
+  if (t.length >= 50 && spaces / t.length < 0.05) {
+    return {
+      unreadable: true,
+      reason: 'Chữ trích được từ PDF gần như không có khoảng trắng — có thể file bị mã hóa font.'
+    };
+  }
+  return { unreadable: false, reason: '' };
+}
+
 /**
  * Bóc tách văn bản từ file PDF cơ bản
  */
@@ -51,10 +86,15 @@ function parsePdfBuffer(buffer) {
   }
 
   const text = extractedChunks.join('\n').trim();
+  // GĐ3 (P1-06): không còn trả chữ giữ chỗ như văn bản thật. Đánh dấu rõ
+  // file không đọc được để bước 1 từ chối ngay với đúng nguyên nhân.
+  const check = isPdfTextUnreadable(text);
   return {
-    text: text || '[Tài liệu PDF dạng ảnh quét hoặc mã hóa font đặc biệt - Sẵn sàng gửi qua AI Vision/Document API]',
+    text: check.unreadable ? `${PDF_PLACEHOLDER_PREFIX} hoặc mã hóa font đặc biệt - Sẵn sàng gửi qua AI Vision/Document API]` : text,
     paragraphs: text ? text.split(/\r?\n/).filter(Boolean) : [],
-    tables: []
+    tables: [],
+    pdfUnreadable: check.unreadable,
+    unreadableReason: check.reason
   };
 }
 
@@ -89,7 +129,10 @@ function extractDocumentContent(fileName, buffer, mimeType = '') {
       paragraphs: parsed.paragraphs,
       tables: parsed.tables,
       base64: buffer.toString('base64'),
-      mimeType: 'application/pdf'
+      mimeType: 'application/pdf',
+      // GĐ3 (P1-06): cờ để bước 1 từ chối PDF quét/không đọc được.
+      pdfUnreadable: parsed.pdfUnreadable,
+      unreadableReason: parsed.unreadableReason
     };
   }
 
@@ -657,5 +700,9 @@ module.exports = {
   analyzeEducationalText,
   parseSchoolMatrixAndSpecFromDocx,
   parseOutcomesFromText,
-  detectMetadataFromTablesAndText
+  detectMetadataFromTablesAndText,
+  // GĐ3 (P1-06)
+  parsePdfBuffer,
+  isPdfTextUnreadable,
+  PDF_UNREADABLE_MESSAGE
 };

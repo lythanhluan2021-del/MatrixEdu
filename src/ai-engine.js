@@ -12,26 +12,25 @@ const path = require('path');
 const { SAMPLE_DOCUMENTS } = require('./sample-materials');
 const { SUBJECT_POOLS } = require('./question-banks');
 const { analyzeEducationalText } = require('./doc-parser');
-const { computeMatrixStatistics, generateShuffledVariants, validateExamProfile } = require('./qa-validator');
+const { computeMatrixStatistics, generateShuffledVariants, validateExamProfile, isValidShortAnswer } = require('./qa-validator');
 const { loadDriveQuestionBank, calculateRelevanceScore, resolveTargetBankFiles, inferCognitiveLevel } = require('./drive-bank');
 const { evaluateAlignment, evaluateAlignmentMultiRow, detectSubjectFamily } = require('./content-alignment');
 
 const BUNDLED_CONFIG_PATH = path.join(__dirname, '..', 'data', 'ai_config.json');
 const TMP_CONFIG_PATH = path.join(os.tmpdir(), 'matrixedu_data', 'ai_config.json');
-let memoryAiConfig = null;
 
+// GĐ3 (P1-08, QĐ4): cấu hình AI đọc từ file MỖI LẦN cần dùng — không giữ
+// bản sao trong RAM giữa các lần gọi, tránh lệch giữa các instance.
 function loadAiConfig() {
   let fileCfg = {};
   try {
-    if (memoryAiConfig) {
-      fileCfg = { ...memoryAiConfig };
-    } else if (fs.existsSync(TMP_CONFIG_PATH)) {
+    if (fs.existsSync(TMP_CONFIG_PATH)) {
       fileCfg = JSON.parse(fs.readFileSync(TMP_CONFIG_PATH, 'utf8'));
     } else if (fs.existsSync(BUNDLED_CONFIG_PATH)) {
       fileCfg = JSON.parse(fs.readFileSync(BUNDLED_CONFIG_PATH, 'utf8'));
     }
   } catch (_) {
-    fileCfg = memoryAiConfig || {};
+    fileCfg = {};
   }
 
   // GĐ1 (P0-06, P0-07, QĐ5, QĐ6): khóa AI chỉ đọc từ file local
@@ -595,7 +594,9 @@ function synthesizeCustomQuestion({ row, qt, level, index, pointUnit, spec }) {
       points: pointUnit,
       matrixRef: `MT-R${row.id.replace(/\D/g, '') || 1}-TLN${index}`,
       stem: `[Dự thảo - Cần duyệt - Bài "${unitName}"] Nêu kết quả hoặc giá trị số cụ thể thỏa mãn yêu cầu: "${yccd}".`,
-      answer: 'Theo chuẩn SGK và tài liệu chuyên môn.',
+      // GĐ3 (P1-07): KHÔNG tự điền đáp án mẫu câu. Thiếu đáp số thì bước 4
+      // dừng và báo rõ (nguyên tắc 1) thay vì xuất đề với đáp án bịa.
+      answer: '',
       explanation: `Đối chiếu Bản đặc tả yêu cầu cần đạt của "${unitName}".`,
       isPlaceholder: true,
       sourceBadge: 'Cần bổ sung (Chưa có trong Ngân hàng)',
@@ -613,7 +614,8 @@ function synthesizeCustomQuestion({ row, qt, level, index, pointUnit, spec }) {
     points: pointUnit,
     matrixRef: `MT-R${row.id.replace(/\D/g, '') || 1}-TL${index}`,
     stem: `Trình bày nội dung trọng tâm và vận dụng kiến thức bài "${unitName}" (${topicName}) để thực hiện yêu cầu: ${yccd}`,
-    answer: `Trình bày đầy đủ cơ sở lý thuyết và các bước giải quyết vấn đề thuộc "${unitName}".`,
+    // GĐ3 (P1-07): không điền đáp án/hướng dẫn chấm mẫu câu chung chung.
+    answer: '',
     explanation: `Hướng dẫn chấm (${pointUnit} điểm):\n- Trình bày đúng kiến thức cốt lõi của "${unitName}" (50% số điểm).\n- Lập luận chặt chẽ, vận dụng giải quyết đúng yêu cầu thực tiễn và trình bày khoa học (50% số điểm).`,
     isPlaceholder: true,
     sourceBadge: 'Cần bổ sung (Chưa có trong Ngân hàng)'
@@ -662,6 +664,14 @@ async function step4GenerateQuestionsAndAnswers({ metadata = {}, matrix = {}, sp
     if (qt === 'MCQ') list = driveBank.mcqQuestions;
     else if (qt === 'TF') list = driveBank.tfQuestions.filter(q => q.items && q.items.length >= 4);
     else if (qt === 'SA' || qt === 'ESSAY') list = driveBank.saQuestions;
+
+    // GĐ3 (P1-07): câu TLN/Tự luận trong ngân hàng mà không kèm đáp án thì
+    // không dùng được làm câu thi — bỏ qua để hệ thống lấy từ Ngân hàng
+    // chuyên môn nội bộ hoặc AI; nếu không còn nguồn nào, bước 4 dừng và
+    // báo rõ câu nào thiếu đáp án (nguyên tắc 1).
+    if (qt === 'SA' || qt === 'ESSAY') {
+      list = list.filter(q => q.answer !== undefined && q.answer !== null && String(q.answer).trim() !== '');
+    }
 
     const { targetFiles, forbiddenFiles, preferredKeywords, penaltyKeywords } = resolveTargetBankFiles(row, metadata);
 
@@ -982,7 +992,9 @@ async function step4GenerateQuestionsAndAnswers({ metadata = {}, matrix = {}, sp
             rowId: row.id,
             level: lv,
             stem: driveItem.prompt,
-            answer: driveItem.answer || 'Đáp án theo SGK và tài liệu chuyên môn.',
+            // GĐ3 (P1-07): ngân hàng không kèm đáp số thì để trống — bước 4
+            // sẽ dừng và báo rõ nếu cuối cùng vẫn thiếu đáp số.
+            answer: driveItem.answer || '',
             explanation: `Căn cứ theo tài liệu "${driveItem.sourceFile}" trong Ngân hàng câu hỏi Google Drive.`,
             sourceFile: driveItem.sourceFile,
             sourceBadge: `Ngân hàng Google Drive (${driveItem.sourceFile})`,
@@ -1036,7 +1048,8 @@ async function step4GenerateQuestionsAndAnswers({ metadata = {}, matrix = {}, sp
             rowId: row.id,
             level: lv,
             stem: driveItem.prompt,
-            answer: driveItem.answer || 'Trình bày theo yêu cầu câu hỏi và tài liệu chuyên môn.',
+            // GĐ3 (P1-07): không điền hướng dẫn chấm mẫu câu chung chung.
+            answer: driveItem.answer || '',
             explanation: `Căn cứ theo tài liệu "${driveItem.sourceFile}" trong Ngân hàng câu hỏi Google Drive.`,
             sourceFile: driveItem.sourceFile,
             sourceBadge: `Ngân hàng Google Drive (${driveItem.sourceFile})`,
@@ -1125,6 +1138,30 @@ Trả về duy nhất 1 JSON object có cấu trúc:
         // Tiếp tục giữ câu dự thảo nếu không kết nối được AI
       }
     }
+  }
+
+  // GĐ3 (P1-07, nguyên tắc 1): dừng sinh đề khi còn câu TLN thiếu đáp số.
+  // Kiểm tra SAU bước AI điền câu dự thảo, để AI có cơ hội bổ sung đáp số
+  // thật trước khi kết luận là thiếu. Không trộn mã đề, không xuất Word khi
+  // còn câu TLN không có đáp số.
+  const missingSaAnswers = [];
+  let saOrdinal = 0;
+  const saFamily = detectSubjectFamily(metadata.subject || '');
+  for (const q of questions) {
+    if (q.type !== 'SA') continue;
+    saOrdinal++;
+    if (!isValidShortAnswer(q.answer, saFamily)) {
+      missingSaAnswers.push(`câu TLN ${saOrdinal} (${q.unit || q.topic || 'không rõ đơn vị kiến thức'})`);
+    }
+  }
+  if (missingSaAnswers.length > 0) {
+    return {
+      ok: false,
+      errorCode: 'MISSING_TLN_ANSWER',
+      message: `Không thể sinh đề: ${missingSaAnswers.length} ${missingSaAnswers.join('; ')} thiếu đáp số (giá trị số). ` +
+        'Ngân hàng câu hỏi không kèm đáp án cho các câu này và chưa có AI để tạo đáp số. ' +
+        'Hãy bổ sung đáp án cho các câu TLN trong ngân hàng, hoặc bật AI, rồi sinh đề lại.'
+    };
   }
 
   // Nhân bản & Trộn các mã đề theo số lượng và danh sách mã đề tùy chỉnh của giáo viên
@@ -1268,12 +1305,17 @@ function getCandidateQuestionsForSwap({
           usedAtQNum
         };
       } else {
+        // GĐ3 (P1-07): ứng viên TLN/Tự luận không kèm đáp án thì loại khỏi
+        // danh sách đổi câu — không đưa đáp án mẫu câu cho giáo viên chọn.
+        if ((qt === 'SA' || qt === 'ESSAY') && (dq.answer === undefined || dq.answer === null || String(dq.answer).trim() === '')) {
+          return;
+        }
         normalized = {
           candidateId: dq.id || `drv_sa_${candidates.length}`,
           driveQuestionId: dq.id,
           type: qt,
           stem: stemText,
-          answer: dq.answer || 'Đáp án theo SGK và tài liệu chuyên môn.',
+          answer: dq.answer || '',
           explanation: `Căn cứ theo tài liệu "${dq.sourceFile}" trong Ngân hàng câu hỏi Google Drive.`,
           level: dq.level || targetLevel,
           sourceFile: dq.sourceFile,
@@ -1495,6 +1537,19 @@ async function regenerateSingleQuestion({ question, existingQuestions = [], meta
       updated.explanation = `${question.explanation || ''} (Đã cập nhật phương án đúng là ${updated.answer} cho biến thể #${seed}, kiểm chứng ${n1}+${n2}=${resVal}).`;
     }
   } else if (updated.type === 'SA') {
+    // GĐ3 (P1-07): biến thể toán học "P = a × k" chỉ được tạo cho câu TLN
+    // môn Toán (hoặc câu gốc vốn là bài toán số). Với môn khác, tạo bài
+    // toán này là bịa nội dung sai môn — dừng và báo rõ thay vì tạo.
+    const subjFamily = detectSubjectFamily(metadata.subject || question.subject || '');
+    const stemLooksMath = /[0-9]\s*[+\-×x*/^]\s*[0-9]|hàm số|phương trình|tính giá trị/i.test(String(question.stem || ''));
+    if (subjFamily !== 'math' && !stemLooksMath) {
+      return {
+        ok: false,
+        errorCode: 'NO_SA_VARIANT_SOURCE',
+        message: `Không tạo được biến thể tự động cho câu TLN môn ${metadata.subject || question.subject || 'này'}: ` +
+          'không có câu thay thế trong ngân hàng và không có AI. Hãy chọn câu từ ngân hàng hoặc bật AI rồi thử lại.'
+      };
+    }
     const k1 = seed * 6;
     const k2 = seed + 3;
     const prod = k1 * k2;

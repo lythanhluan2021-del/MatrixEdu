@@ -37,7 +37,7 @@ const {
   exportRosterToCsv,
   exportMultiClassGradeCsv,
   exportAuditLogsToCsv,
-  syncOmrDatabaseToGoogleDrive
+  exportOmrDatabaseLocalBackup
 } = require('./src/omr-engine');
 const {
   OMR_TEMPLATES,
@@ -47,7 +47,16 @@ const {
   deleteCustomTemplate,
   resolveTemplateImagePath
 } = require('./src/omr-templates');
-const { extractDocumentContent } = require('./src/doc-parser');
+const { extractDocumentContent, PDF_UNREADABLE_MESSAGE } = require('./src/doc-parser');
+// GĐ3 (P1-08, QĐ4): lưu trữ bền + chặn ghi ở chế độ giới thiệu (Vercel).
+const {
+  DEMO_MODE_MESSAGE,
+  DemoModeError,
+  isDemoMode,
+  atomicWriteJson,
+  atomicWriteFile,
+  ensureDir
+} = require('./src/storage');
 const auth = require('./src/auth'); // GĐ1 (P0-05, QĐ3): đăng nhập quản trị + rate-limit
 const { computeMatrixStatistics, validateExamProfile, generateShuffledVariants } = require('./src/qa-validator');
 const { SAMPLE_DOCUMENTS } = require('./src/sample-materials');
@@ -95,14 +104,37 @@ function readDeletedProfileIds() {
 }
 
 function writeDeletedProfileIds(idSet) {
-  try {
-    if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
-    fs.writeFileSync(DELETED_PROFILES_FILE, JSON.stringify(Array.from(idSet), null, 2), 'utf8');
-  } catch (_) {}
+  // GĐ3 (P1-08): ghi nguyên tử; lỗi ghi lộ ra cho route xử lý.
+  atomicWriteJson(DELETED_PROFILES_FILE, Array.from(idSet));
+}
+
+// GĐ3 (P1-10): chuẩn hóa tên file xuất Word — chỉ giữ chữ, số, dấu gạch
+// (giữ dấu tiếng Việt), mọi ký tự khác (kể cả "/", "\", "..") thành "_";
+// đồng thời kiểm tra đường dẫn cuối cùng vẫn nằm trong thư mục exports.
+function sanitizeExportFileName(name) {
+  const cleaned = String(name || '')
+    .replace(/[^\p{L}\p{N}_.\-]+/gu, '_')
+    .replace(/\.{2,}/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^\.+/, '')
+    .replace(/\.+$/, '')
+    .slice(0, 120);
+  return cleaned || 'DeKiemTra';
+}
+
+function resolveExportPath(fileName) {
+  const safeName = sanitizeExportFileName(fileName);
+  const resolved = path.resolve(EXPORTS_DIR, safeName);
+  const root = path.resolve(EXPORTS_DIR) + path.sep;
+  if (!resolved.startsWith(root)) {
+    throw new Error(`Tên file không hợp lệ: "${fileName}"`);
+  }
+  return resolved;
 }
 
 // Khởi tạo thư mục dữ liệu cần thiết (an toàn trên Read-Only Serverless như Vercel)
-for (const dir of [DATA_DIR, PROFILES_DIR]) {
+// GĐ3 (P1-10): tạo cả EXPORTS_DIR ngay khi khởi động.
+for (const dir of [DATA_DIR, PROFILES_DIR, EXPORTS_DIR]) {
   try {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
@@ -169,17 +201,31 @@ function requireAiRateLimit(req, res) {
 }
 
 // GĐ1 (P0-08): lược bỏ mọi trường đáp án khỏi câu hỏi ngân hàng.
+// GĐ3 bổ sung: lược cả `explanation` — trường này chứa câu "Đáp án đúng
+// là X ..." nên vẫn lộ đáp án dù các trường đáp án trực tiếp đã bị lược.
 function stripBankAnswers(q) {
   if (!q || typeof q !== 'object') return q;
   const out = { ...q };
   delete out.correctAnswer;
   delete out.answer;
+  delete out.explanation;
   if (Array.isArray(out.items)) {
     out.items = out.items.map(it => {
       const c = { ...it };
       delete c.isCorrect;
       delete c.correctAnswer;
       delete c.answer;
+      delete c.explanation;
+      return c;
+    });
+  }
+  if (Array.isArray(out.statements)) {
+    out.statements = out.statements.map(it => {
+      const c = { ...it };
+      delete c.isCorrect;
+      delete c.correctAnswer;
+      delete c.answer;
+      delete c.explanation;
       return c;
     });
   }
@@ -291,9 +337,13 @@ const requestHandler = async (req, res) => {
     if (req.method === 'GET' && pathname === '/api/health') {
       const cfg = loadAiConfig();
       // GĐ1 (P0-06): chỉ trả "đã cấu hình: có/không", KHÔNG trả ký tự nào của khóa.
+      // GĐ3 (P1-08, QĐ4): báo rõ chế độ giới thiệu để giao diện hiển thị
+      // "bản giới thiệu — dữ liệu không được lưu" thay vì hứa hẹn lưu trữ.
       sendJson(res, 200, {
         ok: true,
         app: 'AI RA ĐỀ KIỂM TRA TỰ ĐỘNG',
+        demoMode: isDemoMode(),
+        demoNotice: isDemoMode() ? DEMO_MODE_MESSAGE : undefined,
         aiConfig: {
           provider: cfg.provider,
           model: cfg.model,
@@ -439,6 +489,16 @@ const requestHandler = async (req, res) => {
       }
       const fileBuffer = fs.readFileSync(fullPath);
       const extracted = extractDocumentContent(safeName, fileBuffer, '');
+      // GĐ3 (P1-06): PDF quét/không trích được chữ bị từ chối ngay ở bước 1.
+      if (extracted.fileType === 'pdf' && extracted.pdfUnreadable) {
+        sendJson(res, 400, {
+          ok: false,
+          errorCode: 'PDF_UNREADABLE',
+          message: PDF_UNREADABLE_MESSAGE,
+          detail: extracted.unreadableReason || ''
+        });
+        return;
+      }
       sendJson(res, 200, {
         ok: true,
         fileName: extracted.fileName,
@@ -502,9 +562,15 @@ const requestHandler = async (req, res) => {
       const folderUrl = (bodyData.folderUrl || '').trim();
       try {
         const result = await syncGoogleDriveFolder(folderUrl);
-        sendJson(res, 200, result);
+        // GĐ3 (P1-09): thất bại trả về thất bại (kèm nguyên nhân), không
+        // ngụy trang thành thành công.
+        sendJson(res, result.ok ? 200 : 502, result);
       } catch (err) {
         console.error('[POST /api/drive-bank/sync] Error:', err.message);
+        if (err instanceof DemoModeError) {
+          sendJson(res, 503, { ok: false, errorCode: 'DEMO_MODE_READONLY', message: err.message });
+          return;
+        }
         sendJson(res, 400, { ok: false, message: 'Lỗi đồng bộ thư mục Google Drive: ' + err.message });
       }
       return;
@@ -524,6 +590,17 @@ const requestHandler = async (req, res) => {
       }
 
       const extracted = extractDocumentContent(fileName, fileBuffer, mimeType);
+      // GĐ3 (P1-06): PDF quét/không trích được chữ bị từ chối NGAY ở bước 1
+      // với đúng nguyên nhân — không trả chữ giữ chỗ như tài liệu thật.
+      if (extracted.fileType === 'pdf' && extracted.pdfUnreadable) {
+        sendJson(res, 400, {
+          ok: false,
+          errorCode: 'PDF_UNREADABLE',
+          message: PDF_UNREADABLE_MESSAGE,
+          detail: extracted.unreadableReason || ''
+        });
+        return;
+      }
       sendJson(res, 200, {
         ok: true,
         fileName: extracted.fileName,
@@ -546,6 +623,17 @@ const requestHandler = async (req, res) => {
       if (!requireAiRateLimit(req, res)) return;
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
+      // GĐ3 (P1-06): phòng vệ thêm — văn bản bước 1 là chữ giữ chỗ của PDF
+      // quét thì từ chối ngay với đúng nguyên nhân.
+      const step1Text = String(body.rawText || body.text || '');
+      if (step1Text.trim().startsWith('[Tài liệu PDF dạng ảnh quét')) {
+        sendJson(res, 400, {
+          ok: false,
+          errorCode: 'PDF_UNREADABLE',
+          message: PDF_UNREADABLE_MESSAGE
+        });
+        return;
+      }
       const result = await step1AnalyzeMaterial(body);
       sendJson(res, result.ok ? 200 : 400, result);
       return;
@@ -723,14 +811,31 @@ const requestHandler = async (req, res) => {
       };
       const fileName = `${modeNames[mode] || 'HoSo'}_${subj}_Lop${grade}.docx`;
 
-      // Lưu bản sao vào thư mục data/exports để phục vụ đối chiếu
+      // GĐ3 (P1-10): chuẩn hóa tên file, kiểm tra đường dẫn cuối cùng nằm
+      // trong thư mục exports; lưu bản sao bằng ghi nguyên tử; LỖI GHI PHẢI
+      // BÁO RA cho người dùng thay vì nuốt im lặng rồi vẫn gửi file.
+      let exportPath;
       try {
-        fs.writeFileSync(path.join(EXPORTS_DIR, fileName), docxBuffer);
-      } catch (_) {}
+        exportPath = resolveExportPath(fileName);
+        ensureDir(EXPORTS_DIR);
+        atomicWriteFile(exportPath, docxBuffer);
+      } catch (err) {
+        console.error('[POST /api/export-docx] Không lưu được bản sao vào exports:', err);
+        if (err instanceof DemoModeError) {
+          sendJson(res, 503, { ok: false, errorCode: 'DEMO_MODE_READONLY', message: err.message });
+          return;
+        }
+        sendJson(res, 500, {
+          ok: false,
+          errorCode: 'EXPORT_SAVE_FAILED',
+          message: 'Không lưu được bản sao file Word vào thư mục exports: ' + err.message
+        });
+        return;
+      }
 
       res.writeHead(200, {
         'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'Content-Disposition': `attachment; filename="${encodeURIComponent(fileName)}"`,
+        'Content-Disposition': `attachment; filename="${encodeURIComponent(path.basename(exportPath))}"`,
         'Content-Length': docxBuffer.length
       });
       res.end(docxBuffer);
@@ -915,7 +1020,9 @@ function extractOmrConfigFromProfile(profile = {}) {
       cleanProfile.omrConfig = extractOmrConfigFromProfile(cleanProfile);
 
       if (!fs.existsSync(PROFILES_DIR)) fs.mkdirSync(PROFILES_DIR, { recursive: true });
-      fs.writeFileSync(path.join(PROFILES_DIR, `${id}.json`), JSON.stringify(cleanProfile, null, 2), 'utf8');
+      // GĐ3 (P1-08): lưu hồ sơ đề bằng ghi nguyên tử; lỗi ghi lộ ra
+      // (requestHandler trả 500, hoặc 503 ở chế độ giới thiệu).
+      atomicWriteJson(path.join(PROFILES_DIR, `${id}.json`), cleanProfile);
       const deletedIds = readDeletedProfileIds();
       if (deletedIds.has(id)) {
         deletedIds.delete(id);
@@ -1398,33 +1505,52 @@ function extractOmrConfigFromProfile(profile = {}) {
       });
 
       // Tự động lưu snapshot ca chấm THẬT vào CSDL (KHÔNG trộn dữ liệu chấm thử mô phỏng vào CSDL chấm thật!)
+      // GĐ3 (P1-08): lỗi lưu phiên phải BÁO RÕ trong phản hồi (persistence),
+      // không nuốt im lặng rồi trả sessionId null như đã lưu.
       let savedSession = null;
+      let persistence = null;
       if (!isDemoSimulation) {
-        try {
-          savedSession = saveGradingSessionSnapshot({
-            gradedPapers: gradeResult.gradedPapers,
-            answerKeysByCode,
-            pointRules,
-            metadata: body.metadata || {},
-            examId: body.examId || '',
-            examTitle: body.examTitle || '',
-            className: targetClassName,
-            templateId: body.templateId || '',
-            overwriteSameExamClass: Boolean(body.overwriteSameExamClass && body.examId),
-            sessionId: body.sessionId || ''
-          });
-        } catch (_) {}
+        if (isDemoMode()) {
+          persistence = { saved: false, error: DEMO_MODE_MESSAGE };
+        } else {
+          try {
+            savedSession = saveGradingSessionSnapshot({
+              gradedPapers: gradeResult.gradedPapers,
+              answerKeysByCode,
+              pointRules,
+              metadata: body.metadata || {},
+              examId: body.examId || '',
+              examTitle: body.examTitle || '',
+              className: targetClassName,
+              templateId: body.templateId || '',
+              overwriteSameExamClass: Boolean(body.overwriteSameExamClass && body.examId),
+              sessionId: body.sessionId || ''
+            });
+            persistence = { saved: true, sessionId: savedSession.id };
+          } catch (err) {
+            console.error('[POST /api/omr/grade-batch] Không lưu được phiên chấm:', err);
+            persistence = { saved: false, error: err.message };
+          }
+        }
+      }
+      if (gradeResult.persistenceError) {
+        // Lỗi lưu CSDL tổng (omr_database.json) — phiên snapshot vẫn có
+        // thể đã lưu được; báo riêng để người dùng biết mà kiểm tra.
+        persistence = persistence || { saved: false };
+        persistence.dbError = gradeResult.persistenceError;
       }
 
       sendJson(res, 200, {
         ok: true,
         isDemoSimulation,
+        demoMode: isDemoMode(),
         ...gradeResult,
         answerKeysByCode,
         pointRules,
         roster,
         sessionId: savedSession ? savedSession.id : null,
         savedSession,
+        persistence,
         auditLogs: getAuditLogs()
       });
       return;
@@ -1455,7 +1581,22 @@ function extractOmrConfigFromProfile(profile = {}) {
       });
 
       if (sessionId) {
-        syncSessionPapers(sessionId, allPapers);
+        // GĐ3 (P1-08): lỗi ghi phiên hiệu chỉnh phải báo rõ, không nuốt.
+        try {
+          syncSessionPapers(sessionId, allPapers);
+        } catch (err) {
+          console.error('[POST /api/omr/update-paper] Không lưu được phiên đã hiệu chỉnh:', err);
+          if (err instanceof DemoModeError) {
+            sendJson(res, 503, { ok: false, errorCode: 'DEMO_MODE_READONLY', message: err.message });
+            return;
+          }
+          sendJson(res, 500, {
+            ok: false,
+            errorCode: 'SESSION_SAVE_FAILED',
+            message: 'Đã tính lại điểm nhưng không lưu được phiên chấm: ' + err.message
+          });
+          return;
+        }
       }
 
       const newStats = calculateBatchStatistics(allPapers);
@@ -1502,7 +1643,9 @@ function extractOmrConfigFromProfile(profile = {}) {
       const answerKeysByCode = body.answerKeysByCode || {};
       const pointRules = body.pointRules || {};
 
-      const syncRes = syncOmrDatabaseToGoogleDrive({ folderId, gradedPapers, metadata, answerKeysByCode, pointRules });
+      // GĐ3 (P1-09): đây là XUẤT BẢN SAO LƯU CỤC BỘ, không phải đồng bộ lên
+      // Google Drive — xem exportOmrDatabaseLocalBackup trong omr-engine.js.
+      const syncRes = exportOmrDatabaseLocalBackup({ folderId, gradedPapers, metadata, answerKeysByCode, pointRules });
       sendJson(res, 200, syncRes);
       return;
     }
@@ -1556,6 +1699,12 @@ function extractOmrConfigFromProfile(profile = {}) {
   } catch (err) {
     console.error('[requestHandler]', err);
     try {
+      // GĐ3 (P1-08): chế độ giới thiệu chặn ghi dữ liệu — trả 503 kèm
+      // thông báo rõ ràng thay vì lỗi máy chủ chung chung.
+      if (err instanceof DemoModeError) {
+        sendJson(res, 503, { ok: false, errorCode: 'DEMO_MODE_READONLY', message: err.message });
+        return;
+      }
       sendJson(res, 500, { ok: false, message: 'Lỗi máy chủ nội bộ.' });
     } catch (_) {}
   }

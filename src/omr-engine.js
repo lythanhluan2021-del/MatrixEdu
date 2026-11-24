@@ -9,6 +9,8 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+// GĐ3 (P1-08, QĐ4): ghi nguyên tử + sao lưu ngày + khóa ghi + chặn ghi demo.
+const { atomicWriteJson, atomicWriteFile } = require('./storage');
 
 // Đường dẫn lưu trữ CSDL cục bộ và đồng bộ (Hỗ trợ cả môi trường Serverless Read-Only như Vercel)
 const BUNDLED_DATA_DIR = path.join(__dirname, '..', 'data');
@@ -125,9 +127,14 @@ function logAuditRecord({ paperId, sbd, studentName, field, oldVal, newVal, reas
   };
 
   logs.unshift(rec);
+  // GĐ3 (P1-08): ghi nhật ký bằng ghi nguyên tử; lỗi ghi được log ra
+  // console thay vì nuốt im lặng (nhật ký là dữ liệu phụ nên không chặn
+  // luồng chấm chính khi ghi lỗi).
   try {
-    fs.writeFileSync(OMR_AUDIT_FILE, JSON.stringify(logs, null, 2), 'utf8');
-  } catch (_) { }
+    atomicWriteJson(OMR_AUDIT_FILE, logs);
+  } catch (err) {
+    console.error('Lỗi ghi nhật ký lưu vết (omr_audit_logs.json):', err.message);
+  }
   return rec;
 }
 
@@ -400,16 +407,14 @@ function readMultiClassRostersStore() {
  */
 function writeMultiClassRostersStore(store) {
   store.updatedAt = new Date().toISOString();
-  try {
-    fs.writeFileSync(OMR_ROSTERS_FILE, JSON.stringify(store, null, 2), 'utf8');
-  } catch (_) { }
+  // GĐ3 (P1-08): roster là dữ liệu chính — ghi nguyên tử, lỗi ghi lộ ra
+  // cho route xử lý thay vì nuốt im lặng.
+  atomicWriteJson(OMR_ROSTERS_FILE, store);
 
   const activeList = store.activeClass === '__ALL__'
     ? Object.values(store.classes || {}).flat()
     : (store.classes?.[store.activeClass] || Object.values(store.classes || {})[0] || []);
-  try {
-    fs.writeFileSync(OMR_ROSTER_FILE, JSON.stringify(activeList, null, 2), 'utf8');
-  } catch (_) { }
+  atomicWriteJson(OMR_ROSTER_FILE, activeList);
   return store;
 }
 
@@ -566,9 +571,8 @@ function saveActiveRoster(roster, options = {}) {
   }
 
   writeMultiClassRostersStore(store);
-  try {
-    fs.writeFileSync(OMR_ROSTER_FILE, JSON.stringify(normalized, null, 2), 'utf8');
-  } catch (_) { }
+  // GĐ3 (P1-08): ghi nguyên tử, lỗi ghi lộ ra cho route xử lý.
+  atomicWriteJson(OMR_ROSTER_FILE, normalized);
   return normalized;
 }
 
@@ -869,8 +873,15 @@ function gradeBatchPapers({ papers = [], answerKeysByCode = {}, pointRules = {},
   const stats = calculateBatchStatistics(gradedPapers);
 
   // Tự động lưu bản chụp phiên chấm vào ổ cứng (trừ chế độ Demo mô phỏng)
+  // GĐ3 (P1-08): lỗi lưu không được làm mất kết quả chấm đã tính — ghi nhận
+  // vào persistenceError để route báo rõ cho người dùng.
+  let persistenceError = null;
   if (persistDbState) {
-    saveDatabaseState(gradedPapers);
+    try {
+      saveDatabaseState(gradedPapers);
+    } catch (err) {
+      persistenceError = err.message;
+    }
   }
 
   return {
@@ -878,7 +889,8 @@ function gradeBatchPapers({ papers = [], answerKeysByCode = {}, pointRules = {},
     validCount,
     warningCount,
     gradedPapers,
-    statistics: stats
+    statistics: stats,
+    persistenceError
   };
 }
 
@@ -1170,10 +1182,14 @@ function updatePaperAndAudit({ paperId, updates, allPapers, answerKeysByCode, po
  * Lưu toàn bộ CSDL phiên chấm thi vào file
  */
 function saveDatabaseState(papers) {
+  // GĐ3 (P1-08): ghi nguyên tử; lỗi ghi lộ ra (kèm log) thay vì nuốt —
+  // nơi gọi quyết định xử lý (gradeBatchPapers ghi nhận persistenceError,
+  // snapshot thì báo về route).
   try {
-    fs.writeFileSync(OMR_DB_FILE, JSON.stringify(papers, null, 2), 'utf8');
+    atomicWriteJson(OMR_DB_FILE, papers);
   } catch (err) {
     console.error('Lỗi lưu CSDL chấm thi:', err);
+    throw err;
   }
 }
 
@@ -1257,10 +1273,10 @@ function saveGradingSessionSnapshot({
   };
 
   const sessionPath = path.join(OMR_SESSIONS_DIR, `${id}.json`);
-  try {
-    if (!fs.existsSync(OMR_SESSIONS_DIR)) fs.mkdirSync(OMR_SESSIONS_DIR, { recursive: true });
-    fs.writeFileSync(sessionPath, JSON.stringify(payload, null, 2), 'utf8');
-  } catch (_) { }
+  // GĐ3 (P1-08): ghi phiên chấm bằng ghi nguyên tử — tắt tiến trình đột
+  // ngột giữa chừng cũng không làm hỏng file phiên cũ. Lỗi ghi lộ ra để
+  // route grade-batch báo rõ (persistence) thay vì nuốt.
+  atomicWriteJson(sessionPath, payload);
   saveDatabaseState(cleanPapers);
   return {
     id,
@@ -1282,24 +1298,22 @@ function syncSessionPapers(sessionId, updatedPapers) {
   const safeId = String(sessionId).replace(/[^a-zA-Z0-9_\-]/g, '');
   const filePath = path.join(OMR_SESSIONS_DIR, `${safeId}.json`);
   if (!fs.existsSync(filePath)) return false;
-  try {
-    const raw = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    const cleanPapers = updatedPapers.map(p => {
-      const c = { ...p };
-      delete c.imageElement;
-      delete c.imageUrl;
-      return c;
-    });
-    raw.papers = cleanPapers;
-    raw.totalPapers = cleanPapers.length;
-    raw.warningCount = cleanPapers.filter(p => p.hasError || (p.warnings && p.warnings.length > 0)).length;
-    raw.statistics = calculateBatchStatistics(cleanPapers);
-    raw.savedAt = new Date().toISOString();
-    fs.writeFileSync(filePath, JSON.stringify(raw, null, 2), 'utf8');
-    return true;
-  } catch (_) {
-    return false;
-  }
+  // GĐ3 (P1-08): ghi nguyên tử; lỗi ghi lộ ra (ném lỗi) thay vì trả false
+  // im lặng — route update-paper sẽ báo rõ cho người dùng.
+  const raw = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  const cleanPapers = updatedPapers.map(p => {
+    const c = { ...p };
+    delete c.imageElement;
+    delete c.imageUrl;
+    return c;
+  });
+  raw.papers = cleanPapers;
+  raw.totalPapers = cleanPapers.length;
+  raw.warningCount = cleanPapers.filter(p => p.hasError || (p.warnings && p.warnings.length > 0)).length;
+  raw.statistics = calculateBatchStatistics(cleanPapers);
+  raw.savedAt = new Date().toISOString();
+  atomicWriteJson(filePath, raw);
+  return true;
 }
 
 /**
@@ -1652,11 +1666,16 @@ function exportAuditLogsToCsv() {
 }
 
 /**
- * Đóng gói CSDL Chấm thi & Nhật ký Lưu vết:
- * - Lưu snapshot trên máy chủ (`data/omr_database` hoặc `/tmp/matrixedu_data` trên Vercel)
- * - Trả về nội dung JSON/CSV thật để trình duyệt tải xuống / đẩy vào Google Drive của giáo viên (KHÔNG giả vờ đã upload Drive khi không có OAuth token)
+ * GĐ3 (P1-09): XUẤT BẢN SAO LƯU CỤC BỘ của CSDL chấm thi (đổi tên từ
+ * syncOmrDatabaseToGoogleDrive — tên cũ gây hiểu nhầm là "đồng bộ lên
+ * Google Drive" trong khi hàm chỉ ghi file cục bộ và trả nội dung để
+ * trình duyệt tải về. Không có OAuth nên không thể upload thật lên Drive;
+ * giáo viên tải file về rồi đưa lên Drive thủ công).
+ * - Lưu snapshot vào thư mục CSDL (`data/omr_database` hoặc /tmp trên Vercel)
+ * - Trả về nội dung JSON/CSV thật để trình duyệt tải xuống.
+ * - KHÔNG bao giờ báo là đã upload lên Drive (remoteDriveUploaded: false).
  */
-function syncOmrDatabaseToGoogleDrive({ folderId = '', gradedPapers = [], metadata = {}, answerKeysByCode = {}, pointRules = {} }) {
+function exportOmrDatabaseLocalBackup({ folderId = '', gradedPapers = [], metadata = {}, answerKeysByCode = {}, pointRules = {} }) {
   const now = new Date();
   const dateStr = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
   const subjectSlug = (metadata.subject || 'De_Thi').replace(/\s+/g, '_');
@@ -1694,49 +1713,46 @@ function syncOmrDatabaseToGoogleDrive({ folderId = '', gradedPapers = [], metada
   };
   const dbFilePath = path.join(DATA_DIR, dbFileName);
   const dbJsonStr = JSON.stringify(dbPayload, null, 2);
-  let savedLocalFiles = false;
-  try {
-    fs.writeFileSync(dbFilePath, dbJsonStr, 'utf8');
-    savedLocalFiles = true;
-  } catch (_) { }
+  // GĐ3 (P1-08): ghi nguyên tử; lỗi ghi lộ ra thay vì nuốt.
+  atomicWriteFile(dbFilePath, Buffer.from(dbJsonStr, 'utf8'));
 
   // 2. Tạo file Bảng điểm CSV
   const csvFileName = `BANG_DIEM_${subjectSlug}${gradeSlug ? '_Lop' + gradeSlug : ''}_${dateStr}.csv`;
   const csvContent = exportRosterToCsv(gradedPapers, metadata);
   const csvFilePath = path.join(DATA_DIR, csvFileName);
-  try {
-    fs.writeFileSync(csvFilePath, csvContent, 'utf8');
-  } catch (_) { }
+  atomicWriteFile(csvFilePath, Buffer.from(csvContent, 'utf8'));
 
   // 3. Tạo file Nhật ký lưu vết CSV
   const auditFileName = `NHAT_KY_LUU_VET_CHAM_THI_${dateStr}.csv`;
   const auditContent = exportAuditLogsToCsv();
   const auditFilePath = path.join(DATA_DIR, auditFileName);
-  try {
-    fs.writeFileSync(auditFilePath, auditContent, 'utf8');
-  } catch (_) { }
+  atomicWriteFile(auditFilePath, Buffer.from(auditContent, 'utf8'));
 
   const isVercelEphemeral = Boolean(process.env.VERCEL);
   const msg = isVercelEphemeral
-    ? `Đã lưu tạm trên Vercel (/tmp) và xuất tệp CSDL (${dbFileName}, ${csvFileName}). Hệ thống không tự upload lên Google Drive cá nhân (không có OAuth) — trình duyệt sẽ tự tải về bản sao để bạn lưu vào Drive.`
-    : `Đã lưu CSDL & bảng điểm vào máy chủ (${DATA_DIR}) và chuẩn bị tệp tải về (${csvFileName}). Lưu ý: upload tự động lên Google Drive cá nhân yêu cầu tải tệp lên thư mục Drive của bạn.`;
+    ? `Đã xuất bản sao lưu cục bộ (tạm trên Vercel /tmp) gồm CSDL (${dbFileName}, ${csvFileName}). CHƯA upload lên Google Drive — hệ thống không tự upload lên Drive cá nhân (không có OAuth); hãy tải các tệp về rồi đưa lên Drive thủ công.`
+    : `Đã xuất bản sao lưu cục bộ vào máy chủ (${DATA_DIR}) và chuẩn bị tệp tải về (${csvFileName}). CHƯA upload lên Google Drive — hãy tải các tệp về rồi đưa lên thư mục Drive của bạn.`;
 
   return {
     ok: true,
-    syncMode: isVercelEphemeral ? 'ephemeral_server_plus_download' : 'local_disk_plus_download',
+    syncMode: 'local_backup_export',
     isVercelEphemeral,
     remoteDriveUploaded: false,
     sessionId: savedSnap.id,
     message: msg,
     folderId: cleanFolderId,
     files: [
-      { name: dbFileName, path: dbFilePath, size: savedLocalFiles && fs.existsSync(dbFilePath) ? fs.statSync(dbFilePath).size : Buffer.byteLength(dbJsonStr, 'utf8'), content: dbJsonStr, mime: 'application/json' },
+      { name: dbFileName, path: dbFilePath, size: fs.existsSync(dbFilePath) ? fs.statSync(dbFilePath).size : Buffer.byteLength(dbJsonStr, 'utf8'), content: dbJsonStr, mime: 'application/json' },
       { name: csvFileName, path: csvFilePath, size: fs.existsSync(csvFilePath) ? fs.statSync(csvFilePath).size : Buffer.byteLength(csvContent, 'utf8'), content: csvContent, mime: 'text/csv;charset=utf-8' },
       { name: auditFileName, path: auditFilePath, size: fs.existsSync(auditFilePath) ? fs.statSync(auditFilePath).size : Buffer.byteLength(auditContent, 'utf8'), content: auditContent, mime: 'text/csv;charset=utf-8' }
     ],
     syncedAt: now.toISOString()
   };
 }
+
+// Tên cũ, giữ lại để tương thích — KHÔNG dùng trong code mới.
+// (Đã đổi tên ở trên vì tên cũ gây hiểu nhầm là đã đồng bộ lên Google Drive.)
+const syncOmrDatabaseToGoogleDrive = exportOmrDatabaseLocalBackup;
 
 function clearAllRosters() {
   writeMultiClassRostersStore({ activeClass: '', classes: {} });
@@ -1771,5 +1787,7 @@ module.exports = {
   exportRosterToCsv,
   exportMultiClassGradeCsv,
   exportAuditLogsToCsv,
+  exportOmrDatabaseLocalBackup,
+  // Tên cũ, chỉ để tương thích — code mới dùng exportOmrDatabaseLocalBackup.
   syncOmrDatabaseToGoogleDrive
 };
