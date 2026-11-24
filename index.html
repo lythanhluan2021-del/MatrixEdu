@@ -2125,6 +2125,35 @@
       #step-1 .meta-grid { grid-template-columns: 1fr; }
       #step-1 .grid-2 { grid-template-columns: 1fr; }
     }
+    /* ================================================================== */
+    /* GĐ5e (UI-22): THIẾT KẾ LẠI MỤC 1.2 — CÂN ĐỐI                     */
+    /* Vấn đề cũ: .grid-2 chia 1.2 thành 2 cột — cột trái chỉ có ô tải  */
+    /* lên cao + khoảng trắng chết (do #step-1 .grid-2 > * min-height:   */
+    /* 220px), cột phải dồn đặc 8 tầng (URL, tên thư mục, pill, 3 ô     */
+    /* thống kê, 2 thông điệp trống trùng ý, 2 nút). Bố cục mới:        */
+    /*  - Hàng nguồn: 2 ô song song cùng chiều cao (Ma trận gốc |        */
+    /*    Ngân hàng Drive), mỗi ô 1 nhãn + 1 hàng điều khiển; ô tải lên */
+    /*    là dải ngang, co giãn lấp đầy chiều cao ô (flex: 1).          */
+    /*  - Báo cáo ngân hàng full-width: dải trạng thái 1 dòng (tên thư   */
+    /*    mục ellipsis + pill), 3 ô thống kê trên cùng một hàng, rồi    */
+    /*    CHỈ 1 thông điệp trạng thái + hàng nút hành động căn phải.     */
+    /*  - 2 thông điệp "ngân hàng đang trống" gộp thành 1 (xem           */
+    /*    renderDriveBankReport). Mọi id/handler giữ nguyên.             */
+    /* ================================================================== */
+    .bank-sources { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+    .bank-source-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .bank-source-label { font-weight: 700; font-size: 0.81rem; color: var(--mx-blue-hover); }
+    .upload-zone-row { display: flex; align-items: center; gap: 12px; text-align: left; padding: 12px 16px; flex: 1; }
+    .upload-zone-row .upload-zone-ic { flex-shrink: 0; display: inline-flex; color: var(--mx-blue-hover); }
+    .bank-source-row { display: flex; gap: 8px; }
+    .bank-source-row input { min-width: 0; }
+    .bank-source-hint { font-size: 0.75rem; color: var(--mx-ink-2); }
+    #gdrive-scan-report { margin-top: 16px; }
+    .bank-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 8px; }
+    @media (max-width: 768px) {
+      .bank-sources { grid-template-columns: 1fr; }
+      .bank-stats { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 
@@ -2429,33 +2458,34 @@
 
               <div id="workspace-files-bar" style="margin-bottom: 10px"></div>
 
-              <div class="grid-2">
-                <!-- TẢI FILE MA TRẬN -->
-                <div>
-                  <div class="upload-zone" onclick="document.getElementById('file-upload-input').click()" style="padding: 18px">
+              <!-- GĐ5e (UI-22): hai nguồn dữ liệu song song, cùng chiều cao -->
+              <div class="bank-sources">
+                <!-- Nguồn 1: file ma trận gốc -->
+                <div class="drive-panel">
+                  <div class="bank-source-head">
+                    <span class="bank-source-label">Ma trận gốc</span>
+                  </div>
+                  <div class="upload-zone upload-zone-row" onclick="document.getElementById('file-upload-input').click()">
                     <input type="file" id="file-upload-input" style="display: none"
                       accept=".docx,.pdf,.txt,.md,.png,.jpg,.jpeg" onchange="handleFileUpload(event)" />
-                    <div style="font-size: 1.7rem; margin-bottom: 4px"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-                    <div style="font-weight: 700; color: var(--primary)">Tải lên Ma trận gốc</div><div style="font-size: 0.8rem; color: var(--mx-ink-2); font-weight: 600">.docx, .pdf</div>
+                    <span class="upload-zone-ic"><svg style="width: 20px; height: 20px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+                    <span class="upload-zone-text">
+                      <div style="font-weight: 700; color: var(--primary)">Tải lên Ma trận gốc</div>
+                      <div style="font-size: 0.8rem; color: var(--mx-ink-2); font-weight: 600">.docx, .pdf</div>
+                    </span>
                   </div>
                   <div id="uploaded-files-list" style="margin-top: 8px; font-size: 0.84rem"></div>
                 </div>
 
-                <!-- KẾT NỐI GOOGLE DRIVE -->
+                <!-- Nguồn 2: thư mục Google Drive -->
                 <div class="drive-panel">
-                  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px">
-                    <div style="display: flex; align-items: center; gap: 6px">
-                      <span style="font-size: 1.15rem"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg></span>
-                      <strong style="color: var(--mx-blue-hover); font-size: 0.94rem">Ngân hàng Drive</strong>
-                    </div>
-                    <div style="display: flex; gap: 6px">
-                      <span id="gdrive-status-badge" class="badge"
-                        style="background: var(--mx-surface); color: var(--mx-ink-2); font-size: 0.75rem">○ Chưa đồng bộ</span>
-                      <span id="gdrive-count-badge" class="badge" style="background: var(--mx-blue); color: var(--mx-surface); font-size: 0.75rem">0 câu</span>
-                    </div>
+                  <div class="bank-source-head">
+                    <span class="bank-source-label">Ngân hàng Drive</span>
+                    <span id="gdrive-status-badge" class="badge"
+                      style="background: var(--mx-surface); color: var(--mx-ink-2); font-size: 0.75rem">○ Chưa đồng bộ</span>
+                    <span id="gdrive-count-badge" class="badge" style="background: var(--mx-blue); color: var(--mx-surface); font-size: 0.75rem">0 câu</span>
                   </div>
-
-                  <div style="display: flex; gap: 8px">
+                  <div class="bank-source-row">
                     <input type="text" id="gdrive-folder-url"
                       value="https://drive.google.com/drive/folders/1MbQqovIMutXQP-qDRqehjAeRZzVqojF-?usp=sharing"
                       placeholder="Link thư mục Google Drive..."
@@ -2463,15 +2493,17 @@
                     <button class="btn btn-primary btn-sm" onclick="connectAndScanGoogleDriveBank()"
                       style="white-space: nowrap; padding: 7px 14px"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Quét</button>
                   </div>
-
-                  <div id="gdrive-scan-report"
-                    style="background: rgba(255,255,255,0.62); border: 1px solid rgba(255,255,255,0.85); border-radius: 10px; padding: 8px 10px">
-                    <div style="text-align: center; color: var(--mx-ink-2); padding: 4px; font-size: 0.82rem">Đang quét Drive...</div>
-                  </div>
-
-                  <textarea id="scope-raw-text" style="display: none"></textarea>
+                  <div class="bank-source-hint">Quét để đồng bộ câu hỏi từ thư mục Drive về ngân hàng.</div>
                 </div>
               </div>
+
+              <!-- GĐ5e (UI-22): báo cáo ngân hàng full-width -->
+              <div id="gdrive-scan-report"
+                style="background: rgba(255,255,255,0.62); border: 1px solid rgba(255,255,255,0.85); border-radius: 10px; padding: 8px 10px">
+                <div style="text-align: center; color: var(--mx-ink-2); padding: 4px; font-size: 0.82rem">Đang quét Drive...</div>
+              </div>
+
+              <textarea id="scope-raw-text" style="display: none"></textarea>
 
               <div id="detected-matrix-preview-box" style="display: none; margin-top: 14px"></div>
             </div>
@@ -8367,9 +8399,12 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       const commitHtml = total > 0
         ? `<div style="background: var(--mx-ok-soft); border: 1px solid var(--mx-line); border-radius: 6px; padding: 6px 10px; font-size: 0.78rem; color: var(--mx-ok); margin-bottom: 8px; display: flex; align-items: center; gap: 6px"><span><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span><strong>Cam kết nguồn gốc:</strong> Đề thi được bốc tách 100% từ các file Word trong thư mục Drive trên. Tuyệt đối không tự bịa đặt kiến thức, không tìm kiếm web gây mất kiểm soát.</span></div>`
         : `<div style="background: var(--mx-amber-soft); border: 1px solid var(--mx-amber); border-radius: 6px; padding: 6px 10px; font-size: 0.78rem; color: var(--mx-warn); margin-bottom: 8px"><strong>Ngân hàng đang trống:</strong> chưa có câu hỏi nào — hãy thêm file Word (.docx) vào thư mục Drive rồi bấm Quét.</div>`;
+      // GĐ5e (UI-22): gộp 2 thông điệp trống thành 1 — hộp hổ phách
+      // trên đã nói đủ ý và hành động cần làm, dòng tổng khi trống
+      // để rỗng thay vì lặp lại ý đó.
       const totalLineHtml = total > 0
         ? `Tổng cộng: <strong style="color: var(--mx-blue)">${total} câu hỏi</strong> đã sẵn sàng tạo <strong>4 đề thi</strong> bám sát ma trận`
-        : `Ngân hàng đang trống — chưa có câu hỏi nào để tạo đề.`;
+        : '';
       const gdriveCount = document.getElementById('gdrive-count-badge');
       if (gdriveCount) gdriveCount.textContent = `${total} câu`;
 
@@ -8378,14 +8413,14 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       reportBox.innerHTML = `
         <div style="font-size: 0.86rem; color: var(--mx-dark)">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; border-bottom: 1px solid var(--mx-blue-soft); padding-bottom: 6px">
-            <div style="min-width: 0; overflow: hidden; text-overflow: ellipsis">
+            <div style="min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">
               <span style="font-weight: 700; color: var(--mx-blue-hover); font-size: 0.92rem"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Thư mục Google Drive:</span>
               <span style="font-weight: 600; color: var(--mx-dark); font-size: 0.9rem"> ${escapeHtml(folderName)}</span>
             </div>
             ${syncPillHtml}
           </div>
 
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 8px">
+          <div class="bank-stats">
             <div style="background: var(--mx-surface); border: 1px solid var(--mx-line-soft); border-radius: 6px; padding: 6px 8px; text-align: center">
               <div style="font-size: 0.75rem; color: var(--mx-ink-2); font-weight: 700">PHẦN I: TRẮC NGHIỆM (MCQ)</div>
               <div style="font-size: 1.18rem; font-weight: 800; color: var(--mx-blue)">${mcq} <span style="font-size: 0.75rem; font-weight: 500">câu</span></div>
