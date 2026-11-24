@@ -36,9 +36,11 @@ check('UI-22 GĐ5e override layer exists after GĐ5d layer',
   gd5eIdx > gd5dIdx && gd5dIdx > 0, `gd5d=${gd5dIdx} gd5e=${gd5eIdx}`);
 
 // --- 2. Sources row: two equal panels, upload + Drive side by side ---
-check('UI-22 .bank-sources grid exists (2 minmax(0,1fr) columns, stretch)',
-  /\.bank-sources\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)[^}]*align-items:\s*stretch;/.test(gd5eCss),
-  'missing .bank-sources 2-col stretch rule');
+// GĐ5g (UI-24) supersedes: align-items: stretch kéo dài ô tải lên gây
+// khoảng trắng chết — nay align-items: start, ô cao vừa nội dung thật.
+check('UI-22 [GĐ5g thay thế] .bank-sources grid 2 cột, align-items: start',
+  /\.bank-sources\s*\{\s*display:\s*grid;\s*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)[^}]*align-items:\s*start;/.test(gd5eCss),
+  'missing .bank-sources 2-col start rule');
 check('UI-22 .bank-sources has no min-height dead space',
   !/\.bank-sources\s*\{[^}]*min-height/.test(gd5eCss),
   '.bank-sources still forces a min-height');
@@ -66,10 +68,13 @@ check('UI-22 no .grid-2 left inside step 1',
 check('UI-22 upload zone is a horizontal strip (upload-zone-row)',
   s12.includes('class="upload-zone upload-zone-row"'),
   'upload zone is not the horizontal strip');
-check('UI-22 upload strip stretches to fill its cell (flex:1, no fixed tall padding)',
-  /\.upload-zone-row\s*\{[^}]*display:\s*flex;[^}]*flex:\s*1;/.test(gd5eCss)
+// GĐ5g (UI-24) supersedes: flex:1 kéo dài vùng nét đứt gây khoảng trắng
+// chết — nay bỏ flex:1, vùng tải lên cao vừa nội dung; danh sách file rỗng ẩn.
+check('UI-22 [GĐ5g thay thế] upload strip không còn flex:1 kéo dài',
+  /\.upload-zone-row\s*\{[^}]*display:\s*flex;/.test(gd5eCss)
+  && !/\.upload-zone-row\s*\{[^}]*flex:\s*1;/.test(gd5eCss)
   && !s12.includes('class="upload-zone upload-zone-row" onclick="document.getElementById(\'file-upload-input\').click()" style="padding: 18px"'),
-  'upload strip does not stretch or still has the tall 18px padding');
+  'upload strip vẫn flex:1 hoặc còn padding 18px');
 check('UI-22 upload label stays short ("Tải lên Ma trận gốc" + separate .docx line)',
   html.includes('>Tải lên Ma trận gốc</div>')
   && !html.includes('Tải lên Ma trận gốc (.docx, .pdf)'),
@@ -135,9 +140,11 @@ check('UI-22 "Tra cứu Ngân hàng" action still in report template',
   'bank lookup button missing from report');
 
 // --- 9. No regression on the honest-sync gates (GĐ5c) ---
-check('UI-22 empty scan pill "ĐÃ QUÉT: 0 TỆP — NGÂN HÀNG TRỐNG" kept',
-  html.includes('ĐÃ QUÉT: 0 TỆP — NGÂN HÀNG TRỐNG'),
-  'empty-scan pill text lost');
+// GĐ5g (UI-24) supersedes: pill trùng ý đã bỏ; dải vàng là thông báo duy nhất.
+check('UI-22 [GĐ5g thay thế] pill trống đã bỏ, dải vàng là thông báo duy nhất',
+  !html.includes('ĐÃ QUÉT: 0 TỆP — NGÂN HÀNG TRỐNG</span>')
+  && html.includes('Ngân hàng đang trống:'),
+  'pill trùng ý còn sót hoặc mất dải vàng');
 check('UI-22 sync pill still nowrap / no-shrink',
   renderBank.includes('white-space: nowrap; flex-shrink: 0'),
   'sync pill can wrap/overlap again');

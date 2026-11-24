@@ -70,12 +70,15 @@ const step1 = html.slice(html.indexOf('<section id="step-1"'), html.indexOf('<se
 check('UI-13 1.1 uses .meta-grid (2 columns) instead of .grid-4',
   step1.includes('class="meta-grid"') && !step1.includes('class="grid-4"'),
   'grid-4 still present in step 1 or meta-grid missing');
-check('UI-13 .meta-grid is 2 columns',
-  /#step-1 \.meta-grid\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*1fr\)/.test(html),
-  'missing 2-column meta-grid rule');
-check('UI-13 1.1 labels do not wrap',
-  /#step-1 \.meta-grid \.form-group label\s*\{[^}]*white-space:\s*nowrap/.test(html),
-  'missing label nowrap rule');
+// GĐ5g (UI-28) supersedes: quy tắc gốc 2 cột cũ của GĐ5c đã bị xóa —
+  // nay đúng MỘT quy tắc gốc 4 cột (GĐ5d), media 1280px về 2 cột.
+check('UI-13 [GĐ5g thay thế] .meta-grid gốc là 4 cột, không còn 2 cột',
+  /#step-1 \.meta-grid\s*\{[^}]*grid-template-columns:\s*repeat\(4,\s*minmax\(0,\s*1fr\)\)/.test(html)
+  && !/#step-1 \.meta-grid\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*1fr\)/.test(html),
+  'missing 4-column meta-grid rule / stale 2-column rule remains');
+check('UI-13 [GĐ5g thay thế] 1.1 labels xuống dòng bình thường (không nowrap/ellipsis)',
+  /#step-1 \.meta-grid \.form-group label\s*\{[^}]*white-space:\s*normal/.test(html),
+  'missing label normal-wrap rule');
 check('UI-13 1.3 table headers do not break vertically',
   /#units-table th\s*\{[^}]*white-space:\s*nowrap/.test(html),
   'missing #units-table th nowrap rule');
@@ -103,9 +106,10 @@ const renderBank = html.slice(html.indexOf('function renderDriveBankReport'));
 check('UI-13 sync badge only "Đã đồng bộ" when there is data',
   renderBank.includes('setGdriveSyncBadge(hasBankData)') && !renderBank.includes('setGdriveSyncBadge(true);'),
   'unconditional setGdriveSyncBadge(true) still present');
-check('UI-13 empty scan reports "ĐÃ QUÉT: 0 TỆP" instead of "ĐỒNG BỘ 0 TỆP"',
-  html.includes('ĐÃ QUÉT: 0 TỆP — NGÂN HÀNG TRỐNG'),
-  'missing empty-scan pill text');
+// GĐ5g (UI-24) supersedes: pill trùng ý đã bỏ; chỉ giữ dải vàng có hướng dẫn.
+check('UI-13 [GĐ5g thay thế] ngân hàng trống chỉ còn MỘT thông báo (dải vàng)',
+  html.includes('Ngân hàng đang trống:') && !html.includes('ĐÃ QUÉT: 0 TỆP — NGÂN HÀNG TRỐNG</span>'),
+  'pill trùng ý còn sót hoặc mất dải vàng');
 check('UI-13 "Cam kết nguồn gốc" only shown when bank has questions',
   renderBank.includes('total > 0') && renderBank.includes('Ngân hàng đang trống:'),
   'Cam kết box not conditional / empty-bank message missing');
@@ -131,16 +135,13 @@ check('UI-14 pctApply(10 total, 3/3) = 40', pctApplyFixed(10, 3, 3) === 40);
 check('UI-14 pctOfTen(0) = 0, pctOfTen(10) = 100',
   pctOfTen(0) === 0 && pctOfTen(10) === 100 && pctOfTen(5) === 50);
 
-// 6. Step navigation: first click on "Bước 2" navigates.
+// GĐ5g (UI-25) supersedes: nút chuyển bước CHỈ chuyển trang — không tự
+// phân tích, không toast giải thích; hướng dẫn trống ở Bước 2 đã đủ.
 const confirmFn = html.slice(html.indexOf('function confirmStep1AndGoStep2'));
-const innerIfIdx = confirmFn.indexOf('if (!appState.units', confirmFn.indexOf('await runStep1Analysis'));
-const innerBranch = confirmFn.slice(innerIfIdx, confirmFn.indexOf('}', innerIfIdx));
-check('UI-14 first click navigates even with no units (goToStep before return)',
-  innerBranch.includes('goToStep(2)') && innerBranch.indexOf('goToStep(2)') < innerBranch.indexOf('return;'),
-  'empty-units branch still returns without navigating');
-check('UI-14 empty-units branch explains why (toast)',
-  confirmFn.includes("showToast('Chưa có đơn vị kiến thức"),
-  'missing explanatory toast in empty-units branch');
+const confirmBody = confirmFn.slice(0, confirmFn.indexOf('\n    }')).replace(/\/\/[^\n]*/g, '');
+check('UI-14 [GĐ5g thay thế] confirmStep1AndGoStep2 chỉ chuyển trang (không phân tích/toast)',
+  confirmBody.includes('goToStep(2)') && !/runStep1Analysis|runStep2GenerateMatrix|showToast|await/.test(confirmBody),
+  'nút Bước 2 vẫn tự phân tích hoặc hiện toast');
 
 // 7. Step 5 render + step 7 message + duplicate save.
 check('UI-14 goToStep(5) calls the existing render function',

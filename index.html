@@ -1375,16 +1375,21 @@
       outline: none !important;
     }
 
-    /* Toast Notification */
+    /* Toast Notification — GĐ5g (UI-26): vùng toast nằm TRONG luồng trang
+       (đầu .content-container), xếp phải; khi có toast, nội dung bước bị
+       đẩy xuống thay vì bị toast fixed che mất nút. Trước đây toast
+       position:fixed góc trên-phải (top:76px) che mất nút "Sinh đề /
+       Trộn mã đề / Bản in A4" ở đầu Bước 4 trong vài giây. Rỗng thì
+       không chiếm chỗ (:empty). Tối đa 3 toast, tự biến mất sau 4,2 giây
+       (xem showToast). */
     #toast-container {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 1200;
       display: flex;
       flex-direction: column;
+      align-items: flex-end;
       gap: 8px;
     }
+
+    #toast-container:empty { display: none; }
 
     .toast {
       background: var(--mx-dark);
@@ -2047,7 +2052,7 @@
     .btn .mx-ic { width: 16px; height: 16px; }
     .mx-ic-lg { width: 28px; height: 28px; }
     .card-title .mx-ic, .modal-title .mx-ic, .section-title .mx-ic { width: 20px; height: 20px; }
-    .autosave-badge { font-size: var(--fs-xs); color: rgba(255, 255, 255, 0.75); display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 4px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); }
+    .autosave-badge { font-size: var(--fs-xs); color: rgba(255, 255, 255, 0.75); display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 4px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); white-space: nowrap; }
     .autosave-dot { color: var(--mx-ok); }
     .restore-banner { background: var(--mx-blue-soft); border-bottom: 1px solid var(--mx-line); padding: 7px 18px; font-size: var(--fs-sm); color: var(--mx-blue-hover); align-items: center; justify-content: space-between; z-index: 95; }
     .brand-name { color: #fff; font-weight: 900; letter-spacing: 0.3px; }
@@ -2078,9 +2083,13 @@
     /* GĐ5c (UI-13): mục 1.1 luôn 2 cột (nhãn trên, ô nhập dưới), mỗi ô   */
     /* tối thiểu đủ rộng để giá trị hiện đủ; nhãn không gãy dòng. Dưới    */
     /* 768px xếp 1 cột. Tiêu đề bảng 1.3 không gãy dọc.                   */
-    #step-1 .meta-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    /* GĐ5g (UI-28): quy tắc lưới 2 cột ở đây đã XÓA — lưới gốc của 1.1  */
+    /* giờ là 4 cột (rule GĐ5d phía dưới, repeat(4, minmax(0, 1fr)));     */
+    /* giữ 2 cột làm gốc khiến cascade mập mờ (cùng specificity, rule    */
+    /* sau thắng nhưng trình duyệt kiểm tra ở ≤1280 CSS px vẫn thấy 2     */
+    /* cột). Chỉ còn MỘT rule gốc 4 cột + media query 1280px → 2 cột,    */
+    /* 768px → 1 cột nên không còn mập mờ.                                */
     #step-1 .meta-grid .form-group { min-width: 0; }
-    #step-1 .meta-grid .form-group label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     #step-1 .meta-grid .form-group input, #step-1 .meta-grid .form-group select { width: 100%; min-width: 0; }
     #units-table th { white-space: nowrap; }
     @media (max-width: 768px) {
@@ -2107,7 +2116,10 @@
     #step-1 .meta-grid .form-group label { white-space: normal; overflow: visible; text-overflow: clip; }
     /* UI-17 Toast lên góc trên-phải (dưới header) để không che nút     */
     /* footer bước; giới hạn 3 toast cùng lúc (xem showToast).          */
-    #toast-container { position: fixed; top: 76px; bottom: auto; right: 20px; z-index: 1200; }
+    /* GĐ5g (UI-26): rule fixed top:76px này đã XÓA — toast fixed vẫn    */
+    /* che nút ở đầu Bước 4. Toast giờ nằm trong luồng trang (đầu        */
+    /* .content-container, xem rule #toast-container ở trên): có toast   */
+    /* thì nội dung bị đẩy xuống, không nút nào bị che.                  */
     /* UI-20 Bảng Bước 2: thanh cuộn ngang nhìn thấy được ở cỡ hẹp.     */
     .matrix-table-wrap { scrollbar-width: thin; scrollbar-color: var(--mx-blue) var(--mx-line-soft); }
     .matrix-table-wrap::-webkit-scrollbar { height: 10px; }
@@ -2135,10 +2147,18 @@
     /*  - 2 thông điệp "ngân hàng đang trống" gộp thành 1 (xem           */
     /*    renderDriveBankReport). Mọi id/handler giữ nguyên.             */
     /* ================================================================== */
-    .bank-sources { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+    /* GĐ5g (UI-24): bỏ align-items: stretch — hai ô nguồn ôm sát nội
+       dung thật của mình thay vì bị kéo dãn bằng ô cao hơn, nên không
+       còn khoảng trắng chết dưới vùng tải lên / dưới ô Drive. Ô tải lên
+       cũng không còn flex:1 kéo dãn vùng nét đứt. Hai ô có thể lệch
+       nhau vài px chiều cao, đó là bố cục cố ý, không phải lỗi. */
+    .bank-sources { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
     .bank-source-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .bank-source-label { font-weight: 700; font-size: 0.81rem; color: var(--mx-blue-hover); }
-    .upload-zone-row { display: flex; align-items: center; gap: 12px; text-align: left; padding: 12px 16px; flex: 1; }
+    .upload-zone-row { display: flex; align-items: center; gap: 12px; text-align: left; padding: 12px 16px; }
+    /* GĐ5g (UI-24): danh sách file đã tải rỗng thì không chiếm chỗ
+       (trước đây div trống vẫn giữ margin-top: 8px dưới vùng tải lên). */
+    #uploaded-files-list:empty { display: none; }
     .upload-zone-row .upload-zone-ic { flex-shrink: 0; display: inline-flex; color: var(--mx-blue-hover); }
     .bank-source-row { display: flex; gap: 8px; }
     .bank-source-row input { min-width: 0; }
@@ -2197,11 +2217,17 @@
           <span class="header-status"><span id="ai-status-badge" class="badge badge-amber"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> AI chưa cấu hình khóa</span>
           <span id="session-autosave-badge"
             class="autosave-badge"
-            title="Tự động sao lưu">Tự động sao lưu <span id="autosave-dot" class="autosave-dot">●</span></span> <span
+            title="Tự động sao lưu">Tự động sao lưu <span id="autosave-dot" class="autosave-dot">●</span> <span
               id="autosave-text">Chưa đồng bộ</span></span>
           <button class="btn btn-ghost-light btn-sm" onclick="openProfilesModal()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Hồ sơ</button>
           <button class="btn btn-ghost-light btn-sm" onclick="openAiConfigModal()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> AI</button>
-          <button id="auth-header-btn" class="btn btn-ghost-light btn-sm" onclick="openAuthModal()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Đăng nhập</button>
+          <!-- GĐ5g (UI-29): nhãn khởi đầu trung tính "Quản trị" — nhãn chính
+               xác (Đăng nhập / Đặt mật khẩu / Quản trị viên • Đăng xuất)
+               do updateAuthHeaderBtn() đặt sau khi /api/auth/status trả
+               về. Trước đây HTML ghi sẵn "Đăng nhập" rồi JS lật thành
+               "Đặt mật khẩu" khi máy chủ chưa đặt mật khẩu, gây cảm giác
+               nút tự đổi sau khi đóng modal. -->
+          <button id="auth-header-btn" class="btn btn-ghost-light btn-sm" onclick="openAuthModal()" title="Tài khoản quản trị"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Quản trị</button>
           <button class="btn btn-primary btn-sm" onclick="saveCurrentProfile()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Lưu</button>
         </div>
       </div>
@@ -2343,6 +2369,11 @@
       <!-- RIGHT MAIN VIEWPORT -->
       <main class="main-viewport" id="main-viewport">
         <div class="content-container">
+          <!-- GĐ5g (UI-26): vùng toast nằm trong luồng trang tại đây — có
+               toast thì nội dung bước bị đẩy xuống, không nút nào bị che
+               (trước đây toast fixed ở body che nút đầu Bước 4). -->
+
+          <div id="toast-container"></div>
 
 
           <!-- ================================================================== -->
@@ -2515,10 +2546,19 @@
               <div id="gdrive-scan-report"
                 style="background: rgba(255,255,255,0.62); border: 1px solid rgba(255,255,255,0.85); border-radius: 10px; padding: 8px 10px">
                 <div style="text-align: center; color: var(--mx-ink-2); padding: 4px; font-size: 0.82rem">Đang quét Drive...</div>
-
-              <!-- GĐ5f (UI-23): ô thông báo tải/phân tích chuyển từ thẻ 1.3 sang đây để phản hồi hiện ngay tại Bước 2, nơi diễn ra tải lên/phân tích -->
-              <div id="step1-status-msg"></div>
               </div>
+
+              <!-- GĐ5g (UI-24): ô thông báo tải/phân tích PHẢI đứng NGOÀI
+                   #gdrive-scan-report (em ruột của nó, không phải con).
+                   GĐ5f đặt nó BÊN TRONG #gdrive-scan-report nên mỗi lần
+                   renderDriveBankReport() / connectAndScanGoogleDriveBank()
+                   gán reportBox.innerHTML là ô này bị xóa khỏi DOM; sau đó
+                   runStep1Analysis() gọi msgBox.innerHTML trên null và nổ
+                   toast "Lỗi phân tích tài liệu: Cannot set properties of
+                   null (setting 'innerHTML')" mỗi khi vào Bước 2 bằng nút
+                   chuyển bước (đường sidebar không gọi phân tích nên không
+                   thấy lỗi). Đặt ngoài thì render báo cáo không đụng tới. -->
+              <div id="step1-status-msg"></div>
 
               <textarea id="scope-raw-text" style="display: none"></textarea>
 
@@ -2548,7 +2588,7 @@
                   <button type="button" class="btn btn-secondary btn-sm" onclick="runStep2GenerateMatrix()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Cân bằng 10đ</button>
                   <button type="button" class="btn btn-sm"
                     onclick="downloadMatrixAndSpecDocx(this)"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Xuất Word</button>
-                  <button type="button" class="btn btn-primary btn-sm" onclick="confirmStep2AndGoStep4()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="8" width="14" height="10" rx="2"/><line x1="12" y1="8" x2="12" y2="4"/><circle cx="12" cy="3" r="1"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg> Sinh đề →</button>
+                  <button type="button" class="btn btn-primary btn-sm" onclick="confirmStep2AndGoStep4()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="8" width="14" height="10" rx="2"/><line x1="12" y1="8" x2="12" y2="4"/><circle cx="12" cy="3" r="1"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg> Bước 4 →</button>
                 </div>
               </div>
 
@@ -2604,7 +2644,7 @@
                 <button class="btn btn-secondary" onclick="goToStep(1)">← Bước 1</button>
                 <div style="display: flex; gap: 8px">
                   <button class="btn btn-secondary" onclick="confirmStep2AndGoStep3()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Bước 3: Đặc tả →</button>
-                  <button class="btn btn-primary btn-lg" onclick="confirmStep2AndGoStep4()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="8" width="14" height="10" rx="2"/><line x1="12" y1="8" x2="12" y2="4"/><circle cx="12" cy="3" r="1"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg> Bước 4: Sinh đề →</button>
+                  <button class="btn btn-primary btn-lg" onclick="confirmStep2AndGoStep4()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="8" width="14" height="10" rx="2"/><line x1="12" y1="8" x2="12" y2="4"/><circle cx="12" cy="3" r="1"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg> Bước 4: Soạn đề →</button>
                 </div>
               </div>
             </div>
@@ -2670,7 +2710,7 @@
               <div class="step-footer">
                 <button class="btn btn-secondary" onclick="goToStep(2)">← Bước 2</button>
                 <button class="btn btn-primary btn-lg" onclick="confirmStep3AndGoStep4()">
-                  Bước 4: Sinh đề →
+                  Bước 4: Soạn đề →
                 </button>
               </div>
             </div>
@@ -2711,6 +2751,14 @@
                 </div>
               </div>
 
+              <!-- GĐ5g (UI-24): thẻ quy trình Bước 4 — trạng thái thật theo
+                   dữ liệu hiện có (số câu hỏi / số mã đề / đã lưu kho),
+                   do renderStep4ProcessCard() điền mỗi khi vào Bước 4.
+                   Bước 4 vốn chỉ có 1 thẻ ngắn nên trang hụt ~60% chiều
+                   cao; thẻ này giúp giáo viên biết mình đang ở đâu trong
+                   quy trình mà không bịa thêm nội dung. -->
+              <div id="step4-process-card" style="margin-bottom: 14px"></div>
+
               <div id="passage-editor-box" style="display: none; margin-bottom: 14px">
                 <div class="grid-2">
                   <div class="form-group">
@@ -2742,6 +2790,10 @@
           <!-- BƯỚC 5: ĐÁP ÁN & ĐỐI SOÁT QA                                       -->
           <!-- ================================================================== -->
           <section id="step-5" class="step-section glass-zone-step-5" style="display: none">
+            <!-- GĐ5g (UI-24): tổng quan đề ở đầu Bước 5 — số liệu thật
+                 (số câu hỏi / số mã đề / trạng thái QA / đã lưu kho),
+                 do renderStep5Overview() điền mỗi khi vào Bước 5. -->
+            <div id="step5-overview" style="margin-bottom: 14px"></div>
             <div class="card hover-zone-amber">
               <div class="card-header">
                 <div class="card-title"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> 5.1. Đối soát QA</div>
@@ -3341,15 +3393,13 @@
                   </div>
 
                   <!-- FLOATING ZOOM CONTROLS -->
+                  <!-- GĐ5g (UI-24): hai nút xoay 180°/90° trong cụm nổi này
+                       đã XÓA — trùng với cặp nút cùng chức năng ở thanh
+                       công cụ trên (omr-flip-180-btn / omr-rotate-90-btn,
+                       có chú thích "& chấm lại"). Chỉ giữ một cặp; cụm
+                       nổi chỉ còn thu/phóng. -->
                   <div
                     style="position: absolute; bottom: 14px; right: 16px; background: rgba(9,19,37,0.88); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.18); border-radius: 24px; padding: 3px 6px; display: flex; align-items: center; gap: 4px; box-shadow: 0 4px 14px rgba(0,0,0,0.35); z-index: 15">
-                    <button onclick="rotateActiveOmrPaper(180)"
-                      style="padding: 2px 8px; border-radius: 12px; border: 1px solid var(--mx-amber); font-size: 0.75rem; font-weight: 700; cursor: pointer"
-                      title="Lật 180°"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> 180°</button>
-                    <button onclick="rotateActiveOmrPaper(90)"
-                      style="padding: 2px 7px; border-radius: 12px; border: 1px solid rgba(245,158,11,0.5); font-size: 0.75rem; font-weight: 600; cursor: pointer"
-                      title="Xoay 90°">⤵ 90°</button>
-                    <div style="width: 1px; height: 14px; background: rgba(255,255,255,0.2); margin: 0 2px"></div>
                     <button onclick="omrZoomOut()"
                       style="width: 26px; height: 26px; border-radius: 50%; border: none; font-size: 0.95rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center"
                       title="Thu nhỏ">−</button>
@@ -3379,7 +3429,13 @@
               style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 12px">
               <button class="btn btn-secondary" onclick="goToStep(6)">← Bước 6</button>
               <div style="display: flex; gap: 8px">
-                <button class="btn btn-secondary" onclick="exportOmrRosterCsv()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Xuất Excel</button>
+                <!-- GĐ5g (UI-24): nút "Xuất Excel" ở footer này đã XÓA —
+                     trùng với 2 nút cùng chức năng còn lại (thanh đầu
+                     Bước 7, luôn nhìn thấy; và trong tab "Đã chấm & Báo
+                     cáo", ngay cạnh bảng điểm cần xuất). Không gian làm
+                     việc Bước 7 cao cố định theo viewport nên footer
+                     luôn nhìn thấy, việc lặp đầu/cuối trang không giúp
+                     ích gì thêm. -->
                 <button class="btn btn-primary" onclick="syncOmrToGoogleDrive()"
                   style="font-weight: 700">
                   <svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg> Lưu Drive
@@ -4298,7 +4354,10 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
           <span style="font-size: 1.4rem"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg></span>
           <div>
             <div class="card-title" id="modal-drive-bank-title" style="color: var(--mx-surface); font-size: 1.08rem">NGÂN HÀNG CÂU HỎI GOOGLE DRIVE (TIN HỌC THPT)</div>
-            <div id="modal-drive-bank-subtitle" style="font-size: 0.78rem; opacity: 0.9">Bóc tách từ thư mục Google Drive: 1MbQqovIMutXQP-qDRqehjAeRZzVqojF-</div>
+            <!-- GĐ5g (UI-27): phụ đề chỉ ghi tên thư mục, KHÔNG phô ID thư
+                 mục Drive (trước đây ghi nguyên ID 1MbQqovIMutXQP...).
+                 JS (loadDriveBankData) sẽ ghi đè bằng tên thư mục thật. -->
+            <div id="modal-drive-bank-subtitle" style="font-size: 0.78rem; opacity: 0.9">Bóc tách từ thư mục Google Drive</div>
           </div>
         </div>
         <button class="btn btn-ghost-light btn-sm" onclick="closeModal('modalDriveBank')"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Đóng</button>
@@ -4470,8 +4529,6 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       </div>
     </div>
   </div>
-
-  <div id="toast-container"></div>
 
   <script>
     // ========================================================================
@@ -5009,7 +5066,8 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         renderSpecTable();
 
         const msgBox = document.getElementById('step1-status-msg');
-        msgBox.innerHTML = `<div class="alert alert-success"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> <strong>Đã nhận dạng thành công Bảng Ma trận & Bảng Đặc tả từ file "${escapeHtml(data.fileName)}"!</strong> Gồm <strong>${appState.matrix.rows.length} đơn vị kiến thức</strong>, tổng điểm <strong>10,0 điểm</strong> (${escapeHtml(appState.metadata.schoolName || '')} — ${escapeHtml(appState.metadata.subject || '')} Lớp ${escapeHtml(appState.metadata.grade || '')}).</div>`;
+        // GĐ5g (UI-24): phòng vệ null (cùng lỗi gốc như runStep1Analysis).
+        if (msgBox) msgBox.innerHTML = `<div class="alert alert-success"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> <strong>Đã nhận dạng thành công Bảng Ma trận & Bảng Đặc tả từ file "${escapeHtml(data.fileName)}"!</strong> Gồm <strong>${appState.matrix.rows.length} đơn vị kiến thức</strong>, tổng điểm <strong>10,0 điểm</strong> (${escapeHtml(appState.metadata.schoolName || '')} — ${escapeHtml(appState.metadata.subject || '')} Lớp ${escapeHtml(appState.metadata.grade || '')}).</div>`;
 
         // Tự động sinh sẵn bộ câu hỏi bám sát Ma trận vừa nạp để giáo viên có thể xem ở mọi bước
         await runStep4GenerateExam();
@@ -5084,6 +5142,8 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
 
     function renderDetectedMatrixPreview(fileName, matrix) {
       const box = document.getElementById('detected-matrix-preview-box');
+      // GĐ5g (UI-24): phòng vệ null — cùng họ lỗi với #step1-status-msg.
+      if (!box) return;
       if (!matrix || !Array.isArray(matrix.rows) || matrix.rows.length === 0) {
         box.style.display = 'none';
         return;
@@ -5340,7 +5400,10 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         });
         const data = await res.json();
         if (!data.ok) {
-          msgBox.innerHTML = `<div class="alert alert-danger"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ${escapeHtml(data.message)}</div>`;
+          // GĐ5g (UI-24): phòng vệ null — msgBox từng bị xóa khỏi DOM khi
+          // còn nằm trong #gdrive-scan-report (xem ghi chú ở HTML); nếu
+          // phần tử không còn thì chỉ báo toast, không nổ lỗi innerHTML.
+          if (msgBox) msgBox.innerHTML = `<div class="alert alert-danger"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ${escapeHtml(data.message)}</div>`;
           showToast(data.message, 'warn');
           return;
         }
@@ -5362,7 +5425,8 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
           }
           renderDetectedMatrixPreview(appState.uploadedDocs[0]?.fileName || 'Tài liệu tải lên', appState.matrix);
         }
-        msgBox.innerHTML = `<div class="alert alert-success"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> <strong>${escapeHtml(data.aiStatus?.notice || '')}</strong> Đã bóc tách được <strong>${appState.units.length} đơn vị kiến thức</strong> theo ${escapeHtml(data.analysis.regulation)}.</div>`;
+        // GĐ5g (UI-24): phòng vệ null như nhánh lỗi ở trên.
+        if (msgBox) msgBox.innerHTML = `<div class="alert alert-success"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> <strong>${escapeHtml(data.aiStatus?.notice || '')}</strong> Đã bóc tách được <strong>${appState.units.length} đơn vị kiến thức</strong> theo ${escapeHtml(data.analysis.regulation)}.</div>`;
         renderUnitsTable();
       } catch (err) {
         showToast('Lỗi phân tích tài liệu: ' + err.message, 'error');
@@ -5439,20 +5503,16 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       renderUnitsTable();
     }
 
-    async function confirmStep1AndGoStep2() {
-      syncMetadataFromInputs();
-      if (!appState.units || appState.units.length === 0) {
-        await runStep1Analysis();
-        if (!appState.units || appState.units.length === 0) {
-        // GĐ5c (UI-14): trước đây nhánh này `return` lặng lẽ nên lần bấm
-        // đầu tiên vào "Bước 2: Ma trận →" không chuyển bước (người dùng
-        // tưởng nút hỏng). Nay vẫn sang Bước 2 và giải thích rõ lý do.
-        showToast('Chưa có đơn vị kiến thức — đã chuyển sang Bước 2. Hãy tải ma trận và bấm "Phân tích", hoặc nhập ma trận thủ công.', 'warn');
-        goToStep(2);
-        return;
-      }
-      }
-      await runStep2GenerateMatrix();
+    // GĐ5g (UI-25): nút chuyển bước CHỈ chuyển trang — không tự chạy phân
+    // tích / lập ma trận / tạo đặc tả / sinh đề. Trước đây hàm này gọi
+    // runStep1Analysis() (khi chưa có đơn vị) hoặc runStep2GenerateMatrix()
+    // nên vào Bước 2 bằng nút thì tự hiện toast lỗi phân tích / toast
+    // thành công, còn vào bằng sidebar thì không — hai đường vào không
+    // nhất quán. Muốn phân tích thì bấm nút "Phân tích" ở mục 1.2,
+    // muốn lập ma trận thì bấm "Cân bằng 10đ" ở Bước 2. (GĐ5c từng thêm
+    // toast giải thích khi chưa có đơn vị — nay bỏ luôn vì nút không
+    // còn làm gì ngoài chuyển trang; hướng dẫn trống ở Bước 2 đã đủ.)
+    function confirmStep1AndGoStep2() {
       goToStep(2);
     }
 
@@ -5561,11 +5621,11 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       }
     }
 
-    async function confirmStep2AndGoStep4() {
-      if (!appState.specification || appState.specification.length === 0) {
-        await runStep3GenerateSpec();
-      }
-      await runStep4GenerateExam();
+    // GĐ5g (UI-25): nút chuyển bước CHỈ chuyển trang (xem ghi chú ở
+    // confirmStep1AndGoStep2). Trước đây hàm này tự tạo đặc tả (nếu thiếu)
+    // rồi tự sinh đề — cùng lỗi như confirmStep3AndGoStep4. Đã đổi nhãn
+    // nút thành "Bước 4: Soạn đề →" cho đúng hành vi mới.
+    function confirmStep2AndGoStep4() {
       goToStep(4);
     }
 
@@ -6196,8 +6256,10 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       renderMatrixTable();
     }
 
-    async function confirmStep2AndGoStep3() {
-      await runStep3GenerateSpec();
+    // GĐ5g (UI-25): nút chuyển bước CHỈ chuyển trang (xem ghi chú ở
+    // confirmStep1AndGoStep2). Trước đây hàm này tự tạo đặc tả rồi mới
+    // sang Bước 3. Muốn tạo đặc tả thì bấm nút "Đồng bộ Ma trận" ở Bước 3.
+    function confirmStep2AndGoStep3() {
       goToStep(3);
     }
 
@@ -6267,8 +6329,12 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       }).join('');
     }
 
-    async function confirmStep3AndGoStep4() {
-      await runStep4GenerateExam();
+    // GĐ5g (UI-25): nút chuyển bước CHỈ chuyển trang (xem ghi chú ở
+    // confirmStep1AndGoStep2). Trước đây hàm này tự sinh đề rồi mới sang
+    // Bước 4 nên chưa bấm "Sinh đề" đã hiện toast "Đang sinh..." kèm
+    // toast "Yêu cầu đăng nhập quản trị." khi chưa đăng nhập. Muốn sinh
+    // đề thì bấm nút "Sinh đề" trong Bước 4.
+    function confirmStep3AndGoStep4() {
       goToStep(4);
     }
 
@@ -6340,7 +6406,30 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       return v ? v.questions : appState.questions;
     }
 
+    // GĐ5g (UI-24): thẻ quy trình Bước 4 — trạng thái thật theo dữ liệu
+    // hiện có, giúp trang bớt hụt khi chưa có câu hỏi. Không bịa số liệu:
+    // mọi con số đều đọc từ appState (questions / variants / savedExamProfileId).
+    function renderStep4ProcessCard() {
+      const el = document.getElementById('step4-process-card');
+      if (!el) return;
+      const qCount = (appState.questions || []).length;
+      const vCount = (appState.variants || []).length;
+      const isSaved = Boolean(appState.savedExamProfileId && appState.id && appState.savedExamProfileId === appState.id);
+      const steps = [
+        { done: qCount > 0, title: '1. Sinh đề', text: qCount > 0 ? `Đã có ${qCount} câu hỏi` : 'Chưa có câu hỏi — bấm nút "Sinh đề" ở trên' },
+        { done: vCount > 1, title: '2. Trộn mã đề', text: vCount > 1 ? `Đã có ${vCount} mã đề` : (qCount > 0 ? 'Chưa trộn — bấm nút "Trộn mã đề" ở trên' : 'Chờ sinh đề xong mới trộn được') },
+        { done: isSaved, title: '3. Lưu kho', text: isSaved ? 'Đã lưu vào Kho Đề' : 'Chưa lưu — bấm "Lưu kho" ở cuối trang' }
+      ];
+      el.innerHTML = `<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+        ${steps.map(s => `<div style="background: var(--mx-surface); border: 1px solid var(--mx-line-soft); border-radius: 8px; padding: 10px 12px">
+          <div style="font-weight: 700; font-size: 0.86rem; color: ${s.done ? 'var(--mx-ok)' : 'var(--mx-blue-hover)'}">${s.done ? '<svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> ' : ''}${escapeHtml(s.title)}</div>
+          <div style="font-size: 0.82rem; color: var(--mx-ink-2); margin-top: 2px">${escapeHtml(s.text)}</div>
+        </div>`).join('')}
+      </div>`;
+    }
+
     function renderExamStep() {
+      renderStep4ProcessCard();
       // Variant Tabs
       const tabsEl = document.getElementById('variant-tabs');
       const variants = appState.variants && appState.variants.length > 0
@@ -7048,8 +7137,12 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       container.innerHTML = html;
     }
 
-    async function confirmStep4AndGoStep5() {
-      await runQaValidationNow();
+    // GĐ5g (UI-25): nút chuyển bước CHỈ chuyển trang (xem ghi chú ở
+    // confirmStep1AndGoStep2). Trước đây hàm này tự chạy kiểm định QA
+    // (gọi /api/validate-qa) rồi mới sang Bước 5. Muốn kiểm định lại thì
+    // bấm nút "Kiểm tra lại" ở mục 5.1; báo cáo QA đã có từ lúc sinh đề
+    // vẫn hiển thị bình thường khi sang Bước 5.
+    function confirmStep4AndGoStep5() {
       goToStep(5);
     }
 
@@ -7082,7 +7175,26 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       }
     }
 
+    // GĐ5g (UI-24): tổng quan đề ở đầu Bước 5 — số liệu thật theo dữ liệu
+    // hiện có (questions / variants / qaReport / savedExamProfileId).
+    function renderStep5Overview() {
+      const el = document.getElementById('step5-overview');
+      if (!el) return;
+      const qCount = (appState.questions || []).length;
+      const vCount = (appState.variants || []).length;
+      const qa = appState.qaReport;
+      const qaText = !qa ? 'Chưa kiểm định' : (qa.isValid ? `Đạt chuẩn (QA ${qa.score !== undefined ? qa.score : 100}/100)` : `Cần hiệu chỉnh (QA ${qa.score !== undefined ? qa.score : 0}/100)`);
+      const isSaved = Boolean(appState.savedExamProfileId && appState.id && appState.savedExamProfileId === appState.id);
+      el.innerHTML = `<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+        <div style="background: var(--mx-surface); border: 1px solid var(--mx-line-soft); border-radius: 8px; padding: 10px 12px; text-align: center"><div style="font-size: 1.15rem; font-weight: 800; color: var(--mx-blue)">${qCount}</div><div style="font-size: 0.78rem; color: var(--mx-ink-2); font-weight: 700">CÂU HỎI</div></div>
+        <div style="background: var(--mx-surface); border: 1px solid var(--mx-line-soft); border-radius: 8px; padding: 10px 12px; text-align: center"><div style="font-size: 1.15rem; font-weight: 800; color: var(--mx-blue)">${vCount}</div><div style="font-size: 0.78rem; color: var(--mx-ink-2); font-weight: 700">MÃ ĐỀ</div></div>
+        <div style="background: var(--mx-surface); border: 1px solid var(--mx-line-soft); border-radius: 8px; padding: 10px 12px; text-align: center"><div style="font-size: 0.9rem; font-weight: 800; color: ${qa && qa.isValid ? 'var(--mx-ok)' : 'var(--mx-blue)'}">${escapeHtml(qaText)}</div><div style="font-size: 0.78rem; color: var(--mx-ink-2); font-weight: 700">KIỂM ĐỊNH QA</div></div>
+        <div style="background: var(--mx-surface); border: 1px solid var(--mx-line-soft); border-radius: 8px; padding: 10px 12px; text-align: center"><div style="font-size: 0.9rem; font-weight: 800; color: ${isSaved ? 'var(--mx-ok)' : 'var(--mx-blue)'}">${isSaved ? 'Đã lưu kho' : 'Chưa lưu kho'}</div><div style="font-size: 0.78rem; color: var(--mx-ink-2); font-weight: 700">KHO ĐỀ</div></div>
+      </div>`;
+    }
+
     function renderAnswerAndQaStep() {
+      renderStep5Overview();
       const qaEl = document.getElementById('qa-report-container');
       const ansEl = document.getElementById('answer-key-container');
       const qa = appState.qaReport;
@@ -7522,7 +7634,15 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       }
     }
 
-    function openAuthModal() {
+    // GĐ5g (UI-29): nếu trạng thái đăng nhập chưa biết (fetch
+    // /api/auth/status chưa về) thì đợi nó về rồi mới chọn chế độ modal
+    // (đặt mật khẩu mới / đăng nhập) — trước đây modal mở ngay với
+    // __mxAuthSetup === undefined nên luôn rơi vào chế độ "đặt mật khẩu",
+    // sai khi máy chủ đã có mật khẩu.
+    async function openAuthModal() {
+      if (window.__mxAuthSetup === undefined) {
+        await checkAuthStatus();
+      }
       const setupMode = !window.__mxAuthSetup;
       document.getElementById('auth-setup-hint').hidden = !setupMode;
       document.getElementById('auth-confirm-group').hidden = !setupMode;
@@ -8401,6 +8521,22 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       }
     }
 
+    // GĐ5g (UI-27): tên ngân hàng hiển thị gọn, không lặp ngoặc.
+    // folderName từ Drive/API thường là "Ngân hàng câu hỏi Tin học THPT
+    // (Google Drive)" — nếu ghép nguyên vào "NGÂN HÀNG CÂU HỎI GOOGLE
+    // DRIVE (...)" hay "Ngân hàng Google Drive của Thầy/Cô (...)" sẽ
+    // thành ngoặc lồng ngoặc. Rút thành phần môn ("Tin học THPT") rồi
+    // ghép lại một lần duy nhất.
+    function shortBankName(folderName) {
+      let s = String(folderName || '').trim();
+      s = s.replace(/\s*\(\s*Google Drive\s*\)\s*$/i, '').replace(/\s*-\s*Google Drive\s*$/i, '').trim();
+      s = s.replace(/^Ngân hàng câu hỏi\s*/i, '').trim();
+      return s || 'Tin học THPT';
+    }
+    function displayBankName(folderName) {
+      return 'Ngân hàng câu hỏi ' + shortBankName(folderName);
+    }
+
     function renderDriveBankReport(data) {
       const reportBox = document.getElementById('gdrive-scan-report');
 
@@ -8411,22 +8547,29 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       const files = data.filesCount || (data.files ? data.files.length : 0);
       const underlinePts = data.underlinePercent !== undefined ? data.underlinePercent : 100;
       const folderUrl = data.folderUrl || (document.getElementById('gdrive-folder-url')?.value) || 'https://drive.google.com/drive/folders/1MbQqovIMutXQP-qDRqehjAeRZzVqojF-?usp=sharing';
-      const folderName = data.folderName || 'Ngân hàng câu hỏi Google Drive';
+      const folderName = displayBankName(data.folderName);
 
       // Cập nhật header button & step 4 badge
       const headerBtn = document.getElementById('header-drive-bank-btn');
       if (headerBtn) headerBtn.textContent = ` Ngân hàng Google Drive (${total} câu)`;
+      // GĐ5g (UI-27): tên hiển thị gọn, không lặp ngoặc — trước đây
+      // "Ngân hàng Google Drive của Thầy/Cô (0 câu hỏi gốc - Ngân hàng
+      // câu hỏi Tin học THPT (Google Drive))".
       const step4Badge = document.getElementById('step4-drive-bank-badge');
-      if (step4Badge) step4Badge.textContent = `Ngân hàng Google Drive của Thầy/Cô (${total} câu hỏi gốc - ${folderName})`;
+      if (step4Badge) step4Badge.textContent = `${folderName} (${total} câu hỏi gốc)`;
 
       // GĐ5c (UI-13): chỉ báo "Đã đồng bộ" khi lần quét vừa rồi thành công
       // VÀ có dữ liệu; quét xong mà 0 tệp/0 câu thì vẫn là "Chưa đồng bộ"
       // (ngân hàng trống) — không dùng chữ "Đã đồng bộ" gây hiểu lầm.
       const hasBankData = files > 0 || total > 0;
       setGdriveSyncBadge(hasBankData);
+      // GĐ5g (UI-24): chỉ giữ MỘT thông báo khi ngân hàng trống — dải vàng
+      // thông báo trống (có hướng dẫn hành động). Trước đây còn
+      // thêm pill "ĐÃ QUÉT: 0 TỆP — NGÂN HÀNG TRỐNG" nói cùng một ý.
+      // Khi có dữ liệu thì pill xanh "ĐÃ ĐỒNG BỘ N TỆP WORD" vẫn giữ.
       const syncPillHtml = hasBankData
         ? `<span class="badge" style="background: var(--mx-ok); color: var(--mx-surface); font-size: 0.75rem; white-space: nowrap; flex-shrink: 0"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> ĐÃ ĐỒNG BỘ ${files} TỆP WORD</span>`
-        : `<span class="badge" style="background: var(--mx-bg); color: var(--mx-ink-2); border: 1px solid var(--mx-line); font-size: 0.75rem; white-space: nowrap; flex-shrink: 0">ĐÃ QUÉT: 0 TỆP — NGÂN HÀNG TRỐNG</span>`;
+        : '';
       const commitHtml = total > 0
         ? `<div style="background: var(--mx-ok-soft); border: 1px solid var(--mx-line); border-radius: 6px; padding: 6px 10px; font-size: 0.78rem; color: var(--mx-ok); margin-bottom: 8px; display: flex; align-items: center; gap: 6px"><span><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span><strong>Cam kết nguồn gốc:</strong> Đề thi được bốc tách 100% từ các file Word trong thư mục Drive trên. Tuyệt đối không tự bịa đặt kiến thức, không tìm kiếm web gây mất kiểm soát.</span></div>`
         : `<div style="background: var(--mx-amber-soft); border: 1px solid var(--mx-amber); border-radius: 6px; padding: 6px 10px; font-size: 0.78rem; color: var(--mx-warn); margin-bottom: 8px"><strong>Ngân hàng đang trống:</strong> chưa có câu hỏi nào — hãy thêm file Word (.docx) vào thư mục Drive rồi bấm Quét.</div>`;
@@ -8522,9 +8665,14 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
               data.files.map(f => `<option value="${escapeHtml(f)}">${escapeHtml(f)}</option>`).join('');
           }
           const modalTitle = document.getElementById('modal-drive-bank-title');
-          if (modalTitle) modalTitle.textContent = `NGÂN HÀNG CÂU HỎI GOOGLE DRIVE (${(data.folderName || 'TIN HỌC THPT').toUpperCase()})`;
+          // GĐ5g (UI-27): tên gọn, không lặp ngoặc — trước đây
+          // "NGÂN HÀNG CÂU HỎI GOOGLE DRIVE (NGÂN HÀNG CÂU HỎI TIN HỌC
+          // THPT (GOOGLE DRIVE))".
+          if (modalTitle) modalTitle.textContent = `NGÂN HÀNG CÂU HỎI (${shortBankName(data.folderName).toUpperCase()})`;
           const modalSub = document.getElementById('modal-drive-bank-subtitle');
-          if (modalSub) modalSub.textContent = `Bóc tách từ thư mục: ${data.folderName || 'Google Drive'} (${data.folderId || ''}) — ${data.totalQuestions || 0} câu`;
+          // GĐ5g (UI-27): phụ đề chỉ ghi tên thư mục + số câu, KHÔNG phô
+          // ID thư mục Drive (trước đây ghi nguyên ID trong ngoặc).
+          if (modalSub) modalSub.textContent = `Bóc tách từ thư mục: ${displayBankName(data.folderName)} — ${data.totalQuestions || 0} câu`;
         }
 
         // GĐ4 (P2-01): limit 200 → 2000 (trần máy chủ cũng nâng 500 → 2000).
@@ -8597,7 +8745,10 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       if (countLabel) countLabel.textContent = filtered.length;
 
       if (filtered.length === 0) {
-        container.innerHTML = `<div style="text-align: center; padding: 30px; color: var(--mx-line)">Không tìm thấy câu hỏi phù hợp với bộ lọc hiện tại.</div>`;
+        // GĐ5g (UI-24): màu chữ tương phản đủ đọc (var(--mx-ink-2) #5B6B82
+        // ≈ 5,5:1 trên nền trắng, đạt WCAG AA). Trước đây dùng
+        // var(--mx-line) #CBD5E1 (≈ 1,6:1) nên chữ xám nhạt, khó đọc.
+        container.innerHTML = `<div style="text-align: center; padding: 30px; color: var(--mx-ink-2)">Không tìm thấy câu hỏi phù hợp với bộ lọc hiện tại.</div>`;
         return;
       }
 
@@ -9551,7 +9702,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
           step1Status.style.borderColor = 'var(--mx-line)';
         } else {
           step1Status.textContent = 'Chưa có';
-          step1Status.title = 'Chọn đề đã lưu hoặc bấm [Nạp Đ/Á] ở Bước 1';
+          step1Status.title = 'Chọn đề đã lưu hoặc bấm [Nạp Đ/Á] ở Bước 7';
           step1Status.style.background = 'var(--mx-amber-soft)';
           step1Status.style.color = 'var(--mx-warn)';
           step1Status.style.borderColor = 'var(--mx-amber-soft)';
@@ -9596,7 +9747,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         if (banner) {
           const codePreview = keyCodes.slice(0, 4).join(', ') + (keyCodes.length > 4 ? '...' : '');
           if (!hasKeys) {
-            banner.textContent = 'Cần nạp Đáp án (B1)';
+            banner.textContent = 'Cần nạp Đáp án (Bước 7)';
             banner.style.color = 'var(--mx-warn)';
           } else if (appState.omr.isDemoMode && gradedCount > 0) {
             banner.textContent = 'Chế độ Demo (không lưu CSDL)';
@@ -9826,7 +9977,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
           idBanner.style.borderColor = 'var(--mx-line)';
         } else if (info.codes.length === 0 && (!appState.questions || appState.questions.length === 0)) {
           idText.innerHTML = `<svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> <b>Đang chấm:</b> Chưa chọn đề / đáp án`;
-          idBanner.title = 'Chọn đề đã lưu từ danh sách hoặc bấm [Nạp Đ/Á] ở Bước 1';
+          idBanner.title = 'Chọn đề đã lưu từ danh sách hoặc bấm [Nạp Đ/Á] ở Bước 7';
           idBanner.style.background = 'var(--mx-surface)';
           idBanner.style.borderColor = 'var(--mx-line-soft)';
         } else {
@@ -11402,7 +11553,7 @@ Phần III:
       if (!useSample) {
         const keyCodes = Object.keys(appState.omr.answerKeysByCode || {});
         if ((!Array.isArray(appState.omr.papers) || appState.omr.papers.length === 0) && keyCodes.length === 0) {
-          showToast(' Chưa có Đáp án đề thi để đối chiếu! Hãy soạn đề ở Bước 4, Chọn Đề đã lưu hoặc bấm [ Nạp Đ/Á].', 'warning');
+          showToast(' Chưa có Đáp án đề thi để đối chiếu! Hãy soạn đề ở Bước 4, Chọn Đề đã lưu hoặc bấm [ Nạp Đ/Á] ở Bước 7.', 'warning');
           return;
         }
         if (!Array.isArray(appState.omr.papers) || appState.omr.papers.length === 0) {
@@ -11496,7 +11647,7 @@ Phần III:
             noAnswerKeyLoaded: true,
             warnings: [
               ...(p.warnings || []).filter(w => w.type !== 'NO_ANSWER_KEY'),
-              { type: 'NO_ANSWER_KEY', message: 'Chưa nạp Đáp án đề thi để đối chiếu — hãy chọn đề hoặc bấm [ Nạp Đ/Á] ở Bước 1!' }
+              { type: 'NO_ANSWER_KEY', message: 'Chưa nạp Đáp án đề thi để đối chiếu — hãy chọn đề hoặc bấm [ Nạp Đ/Á] ở Bước 7!' }
             ],
             result: {
               totalScore: 0,
@@ -11516,7 +11667,7 @@ Phần III:
             selectOmrPaper(targetId);
           }
           if (!opts.silentToast) {
-            showToast(' Chưa có Đáp án đề thi để đối chiếu! Đã hiển thị kết quả nhận dạng ô tô — hãy chọn Đề hoặc bấm [ Nạp Đ/Á] ở Bước 1 để tính điểm.', 'warning');
+            showToast(' Chưa có Đáp án đề thi để đối chiếu! Đã hiển thị kết quả nhận dạng ô tô — hãy chọn Đề hoặc bấm [ Nạp Đ/Á] ở Bước 7 để tính điểm.', 'warning');
           }
           return;
         }
@@ -12026,7 +12177,7 @@ Phần III:
       const score = typeof paper.result?.totalScore === 'number' ? paper.result.totalScore.toFixed(2) : '0.00';
       if (banner) {
         banner.textContent = paper.noAnswerKeyLoaded
-          ? `Đã nhận dạng phiếu: mã ${paper.scannedExamCode || '---'} (Chờ nạp Đáp án ở Bước 1 để tính điểm)`
+          ? `Đã nhận dạng phiếu: mã ${paper.scannedExamCode || '---'} (Chờ nạp Đáp án ở Bước 7 để tính điểm)`
           : (paper.isCorrected
               ? `Đã lưu sửa phiếu: mã ${paper.scannedExamCode || '---'}, điểm ${score} đ`
               : `Đang xem phiếu: mã ${paper.scannedExamCode || '---'}, điểm ${score} đ`);
@@ -12041,7 +12192,7 @@ Phần III:
       const diagEl = document.getElementById('omr-bottom-diagnostic');
       if (diagEl) {
         if (paper.noAnswerKeyLoaded) {
-          diagEl.textContent = 'ℹ Đã nhận dạng các ô tô trên phiếu (màu xanh dương). Hãy chọn Đề hoặc bấm [ Nạp Đ/Á] ở Bước 1 để chấm điểm!';
+          diagEl.textContent = 'ℹ Đã nhận dạng các ô tô trên phiếu (màu xanh dương). Hãy chọn Đề hoặc bấm [ Nạp Đ/Á] ở Bước 7 để chấm điểm!';
           diagEl.style.color = 'var(--mx-blue-hover)';
         } else if (paper.isBlankPaper || (Number(paper.result?.totalScore || 0) === 0 && Object.keys(paper.answers?.part1 || {}).length === 0 && Object.keys(paper.answers?.part2 || {}).length === 0)) {
           diagEl.textContent = ' Thí sinh nộp bài để trống (không tô chì Phần I, II, III). Điểm số 0.00 đ là hoàn toàn chính xác theo bài thi.';

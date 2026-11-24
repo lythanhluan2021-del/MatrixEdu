@@ -98,10 +98,14 @@ check('UI-16 units table scrolls inside its wrap (overflow-x:auto present)',
   /\.table-wrap\s*\{[^}]*overflow-x:\s*auto/.test(style),
   'table-wrap lost overflow-x:auto');
 
-// --- 6. Toast: top-right, capped at 3 ---
-check('UI-17 toast container moved to top-right (top:76px, no bottom:20px)',
-  /#toast-container\s*\{\s*position:\s*fixed;\s*top:\s*76px;\s*bottom:\s*auto;/.test(gd5dCss),
-  'toast container still bottom-right');
+// --- 6. Toast: trong luồng trang (GĐ5g supersedes UI-17 top-right/fixed) ---
+// GĐ5g (UI-26): toast không còn fixed góc trên-phải (che nút Bước 4) mà
+// nằm trong luồng trang, đầu .content-container, tự ẩn khi rỗng.
+check('UI-17 [GĐ5g thay thế] toast trong luồng trang, không fixed',
+  /#toast-container \{[^}]*display: flex;[^}]*flex-direction: column;[^}]*align-items: flex-end;/.test(allCss)
+  && !/#toast-container \{[^}]*position:\s*fixed/.test(allCss)
+  && /#toast-container:empty\s*\{\s*display:\s*none;?\s*\}/.test(allCss),
+  'toast vẫn fixed hoặc thiếu :empty');
 check('UI-17 showToast caps concurrent toasts at 3 (drops oldest)',
   /function showToast[\s\S]*?while\s*\(container\.children\.length\s*>=\s*3\)\s*container\.firstChild\.remove\(\);/.test(html),
   'no 3-toast cap in showToast');
@@ -118,11 +122,13 @@ check('UI-17 "Đang sinh…" toast only inside runStep4GenerateExam (no auto-gen
     return first > 0 && first === last && first > genStart && first < genEnd
       && !/goToStep\(4\)[\s\S]{0,200}?runStep4GenerateExam/.test(html);
   })(), '"Đang sinh…" toast appears outside runStep4GenerateExam');
-check('UI-17 navigation buttons that trigger generation are labelled "Sinh đề"',
-  !/onclick="confirmStep2AndGoStep4\(\)"[^>]*>\s*(?:<svg[\s\S]*?<\/svg>\s*)?Soạn đề/.test(html)
-  && !/onclick="confirmStep3AndGoStep4\(\)"[^>]*>\s*Bước 4: Soạn đề/.test(html)
-  && html.includes('Bước 4: Sinh đề →'),
-  '"Soạn đề →" buttons still hide the generation trigger');
+// GĐ5g (UI-25) supersedes: nút chuyển bước CHỈ chuyển trang, không sinh
+// đề — nhãn "Bước 4: Sinh đề →" đổi thành "Bước 4: Soạn đề →" (footer
+// Bước 2/3) và "Bước 4 →" (toolbar Bước 2). Nút sinh đề thật vẫn ở Bước 4.
+check('UI-17 [GĐ5g thay thế] nút chuyển bước mang nhãn "Soạn đề", không sinh đề',
+  html.includes('Bước 4: Soạn đề →') && html.includes('Bước 4 →')
+  && !html.includes('Bước 4: Sinh đề →'),
+  'nhãn nút chuyển bước chưa đổi theo GĐ5g');
 
 // --- 7. Empty-state instructions name the real buttons ---
 check('UI-18 step-3 empty state names "Đồng bộ Ma trận"',

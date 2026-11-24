@@ -143,10 +143,12 @@ check('UI-23 1.3 empty state points at Step 2, not "ở trên"',
 check('UI-23 units-table empty state points at Step 2',
   html.includes('Hãy tải ma trận ở Bước 2 rồi bấm "Phân tích"'),
   'renderUnitsTable empty state not updated');
-check('UI-23 confirmStep1 toast points at Step 2, not "quay lại Bước 1"',
-  html.includes('Hãy tải ma trận và bấm "Phân tích"')
-  && !html.includes('quay lại Bước 1 để phân tích'),
-  'confirmStep1 toast still points at Bước 1');
+// GĐ5g (UI-25) supersedes: nút chuyển bước không còn toast giải thích
+// nào — nó chỉ chuyển trang; hướng dẫn trống vẫn ở trạng thái trống Bước 2.
+check('UI-23 [GĐ5g thay thế] confirmStep1 không toast, hướng dẫn ở trạng thái trống Bước 2',
+  !/function confirmStep1AndGoStep2[\s\S]{0,300}?showToast/.test(html)
+  && html.includes('Chưa có đơn vị kiến thức. Hãy tải ma trận ở Bước 2 rồi bấm "Phân tích"'),
+  'confirmStep1 vẫn toast hoặc mất hướng dẫn trống Bước 2');
 
 // --- 11. Structure intact: still 7 step sections, in order ---
 check('UI-23 still exactly 7 step sections in order',
