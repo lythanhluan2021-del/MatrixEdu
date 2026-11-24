@@ -18,6 +18,7 @@ extracted_sheet_0.jpg
 MatrixEdu.exe
 dist/
 data/ooxml_sources/
+data/omr_templates/custom/
 
 # Runtime generated exports & logs
 data/exports/

@@ -2858,14 +2858,19 @@
                       </div>
                       <div>
                         <label style="font-weight:700; color:#475569; display:block; margin-bottom:2px;">Mẫu phiếu OMR:</label>
-                        <select id="omr-sheet-model-select" class="form-control"
-                          style="height:26px; padding:1px 4px; font-size:0.74rem;"
-                          onchange="onOmrTemplateChanged(this.value)">
-                          <option value="bgd_2025_4code" selected>Mẫu 1: Bộ GD&ĐT (Mã 4 số)</option>
-                          <option value="bgd_2025_3code">Mẫu 2: Bộ GD&ĐT (Mã 3 số)</option>
-                          <option value="thpt_tong_hop">Mẫu 3: Học kỳ Tổng hợp THPT</option>
-                          <option value="thpt_roc_phach">Mẫu 4: Rọc phách THPT 2025-2026</option>
-                        </select>
+                        <div style="display:flex; gap:4px; align-items:center;">
+                          <select id="omr-sheet-model-select" class="form-control"
+                            style="height:26px; padding:1px 4px; font-size:0.74rem; flex:1;"
+                            onchange="onOmrTemplateChanged(this.value)">
+                            <option value="bgd_2025_4code" selected>Mẫu 1: Bộ GD&ĐT (Mã 4 số)</option>
+                            <option value="bgd_2025_3code">Mẫu 2: Bộ GD&ĐT (Mã 3 số)</option>
+                            <option value="thpt_tong_hop">Mẫu 3: Học kỳ Tổng hợp THPT</option>
+                            <option value="thpt_roc_phach">Mẫu 4: Rọc phách THPT 2025-2026</option>
+                          </select>
+                          <button type="button" class="btn btn-outline btn-sm" onclick="openCustomOmrTemplateModal()"
+                            style="height:26px; padding:1px 6px; font-size:0.72rem; white-space:nowrap;"
+                            title="Tải lên mẫu phiếu chấm riêng (PNG/JPG/PDF)">➕ Tải mẫu</button>
+                        </div>
                       </div>
                       <div style="grid-column:span 2;">
                         <label style="font-weight:700; color:#475569; display:block; margin-bottom:2px;">Thang điểm Phần II (Đúng/Sai):</label>
@@ -3230,6 +3235,9 @@
                         <option value="thpt_tong_hop">Mẫu 3: Tổng Hợp (3 số)</option>
                         <option value="thpt_roc_phach">Mẫu 4: Rọc Phách</option>
                       </select>
+                      <button type="button" onclick="openCustomOmrTemplateModal()"
+                        style="background:rgba(56,189,248,0.18); color:#bae6fd; border:1px solid #38bdf8; font-size:0.71rem; padding:2px 6px; border-radius:4px; font-weight:700; cursor:pointer; white-space:nowrap;"
+                        title="Tải lên & hiệu chuẩn mẫu phiếu chấm riêng (PNG/JPG/PDF)">➕ Mẫu</button>
                     </div>
 
                     <div style="display:flex; align-items:center; gap:4px; background:rgba(255,255,255,0.08); padding:2px 6px; border-radius:6px; border:1px solid rgba(255,255,255,0.16);">
@@ -4297,6 +4305,121 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       <!-- Danh sách câu hỏi cuộn được -->
       <div id="drive-bank-list-container"
         style="flex:1; overflow-y:auto; max-height:55vh; border:1px solid #e2e8f0; border-radius:8px; padding:10px; background:#fff; display:flex; flex-direction:column; gap:8px;">
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL TẢI LÊN & HIỆU CHUẨN MẪU PHIẾU CHẤM TÙY CHỈNH (CUSTOM OMR TEMPLATE) -->
+  <div id="modalCustomOmrTemplate" class="modal-backdrop">
+    <div class="modal-box" style="max-width:980px; width:96vw; max-height:92vh; overflow:hidden; display:flex; flex-direction:column;">
+      <div class="card-header"
+        style="background:linear-gradient(135deg,#0f172a,#1e3a8a); color:#fff; border-radius:14px 14px 0 0; margin:-22px -22px 14px -22px; padding:13px 20px;">
+        <div style="display:flex; align-items:center; gap:9px;">
+          <span style="font-size:1.35rem;">📐</span>
+          <div>
+            <div class="card-title" style="color:#fff; font-size:1.02rem; font-weight:800;">TẢI LÊN &amp; HIỆU CHUẨN MẪU PHIẾU CHẤM RIÊNG</div>
+            <div style="font-size:0.76rem; color:#bfdbfe;">Hỗ trợ ảnh phiếu trắng (.png, .jpg, .webp) hoặc .pdf • Tự nhận diện 4 góc định vị &amp; lưới ô tô</div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-ghost-light btn-sm" onclick="closeModal('modalCustomOmrTemplate')">✕ Đóng</button>
+      </div>
+
+      <div style="display:grid; grid-template-columns:340px 1fr; gap:14px; flex:1; min-height:0; overflow:hidden;">
+        <!-- Cột trái: Nạp file + Thông số hiệu chuẩn + Danh sách mẫu đã lưu -->
+        <div style="display:flex; flex-direction:column; gap:10px; overflow-y:auto; padding-right:4px;">
+          <div id="custom-omr-dropzone"
+            onclick="document.getElementById('custom-omr-file-input').click()"
+            ondragover="event.preventDefault(); this.style.borderColor='#1d4ed8';"
+            ondragleave="this.style.borderColor='#3b82f6';"
+            ondrop="handleCustomOmrFileDrop(event)"
+            style="border:2px dashed #3b82f6; border-radius:12px; padding:14px 10px; text-align:center; background:#e1e8f5; box-shadow:inset 4px 4px 8px #bec8dc, inset -4px -4px 8px #ffffff; cursor:pointer;">
+            <div style="font-size:1.45rem; margin-bottom:2px;">📄</div>
+            <div style="font-weight:700; color:#1d4ed8; font-size:0.82rem;">Chọn hoặc kéo thả Mẫu phiếu (.png, .jpg, .pdf)</div>
+            <div id="custom-omr-file-label" style="font-size:0.72rem; color:#475569; margin-top:4px;">Chưa chọn tệp mẫu</div>
+            <input type="file" id="custom-omr-file-input" accept=".png,.jpg,.jpeg,.webp,.pdf,image/png,image/jpeg,image/webp,application/pdf" style="display:none;" onchange="handleCustomOmrFileUpload(this)" />
+          </div>
+
+          <div id="custom-omr-detect-badge"
+            style="display:none; padding:8px 10px; border-radius:10px; background:#dcfce7; border:1px solid #86efac; font-size:0.76rem; color:#166534; font-weight:600;">
+          </div>
+
+          <div style="border-radius:12px; padding:11px; background:linear-gradient(145deg,#f2f5fc,#e0e7f3); border:1px solid rgba(255,255,255,0.85); box-shadow:4px 4px 10px #c0cae0, -4px -4px 10px #ffffff; display:flex; flex-direction:column; gap:8px;">
+            <div>
+              <label style="font-size:0.74rem; font-weight:700; color:#334155; display:block; margin-bottom:2px;">Tên mẫu phiếu:</label>
+              <input type="text" id="custom-omr-name" class="form-control" placeholder="VD: Phiếu KTGK Trường THPT ABC" style="font-size:0.80rem; padding:6px 8px;" />
+            </div>
+
+            <div>
+              <label style="font-size:0.74rem; font-weight:700; color:#334155; display:block; margin-bottom:2px;">Bố cục nền (tự nhận dạng):</label>
+              <select id="custom-omr-base-select" class="form-control" style="font-size:0.78rem; padding:5px 8px;" onchange="onCustomOmrCalibrationChanged()">
+                <option value="bgd_2025_4code">Bộ GD&amp;ĐT 2025 (Mã 4 số)</option>
+                <option value="bgd_2025_3code">Bộ GD&amp;ĐT 2025 (Mã 3 số)</option>
+                <option value="thpt_tong_hop">Học kỳ Tổng hợp THPT (Mã 3 số)</option>
+                <option value="thpt_roc_phach">Rọc phách THPT (SBD 8 số)</option>
+              </select>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+              <div>
+                <label style="font-size:0.72rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">Số cột Mã đề:</label>
+                <select id="custom-omr-code-digits" class="form-control" style="font-size:0.78rem; padding:4px 6px;" onchange="onCustomOmrCalibrationChanged()">
+                  <option value="3">3 chữ số</option>
+                  <option value="4" selected>4 chữ số</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:0.72rem; font-weight:700; color:#475569; display:block; margin-bottom:2px;">Số cột SBD:</label>
+                <select id="custom-omr-sbd-digits" class="form-control" style="font-size:0.78rem; padding:4px 6px;" onchange="onCustomOmrCalibrationChanged()">
+                  <option value="6" selected>6 chữ số</option>
+                  <option value="8">8 chữ số</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="border-top:1px dashed #cbd5e1; padding-top:7px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <span style="font-size:0.73rem; font-weight:700; color:#334155;">Tinh chỉnh lưới ô tô (px / %):</span>
+                <button type="button" class="btn btn-outline btn-sm" onclick="resetCustomOmrCalibration()" style="padding:1px 6px; font-size:0.70rem;">↺ Đặt lại</button>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; font-size:0.72rem;">
+                <label style="color:#475569;">Dịch X: <strong id="custom-omr-dx-val">0</strong>px
+                  <input type="range" id="custom-omr-dx" min="-60" max="60" step="1" value="0" style="width:100%;" oninput="onCustomOmrCalibrationChanged()" />
+                </label>
+                <label style="color:#475569;">Dịch Y: <strong id="custom-omr-dy-val">0</strong>px
+                  <input type="range" id="custom-omr-dy" min="-60" max="60" step="1" value="0" style="width:100%;" oninput="onCustomOmrCalibrationChanged()" />
+                </label>
+                <label style="color:#475569;">Co giãn X: <strong id="custom-omr-sx-val">100</strong>%
+                  <input type="range" id="custom-omr-sx" min="90" max="110" step="0.5" value="100" style="width:100%;" oninput="onCustomOmrCalibrationChanged()" />
+                </label>
+                <label style="color:#475569;">Co giãn Y: <strong id="custom-omr-sy-val">100</strong>%
+                  <input type="range" id="custom-omr-sy" min="90" max="110" step="0.5" value="100" style="width:100%;" oninput="onCustomOmrCalibrationChanged()" />
+                </label>
+              </div>
+            </div>
+
+            <button type="button" id="btn-save-custom-omr" class="btn btn-primary btn-sm" onclick="saveCustomOmrTemplateFromModal()" style="font-weight:700; padding:8px 12px;">
+              💾 Lưu &amp; Áp dụng Mẫu Phiếu
+            </button>
+          </div>
+
+          <div style="border-radius:12px; padding:10px; background:#f8fafc; border:1px solid #cbd5e1;">
+            <div style="font-size:0.75rem; font-weight:700; color:#334155; margin-bottom:6px;">📚 Mẫu phiếu riêng đã lưu (<span id="custom-omr-saved-count">0</span>)</div>
+            <div id="custom-omr-saved-list" style="display:flex; flex-direction:column; gap:5px; max-height:140px; overflow-y:auto; font-size:0.76rem; color:#64748b;">
+              Chưa có mẫu phiếu tùy chỉnh nào.
+            </div>
+          </div>
+        </div>
+
+        <!-- Cột phải: Canvas xem trước căn chỉnh lưới ô tô trực quan -->
+        <div style="background:#0f172a; border-radius:12px; border:1px solid #334155; display:flex; flex-direction:column; overflow:hidden; min-height:420px;">
+          <div style="padding:7px 12px; background:#1e293b; border-bottom:1px solid #334155; display:flex; justify-content:space-between; align-items:center; font-size:0.74rem; color:#cbd5e1;">
+            <span>🔍 Xem trước định vị 4 góc &amp; lưới ô tô (Xanh lá: P.I • Tím: P.II • Cyan: P.III)</span>
+            <span id="custom-omr-align-score" style="color:#38bdf8; font-weight:700;">Chưa tải ảnh</span>
+          </div>
+          <div style="flex:1; overflow:auto; display:flex; align-items:center; justify-content:center; padding:10px;">
+            <canvas id="custom-omr-preview-canvas" width="520" height="740" style="max-width:100%; max-height:66vh; background:#1e293b; border-radius:6px; box-shadow:0 8px 24px rgba(0,0,0,0.45);"></canvas>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -8446,7 +8569,9 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       const sel2 = document.getElementById('omr-sheet-model-select');
       if (sel2 && sel2.value !== templateId) sel2.value = templateId;
 
-      omrOriginalTemplateImage.src = `/api/omr/template-image?templateId=${encodeURIComponent(templateId)}&_t=${Date.now()}`;
+      omrOriginalTemplateImage.src = tpl.imageDataUrl
+        ? tpl.imageDataUrl
+        : `/api/omr/template-image?templateId=${encodeURIComponent(templateId)}&_t=${Date.now()}`;
       showToast(`📋 Đã chuyển sang mẫu: ${tpl.shortName}`, 'info');
 
       const activePaper = (appState.omr.gradedPapers || []).find(p => p.id === appState.omr.activePaperId);
@@ -8457,6 +8582,563 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         showToast(`🔄 Đang quét lại ${appState.omr.papers.length} bài thi theo mẫu "${tpl.shortName}"...`, 'info');
         runOmrBatchGrading(false);
       }
+    }
+
+    const CUSTOM_OMR_STORAGE_KEY = 'matrixedu_custom_omr_templates_v1';
+    const customOmrDraftState = {
+      imageDataUrl: '',
+      fileName: '',
+      mimeType: 'image/jpeg',
+      imgEl: null,
+      width: 0,
+      height: 0,
+      detectedFiducials: null,
+      detectedTimingMarks: null,
+      detectedTemplate: null,
+      scaledPreview: null
+    };
+
+    function readLocalCustomOmrTemplates() {
+      try {
+        const raw = localStorage.getItem(CUSTOM_OMR_STORAGE_KEY);
+        const list = JSON.parse(raw || '[]');
+        return Array.isArray(list) ? list : [];
+      } catch (_) {
+        return [];
+      }
+    }
+
+    function writeLocalCustomOmrTemplates(list) {
+      try {
+        localStorage.setItem(CUSTOM_OMR_STORAGE_KEY, JSON.stringify(list || []));
+      } catch (_) { }
+    }
+
+    function mergeCustomTemplatesIntoRegistry(serverTemplates = []) {
+      const builtInIds = new Set(['bgd_2025_4code', 'bgd_2025_3code', 'thpt_tong_hop', 'thpt_roc_phach']);
+      const localCustom = readLocalCustomOmrTemplates();
+      const customById = new Map();
+
+      localCustom.forEach(t => {
+        if (t && t.id && !builtInIds.has(t.id)) customById.set(t.id, { ...t, isCustom: true });
+      });
+      (serverTemplates || []).forEach(t => {
+        if (t && t.id && !builtInIds.has(t.id)) {
+          const prev = customById.get(t.id);
+          customById.set(t.id, {
+            ...(prev || {}),
+            ...t,
+            imageDataUrl: t.imageDataUrl || prev?.imageDataUrl || '',
+            isCustom: true
+          });
+        }
+      });
+
+      // Giữ lại đúng 4 mẫu gốc rồi nối thêm các mẫu tùy chỉnh
+      while (OMR_CLIENT_TEMPLATES.length > 4) OMR_CLIENT_TEMPLATES.pop();
+      customById.forEach(tpl => OMR_CLIENT_TEMPLATES.push(tpl));
+
+      syncOmrTemplateSelects();
+      renderCustomOmrSavedList();
+    }
+
+    function syncOmrTemplateSelects() {
+      const curId = appState.omr?.selectedTemplateId || 'bgd_2025_4code';
+      const selects = [
+        { el: document.getElementById('omr-template-selector'), compact: true },
+        { el: document.getElementById('omr-sheet-model-select'), compact: false }
+      ];
+      selects.forEach(({ el, compact }) => {
+        if (!el) return;
+        el.innerHTML = OMR_CLIENT_TEMPLATES.map((t, idx) => {
+          const prefix = t.isCustom ? '⭐ ' : `Mẫu ${idx + 1}: `;
+          const label = compact ? `${prefix}${t.shortName}` : `${prefix}${t.shortName}`;
+          return `<option value="${escapeHtml(t.id)}">${escapeHtml(label)}</option>`;
+        }).join('');
+        el.value = OMR_CLIENT_TEMPLATES.some(t => t.id === curId) ? curId : 'bgd_2025_4code';
+      });
+    }
+
+    async function refreshCustomOmrTemplates() {
+      try {
+        const res = await fetch('/api/omr/templates');
+        const data = await res.json();
+        if (data && data.ok && Array.isArray(data.templates)) {
+          mergeCustomTemplatesIntoRegistry(data.templates);
+          return;
+        }
+      } catch (_) { }
+      mergeCustomTemplatesIntoRegistry([]);
+    }
+
+    function computeClientScaledTemplateCoords(baseTpl, width, height, targetFiducials, overrides = {}) {
+      const base = baseTpl || OMR_CLIENT_TEMPLATES[0];
+      const W = Math.max(200, Math.round(Number(width) || base.width));
+      const H = Math.max(200, Math.round(Number(height) || base.height));
+      const bf = base.fiducials;
+      const bSpanW = Math.max(1, ((bf.tr.x - bf.tl.x) + (bf.br.x - bf.bl.x)) * 0.5);
+      const bSpanH = Math.max(1, ((bf.bl.y - bf.tl.y) + (bf.br.y - bf.tr.y)) * 0.5);
+
+      const hasFid = targetFiducials && targetFiducials.tl && targetFiducials.tr && targetFiducials.bl && targetFiducials.br;
+      const r2 = (v) => Math.round(Number(v) * 100) / 100;
+      const tf = hasFid
+        ? {
+            tl: { x: r2(targetFiducials.tl.x), y: r2(targetFiducials.tl.y) },
+            tr: { x: r2(targetFiducials.tr.x), y: r2(targetFiducials.tr.y) },
+            bl: { x: r2(targetFiducials.bl.x), y: r2(targetFiducials.bl.y) },
+            br: { x: r2(targetFiducials.br.x), y: r2(targetFiducials.br.y) }
+          }
+        : {
+            tl: { x: r2((bf.tl.x / base.width) * W), y: r2((bf.tl.y / base.height) * H) },
+            tr: { x: r2((bf.tr.x / base.width) * W), y: r2((bf.tr.y / base.height) * H) },
+            bl: { x: r2((bf.bl.x / base.width) * W), y: r2((bf.bl.y / base.height) * H) },
+            br: { x: r2((bf.br.x / base.width) * W), y: r2((bf.br.y / base.height) * H) }
+          };
+
+      const tSpanW = Math.max(1, ((tf.tr.x - tf.tl.x) + (tf.br.x - tf.bl.x)) * 0.5);
+      const tSpanH = Math.max(1, ((tf.bl.y - tf.tl.y) + (tf.br.y - tf.tr.y)) * 0.5);
+      const off = overrides.offsets || {};
+      const dx = Number(off.dx) || 0;
+      const dy = Number(off.dy) || 0;
+      const sx = Math.max(0.8, Math.min(1.2, Number(off.sx) || 1));
+      const sy = Math.max(0.8, Math.min(1.2, Number(off.sy) || 1));
+      const scaleX = (tSpanW / bSpanW) * sx;
+      const scaleY = (tSpanH / bSpanH) * sy;
+      const cx = tf.tl.x + tSpanW * 0.5;
+      const cy = tf.tl.y + tSpanH * 0.5;
+
+      const mapX = (bx) => r2(cx + ((tf.tl.x + ((bx - bf.tl.x) / bSpanW) * tSpanW) - cx) * sx + dx);
+      const mapY = (by) => r2(cy + ((tf.tl.y + ((by - bf.tl.y) / bSpanH) * tSpanH) - cy) * sy + dy);
+      const scaleR = (br) => r2(Math.max(3.2, br * ((scaleX + scaleY) * 0.5)));
+
+      const bc = base.coords;
+      const sbdDigits = Number(overrides.sbdDigits) || bc.sbd.numCols || 6;
+      const codeDigits = Number(overrides.codeDigits) || bc.code.numCols || 4;
+      return {
+        fiducials: tf,
+        codeDigits,
+        sbdDigits,
+        scoreBox: base.scoreBox ? {
+          x: mapX(base.scoreBox.x), y: mapY(base.scoreBox.y),
+          w: r2(base.scoreBox.w * scaleX), h: r2(base.scoreBox.h * scaleY)
+        } : { x: r2(W * 0.1), y: r2(H * 0.12), w: r2(W * 0.15), h: r2(H * 0.05) },
+        coords: {
+          sbd: {
+            colBaseX: mapX(bc.sbd.colBaseX), colStepX: r2(bc.sbd.colStepX * scaleX), numCols: sbdDigits,
+            boxY: mapY(bc.sbd.boxY), rowBaseY: mapY(bc.sbd.rowBaseY), rowStepY: r2(bc.sbd.rowStepY * scaleY),
+            radius: scaleR(bc.sbd.radius)
+          },
+          code: {
+            colBaseX: mapX(bc.code.colBaseX), colStepX: r2(bc.code.colStepX * scaleX), numCols: codeDigits,
+            boxY: mapY(bc.code.boxY), rowBaseY: mapY(bc.code.rowBaseY), rowStepY: r2(bc.code.rowStepY * scaleY),
+            radius: scaleR(bc.code.radius)
+          },
+          part1: {
+            colBases: bc.part1.colBases.map(mapX), optStepX: r2(bc.part1.optStepX * scaleX),
+            rowBaseY: mapY(bc.part1.rowBaseY), rowStepY: r2(bc.part1.rowStepY * scaleY),
+            radius: scaleR(bc.part1.radius), totalQuestions: bc.part1.totalQuestions || 40
+          },
+          part2: {
+            colBases: bc.part2.colBases.map(mapX), optStepX: r2(bc.part2.optStepX * scaleX),
+            rowBaseY: mapY(bc.part2.rowBaseY), rowStepY: r2(bc.part2.rowStepY * scaleY),
+            radius: scaleR(bc.part2.radius), totalQuestions: bc.part2.totalQuestions || 8
+          },
+          part3: {
+            colBases: bc.part3.colBases.map(mapX), charStepX: r2(bc.part3.charStepX * scaleX),
+            boxY: mapY(bc.part3.boxY), yMinus: mapY(bc.part3.yMinus), yComma: mapY(bc.part3.yComma),
+            rowBaseDigitY: mapY(bc.part3.rowBaseDigitY), rowStepDigitY: r2(bc.part3.rowStepDigitY * scaleY),
+            radius: scaleR(bc.part3.radius), totalQuestions: bc.part3.totalQuestions || 6
+          }
+        }
+      };
+    }
+
+    function openCustomOmrTemplateModal() {
+      openModal('modalCustomOmrTemplate');
+      renderCustomOmrSavedList();
+      if (customOmrDraftState.imgEl) {
+        renderCustomOmrPreviewCanvas();
+      } else {
+        const cvs = document.getElementById('custom-omr-preview-canvas');
+        if (cvs) {
+          const ctx = cvs.getContext('2d');
+          ctx.clearRect(0, 0, cvs.width, cvs.height);
+          ctx.fillStyle = '#0f172a';
+          ctx.fillRect(0, 0, cvs.width, cvs.height);
+          ctx.fillStyle = '#94a3b8';
+          ctx.font = 'bold 14px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('Tải ảnh mẫu phiếu trắng (.png / .jpg / .pdf) ở cột trái', cvs.width / 2, cvs.height / 2 - 10);
+          ctx.font = '12px sans-serif';
+          ctx.fillText('Hệ thống sẽ tự dò 4 góc định vị và vẽ lưới ô tô kiểm tra', cvs.width / 2, cvs.height / 2 + 14);
+        }
+      }
+    }
+
+    function renderCustomOmrSavedList() {
+      const listEl = document.getElementById('custom-omr-saved-list');
+      const countEl = document.getElementById('custom-omr-saved-count');
+      const customList = OMR_CLIENT_TEMPLATES.filter(t => t.isCustom);
+      if (countEl) countEl.textContent = String(customList.length);
+      if (!listEl) return;
+      if (customList.length === 0) {
+        listEl.innerHTML = '<div style="color:#64748b; font-style:italic;">Chưa có mẫu phiếu tùy chỉnh nào.</div>';
+        return;
+      }
+      listEl.innerHTML = customList.map(t => `
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; padding:5px 7px; border-radius:8px; background:#fff; border:1px solid #e2e8f0;">
+          <div style="min-width:0; flex:1;">
+            <div style="font-weight:700; color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(t.name)}">⭐ ${escapeHtml(t.shortName)}</div>
+            <div style="font-size:0.68rem; color:#64748b;">Mã ${t.codeDigits} số • SBD ${t.sbdDigits} số • ${t.width}×${t.height}px</div>
+          </div>
+          <div style="display:flex; gap:4px; flex-shrink:0;">
+            <button type="button" class="btn btn-outline btn-sm" onclick="onOmrTemplateChanged('${escapeHtml(t.id)}'); closeModal('modalCustomOmrTemplate');" style="padding:2px 6px; font-size:0.70rem;">Dùng</button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="deleteCustomOmrTemplateById('${escapeHtml(t.id)}')" style="padding:2px 6px; font-size:0.70rem; color:#dc2626; border-color:#fca5a5;">🗑</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function handleCustomOmrFileDrop(ev) {
+      ev.preventDefault();
+      const dz = document.getElementById('custom-omr-dropzone');
+      if (dz) dz.style.borderColor = '#3b82f6';
+      const files = ev.dataTransfer?.files;
+      if (files && files.length > 0) {
+        processCustomOmrFile(files[0]);
+      }
+    }
+
+    function handleCustomOmrFileUpload(inputEl) {
+      const file = inputEl?.files?.[0];
+      if (file) processCustomOmrFile(file);
+    }
+
+    async function processCustomOmrFile(file) {
+      const labelEl = document.getElementById('custom-omr-file-label');
+      const badgeEl = document.getElementById('custom-omr-detect-badge');
+      if (labelEl) labelEl.textContent = `⏳ Đang phân tích: ${file.name}...`;
+
+      try {
+        let imgBlob = file;
+        let mimeType = file.type || 'image/jpeg';
+        if (/\.pdf$/i.test(file.name) || mimeType === 'application/pdf') {
+          const blobs = await extractJpegBlobsFromPdfFile(file);
+          if (!blobs || blobs.length === 0) {
+            throw new Error('Không trích xuất được ảnh trang 1 từ file PDF này. Thầy/Cô hãy lưu phiếu dạng .PNG hoặc .JPG rồi tải lên nhé.');
+          }
+          imgBlob = blobs[0];
+          mimeType = 'image/jpeg';
+        }
+
+        const dataUrl = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result || ''));
+          reader.onerror = () => reject(new Error('Lỗi đọc file ảnh mẫu phiếu.'));
+          reader.readAsDataURL(imgBlob);
+        });
+
+        const imgEl = await loadImageElementAsync(dataUrl);
+        if (!imgEl || !imgEl.naturalWidth) {
+          throw new Error('Không đọc được kích thước ảnh mẫu phiếu.');
+        }
+
+        // Chuẩn hóa kích thước ảnh lưu trữ (giữ sắc nét max width 1800px để nhẹ trên cả local & Vercel)
+        let saveDataUrl = dataUrl;
+        let saveW = imgEl.naturalWidth;
+        let saveH = imgEl.naturalHeight;
+        if (saveW > 1800) {
+          const scale = 1800 / saveW;
+          saveW = 1800;
+          saveH = Math.round(imgEl.naturalHeight * scale);
+          const offC = document.createElement('canvas');
+          offC.width = saveW;
+          offC.height = saveH;
+          offC.getContext('2d').drawImage(imgEl, 0, 0, saveW, saveH);
+          saveDataUrl = offC.toDataURL('image/jpeg', 0.90);
+          mimeType = 'image/jpeg';
+        }
+        const finalImg = saveDataUrl === dataUrl ? imgEl : await loadImageElementAsync(saveDataUrl);
+
+        // Chạy bộ nhận diện đa đặc trưng mới để tự tìm 4 góc định vị + bố cục gốc gần nhất
+        const det = typeof detectOmrTemplateDetailed === 'function'
+          ? detectOmrTemplateDetailed(finalImg, [])
+          : null;
+
+        // Quy đổi tọa độ 4 góc định vị về hệ quy chiếu ảnh gốc (finalImg.naturalWidth x naturalHeight)
+        let origFid = null;
+        let origTiming = null;
+        if (det && det.fiducials && det.fiducials.hasAlignedFiducials && det.workW && det.workH) {
+          const rx = finalImg.naturalWidth / det.workW;
+          const ry = finalImg.naturalHeight / det.workH;
+          const scalePt = (p) => p ? { x: Math.round(p.x * rx * 100) / 100, y: Math.round(p.y * ry * 100) / 100 } : null;
+          origFid = {
+            tl: scalePt(det.fiducials.tl),
+            tr: scalePt(det.fiducials.tr),
+            bl: scalePt(det.fiducials.bl),
+            br: scalePt(det.fiducials.br)
+          };
+          origTiming = {
+            topMid: scalePt(det.fiducials.topMid),
+            midLeft: scalePt(det.fiducials.midLeft),
+            midRight: scalePt(det.fiducials.midRight)
+          };
+        }
+
+        customOmrDraftState.imageDataUrl = saveDataUrl;
+        customOmrDraftState.fileName = file.name;
+        customOmrDraftState.mimeType = mimeType;
+        customOmrDraftState.imgEl = finalImg;
+        customOmrDraftState.width = finalImg.naturalWidth;
+        customOmrDraftState.height = finalImg.naturalHeight;
+        customOmrDraftState.detectedFiducials = origFid;
+        customOmrDraftState.detectedTimingMarks = origTiming;
+        customOmrDraftState.detectedTemplate = det;
+
+        const nameInput = document.getElementById('custom-omr-name');
+        if (nameInput && !nameInput.value.trim()) {
+          nameInput.value = file.name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ').trim();
+        }
+
+        const baseSel = document.getElementById('custom-omr-base-select');
+        const bestBuiltIn = (det?.scores || []).find(s => !s.isCustom)?.id || 'bgd_2025_4code';
+        if (baseSel) baseSel.value = bestBuiltIn;
+        const baseObj = OMR_CLIENT_TEMPLATES.find(t => t.id === bestBuiltIn) || OMR_CLIENT_TEMPLATES[0];
+        const codeSel = document.getElementById('custom-omr-code-digits');
+        const sbdSel = document.getElementById('custom-omr-sbd-digits');
+        if (codeSel) codeSel.value = String(baseObj.codeDigits || 4);
+        if (sbdSel) sbdSel.value = String(baseObj.sbdDigits || 6);
+
+        resetCustomOmrCalibration(false);
+        if (labelEl) labelEl.textContent = `✅ ${file.name} (${finalImg.naturalWidth}×${finalImg.naturalHeight}px)`;
+        if (badgeEl) {
+          badgeEl.style.display = 'block';
+          const fidText = origFid ? 'Đã bắt chuẩn 4 góc định vị' : 'Không thấy 4 ô đen góc (đang nội suy theo khung ảnh)';
+          const confPct = det ? Math.round(det.confidence || 0) : 0;
+          badgeEl.innerHTML = `🎯 ${fidText}<br>Bố cục gần nhất: <strong>${escapeHtml(baseObj.shortName)}</strong> (Độ khớp ${confPct}%)`;
+        }
+        renderCustomOmrPreviewCanvas();
+      } catch (err) {
+        if (labelEl) labelEl.textContent = `⚠️ ${err.message}`;
+        showToast(err.message, 'error');
+      }
+    }
+
+    function resetCustomOmrCalibration(redraw = true) {
+      const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+      setVal('custom-omr-dx', 0);
+      setVal('custom-omr-dy', 0);
+      setVal('custom-omr-sx', 100);
+      setVal('custom-omr-sy', 100);
+      if (redraw) onCustomOmrCalibrationChanged();
+    }
+
+    function onCustomOmrCalibrationChanged() {
+      const dx = Number(document.getElementById('custom-omr-dx')?.value || 0);
+      const dy = Number(document.getElementById('custom-omr-dy')?.value || 0);
+      const sx = Number(document.getElementById('custom-omr-sx')?.value || 100);
+      const sy = Number(document.getElementById('custom-omr-sy')?.value || 100);
+      const setTxt = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+      setTxt('custom-omr-dx-val', dx);
+      setTxt('custom-omr-dy-val', dy);
+      setTxt('custom-omr-sx-val', sx);
+      setTxt('custom-omr-sy-val', sy);
+      renderCustomOmrPreviewCanvas();
+    }
+
+    function renderCustomOmrPreviewCanvas() {
+      const cvs = document.getElementById('custom-omr-preview-canvas');
+      const scoreEl = document.getElementById('custom-omr-align-score');
+      if (!cvs || !customOmrDraftState.imgEl) return;
+
+      const img = customOmrDraftState.imgEl;
+      const baseId = document.getElementById('custom-omr-base-select')?.value || 'bgd_2025_4code';
+      const baseTpl = OMR_CLIENT_TEMPLATES.find(t => t.id === baseId) || OMR_CLIENT_TEMPLATES[0];
+      const codeDigits = Number(document.getElementById('custom-omr-code-digits')?.value || baseTpl.codeDigits || 4);
+      const sbdDigits = Number(document.getElementById('custom-omr-sbd-digits')?.value || baseTpl.sbdDigits || 6);
+      const dx = Number(document.getElementById('custom-omr-dx')?.value || 0);
+      const dy = Number(document.getElementById('custom-omr-dy')?.value || 0);
+      const sx = Number(document.getElementById('custom-omr-sx')?.value || 100) / 100;
+      const sy = Number(document.getElementById('custom-omr-sy')?.value || 100) / 100;
+
+      const scaled = computeClientScaledTemplateCoords(
+        baseTpl,
+        img.naturalWidth,
+        img.naturalHeight,
+        customOmrDraftState.detectedFiducials,
+        { codeDigits, sbdDigits, offsets: { dx, dy, sx, sy } }
+      );
+      customOmrDraftState.scaledPreview = scaled;
+
+      const drawW = 560;
+      const drawH = Math.round(drawW * (img.naturalHeight / img.naturalWidth));
+      cvs.width = drawW;
+      cvs.height = drawH;
+      const ctx = cvs.getContext('2d');
+      ctx.drawImage(img, 0, 0, drawW, drawH);
+
+      const rx = drawW / img.naturalWidth;
+      const ry = drawH / img.naturalHeight;
+
+      // 1. Vẽ 4 ô góc định vị phát hiện được
+      const f = scaled.fiducials;
+      ctx.strokeStyle = '#06b6d4';
+      ctx.lineWidth = 2.5;
+      ['tl', 'tr', 'bl', 'br'].forEach(k => {
+        const pt = f[k];
+        if (!pt) return;
+        ctx.strokeRect(pt.x * rx - 8, pt.y * ry - 8, 16, 16);
+      });
+
+      const drawCircle = (x, y, r, color) => {
+        ctx.beginPath();
+        ctx.arc(x * rx, y * ry, Math.max(2.2, r * ((rx + ry) * 0.5)), 0, Math.PI * 2);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1.25;
+        ctx.stroke();
+      };
+
+      // 2. Vẽ lưới SBD (Xanh dương) & Mã đề (Cam)
+      const sc = scaled.coords;
+      for (let c = 0; c < sc.sbd.numCols; c++) {
+        for (let d = 0; d <= 9; d++) {
+          drawCircle(sc.sbd.colBaseX + c * sc.sbd.colStepX, sc.sbd.rowBaseY + d * sc.sbd.rowStepY, sc.sbd.radius, 'rgba(37,99,235,0.85)');
+        }
+      }
+      for (let c = 0; c < sc.code.numCols; c++) {
+        for (let d = 0; d <= 9; d++) {
+          drawCircle(sc.code.colBaseX + c * sc.code.colStepX, sc.code.rowBaseY + d * sc.code.rowStepY, sc.code.radius, 'rgba(217,119,6,0.9)');
+        }
+      }
+      // 3. Phần I (Xanh lá)
+      for (let col = 0; col < sc.part1.colBases.length; col++) {
+        for (let row = 0; row < 10; row++) {
+          for (let opt = 0; opt < 4; opt++) {
+            drawCircle(sc.part1.colBases[col] + opt * sc.part1.optStepX, sc.part1.rowBaseY + row * sc.part1.rowStepY, sc.part1.radius, 'rgba(22,163,74,0.82)');
+          }
+        }
+      }
+      // 4. Phần II (Tím)
+      for (let q = 0; q < Math.min(8, sc.part2.colBases.length); q++) {
+        for (let s = 0; s < 4; s++) {
+          drawCircle(sc.part2.colBases[q], sc.part2.rowBaseY + s * sc.part2.rowStepY, sc.part2.radius, 'rgba(147,51,234,0.85)');
+          drawCircle(sc.part2.colBases[q] + sc.part2.optStepX, sc.part2.rowBaseY + s * sc.part2.rowStepY, sc.part2.radius, 'rgba(147,51,234,0.85)');
+        }
+      }
+      // 5. Phần III (Cyan)
+      for (let q = 0; q < Math.min(6, sc.part3.colBases.length); q++) {
+        for (let ch = 0; ch < 4; ch++) {
+          const x = sc.part3.colBases[q] + ch * sc.part3.charStepX;
+          if (ch === 0) drawCircle(x, sc.part3.yMinus, sc.part3.radius, 'rgba(8,145,178,0.8)');
+          if (ch === 1 || ch === 2) drawCircle(x, sc.part3.yComma, sc.part3.radius, 'rgba(8,145,178,0.8)');
+          for (let d = 0; d <= 9; d += 3) {
+            drawCircle(x, sc.part3.rowBaseDigitY + d * sc.part3.rowStepDigitY, sc.part3.radius, 'rgba(8,145,178,0.68)');
+          }
+        }
+      }
+
+      if (scoreEl) {
+        scoreEl.textContent = customOmrDraftState.detectedFiducials
+          ? `✅ Đã khóa 4 góc • ${img.naturalWidth}×${img.naturalHeight}px`
+          : `📐 Nội suy tỷ lệ • ${img.naturalWidth}×${img.naturalHeight}px`;
+      }
+    }
+
+    async function saveCustomOmrTemplateFromModal() {
+      if (!customOmrDraftState.imageDataUrl || !customOmrDraftState.imgEl) {
+        showToast('Vui lòng chọn file ảnh/PDF mẫu phiếu trước khi lưu!', 'error');
+        return;
+      }
+      const name = String(document.getElementById('custom-omr-name')?.value || '').trim();
+      if (!name) {
+        showToast('Vui lòng nhập tên mẫu phiếu!', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('btn-save-custom-omr');
+      if (btn) { btn.disabled = true; btn.textContent = '⏳ Đang lưu mẫu phiếu...'; }
+
+      try {
+        const baseTemplateId = document.getElementById('custom-omr-base-select')?.value || 'bgd_2025_4code';
+        const codeDigits = Number(document.getElementById('custom-omr-code-digits')?.value || 4);
+        const sbdDigits = Number(document.getElementById('custom-omr-sbd-digits')?.value || 6);
+        const offsets = {
+          dx: Number(document.getElementById('custom-omr-dx')?.value || 0),
+          dy: Number(document.getElementById('custom-omr-dy')?.value || 0),
+          sx: Number(document.getElementById('custom-omr-sx')?.value || 100) / 100,
+          sy: Number(document.getElementById('custom-omr-sy')?.value || 100) / 100
+        };
+
+        const payload = {
+          name,
+          shortName: name.slice(0, 40),
+          baseTemplateId,
+          imageBase64: customOmrDraftState.imageDataUrl,
+          fileName: customOmrDraftState.fileName || 'custom_omr_template.jpg',
+          mimeType: customOmrDraftState.mimeType || 'image/jpeg',
+          width: customOmrDraftState.width,
+          height: customOmrDraftState.height,
+          codeDigits,
+          sbdDigits,
+          fiducials: customOmrDraftState.scaledPreview?.fiducials || customOmrDraftState.detectedFiducials,
+          timingMarks: customOmrDraftState.detectedTimingMarks,
+          coords: customOmrDraftState.scaledPreview?.coords,
+          scoreBox: customOmrDraftState.scaledPreview?.scoreBox,
+          offsets
+        };
+
+        let savedTpl = null;
+        try {
+          const res = await fetch('/api/omr/templates/custom', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const data = await res.json();
+          if (data && data.ok && data.template) {
+            savedTpl = { ...data.template, imageDataUrl: customOmrDraftState.imageDataUrl, isCustom: true };
+          }
+        } catch (_) { }
+
+        if (!savedTpl) {
+          savedTpl = {
+            id: `custom_${Date.now()}`,
+            ...payload,
+            imageDataUrl: customOmrDraftState.imageDataUrl,
+            isCustom: true,
+            badge: 'Mẫu tự tải lên'
+          };
+        }
+
+        const locals = readLocalCustomOmrTemplates().filter(t => t.id !== savedTpl.id);
+        locals.push(savedTpl);
+        writeLocalCustomOmrTemplates(locals);
+
+        mergeCustomTemplatesIntoRegistry([savedTpl]);
+        onOmrTemplateChanged(savedTpl.id);
+        closeModal('modalCustomOmrTemplate');
+        showToast(`✅ Đã lưu & kích hoạt mẫu phiếu "${savedTpl.shortName}"!`, 'success');
+      } catch (err) {
+        showToast('Lỗi lưu mẫu phiếu: ' + err.message, 'error');
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = '💾 Lưu & Áp dụng Mẫu Phiếu'; }
+      }
+    }
+
+    async function deleteCustomOmrTemplateById(tplId) {
+      if (!confirm('Xóa mẫu phiếu tùy chỉnh này?')) return;
+      try {
+        await fetch(`/api/omr/templates/custom/${encodeURIComponent(tplId)}`, { method: 'DELETE' });
+      } catch (_) { }
+      const locals = readLocalCustomOmrTemplates().filter(t => t.id !== tplId);
+      writeLocalCustomOmrTemplates(locals);
+
+      if (appState.omr?.selectedTemplateId === tplId) {
+        appState.omr.selectedTemplateId = 'bgd_2025_4code';
+      }
+      await refreshCustomOmrTemplates();
+      onOmrTemplateChanged(appState.omr?.selectedTemplateId || 'bgd_2025_4code');
+      showToast('🗑 Đã xóa mẫu phiếu tùy chỉnh.', 'info');
     }
 
     function downloadSelectedBlankTemplate() {
@@ -9297,7 +9979,10 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       // 1. Đồng bộ đáp án chuẩn từ các đề thi Bước 4 & 5 (trừ khi đang dùng Đề đã lưu hoặc Đ/Á ngoài)
       syncOmrAnswerKeys();
 
-      // 1b. Đồng bộ giá trị chọn Mẫu phiếu tô trên thanh công cụ
+      // 1b. Nạp mẫu phiếu tùy chỉnh & đồng bộ giá trị chọn Mẫu phiếu tô trên thanh công cụ
+      if (typeof refreshCustomOmrTemplates === 'function') {
+        await refreshCustomOmrTemplates();
+      }
       const curTplId = appState.omr?.selectedTemplateId || 'bgd_2025_4code';
       const sel1 = document.getElementById('omr-template-selector');
       if (sel1) sel1.value = curTplId;
@@ -13248,10 +13933,179 @@ Phần III:
     }
 
     /**
-     * Tự động nhận diện đúng mẫu phiếu chuẩn từ đặc trưng hình học ô vuông định vị trên trang scan
-     * (không phụ thuộc tên file scan).
+     * Tính chữ ký hình học chuẩn hóa của một mẫu phiếu OMR (hỗ trợ cả 4 mẫu chuẩn & mẫu tùy chỉnh).
      */
-    function detectOmrTemplateFromImageData(imgEl, validCodes = []) {
+    function computeClientTemplateSignature(tpl) {
+      if (!tpl) return null;
+      if (tpl.signature && typeof tpl.signature.spanWRatio === 'number') return tpl.signature;
+      const W = Number(tpl.width) || 2328;
+      const H = Number(tpl.height) || 3381;
+      const f = tpl.fiducials || {
+        tl: { x: W * 0.04, y: H * 0.03 },
+        tr: { x: W * 0.96, y: H * 0.03 },
+        bl: { x: W * 0.04, y: H * 0.97 },
+        br: { x: W * 0.96, y: H * 0.97 }
+      };
+      const spanW = Math.max(1, ((f.tr.x - f.tl.x) + (f.br.x - f.bl.x)) * 0.5);
+      const spanH = Math.max(1, ((f.bl.y - f.tl.y) + (f.br.y - f.tr.y)) * 0.5);
+      let topMidNormU = null;
+      if (tpl.timingMarks && typeof tpl.timingMarks.topMidNormU === 'number') {
+        topMidNormU = tpl.timingMarks.topMidNormU;
+      } else if (tpl.timingMarks && tpl.timingMarks.topMid) {
+        topMidNormU = (tpl.timingMarks.topMid.x - f.tl.x) / spanW;
+      }
+      let midLeftNormV = null;
+      if (tpl.timingMarks && tpl.timingMarks.midLeft) {
+        midLeftNormV = (tpl.timingMarks.midLeft.y - f.tl.y) / spanH;
+      }
+      let midRightNormV = null;
+      if (tpl.timingMarks && tpl.timingMarks.midRight) {
+        midRightNormV = (tpl.timingMarks.midRight.y - f.tl.y) / spanH;
+      }
+      return {
+        aspectRatio: W / H,
+        spanWRatio: spanW / W,
+        spanHRatio: spanH / H,
+        frameAspect: spanW / spanH,
+        topMidNormU,
+        midLeftNormV,
+        midRightNormV,
+        codeDigits: Number(tpl.codeDigits) || 4,
+        sbdDigits: Number(tpl.sbdDigits) || 6,
+        hasPhach: Boolean(tpl.hasPhach)
+      };
+    }
+
+    /**
+     * Đánh giá độ khớp lưới vòng tròn in (Bubble-Ring Grid Alignment Score, 0..1)
+     * bằng cách lấy mẫu mật độ mực viền vòng tròn so với khoảng trắng lề giữa các ô tô.
+     */
+    function scoreOmrTemplateGridAlignment(imgData, W, H, fid, tpl) {
+      if (!tpl || !tpl.coords || !tpl.fiducials) return 0;
+      const bf = tpl.fiducials;
+      const bSpanW = Math.max(1, ((bf.tr.x - bf.tl.x) + (bf.br.x - bf.bl.x)) * 0.5);
+      const bSpanH = Math.max(1, ((bf.bl.y - bf.tl.y) + (bf.br.y - bf.tr.y)) * 0.5);
+
+      const useFid = Boolean(fid && fid.hasAlignedFiducials && fid.tl && fid.tr && fid.bl && fid.br);
+      const tSpanW = useFid ? (((fid.tr.x - fid.tl.x) + (fid.br.x - fid.bl.x)) * 0.5) : W;
+      const tSpanH = useFid ? (((fid.bl.y - fid.tl.y) + (fid.br.y - fid.tr.y)) * 0.5) : H;
+      const scaleAvg = useFid
+        ? (((tSpanW / bSpanW) + (tSpanH / bSpanH)) * 0.5)
+        : (((W / (tpl.width || 2328)) + (H / (tpl.height || 3381))) * 0.5);
+
+      const mapPt = (ox, oy) => {
+        if (useFid) {
+          const u = (ox - bf.tl.x) / bSpanW;
+          const v = (oy - bf.tl.y) / bSpanH;
+          const topX = fid.tl.x + u * (fid.tr.x - fid.tl.x);
+          const topY = fid.tl.y + u * (fid.tr.y - fid.tl.y);
+          const botX = fid.bl.x + u * (fid.br.x - fid.bl.x);
+          const botY = fid.bl.y + u * (fid.br.y - fid.bl.y);
+          return { x: topX + v * (botX - topX), y: topY + v * (botY - topY) };
+        }
+        return { x: (ox / (tpl.width || 2328)) * W, y: (oy / (tpl.height || 3381)) * H };
+      };
+
+      const grayAt = (x, y) => {
+        const ix = Math.round(x);
+        const iy = Math.round(y);
+        if (ix < 0 || ix >= W || iy < 0 || iy >= H) return 255;
+        const idx = (iy * W + ix) * 4;
+        return imgData[idx] * 0.299 + imgData[idx + 1] * 0.587 + imgData[idx + 2] * 0.114;
+      };
+
+      // Tập điểm mẫu đa vùng: SBD + Mã đề + Phần I + Phần II + Phần III
+      const probes = [];
+      const c = tpl.coords;
+      if (c.sbd) {
+        const cols = [0, Math.min(c.sbd.numCols - 1, 2), Math.max(0, c.sbd.numCols - 1)];
+        const rows = [0, 4, 9];
+        for (const col of cols) {
+          for (const row of rows) {
+            probes.push({ x: c.sbd.colBaseX + col * c.sbd.colStepX, y: c.sbd.rowBaseY + row * c.sbd.rowStepY, r: c.sbd.radius, w: 1.5 });
+          }
+        }
+      }
+      if (c.code) {
+        const cols = [0, Math.max(0, c.code.numCols - 1)];
+        const rows = [1, 5, 8];
+        for (const col of cols) {
+          for (const row of rows) {
+            probes.push({ x: c.code.colBaseX + col * c.code.colStepX, y: c.code.rowBaseY + row * c.code.rowStepY, r: c.code.radius, w: 1.4 });
+          }
+        }
+      }
+      if (c.part1 && Array.isArray(c.part1.colBases)) {
+        for (let ci = 0; ci < c.part1.colBases.length; ci++) {
+          for (const row of [0, 5, 9]) {
+            const opt = (ci + row) % 4;
+            probes.push({ x: c.part1.colBases[ci] + opt * c.part1.optStepX, y: c.part1.rowBaseY + row * c.part1.rowStepY, r: c.part1.radius, w: 1.1 });
+          }
+        }
+      }
+      if (c.part2 && Array.isArray(c.part2.colBases)) {
+        for (const ci of [0, 3, Math.min(7, c.part2.colBases.length - 1)]) {
+          probes.push({ x: c.part2.colBases[ci], y: c.part2.rowBaseY + 1 * c.part2.rowStepY, r: c.part2.radius, w: 1.0 });
+          probes.push({ x: c.part2.colBases[ci] + c.part2.optStepX, y: c.part2.rowBaseY + 2 * c.part2.rowStepY, r: c.part2.radius, w: 1.0 });
+        }
+      }
+      if (c.part3 && Array.isArray(c.part3.colBases)) {
+        for (const ci of [0, 2, Math.min(5, c.part3.colBases.length - 1)]) {
+          probes.push({ x: c.part3.colBases[ci] + c.part3.charStepX, y: c.part3.rowBaseDigitY + 3 * c.part3.rowStepDigitY, r: c.part3.radius, w: 1.0 });
+        }
+      }
+
+      if (probes.length === 0) return 0;
+
+      let weightedHits = 0;
+      let totalWeight = 0;
+      const ringAngles = [0, 0.5236, 1.0472, 1.5708, 2.0944, 2.618, 3.1416, 3.6652, 4.1888, 4.7124, 5.236, 5.7596];
+
+      for (const p of probes) {
+        const pt = mapPt(p.x, p.y);
+        const rr = Math.max(3.0, p.r * scaleAvg);
+        let ringSum = 0;
+        let ringDarkHits = 0;
+        for (let k = 0; k < ringAngles.length; k++) {
+          const ang = ringAngles[k];
+          const cosA = Math.cos(ang);
+          const sinA = Math.sin(ang);
+          // Lấy cực tiểu trong dải bán kính [0.88r, 1.08r] để chịu được sai số dịch chuyển 1-2px
+          const g1 = grayAt(pt.x + cosA * rr * 0.92, pt.y + sinA * rr * 0.92);
+          const g2 = grayAt(pt.x + cosA * rr * 1.06, pt.y + sinA * rr * 1.06);
+          const gMin = g1 < g2 ? g1 : g2;
+          ringSum += gMin;
+          if (gMin < 205) ringDarkHits++;
+        }
+        const ringMean = ringSum / ringAngles.length;
+        const ringHitRatio = ringDarkHits / ringAngles.length;
+
+        // Lấy mẫu vùng trắng bên ngoài đường tròn (r * 1.42 ở 4 góc chéo 45°)
+        const gOut = (
+          grayAt(pt.x + rr * 1.0, pt.y + rr * 1.0) +
+          grayAt(pt.x - rr * 1.0, pt.y + rr * 1.0) +
+          grayAt(pt.x + rr * 1.0, pt.y - rr * 1.0) +
+          grayAt(pt.x - rr * 1.0, pt.y - rr * 1.0)
+        ) * 0.25;
+
+        const contrast = Math.max(0, gOut - ringMean);
+        const probeScore = Math.min(1, (contrast / 55) * 0.55 + ringHitRatio * 0.45);
+        weightedHits += probeScore * p.w;
+        totalWeight += p.w;
+      }
+
+      return totalWeight > 0 ? (weightedHits / totalWeight) : 0;
+    }
+
+    /**
+     * Bộ nhận diện mẫu phiếu OMR đa đặc trưng (Multi-Feature Template Recognizer):
+     * Kết hợp 4 tầng tín hiệu:
+     *   1. Hình học khung 4 góc định vị (spanWRatio, spanHRatio, frameAspect)
+     *   2. Vị trí ô mốc đồng bộ (topMidNormU, midLeftNormV, midRightNormV)
+     *   3. Đối khớp lưới vòng tròn in thực tế trên trang scan (Bubble-Ring Grid Alignment)
+     *   4. Tương thích số chữ số Mã đề từ bộ đáp án (3 số vs 4 số) + Hỗ trợ mẫu tùy chỉnh người dùng tải lên
+     */
+    function detectOmrTemplateDetailed(imgEl, validCodes = []) {
       if (!imgEl || !imgEl.naturalWidth || !imgEl.naturalHeight) return null;
       const W = 1164;
       const H = Math.round(W * (imgEl.naturalHeight / imgEl.naturalWidth));
@@ -13263,36 +14117,146 @@ Phần III:
       const data = ctx.getImageData(0, 0, W, H).data;
 
       const fid = detectOmrFiducialsAndAnchors(data, W, H, null);
-      const all3Digit = Array.isArray(validCodes) && validCodes.length > 0 && validCodes.every(code => String(code).trim().length === 3);
-      const bgdCandidate = all3Digit ? 'bgd_2025_3code' : 'bgd_2025_4code';
+      const imgAspect = imgEl.naturalWidth / imgEl.naturalHeight;
+
+      const codeList = Array.isArray(validCodes) ? validCodes.map(v => String(v).trim()).filter(Boolean) : [];
+      const all3Digit = codeList.length > 0 && codeList.every(code => code.length === 3);
+      const all4Digit = codeList.length > 0 && codeList.every(code => code.length === 4);
+      const activeSelectedId = (typeof appState !== 'undefined' && appState?.omr?.selectedTemplateId) || '';
+
+      let spanWRatio = null;
+      let spanHRatio = null;
+      let frameAspect = null;
+      let uTopMid = null;
 
       if (fid.hasAlignedFiducials) {
         const spanW = ((fid.tr.x - fid.tl.x) + (fid.br.x - fid.bl.x)) * 0.5;
         const spanH = ((fid.bl.y - fid.tl.y) + (fid.br.y - fid.tr.y)) * 0.5;
-        const spanWRatio = spanW / W;
-        const spanHRatio = spanH / H;
-
-        // 1. Mẫu Rọc Phách THPT: 4 góc sát mép giấy nhất (spanW > 94.7% & spanH > 95.8%)
-        if (spanWRatio > 0.947 && spanHRatio > 0.958) {
-          return 'thpt_roc_phach';
+        spanWRatio = spanW / W;
+        spanHRatio = spanH / H;
+        frameAspect = spanH > 0 ? (spanW / spanH) : imgAspect;
+        if (fid.topMid && (fid.tr.x - fid.tl.x) > 0) {
+          uTopMid = (fid.topMid.x - fid.tl.x) / (fid.tr.x - fid.tl.x);
         }
-
-        // 2. Dùng mốc topMid định danh tức thì Phiếu Tổng Hợp (topMidNormU ~ 0.7388) vs Bộ GD&ĐT 2025 (0.6767)
-        if (fid.topMid) {
-          const uTopMid = (fid.topMid.x - fid.tl.x) / (fid.tr.x - fid.tl.x);
-          if (uTopMid > 0.708 && uTopMid < 0.79) return 'thpt_tong_hop';
-          if (uTopMid >= 0.62 && uTopMid <= 0.708) return bgdCandidate;
-        }
-
-        // 3. Dự phòng tỷ lệ lề ngoài của khung 4 góc
-        if (spanWRatio < 0.902) return 'thpt_tong_hop';
-        return bgdCandidate;
       }
 
-      // Nếu không tìm thấy 4 góc nhưng ảnh có tỷ lệ gần A4 Tổng Hợp + all3Digit
-      const aspect = imgEl.naturalWidth / imgEl.naturalHeight;
-      if (Math.abs(aspect - (2480 / 3508)) < 0.008 && all3Digit) return 'thpt_tong_hop';
-      return null;
+      const scored = OMR_CLIENT_TEMPLATES.map(tpl => {
+        const sig = computeClientTemplateSignature(tpl);
+        let geomScore = 0;
+        let timingScore = 0;
+        let codeScore = 0;
+        let customBonus = 0;
+
+        if (fid.hasAlignedFiducials) {
+          // 1. Khớp tỷ lệ khung 4 góc định vị (tối đa 30 điểm)
+          const diffW = Math.abs(spanWRatio - sig.spanWRatio);
+          const diffH = Math.abs(spanHRatio - sig.spanHRatio);
+          const diffFA = Math.abs(frameAspect - sig.frameAspect);
+          geomScore += Math.max(0, 1 - diffW / 0.055) * 13;
+          geomScore += Math.max(0, 1 - diffH / 0.055) * 11;
+          geomScore += Math.max(0, 1 - diffFA / 0.065) * 6;
+
+          // 2. Khớp vị trí ô mốc đồng bộ trên (topMidNormU) (tối đa 22 điểm)
+          if (uTopMid !== null && typeof sig.topMidNormU === 'number') {
+            const diffTop = Math.abs(uTopMid - sig.topMidNormU);
+            timingScore += Math.max(0, 1 - diffTop / 0.045) * 22;
+          } else {
+            // Không phát hiện topMid (mờ/che): giữ điểm trung lập nhẹ
+            timingScore += 8;
+          }
+
+          // Đặc thù Mẫu Rọc Phách: 4 góc sát mép giấy nhất
+          if (tpl.id === 'thpt_roc_phach' && spanWRatio > 0.946 && spanHRatio > 0.956) {
+            geomScore += 8;
+          }
+        } else {
+          // Fallback khi ảnh bị cắt mất 4 góc đen: dùng tỷ lệ khung ảnh
+          const diffAspect = Math.abs(imgAspect - sig.aspectRatio);
+          geomScore += Math.max(0, 1 - diffAspect / 0.04) * 22;
+        }
+
+        // 3. Đối khớp lưới vòng tròn in thực tế (tối đa 36 điểm)
+        const gridAlign = scoreOmrTemplateGridAlignment(data, W, H, fid, tpl);
+        const gridScore = gridAlign * 36;
+
+        // 4. Tương thích số chữ số Mã đề từ đáp án đang nạp (tối đa 12 điểm)
+        if (all3Digit) {
+          codeScore = tpl.codeDigits === 3 ? 12 : -4;
+        } else if (all4Digit) {
+          codeScore = tpl.codeDigits === 4 ? 12 : -4;
+        } else {
+          // Không có danh sách mã đề: ưu tiên nhẹ BGD 4 số hơn BGD 3 số khi đồng hạng
+          codeScore = tpl.id === 'bgd_2025_4code' ? 2.5 : (tpl.id === 'bgd_2025_3code' ? 1.0 : 1.5);
+        }
+
+        // 5. Hỗ trợ mẫu tùy chỉnh (custom template): thưởng khi khớp khít chữ ký kích thước/tọa độ hoặc đang được chọn
+        if (tpl.isCustom) {
+          const aspectMatch = Math.abs(imgAspect - sig.aspectRatio) < 0.012;
+          const spanMatch = !fid.hasAlignedFiducials || (Math.abs(spanWRatio - sig.spanWRatio) < 0.018 && Math.abs(spanHRatio - sig.spanHRatio) < 0.018);
+          if (aspectMatch && spanMatch && gridAlign > 0.42) {
+            customBonus += 5;
+          }
+          if (activeSelectedId === tpl.id && gridAlign > 0.42) {
+            customBonus += 4;
+          }
+        }
+
+        const totalScore = geomScore + timingScore + gridScore + codeScore + customBonus;
+        return {
+          id: tpl.id,
+          shortName: tpl.shortName,
+          isCustom: Boolean(tpl.isCustom),
+          totalScore: Math.round(totalScore * 100) / 100,
+          geomScore: Math.round(geomScore * 10) / 10,
+          timingScore: Math.round(timingScore * 10) / 10,
+          gridScore: Math.round(gridScore * 10) / 10,
+          gridAlign: Math.round(gridAlign * 1000) / 1000,
+          codeScore
+        };
+      });
+
+      scored.sort((a, b) => b.totalScore - a.totalScore);
+      const best = scored[0];
+      const second = scored[1] || { totalScore: 0 };
+
+      if (!best) return null;
+      // Nếu không bắt được 4 góc định vị và độ khớp lưới quá thấp thì trả null để tránh đoán nhầm
+      if (!fid.hasAlignedFiducials && best.gridAlign < 0.36) {
+        if (Math.abs(imgAspect - (2480 / 3508)) < 0.008 && all3Digit) {
+          return {
+            templateId: 'thpt_tong_hop',
+            confidence: 65,
+            margin: 5,
+            scores: scored,
+            fiducials: fid,
+            workW: W,
+            workH: H,
+            reason: 'Khớp tỷ lệ A4 Tổng hợp + Mã đề 3 số'
+          };
+        }
+        return null;
+      }
+
+      const confidence = Math.max(10, Math.min(99, Math.round(best.totalScore)));
+      return {
+        templateId: best.id,
+        confidence,
+        margin: Math.round((best.totalScore - second.totalScore) * 10) / 10,
+        scores: scored,
+        fiducials: fid,
+        workW: W,
+        workH: H,
+        reason: `Khung góc ${best.geomScore} + Mốc ${best.timingScore} + Lưới ô ${best.gridScore}`
+      };
+    }
+
+    /**
+     * Tự động nhận diện đúng mẫu phiếu chuẩn/tùy chỉnh từ đa đặc trưng quang học trên trang scan
+     * (không phụ thuộc tên file scan).
+     */
+    function detectOmrTemplateFromImageData(imgEl, validCodes = []) {
+      const det = detectOmrTemplateDetailed(imgEl, validCodes);
+      return det ? det.templateId : null;
     }
 
     /**
@@ -14214,10 +15178,13 @@ Phần III:
           }
         }
 
-        // Tự động nhận diện mẫu phiếu chuẩn từ ô vuông định vị trên trang scan đầu tiên
+        // Tự động nhận diện mẫu phiếu chuẩn / mẫu tùy chỉnh bằng bộ nhận diện đa đặc trưng (4 góc + mốc + lưới ô tô)
         if (!templateSyncedFromScan && imgEl && imgEl.naturalWidth > 0) {
           templateSyncedFromScan = true;
-          const visualTplId = detectOmrTemplateFromImageData(imgEl, validCodes);
+          const detInfo = typeof detectOmrTemplateDetailed === 'function'
+            ? detectOmrTemplateDetailed(imgEl, validCodes)
+            : null;
+          const visualTplId = detInfo ? detInfo.templateId : detectOmrTemplateFromImageData(imgEl, validCodes);
           const resolvedTplId = visualTplId || (
             validFiles.some(f => /(?:tong_hop|thpt_tong_hop|chinh_thuc)/i.test(f.name || ''))
               ? 'thpt_tong_hop'
@@ -14231,7 +15198,8 @@ Phần III:
             if (selTop) selTop.value = resolvedTplId;
             if (typeof onOmrTemplateChanged === 'function') onOmrTemplateChanged(resolvedTplId);
             const activeTpl = getActiveOmrTemplate();
-            showToast(`🎯 Đã tự động nhận diện mẫu phiếu "${activeTpl.shortName}" từ các ô mốc đen trên trang scan!`, 'info');
+            const confLabel = detInfo?.confidence ? ` • Độ tin cậy ${detInfo.confidence}%` : '';
+            showToast(`🎯 Đã tự động nhận diện mẫu "${activeTpl.shortName}"${confLabel}!`, 'info');
           }
         }
 

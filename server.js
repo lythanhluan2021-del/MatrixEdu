@@ -42,7 +42,10 @@ const {
 const {
   OMR_TEMPLATES,
   getAllTemplates,
-  getTemplateById
+  getTemplateById,
+  saveCustomTemplate,
+  deleteCustomTemplate,
+  resolveTemplateImagePath
 } = require('./src/omr-templates');
 const { extractDocumentContent } = require('./src/doc-parser');
 const { computeMatrixStatistics, validateExamProfile, generateShuffledVariants } = require('./src/qa-validator');
@@ -829,10 +832,50 @@ function extractOmrConfigFromProfile(profile = {}) {
     // CHỨC NĂNG 7: CHẤM BÀI TRẮC NGHIỆM (PHIẾU TLTN 2025 BGD) & THỐNG KÊ - BÁO CÁO
     // ========================================================================
 
-    // 14.0. Danh sách tất cả các Mẫu Phiếu Trả lời trắc nghiệm hỗ trợ
+    // 14.0. Danh sách tất cả các Mẫu Phiếu Trả lời trắc nghiệm hỗ trợ (4 mẫu chuẩn + mẫu tùy chỉnh người dùng tải lên)
     if (req.method === 'GET' && pathname === '/api/omr/templates') {
       sendJson(res, 200, {
         ok: true,
+        templates: getAllTemplates()
+      });
+      return;
+    }
+
+    // 14.0b. Tải lên & lưu Mẫu Phiếu Chấm tùy chỉnh của người dùng (PNG/JPG/WEBP/PDF đã render)
+    if (req.method === 'POST' && pathname === '/api/omr/templates/custom') {
+      try {
+        const raw = await readRequestBody(req);
+        const body = JSON.parse(raw.toString('utf8') || '{}');
+        const saved = saveCustomTemplate(body);
+        sendJson(res, 200, {
+          ok: true,
+          template: saved,
+          templates: getAllTemplates(),
+          message: `Đã lưu mẫu phiếu chấm "${saved.name}" thành công!`
+        });
+      } catch (err) {
+        sendJson(res, 400, {
+          ok: false,
+          message: err.message || 'Không thể lưu mẫu phiếu chấm tùy chỉnh.'
+        });
+      }
+      return;
+    }
+
+    // 14.0c. Xóa Mẫu Phiếu Chấm tùy chỉnh
+    if (req.method === 'DELETE' && pathname.startsWith('/api/omr/templates/custom/')) {
+      const tplId = decodeURIComponent(pathname.split('/')[5] || '').trim();
+      const deleted = deleteCustomTemplate(tplId);
+      if (!deleted) {
+        sendJson(res, 404, {
+          ok: false,
+          message: 'Không tìm thấy mẫu phiếu tùy chỉnh cần xóa (chỉ xóa được mẫu do người dùng tải lên).'
+        });
+        return;
+      }
+      sendJson(res, 200, {
+        ok: true,
+        deleted: true,
         templates: getAllTemplates()
       });
       return;
@@ -1014,15 +1057,17 @@ function extractOmrConfigFromProfile(profile = {}) {
       return;
     }
 
-    // 14.1b. Phục vụ ảnh Mẫu phiếu TLTN theo templateId (Hỗ trợ 4 mẫu: BGD 4 số, BGD 3 số, Tổng hợp, Rọc phách)
+    // 14.1b. Phục vụ ảnh Mẫu phiếu TLTN theo templateId (Hỗ trợ 4 mẫu chuẩn + mẫu tùy chỉnh người dùng tải lên)
     if ((req.method === 'GET' || req.method === 'HEAD') && (pathname === '/api/omr/template-image' || pathname === '/api/omr/template-sheet-image')) {
       const templateId = parsedUrl.searchParams.get('templateId') || 'bgd_2025_4code';
       const template = getTemplateById(templateId);
 
-      // Tìm file ảnh theo template: kiểm tra thư mục data/omr_templates/, sau đó thư mục data, rồi thư mục gốc
+      // Tìm file ảnh theo template: ưu tiên resolveTemplateImagePath (hỗ trợ cả custom template), sau đó fallback
+      const resolvedCustomOrBuiltIn = resolveTemplateImagePath(template);
       const candidatePaths = [
-        path.join(__dirname, template.imageRelPath),
-        path.join(BUNDLED_DATA_DIR, 'omr_templates', path.basename(template.imageRelPath)),
+        resolvedCustomOrBuiltIn,
+        template.imageRelPath ? path.join(__dirname, template.imageRelPath) : null,
+        template.imageRelPath ? path.join(BUNDLED_DATA_DIR, 'omr_templates', path.basename(template.imageRelPath)) : null,
         path.join(BUNDLED_DATA_DIR, 'omr_template_sheet.jpg'),
         path.join(__dirname, 'extracted_sheet_0.jpg')
       ];
@@ -1036,12 +1081,13 @@ function extractOmrConfigFromProfile(profile = {}) {
       }
 
       if (targetPath) {
-        const isPng = targetPath.toLowerCase().endsWith('.png');
+        const lowerP = targetPath.toLowerCase();
+        const contentType = lowerP.endsWith('.png') ? 'image/png' : (lowerP.endsWith('.webp') ? 'image/webp' : 'image/jpeg');
         const stat = fs.statSync(targetPath);
         res.writeHead(200, {
-          'Content-Type': isPng ? 'image/png' : 'image/jpeg',
+          'Content-Type': contentType,
           'Content-Length': stat.size,
-          'Cache-Control': 'public, max-age=86400'
+          'Cache-Control': template.isCustom ? 'no-cache' : 'public, max-age=86400'
         });
         if (req.method === 'HEAD') {
           res.end();
@@ -1055,12 +1101,13 @@ function extractOmrConfigFromProfile(profile = {}) {
       return;
     }
 
-    // 14.1d. Tải file Phôi Phiếu Trắng in ấn (PDF / Docx) theo templateId
+    // 14.1d. Tải file Phôi Phiếu Trắng in ấn (PDF / Docx / Ảnh mẫu tùy chỉnh) theo templateId
     if ((req.method === 'GET' || req.method === 'HEAD') && (pathname === '/api/omr/download-blank-template' || pathname === '/api/omr/template-pdf')) {
       const templateId = parsedUrl.searchParams.get('templateId') || 'bgd_2025_4code';
       const template = getTemplateById(templateId);
 
       const candidateFiles = [
+        template.isCustom ? resolveTemplateImagePath(template) : null,
         path.join(BUNDLED_DATA_DIR, 'omr_templates', 'blank_files', template.blankFileName),
         path.join(__dirname, template.blankFileName),
         path.join(BUNDLED_DATA_DIR, 'omr_templates', template.blankFileName)

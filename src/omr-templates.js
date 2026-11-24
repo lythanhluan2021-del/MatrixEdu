@@ -9,6 +9,7 @@
 
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 
 const OMR_TEMPLATES = [
   {
@@ -311,17 +312,402 @@ const OMR_TEMPLATES = [
   }
 ];
 
+function resolveCustomTemplatesDir() {
+  const localParent = path.join(__dirname, '..', 'data', 'omr_templates');
+  const localCustom = path.join(localParent, 'custom');
+  if (!process.env.VERCEL) {
+    try {
+      if (fs.existsSync(localParent)) {
+        fs.accessSync(localParent, fs.constants.W_OK);
+        if (!fs.existsSync(localCustom)) fs.mkdirSync(localCustom, { recursive: true });
+        return localCustom;
+      }
+    } catch (_) {
+      // Fallback to os.tmpdir on read-only environments
+    }
+  }
+  const tmpCustom = path.join(os.tmpdir(), 'matrixedu_data', 'omr_templates', 'custom');
+  if (!fs.existsSync(tmpCustom)) fs.mkdirSync(tmpCustom, { recursive: true });
+  return tmpCustom;
+}
+
+function getCustomRegistryPath() {
+  return path.join(resolveCustomTemplatesDir(), 'custom_templates.json');
+}
+
+function computeTemplateSignature(tpl) {
+  const W = Number(tpl.width) || 2328;
+  const H = Number(tpl.height) || 3381;
+  const f = tpl.fiducials || {
+    tl: { x: W * 0.04, y: H * 0.03 },
+    tr: { x: W * 0.96, y: H * 0.03 },
+    bl: { x: W * 0.04, y: H * 0.97 },
+    br: { x: W * 0.96, y: H * 0.97 }
+  };
+  const spanW = ((f.tr.x - f.tl.x) + (f.br.x - f.bl.x)) * 0.5;
+  const spanH = ((f.bl.y - f.tl.y) + (f.br.y - f.tr.y)) * 0.5;
+  let topMidNormU = null;
+  if (tpl.timingMarks && typeof tpl.timingMarks.topMidNormU === 'number') {
+    topMidNormU = tpl.timingMarks.topMidNormU;
+  } else if (tpl.timingMarks && tpl.timingMarks.topMid && spanW > 0) {
+    topMidNormU = Number(((tpl.timingMarks.topMid.x - f.tl.x) / spanW).toFixed(4));
+  }
+  let midLeftNormV = null;
+  if (tpl.timingMarks && tpl.timingMarks.midLeft && spanH > 0) {
+    midLeftNormV = Number(((tpl.timingMarks.midLeft.y - f.tl.y) / spanH).toFixed(4));
+  }
+  let midRightNormV = null;
+  if (tpl.timingMarks && tpl.timingMarks.midRight && spanH > 0) {
+    midRightNormV = Number(((tpl.timingMarks.midRight.y - f.tl.y) / spanH).toFixed(4));
+  }
+  return {
+    aspectRatio: Number((W / H).toFixed(4)),
+    spanWRatio: Number((spanW / W).toFixed(4)),
+    spanHRatio: Number((spanH / H).toFixed(4)),
+    frameAspect: spanH > 0 ? Number((spanW / spanH).toFixed(4)) : Number((W / H).toFixed(4)),
+    topMidNormU,
+    midLeftNormV,
+    midRightNormV,
+    codeDigits: Number(tpl.codeDigits) || 4,
+    sbdDigits: Number(tpl.sbdDigits) || 6,
+    hasPhach: Boolean(tpl.hasPhach)
+  };
+}
+
+function round2(v) {
+  return Math.round(Number(v) * 100) / 100;
+}
+
+/**
+ * Nội suy toàn bộ hệ tọa độ 582 ô tròn từ một mẫu chuẩn sang ảnh phiếu tùy chỉnh mới tải lên,
+ * tự động khớp theo 4 góc định vị (fiducials) + hỗ trợ tinh chỉnh độ lệch (offsetX, offsetY, scaleX, scaleY).
+ */
+function scaleTemplateCoordsFromBase(baseTpl, width, height, targetFiducials = null, overrides = {}) {
+  const base = baseTpl || OMR_TEMPLATES[0];
+  const W = Math.max(200, Math.round(Number(width) || base.width));
+  const H = Math.max(200, Math.round(Number(height) || base.height));
+
+  const bf = base.fiducials;
+  const bSpanW = Math.max(1, ((bf.tr.x - bf.tl.x) + (bf.br.x - bf.bl.x)) * 0.5);
+  const bSpanH = Math.max(1, ((bf.bl.y - bf.tl.y) + (bf.br.y - bf.tr.y)) * 0.5);
+
+  const hasValidFid = targetFiducials && targetFiducials.tl && targetFiducials.tr && targetFiducials.bl && targetFiducials.br;
+  const tf = hasValidFid
+    ? {
+        tl: { x: round2(targetFiducials.tl.x), y: round2(targetFiducials.tl.y) },
+        tr: { x: round2(targetFiducials.tr.x), y: round2(targetFiducials.tr.y) },
+        bl: { x: round2(targetFiducials.bl.x), y: round2(targetFiducials.bl.y) },
+        br: { x: round2(targetFiducials.br.x), y: round2(targetFiducials.br.y) }
+      }
+    : {
+        tl: { x: round2((bf.tl.x / base.width) * W), y: round2((bf.tl.y / base.height) * H) },
+        tr: { x: round2((bf.tr.x / base.width) * W), y: round2((bf.tr.y / base.height) * H) },
+        bl: { x: round2((bf.bl.x / base.width) * W), y: round2((bf.bl.y / base.height) * H) },
+        br: { x: round2((bf.br.x / base.width) * W), y: round2((bf.br.y / base.height) * H) }
+      };
+
+  const tSpanW = Math.max(1, ((tf.tr.x - tf.tl.x) + (tf.br.x - tf.bl.x)) * 0.5);
+  const tSpanH = Math.max(1, ((tf.bl.y - tf.tl.y) + (tf.br.y - tf.tr.y)) * 0.5);
+
+  const off = overrides.offsets || {};
+  const dx = Number(off.dx) || 0;
+  const dy = Number(off.dy) || 0;
+  const sx = Math.max(0.75, Math.min(1.25, Number(off.sx) || 1));
+  const sy = Math.max(0.75, Math.min(1.25, Number(off.sy) || 1));
+
+  const scaleX = (tSpanW / bSpanW) * sx;
+  const scaleY = (tSpanH / bSpanH) * sy;
+  const centerX = tf.tl.x + tSpanW * 0.5;
+  const centerY = tf.tl.y + tSpanH * 0.5;
+
+  const mapX = (bx) => {
+    const u = (bx - bf.tl.x) / bSpanW;
+    const rawX = tf.tl.x + u * tSpanW;
+    return round2(centerX + (rawX - centerX) * sx + dx);
+  };
+  const mapY = (by) => {
+    const v = (by - bf.tl.y) / bSpanH;
+    const rawY = tf.tl.y + v * tSpanH;
+    return round2(centerY + (rawY - centerY) * sy + dy);
+  };
+  const scaleR = (br) => round2(Math.max(3.2, br * ((scaleX + scaleY) * 0.5)));
+
+  const bc = base.coords;
+  const sbdDigits = Math.max(4, Math.min(10, Number(overrides.sbdDigits) || bc.sbd.numCols || 6));
+  const codeDigits = Math.max(2, Math.min(6, Number(overrides.codeDigits) || bc.code.numCols || 4));
+  const p1Total = Math.max(10, Math.min(60, Number(overrides.p1Total) || bc.part1.totalQuestions || 40));
+  const p2Total = Math.max(0, Math.min(12, overrides.p2Total !== undefined ? Number(overrides.p2Total) : (bc.part2.totalQuestions || 8)));
+  const p3Total = Math.max(0, Math.min(10, overrides.p3Total !== undefined ? Number(overrides.p3Total) : (bc.part3.totalQuestions || 6)));
+
+  const coords = {
+    sbd: {
+      colBaseX: mapX(bc.sbd.colBaseX),
+      colStepX: round2(bc.sbd.colStepX * scaleX),
+      numCols: sbdDigits,
+      boxY: mapY(bc.sbd.boxY),
+      rowBaseY: mapY(bc.sbd.rowBaseY),
+      rowStepY: round2(bc.sbd.rowStepY * scaleY),
+      radius: scaleR(bc.sbd.radius)
+    },
+    code: {
+      colBaseX: mapX(bc.code.colBaseX),
+      colStepX: round2(bc.code.colStepX * scaleX),
+      numCols: codeDigits,
+      boxY: mapY(bc.code.boxY),
+      rowBaseY: mapY(bc.code.rowBaseY),
+      rowStepY: round2(bc.code.rowStepY * scaleY),
+      radius: scaleR(bc.code.radius)
+    },
+    part1: {
+      colBases: bc.part1.colBases.map(mapX),
+      optStepX: round2(bc.part1.optStepX * scaleX),
+      rowBaseY: mapY(bc.part1.rowBaseY),
+      rowStepY: round2(bc.part1.rowStepY * scaleY),
+      radius: scaleR(bc.part1.radius),
+      totalQuestions: p1Total
+    },
+    part2: {
+      colBases: bc.part2.colBases.map(mapX),
+      optStepX: round2(bc.part2.optStepX * scaleX),
+      rowBaseY: mapY(bc.part2.rowBaseY),
+      rowStepY: round2(bc.part2.rowStepY * scaleY),
+      radius: scaleR(bc.part2.radius),
+      totalQuestions: p2Total
+    },
+    part3: {
+      colBases: bc.part3.colBases.map(mapX),
+      charStepX: round2(bc.part3.charStepX * scaleX),
+      boxY: mapY(bc.part3.boxY),
+      yMinus: mapY(bc.part3.yMinus),
+      yComma: mapY(bc.part3.yComma),
+      rowBaseDigitY: mapY(bc.part3.rowBaseDigitY),
+      rowStepDigitY: round2(bc.part3.rowStepDigitY * scaleY),
+      radius: scaleR(bc.part3.radius),
+      totalQuestions: p3Total
+    }
+  };
+
+  const scoreBox = base.scoreBox
+    ? {
+        x: mapX(base.scoreBox.x),
+        y: mapY(base.scoreBox.y),
+        w: round2(base.scoreBox.w * scaleX),
+        h: round2(base.scoreBox.h * scaleY)
+      }
+    : { x: round2(W * 0.1), y: round2(H * 0.12), w: round2(W * 0.15), h: round2(H * 0.05) };
+
+  const timingMarks = {};
+  if (overrides.timingMarks && overrides.timingMarks.topMid) {
+    timingMarks.topMid = { x: round2(overrides.timingMarks.topMid.x), y: round2(overrides.timingMarks.topMid.y) };
+    timingMarks.topMidNormU = Number(((timingMarks.topMid.x - tf.tl.x) / tSpanW).toFixed(4));
+  } else if (base.timingMarks && base.timingMarks.topMid) {
+    timingMarks.topMid = { x: mapX(base.timingMarks.topMid.x), y: mapY(base.timingMarks.topMid.y) };
+    timingMarks.topMidNormU = Number(((timingMarks.topMid.x - tf.tl.x) / tSpanW).toFixed(4));
+  }
+  if (overrides.timingMarks && overrides.timingMarks.midLeft) {
+    timingMarks.midLeft = { x: round2(overrides.timingMarks.midLeft.x), y: round2(overrides.timingMarks.midLeft.y) };
+  } else if (base.timingMarks && base.timingMarks.midLeft) {
+    timingMarks.midLeft = { x: mapX(base.timingMarks.midLeft.x), y: mapY(base.timingMarks.midLeft.y) };
+  }
+  if (overrides.timingMarks && overrides.timingMarks.midRight) {
+    timingMarks.midRight = { x: round2(overrides.timingMarks.midRight.x), y: round2(overrides.timingMarks.midRight.y) };
+  } else if (base.timingMarks && base.timingMarks.midRight) {
+    timingMarks.midRight = { x: mapX(base.timingMarks.midRight.x), y: mapY(base.timingMarks.midRight.y) };
+  }
+
+  return { fiducials: tf, timingMarks, coords, scoreBox, codeDigits, sbdDigits };
+}
+
+function loadCustomTemplates() {
+  try {
+    const regPath = getCustomRegistryPath();
+    if (!fs.existsSync(regPath)) return [];
+    const parsed = JSON.parse(fs.readFileSync(regPath, 'utf8'));
+    if (!Array.isArray(parsed)) return [];
+    return parsed.map(t => ({
+      ...t,
+      isCustom: true,
+      signature: t.signature || computeTemplateSignature(t)
+    }));
+  } catch (_) {
+    return [];
+  }
+}
+
+function writeCustomTemplates(list) {
+  const regPath = getCustomRegistryPath();
+  const dir = path.dirname(regPath);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(regPath, JSON.stringify(list, null, 2), 'utf8');
+}
+
+function saveCustomTemplate(payload = {}) {
+  const rawName = String(payload.name || '').trim();
+  if (!rawName) {
+    throw new Error('Vui lòng nhập tên mẫu phiếu chấm!');
+  }
+
+  const baseId = String(payload.baseTemplateId || 'bgd_2025_4code').trim();
+  const baseTpl = OMR_TEMPLATES.find(t => t.id === baseId) || OMR_TEMPLATES[0];
+
+  const customDir = resolveCustomTemplatesDir();
+  const existing = loadCustomTemplates();
+
+  const rawId = String(payload.id || '').trim().replace(/[^a-zA-Z0-9_\-]/g, '');
+  const id = (rawId && rawId.startsWith('custom_'))
+    ? rawId
+    : `custom_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+
+  let ext = '.jpg';
+  let mimeType = String(payload.mimeType || 'image/jpeg').toLowerCase();
+  let imgBuffer = null;
+
+  if (payload.imageBase64) {
+    let b64 = String(payload.imageBase64).trim();
+    const dataUrlMatch = b64.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/s);
+    if (dataUrlMatch) {
+      mimeType = dataUrlMatch[1].toLowerCase();
+      b64 = dataUrlMatch[2];
+    }
+    if (mimeType.includes('png')) ext = '.png';
+    else if (mimeType.includes('webp')) ext = '.webp';
+    else {
+      ext = '.jpg';
+      mimeType = 'image/jpeg';
+    }
+    imgBuffer = Buffer.from(b64, 'base64');
+    if (imgBuffer.length < 256) {
+      throw new Error('Ảnh mẫu phiếu tải lên quá nhỏ hoặc không hợp lệ.');
+    }
+    if (imgBuffer.length > 18 * 1024 * 1024) {
+      throw new Error('Ảnh mẫu phiếu vượt quá giới hạn 18MB.');
+    }
+  } else {
+    const prev = existing.find(t => t.id === id);
+    if (!prev) {
+      throw new Error('Thiếu dữ liệu ảnh mẫu phiếu chấm (PNG/JPG/PDF).');
+    }
+    ext = path.extname(prev.customImageFile || '') || '.jpg';
+    mimeType = prev.blankMime || 'image/jpeg';
+  }
+
+  const imgFileName = `${id}${ext}`;
+  const imgFullPath = path.join(customDir, imgFileName);
+  if (imgBuffer) {
+    fs.writeFileSync(imgFullPath, imgBuffer);
+  }
+
+  const width = Math.max(200, Math.round(Number(payload.width) || baseTpl.width));
+  const height = Math.max(200, Math.round(Number(payload.height) || baseTpl.height));
+
+  const scaled = scaleTemplateCoordsFromBase(baseTpl, width, height, payload.fiducials || null, {
+    codeDigits: payload.codeDigits,
+    sbdDigits: payload.sbdDigits,
+    p1Total: payload.p1Total,
+    p2Total: payload.p2Total,
+    p3Total: payload.p3Total,
+    timingMarks: payload.timingMarks,
+    offsets: payload.offsets || {}
+  });
+
+  const finalCoords = (payload.coords && payload.coords.part1 && payload.coords.sbd && payload.coords.code)
+    ? payload.coords
+    : scaled.coords;
+
+  const shortName = String(payload.shortName || rawName).trim().slice(0, 42);
+  const safeBlankName = String(payload.fileName || `${id}${ext}`).replace(/[\\/:*?"<>|]/g, '_');
+
+  const tplObj = {
+    id,
+    name: rawName,
+    shortName,
+    badge: 'Mẫu tự tải lên',
+    isCustom: true,
+    baseTemplateId: baseTpl.id,
+    codeDigits: scaled.codeDigits,
+    sbdDigits: scaled.sbdDigits,
+    width,
+    height,
+    imageRelPath: `data/omr_templates/custom/${imgFileName}`,
+    customImageFile: imgFileName,
+    blankFileName: safeBlankName,
+    blankMime: mimeType,
+    description: String(payload.description || `Mẫu phiếu tùy chỉnh do giáo viên tải lên (nền ${baseTpl.shortName}).`).trim(),
+    hasScoreBoxLeft: Boolean(baseTpl.hasScoreBoxLeft),
+    hasPhach: Boolean(payload.hasPhach !== undefined ? payload.hasPhach : baseTpl.hasPhach),
+    scoreBox: payload.scoreBox || scaled.scoreBox,
+    fiducials: scaled.fiducials,
+    timingMarks: scaled.timingMarks,
+    offsets: payload.offsets || { dx: 0, dy: 0, sx: 1, sy: 1 },
+    coords: finalCoords,
+    createdAt: new Date().toISOString()
+  };
+  tplObj.signature = payload.signature || computeTemplateSignature(tplObj);
+
+  const idx = existing.findIndex(t => t.id === id);
+  if (idx >= 0) existing[idx] = tplObj;
+  else existing.push(tplObj);
+  writeCustomTemplates(existing);
+
+  return tplObj;
+}
+
+function deleteCustomTemplate(templateId) {
+  const id = String(templateId || '').trim();
+  if (!id || !id.startsWith('custom_')) return false;
+  const existing = loadCustomTemplates();
+  const target = existing.find(t => t.id === id);
+  if (!target) return false;
+  const next = existing.filter(t => t.id !== id);
+  writeCustomTemplates(next);
+  try {
+    const imgPath = resolveTemplateImagePath(target);
+    if (imgPath && fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
+  } catch (_) {}
+  return true;
+}
+
+function resolveTemplateImagePath(template) {
+  if (!template) return null;
+  if (template.isCustom && template.customImageFile) {
+    const pCustom = path.join(resolveCustomTemplatesDir(), path.basename(template.customImageFile));
+    if (fs.existsSync(pCustom)) return pCustom;
+  }
+  const rootDir = path.join(__dirname, '..');
+  const candidates = [
+    template.imageRelPath ? path.join(rootDir, template.imageRelPath) : null,
+    template.imageRelPath ? path.join(rootDir, 'data', 'omr_templates', path.basename(template.imageRelPath)) : null
+  ];
+  for (const p of candidates) {
+    if (p && fs.existsSync(p)) return p;
+  }
+  return null;
+}
+
 function getAllTemplates() {
-  return OMR_TEMPLATES;
+  const builtIns = OMR_TEMPLATES.map(t => ({
+    ...t,
+    isCustom: false,
+    signature: t.signature || computeTemplateSignature(t)
+  }));
+  return [...builtIns, ...loadCustomTemplates()];
 }
 
 function getTemplateById(templateId) {
-  return OMR_TEMPLATES.find(t => t.id === templateId) || OMR_TEMPLATES[0];
+  const all = getAllTemplates();
+  return all.find(t => t.id === templateId) || all[0];
 }
 
 module.exports = {
   OMR_TEMPLATES,
   getAllTemplates,
-  getTemplateById
+  getTemplateById,
+  loadCustomTemplates,
+  saveCustomTemplate,
+  deleteCustomTemplate,
+  scaleTemplateCoordsFromBase,
+  computeTemplateSignature,
+  resolveTemplateImagePath,
+  resolveCustomTemplatesDir
 };
 

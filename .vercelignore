@@ -22,6 +22,7 @@ scripts/
 data/exports/
 data/omr_database/
 data/ooxml_sources/
+data/omr_templates/custom/
 data/BANG_DIEM_*.csv
 data/CSDL_CHAM_THI_*.json
 data/NHAT_KY_LUU_VET_*.csv
