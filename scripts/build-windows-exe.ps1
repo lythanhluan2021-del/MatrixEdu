@@ -100,13 +100,6 @@ foreach ($f in $rootFilesToCopy) {
   }
 }
 
-# Blank printable OMR templates at repo root (if present)
-Get-ChildItem -Path $rootDir -File | Where-Object {
-  $_.Name -match '(Phieu_Thi_Tong_Hop|TLTN 2025|TN 2025-2026)' -and $_.Extension -in @('.pdf', '.docx')
-} | ForEach-Object {
-  Copy-Item -Path $_.FullName -Destination (Join-Path $portableDir $_.Name) -Force
-}
-
 # Copy src/ (JS backend modules only; exclude C# launcher source)
 $dstSrc = Join-Path $portableDir "src"
 New-Item -ItemType Directory -Path $dstSrc -Force | Out-Null
@@ -126,8 +119,9 @@ $dstData = Join-Path $portableDir "data"
 New-Item -ItemType Directory -Path $dstData -Force | Out-Null
 
 if (Test-Path $srcData) {
-  # Clean subdirectories to copy
-  $cleanDataDirs = @("omr_templates", "sample_docs", "google_drive_bank")
+  # Clean subdirectories to copy (NEVER the question bank with answers:
+  # data/google_drive_bank is excluded from the release package)
+  $cleanDataDirs = @("omr_templates", "sample_docs")
   foreach ($d in $cleanDataDirs) {
     $fromDir = Join-Path $srcData $d
     if (Test-Path $fromDir) {
@@ -151,6 +145,11 @@ if (Test-Path $srcData) {
   # Copy clean root files inside data/, strictly excluding secrets & real grading data
   $excludedDataFilePatterns = @(
     "ai_config.json",
+    "active_drive_bank.json",
+    "drive_files_map.json",
+    "drive_folder.html",
+    "sample_dapan_*.csv",
+    "sample_dapan_*.txt",
     "deleted_profiles.json",
     "omr_audit_logs.json",
     "omr_database.json",
@@ -193,12 +192,28 @@ if ($needDownload) {
   }
   $nodeZipName = "node-v$NodeVersion-win-x64.zip"
   $nodeUrl     = "https://nodejs.org/dist/v$NodeVersion/$nodeZipName"
+  $shaUrl      = "https://nodejs.org/dist/v$NodeVersion/SHASUMS256.txt"
   $tmpNodeZip  = Join-Path ([System.IO.Path]::GetTempPath()) $nodeZipName
   $tmpExtract  = Join-Path ([System.IO.Path]::GetTempPath()) ("node_extract_" + [System.Guid]::NewGuid().ToString("N"))
 
   try {
     Write-Host "      -> Dang tai $nodeUrl ..."
     Invoke-WebRequest -Uri $nodeUrl -OutFile $tmpNodeZip -UseBasicParsing
+    # Verify SHA-256 against the official SHASUMS256.txt before extracting.
+    # Reference value for v24.14.1 (from https://nodejs.org/dist/v24.14.1/SHASUMS256.txt):
+    # 6e50ce5498c0cebc20fd39ab3ff5df836ed2f8a31aa093cecad8497cff126d70  node-v24.14.1-win-x64.zip
+    Write-Host "      -> Dang kiem tra SHA-256 voi $shaUrl ..."
+    $shaText = (Invoke-WebRequest -Uri $shaUrl -UseBasicParsing).Content
+    $expectedLine = ($shaText -split "`n") | Where-Object { $_ -match [regex]::Escape($nodeZipName) } | Select-Object -First 1
+    if (-not $expectedLine) {
+      throw "Khong tim thay checksum SHA-256 cho $nodeZipName trong SHASUMS256.txt."
+    }
+    $expectedHash = ($expectedLine -split '\s+')[0].ToLower()
+    $actualHash = (Get-FileHash -Path $tmpNodeZip -Algorithm SHA256).Hash.ToLower()
+    if ($actualHash -ne $expectedHash) {
+      throw "Checksum SHA-256 khong khop cho $nodeZipName (mong doi $expectedHash, nhan $actualHash). Dung giai nen."
+    }
+    Write-Host "      -> SHA-256 khop: $actualHash"
     Add-Type -AssemblyName System.IO.Compression.FileSystem
     [System.IO.Compression.ZipFile]::ExtractToDirectory($tmpNodeZip, $tmpExtract)
 

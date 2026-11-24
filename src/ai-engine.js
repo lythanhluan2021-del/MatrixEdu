@@ -34,43 +34,19 @@ function loadAiConfig() {
     fileCfg = memoryAiConfig || {};
   }
 
+  // GĐ1 (P0-06, P0-07, QĐ5, QĐ6): khóa AI chỉ đọc từ file local
+  // data/ai_config.json hoặc biến môi trường; KHÔNG còn endpoint do client
+  // gửi — endpoint được cố định trong callRemoteLLM theo allowlist.
   const provider = fileCfg.provider || process.env.AI_PROVIDER || 'gemini';
   const apiKey = fileCfg.apiKey || process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY || process.env.ANTHROPIC_API_KEY || '';
   const model = fileCfg.model || process.env.AI_MODEL || (provider === 'openai' ? 'gpt-4o-mini' : provider === 'anthropic' ? 'claude-3-5-sonnet-latest' : 'gemini-2.5-flash');
-  const baseUrl = fileCfg.baseUrl || process.env.AI_BASE_URL || '';
 
   return {
     provider,
     apiKey: apiKey.trim(),
     model,
-    baseUrl: baseUrl.trim(),
     hasKey: Boolean(apiKey && apiKey.trim().length > 8)
   };
-}
-
-function saveAiConfig(newCfg) {
-  const current = loadAiConfig();
-  const merged = {
-    provider: newCfg.provider || current.provider || 'gemini',
-    apiKey: newCfg.apiKey !== undefined ? String(newCfg.apiKey).trim() : current.apiKey,
-    model: newCfg.model || current.model || 'gemini-2.5-flash',
-    baseUrl: newCfg.baseUrl !== undefined ? String(newCfg.baseUrl).trim() : current.baseUrl
-  };
-  memoryAiConfig = merged;
-
-  const targetPath = process.env.VERCEL ? TMP_CONFIG_PATH : BUNDLED_CONFIG_PATH;
-  try {
-    const dir = path.dirname(targetPath);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(targetPath, JSON.stringify(merged, null, 2), 'utf8');
-  } catch (_) {
-    try {
-      const tmpDir = path.dirname(TMP_CONFIG_PATH);
-      if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
-      fs.writeFileSync(TMP_CONFIG_PATH, JSON.stringify(merged, null, 2), 'utf8');
-    } catch (__) {}
-  }
-  return loadAiConfig();
 }
 
 /**
@@ -86,12 +62,33 @@ async function callRemoteLLM(systemPrompt, userPrompt, cfg = null) {
     };
   }
 
+  // GĐ1 (P0-07, QĐ6): allowlist 3 tên miền cố định, so khớp chính xác,
+  // chỉ https, timeout 60 giây. Khóa KHÔNG bao giờ nằm trong URL.
+  const LLM_ENDPOINTS = {
+    gemini: `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(aiCfg.model)}:generateContent`,
+    openai: 'https://api.openai.com/v1/chat/completions',
+    anthropic: 'https://api.anthropic.com/v1/messages'
+  };
+  const ALLOWED_LLM_HOSTS = new Set([
+    'generativelanguage.googleapis.com',
+    'api.openai.com',
+    'api.anthropic.com'
+  ]);
+  function resolveLlmEndpoint(fallbackUrl) {
+    const url = new URL(fallbackUrl);
+    if (url.protocol !== 'https:' || !ALLOWED_LLM_HOSTS.has(url.hostname)) {
+      throw new Error(`Địa chỉ AI không nằm trong allowlist: ${url.hostname}`);
+    }
+    return url.toString();
+  }
+
   try {
     if (aiCfg.provider === 'gemini') {
-      const endpoint = aiCfg.baseUrl || `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(aiCfg.model)}:generateContent?key=${encodeURIComponent(aiCfg.apiKey)}`;
+      const endpoint = resolveLlmEndpoint(LLM_ENDPOINTS.gemini);
       const res = await fetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        signal: AbortSignal.timeout(60000),
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': aiCfg.apiKey },
         body: JSON.stringify({
           systemInstruction: { parts: [{ text: systemPrompt }] },
           contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
@@ -110,10 +107,11 @@ async function callRemoteLLM(systemPrompt, userPrompt, cfg = null) {
       return { ok: true, data: JSON.parse(cleanJsonBlock(rawText)), provider: 'gemini', model: aiCfg.model };
     }
 
-    if (aiCfg.provider === 'openai' || aiCfg.provider === 'custom') {
-      const endpoint = aiCfg.baseUrl || 'https://api.openai.com/v1/chat/completions';
+    if (aiCfg.provider === 'openai') {
+      const endpoint = resolveLlmEndpoint(LLM_ENDPOINTS.openai);
       const res = await fetch(endpoint, {
         method: 'POST',
+        signal: AbortSignal.timeout(60000),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${aiCfg.apiKey}`
@@ -138,9 +136,10 @@ async function callRemoteLLM(systemPrompt, userPrompt, cfg = null) {
     }
 
     if (aiCfg.provider === 'anthropic') {
-      const endpoint = aiCfg.baseUrl || 'https://api.anthropic.com/v1/messages';
+      const endpoint = resolveLlmEndpoint(LLM_ENDPOINTS.anthropic);
       const res = await fetch(endpoint, {
         method: 'POST',
+        signal: AbortSignal.timeout(60000),
         headers: {
           'Content-Type': 'application/json',
           'x-api-key': aiCfg.apiKey,
@@ -1523,7 +1522,6 @@ async function regenerateSingleQuestion({ question, existingQuestions = [], meta
 
 module.exports = {
   loadAiConfig,
-  saveAiConfig,
   step1AnalyzeMaterial,
   step2GenerateMatrix,
   step3GenerateSpecification,

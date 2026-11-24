@@ -5,6 +5,8 @@ node_modules/
 
 # Secret API configuration (never commit API keys)
 data/ai_config.json
+# Admin login hash (GĐ1, QĐ3) — never commit
+data/admin_auth.json
 
 # Backup & temporary files
 *.bak
@@ -25,6 +27,9 @@ data/omr_templates/custom/
 # Runtime generated exports & logs
 data/exports/
 data/omr_database/
+data/active_drive_bank.json
+data/google_drive_bank/
+data/profiles/profile_thpt_*.json
 data/BANG_DIEM_*.csv
 data/CSDL_CHAM_THI_*.json
 data/NHAT_KY_LUU_VET_*.csv

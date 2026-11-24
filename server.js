@@ -48,12 +48,12 @@ const {
   resolveTemplateImagePath
 } = require('./src/omr-templates');
 const { extractDocumentContent } = require('./src/doc-parser');
+const auth = require('./src/auth'); // GĐ1 (P0-05, QĐ3): đăng nhập quản trị + rate-limit
 const { computeMatrixStatistics, validateExamProfile, generateShuffledVariants } = require('./src/qa-validator');
 const { SAMPLE_DOCUMENTS } = require('./src/sample-materials');
 const { loadDriveQuestionBank, syncGoogleDriveFolder, getDriveBankStatus } = require('./src/drive-bank');
 const {
   loadAiConfig,
-  saveAiConfig,
   step1AnalyzeMaterial,
   step2GenerateMatrix,
   step3GenerateSpecification,
@@ -128,13 +128,63 @@ function ensureSampleDocxFiles() {
 }
 ensureSampleDocxFiles();
 
+// GĐ1 (P0-05): tiêu đề bảo mật áp cho mọi phản hồi JSON/HTML.
+// Lưu ý: CSP vẫn cho 'unsafe-inline' vì index.html dùng script/style nội tuyến;
+// việc loại bỏ inline handler là việc của GĐ4 (P0-10).
+const SECURITY_HEADERS = {
+  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'",
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'same-origin'
+};
+
 function sendJson(res, statusCode, payload) {
   const body = JSON.stringify(payload);
   res.writeHead(statusCode, {
     'Content-Type': 'application/json; charset=utf-8',
-    'Cache-Control': 'no-store'
+    'Cache-Control': 'no-store',
+    ...SECURITY_HEADERS
   });
   res.end(body);
+}
+
+// GĐ1 (P0-05, P0-09): chặn API khi chưa đăng nhập quản trị.
+function requireAuth(req, res) {
+  const st = auth.getAuthState(req);
+  if (!st.authenticated) {
+    sendJson(res, 401, { ok: false, message: 'Yêu cầu đăng nhập quản trị.' });
+    return false;
+  }
+  return true;
+}
+
+// GĐ1 (P0-05): giới hạn gọi AI — 60 lần/giờ/IP.
+function requireAiRateLimit(req, res) {
+  const ip = auth.getClientIp(req);
+  const r = auth.checkRateLimit(`ai:${ip}`, 60, 60 * 60 * 1000);
+  if (!r.allowed) {
+    sendJson(res, 429, { ok: false, message: `Đã vượt giới hạn gọi AI (60 lần/giờ). Thử lại sau ${r.retryAfterSec} giây.` });
+    return false;
+  }
+  return true;
+}
+
+// GĐ1 (P0-08): lược bỏ mọi trường đáp án khỏi câu hỏi ngân hàng.
+function stripBankAnswers(q) {
+  if (!q || typeof q !== 'object') return q;
+  const out = { ...q };
+  delete out.correctAnswer;
+  delete out.answer;
+  if (Array.isArray(out.items)) {
+    out.items = out.items.map(it => {
+      const c = { ...it };
+      delete c.isCorrect;
+      delete c.correctAnswer;
+      delete c.answer;
+      return c;
+    });
+  }
+  if (Array.isArray(out.options)) out.options = [...out.options];
+  return out;
 }
 
 function readRequestBody(req, maxBytes = 25 * 1024 * 1024) {
@@ -153,11 +203,6 @@ function readRequestBody(req, maxBytes = 25 * 1024 * 1024) {
     req.on('end', () => resolve(Buffer.concat(chunks)));
     req.on('error', reject);
   });
-}
-
-function maskApiKey(key) {
-  if (!key || key.length < 8) return '';
-  return key.slice(0, 4) + '••••••••••••' + key.slice(-4);
 }
 
 function resolveRequestPathname(req, parsedUrl) {
@@ -237,7 +282,7 @@ const requestHandler = async (req, res) => {
         return;
       }
       const html = fs.readFileSync(htmlPath, 'utf8');
-      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', ...SECURITY_HEADERS });
       res.end(html);
       return;
     }
@@ -245,37 +290,98 @@ const requestHandler = async (req, res) => {
     // 2. API Kiểm tra trạng thái & Cấu hình AI (Không lộ khóa bí mật)
     if (req.method === 'GET' && pathname === '/api/health') {
       const cfg = loadAiConfig();
+      // GĐ1 (P0-06): chỉ trả "đã cấu hình: có/không", KHÔNG trả ký tự nào của khóa.
       sendJson(res, 200, {
         ok: true,
         app: 'AI RA ĐỀ KIỂM TRA TỰ ĐỘNG',
         aiConfig: {
           provider: cfg.provider,
           model: cfg.model,
-          baseUrl: cfg.baseUrl,
-          hasKey: cfg.hasKey,
-          maskedKey: maskApiKey(cfg.apiKey)
+          hasKey: cfg.hasKey
         }
       });
       return;
     }
 
-    if (req.method === 'POST' && pathname === '/api/ai-config') {
+    // 2b. API Đăng nhập quản trị (GĐ1, P0-05, QĐ3) — mật khẩu băm scrypt,
+    // phiên cookie httpOnly. Chỉ dùng khi chưa có mật khẩu (setup) hoặc đã có.
+    if (req.method === 'GET' && pathname === '/api/auth/status') {
+      const st = auth.getAuthState(req);
+      sendJson(res, 200, { ok: true, setup: st.setup, authenticated: st.authenticated });
+      return;
+    }
+
+    if (req.method === 'POST' && pathname === '/api/auth/setup') {
+      if (auth.isSetup()) {
+        sendJson(res, 403, { ok: false, message: 'Mật khẩu quản trị đã được đặt. Dùng chức năng đổi mật khẩu sau khi đăng nhập.' });
+        return;
+      }
+      const ip = auth.getClientIp(req);
+      const rl = auth.checkRateLimit(`setup:${ip}`, 5, 15 * 60 * 1000);
+      if (!rl.allowed) {
+        sendJson(res, 429, { ok: false, message: 'Thử lại sau ít phút.' });
+        return;
+      }
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
-      const updated = saveAiConfig(body);
-      sendJson(res, 200, {
-        ok: true,
-        message: updated.hasKey
-          ? `Đã lưu cấu hình AI (${updated.provider.toUpperCase()} - ${updated.model}) an toàn trên máy chủ.`
-          : 'Đã cập nhật cấu hình AI (chế độ Bộ máy Tri thức Nội bộ).',
-        aiConfig: {
-          provider: updated.provider,
-          model: updated.model,
-          baseUrl: updated.baseUrl,
-          hasKey: updated.hasKey,
-          maskedKey: maskApiKey(updated.apiKey)
-        }
-      });
+      try {
+        auth.setupAdminPassword(String(body.password || ''));
+      } catch (err) {
+        sendJson(res, 400, { ok: false, message: err.message });
+        return;
+      }
+      const token = auth.createSession();
+      auth.setSessionCookie(res, token);
+      sendJson(res, 200, { ok: true, message: 'Đã đặt mật khẩu quản trị và đăng nhập.' });
+      return;
+    }
+
+    if (req.method === 'POST' && pathname === '/api/auth/login') {
+      if (!auth.isSetup()) {
+        sendJson(res, 400, { ok: false, setupRequired: true, message: 'Chưa đặt mật khẩu quản trị. Hãy đặt mật khẩu ở lần chạy đầu tiên.' });
+        return;
+      }
+      const ip = auth.getClientIp(req);
+      const rl = auth.checkRateLimit(`login:${ip}`, 10, 15 * 60 * 1000);
+      if (!rl.allowed) {
+        sendJson(res, 429, { ok: false, message: `Đăng nhập sai quá nhiều lần. Thử lại sau ${rl.retryAfterSec} giây.` });
+        return;
+      }
+      const raw = await readRequestBody(req);
+      const body = JSON.parse(raw.toString('utf8') || '{}');
+      if (!auth.verifyAdminPassword(String(body.password || ''))) {
+        sendJson(res, 401, { ok: false, message: 'Mật khẩu không đúng.' });
+        return;
+      }
+      auth.resetRateLimit(`login:${ip}`);
+      const token = auth.createSession();
+      auth.setSessionCookie(res, token);
+      sendJson(res, 200, { ok: true, message: 'Đăng nhập thành công.' });
+      return;
+    }
+
+    if (req.method === 'POST' && pathname === '/api/auth/logout') {
+      auth.destroySession(auth.parseSessionToken(req));
+      auth.clearSessionCookie(res);
+      sendJson(res, 200, { ok: true, message: 'Đã đăng xuất.' });
+      return;
+    }
+
+    if (req.method === 'POST' && pathname === '/api/auth/change-password') {
+      if (!requireAuth(req, res)) return;
+      const raw = await readRequestBody(req);
+      const body = JSON.parse(raw.toString('utf8') || '{}');
+      if (!auth.verifyAdminPassword(String(body.currentPassword || ''))) {
+        sendJson(res, 401, { ok: false, message: 'Mật khẩu hiện tại không đúng.' });
+        return;
+      }
+      try {
+        auth.setupAdminPassword(String(body.newPassword || ''));
+      } catch (err) {
+        sendJson(res, 400, { ok: false, message: err.message });
+        return;
+      }
+      sendJson(res, 200, { ok: true, message: 'Đã đổi mật khẩu quản trị. Hãy đăng nhập lại.' });
       return;
     }
 
@@ -372,15 +478,21 @@ const requestHandler = async (req, res) => {
         list = list.filter(q => q.sourceFile === file);
       }
 
+      // GĐ1 (P0-08): mặc định lược bỏ đáp án; chỉ trả đáp án khi đã đăng nhập
+      // và có tham số yêu cầu tường minh ?includeAnswers=1.
+      const authed = auth.getAuthState(req).authenticated;
+      const wantAnswers = parsedUrl.searchParams.get('includeAnswers') === '1';
+      const out = list.slice(0, limit).map(q => (authed && wantAnswers) ? q : stripBankAnswers(q));
       sendJson(res, 200, {
         ok: true,
         total: list.length,
-        questions: list.slice(0, limit)
+        questions: out
       });
       return;
     }
 
     if (req.method === 'POST' && pathname === '/api/drive-bank/sync') {
+      if (!requireAuth(req, res)) return;
       let bodyData = {};
       try {
         const raw = await readRequestBody(req);
@@ -430,6 +542,8 @@ const requestHandler = async (req, res) => {
 
     // 5. BƯỚC 1: Phân tích tài liệu & phạm vi kiến thức
     if (req.method === 'POST' && pathname === '/api/step1-analyze') {
+      if (!requireAuth(req, res)) return;
+      if (!requireAiRateLimit(req, res)) return;
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
       const result = await step1AnalyzeMaterial(body);
@@ -439,6 +553,8 @@ const requestHandler = async (req, res) => {
 
     // 6. BƯỚC 2: Lập Ma trận đề kiểm tra
     if (req.method === 'POST' && pathname === '/api/step2-matrix') {
+      if (!requireAuth(req, res)) return;
+      if (!requireAiRateLimit(req, res)) return;
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
       const result = await step2GenerateMatrix(body);
@@ -448,6 +564,8 @@ const requestHandler = async (req, res) => {
 
     // 7. BƯỚC 3: Tạo Bản đặc tả đề kiểm tra
     if (req.method === 'POST' && pathname === '/api/step3-spec') {
+      if (!requireAuth(req, res)) return;
+      if (!requireAiRateLimit(req, res)) return;
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
       const result = step3GenerateSpecification(body);
@@ -457,6 +575,8 @@ const requestHandler = async (req, res) => {
 
     // 8. BƯỚC 4 & 5: Soạn Đề kiểm tra, Trộn Mã đề & Tạo Đáp án + Kiểm định QA
     if (req.method === 'POST' && pathname === '/api/step4-exam') {
+      if (!requireAuth(req, res)) return;
+      if (!requireAiRateLimit(req, res)) return;
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
       const result = await step4GenerateQuestionsAndAnswers(body);
@@ -466,6 +586,8 @@ const requestHandler = async (req, res) => {
 
     // 9. Tạo lại hoặc Đổi nhanh 1 câu hỏi đơn lẻ từ Ngân hàng đề / AI
     if (req.method === 'POST' && pathname === '/api/regenerate-question') {
+      if (!requireAuth(req, res)) return;
+      if (!requireAiRateLimit(req, res)) return;
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
       const result = await regenerateSingleQuestion(body);
@@ -475,6 +597,8 @@ const requestHandler = async (req, res) => {
 
     // 9b. Truy xuất danh sách câu hỏi ứng viên từ Ngân hàng đề để đổi/chọn lại câu hỏi ở Bước 4
     if (req.method === 'POST' && pathname === '/api/bank-candidates') {
+      if (!requireAuth(req, res)) return;
+      if (!requireAiRateLimit(req, res)) return;
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
       const result = getCandidateQuestionsForSwap(body);
@@ -484,6 +608,7 @@ const requestHandler = async (req, res) => {
 
     // 9c. Nạp đề thi thủ công từ file Word (.docx) — BẢO TOÀN 100% OOXML (Equation, MathType, Hình ảnh, Bảng biểu) để trộn đề
     if (req.method === 'POST' && pathname === '/api/import-manual-exam') {
+      if (!requireAuth(req, res)) return;
       try {
         const raw = await readRequestBody(req, 35 * 1024 * 1024);
         const body = JSON.parse(raw.toString('utf8') || '{}');
@@ -541,6 +666,7 @@ const requestHandler = async (req, res) => {
 
     // 10. Trộn & Nhân bản mã đề (hỗ trợ tùy chọn giữ mã gốc & đảo ý a/b/c/d Phần II)
     if (req.method === 'POST' && pathname === '/api/shuffle-variants') {
+      if (!requireAuth(req, res)) return;
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
       const rawCodes = body.customCodes;
@@ -561,6 +687,7 @@ const requestHandler = async (req, res) => {
 
     // 11. Kiểm định chất lượng 4 chiều (Ma trận - Đặc tả - Đề - Đáp án) & Kiểm tra phép tính độc lập
     if (req.method === 'POST' && pathname === '/api/validate-qa') {
+      if (!requireAuth(req, res)) return;
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
       const qaReport = validateExamProfile(body);
@@ -570,6 +697,7 @@ const requestHandler = async (req, res) => {
 
     // 12. Xuất file Word (.docx) chuẩn khổ A4 — ưu tiên chế độ Lossless OOXML khi đề có nguồn .docx thủ công
     if (req.method === 'POST' && pathname === '/api/export-docx') {
+      if (!requireAuth(req, res)) return;
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
       const examData = body.examData || body;
@@ -705,6 +833,7 @@ function extractOmrConfigFromProfile(profile = {}) {
 
     // 13. Quản lý Lưu trữ Hồ sơ đề kiểm tra (CRUD Profiles)
     if (req.method === 'GET' && pathname === '/api/profiles') {
+      if (!requireAuth(req, res)) return;
       const deletedIds = readDeletedProfileIds();
       const profileMap = new Map();
       for (const dir of [BUNDLED_PROFILES_DIR, PROFILES_DIR]) {
@@ -742,6 +871,7 @@ function extractOmrConfigFromProfile(profile = {}) {
     }
 
     if (req.method === 'GET' && pathname.startsWith('/api/profiles/')) {
+      if (!requireAuth(req, res)) return;
       const id = pathname.split('/')[3].replace(/[^a-zA-Z0-9_\-]/g, '');
       const deletedIds = readDeletedProfileIds();
       if (deletedIds.has(String(id))) {
@@ -762,6 +892,7 @@ function extractOmrConfigFromProfile(profile = {}) {
     }
 
     if (req.method === 'POST' && pathname === '/api/profiles') {
+      if (!requireAuth(req, res)) return;
       const raw = await readRequestBody(req);
       const profile = JSON.parse(raw.toString('utf8') || '{}');
       const id = (profile.id || `exam_${Date.now()}`).replace(/[^a-zA-Z0-9_\-]/g, '');
@@ -803,6 +934,7 @@ function extractOmrConfigFromProfile(profile = {}) {
     }
 
     if (req.method === 'DELETE' && pathname.startsWith('/api/profiles/')) {
+      if (!requireAuth(req, res)) return;
       const id = pathname.split('/')[3].replace(/[^a-zA-Z0-9_\-]/g, '');
       const writablePath = path.join(PROFILES_DIR, `${id}.json`);
       const bundledPath = path.join(BUNDLED_PROFILES_DIR, `${id}.json`);
@@ -843,6 +975,7 @@ function extractOmrConfigFromProfile(profile = {}) {
 
     // 14.0b. Tải lên & lưu Mẫu Phiếu Chấm tùy chỉnh của người dùng (PNG/JPG/WEBP/PDF đã render)
     if (req.method === 'POST' && pathname === '/api/omr/templates/custom') {
+      if (!requireAuth(req, res)) return;
       try {
         const raw = await readRequestBody(req);
         const body = JSON.parse(raw.toString('utf8') || '{}');
@@ -864,6 +997,7 @@ function extractOmrConfigFromProfile(profile = {}) {
 
     // 14.0c. Xóa Mẫu Phiếu Chấm tùy chỉnh
     if (req.method === 'DELETE' && pathname.startsWith('/api/omr/templates/custom/')) {
+      if (!requireAuth(req, res)) return;
       const tplId = decodeURIComponent(pathname.split('/')[5] || '').trim();
       const deleted = deleteCustomTemplate(tplId);
       if (!deleted) {
@@ -883,6 +1017,7 @@ function extractOmrConfigFromProfile(profile = {}) {
 
     // 14.1. Thông tin Phiếu TLTN chuẩn Bộ GD&ĐT và thông tin mẫu
     if (req.method === 'GET' && pathname === '/api/omr/template-info') {
+      if (!requireAuth(req, res)) return;
       const templateId = parsedUrl.searchParams.get('templateId') || 'bgd_2025_4code';
       const template = getTemplateById(templateId);
       const blankFilePath = path.join(__dirname, template.blankFileName);
@@ -903,6 +1038,7 @@ function extractOmrConfigFromProfile(profile = {}) {
 
     // 14.1c. Phân tích & Lưu Danh sách Học sinh (Excel, CSV, Text hoặc Mảng trực tiếp - Hỗ trợ Đa Lớp)
     if (req.method === 'POST' && pathname === '/api/omr/parse-roster') {
+      if (!requireAuth(req, res)) return;
       try {
         const raw = await readRequestBody(req);
         const body = JSON.parse(raw.toString('utf8') || '{}');
@@ -954,6 +1090,7 @@ function extractOmrConfigFromProfile(profile = {}) {
 
     // 14.1c2. Quản lý Kho Danh sách Nhiều Lớp (Rosters)
     if (req.method === 'GET' && pathname === '/api/omr/rosters') {
+      if (!requireAuth(req, res)) return;
       sendJson(res, 200, {
         ok: true,
         ...listClassRostersSummary()
@@ -962,6 +1099,7 @@ function extractOmrConfigFromProfile(profile = {}) {
     }
 
     if (req.method === 'POST' && pathname === '/api/omr/rosters/select') {
+      if (!requireAuth(req, res)) return;
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
       const requested = String(body.className || '').trim();
@@ -979,6 +1117,7 @@ function extractOmrConfigFromProfile(profile = {}) {
     }
 
     if (req.method === 'POST' && pathname === '/api/omr/rosters/clear') {
+      if (!requireAuth(req, res)) return;
       const summary = clearAllRosters();
       sendJson(res, 200, {
         ok: true,
@@ -989,6 +1128,7 @@ function extractOmrConfigFromProfile(profile = {}) {
     }
 
     if (req.method === 'DELETE' && pathname.startsWith('/api/omr/rosters/')) {
+      if (!requireAuth(req, res)) return;
       const clsName = decodeURIComponent(pathname.split('/')[4] || '');
       const summary = deleteClassRoster(clsName);
       sendJson(res, 200, {
@@ -1001,6 +1141,7 @@ function extractOmrConfigFromProfile(profile = {}) {
 
     // 14.1d. Quản lý các ca chấm đã lưu trong ổ cứng (data/omr_database)
     if (req.method === 'GET' && pathname === '/api/omr/sessions') {
+      if (!requireAuth(req, res)) return;
       sendJson(res, 200, {
         ok: true,
         sessions: listSavedOmrSessions()
@@ -1009,6 +1150,7 @@ function extractOmrConfigFromProfile(profile = {}) {
     }
 
     if (req.method === 'GET' && pathname.startsWith('/api/omr/sessions/')) {
+      if (!requireAuth(req, res)) return;
       const sessionId = pathname.split('/')[4];
       const sessionData = loadSavedOmrSession(sessionId);
       if (!sessionData) {
@@ -1023,6 +1165,7 @@ function extractOmrConfigFromProfile(profile = {}) {
     }
 
     if (req.method === 'POST' && pathname === '/api/omr/sessions') {
+      if (!requireAuth(req, res)) return;
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
       const snap = saveGradingSessionSnapshot({
@@ -1047,6 +1190,7 @@ function extractOmrConfigFromProfile(profile = {}) {
     }
 
     if (req.method === 'DELETE' && pathname.startsWith('/api/omr/sessions/')) {
+      if (!requireAuth(req, res)) return;
       const sessionId = pathname.split('/')[4];
       const deleted = deleteSavedOmrSession(sessionId);
       sendJson(res, 200, {
@@ -1165,6 +1309,7 @@ function extractOmrConfigFromProfile(profile = {}) {
 
     // 14.2c. Phân tích & Nhập Biểu đáp án nạp từ bên ngoài (Excel, CSV, Text, Word, JSON, McMIX, TnMaker)
     if (req.method === 'POST' && pathname === '/api/omr/parse-answer-key') {
+      if (!requireAuth(req, res)) return;
       try {
         const raw = await readRequestBody(req);
         const body = JSON.parse(raw.toString('utf8') || '{}');
@@ -1203,6 +1348,7 @@ function extractOmrConfigFromProfile(profile = {}) {
 
     // 14.3. Chấm theo lô (Batch Grading)
     if (req.method === 'POST' && pathname === '/api/omr/grade-batch') {
+      if (!requireAuth(req, res)) return;
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
       let answerKeysByCode = body.answerKeysByCode || {};
@@ -1286,9 +1432,12 @@ function extractOmrConfigFromProfile(profile = {}) {
 
     // 14.4. Hiệu chỉnh bài thi học sinh & Ghi nhận Lưu vết (Audit Trail)
     if (req.method === 'POST' && pathname === '/api/omr/update-paper') {
+      if (!requireAuth(req, res)) return;
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
-      const { paperId, updates, allPapers, answerKeysByCode, pointRules, roster, user, sessionId } = body;
+      // GĐ1 (P0-09): tên người sửa lấy từ phiên đăng nhập, không lấy từ body client.
+      const { paperId, updates, allPapers, answerKeysByCode, pointRules, roster, sessionId } = body;
+      const user = 'Quản trị viên';
 
       if (!paperId || !updates || !Array.isArray(allPapers)) {
         sendJson(res, 400, { ok: false, message: 'Dữ liệu hiệu chỉnh bài thi không hợp lệ!' });
@@ -1325,6 +1474,7 @@ function extractOmrConfigFromProfile(profile = {}) {
 
     // 14.4b. Báo cáo Tổng hợp Toàn Khối theo Đề thi (Multi-Class Grade Report)
     if (req.method === 'GET' && pathname === '/api/omr/grade-report') {
+      if (!requireAuth(req, res)) return;
       const examId = parsedUrl.searchParams.get('examId') || '';
       const report = aggregateGradeReportByExam(examId);
       sendJson(res, 200, report);
@@ -1333,6 +1483,7 @@ function extractOmrConfigFromProfile(profile = {}) {
 
     // 14.5. Lấy toàn bộ lịch sử Lưu vết can thiệp (Audit Trail)
     if (req.method === 'GET' && pathname === '/api/omr/audit-logs') {
+      if (!requireAuth(req, res)) return;
       sendJson(res, 200, {
         ok: true,
         auditLogs: getAuditLogs()
@@ -1342,6 +1493,7 @@ function extractOmrConfigFromProfile(profile = {}) {
 
     // 14.6. Đóng gói & Xuất CSDL Chấm thi + Lưu vết (JSON/CSV)
     if (req.method === 'POST' && pathname === '/api/omr/sync-gdrive') {
+      if (!requireAuth(req, res)) return;
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
       const folderId = String(body.folderId || '').trim();
@@ -1357,6 +1509,7 @@ function extractOmrConfigFromProfile(profile = {}) {
 
     // 14.7. Xuất Bảng điểm lớp hoặc Toàn khối dạng CSV (tương thích Microsoft Excel UTF-8 BOM)
     if (req.method === 'POST' && pathname === '/api/omr/export-roster-csv') {
+      if (!requireAuth(req, res)) return;
       const raw = await readRequestBody(req);
       const body = JSON.parse(raw.toString('utf8') || '{}');
       const gradedPapers = body.gradedPapers || [];
@@ -1386,6 +1539,7 @@ function extractOmrConfigFromProfile(profile = {}) {
 
     // 14.8. Xuất Nhật ký lưu vết can thiệp dạng CSV
     if (req.method === 'GET' && pathname === '/api/omr/export-audit-csv') {
+      if (!requireAuth(req, res)) return;
       const csvContent = exportAuditLogsToCsv();
       const csvBuffer = Buffer.from(csvContent, 'utf8');
 
@@ -1400,7 +1554,10 @@ function extractOmrConfigFromProfile(profile = {}) {
 
     sendJson(res, 404, { ok: false, message: `Không tìm thấy đường dẫn API: ${pathname}` });
   } catch (err) {
-    sendJson(res, 500, { ok: false, message: err.message || 'Lỗi máy chủ nội bộ.' });
+    console.error('[requestHandler]', err);
+    try {
+      sendJson(res, 500, { ok: false, message: 'Lỗi máy chủ nội bộ.' });
+    } catch (_) {}
   }
 };
 

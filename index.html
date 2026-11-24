@@ -2170,6 +2170,7 @@
               id="autosave-text">Đã đồng bộ</span></span>
           <button class="btn btn-ghost-light btn-sm" onclick="openProfilesModal()">🗂️ Hồ sơ</button>
           <button class="btn btn-ghost-light btn-sm" onclick="openAiConfigModal()">🔑 AI</button>
+          <button id="auth-header-btn" class="btn btn-ghost-light btn-sm" onclick="openAuthModal()">🔐 Đăng nhập</button>
           <button class="btn btn-accent btn-sm" onclick="saveCurrentProfile()">💾 Lưu</button>
         </div>
       </div>
@@ -3936,6 +3937,39 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
   </div>
 
   <!-- MODAL 3: CẤU HÌNH KẾT NỐI AI (BẢO MẬT KHÓA API Ở MÁY CHỦ) -->
+  <!-- MODAL: ĐĂNG NHẬP QUẢN TRỊ (GĐ1, P0-05, QĐ3) -->
+  <div class="modal-backdrop" id="auth-modal">
+    <div class="modal-box" style="max-width:460px;">
+      <div class="card-header">
+        <div class="card-title">🔐 Đăng nhập Quản trị MatrixEdu</div>
+        <button class="btn btn-outline btn-sm" onclick="closeModal('auth-modal')">Đóng ✕</button>
+      </div>
+      <div class="alert" id="auth-modal-info">
+        Bản chạy trên máy giáo viên yêu cầu đăng nhập quản trị để ra đề, xem đáp án
+        và chấm OMR. Mật khẩu chỉ lưu trên máy này (băm scrypt), không gửi đi đâu.
+      </div>
+      <div class="form-group" style="margin-bottom:12px;" id="auth-setup-hint" hidden>
+        <div class="alert" style="background:#fef9c3; border-color:#facc15; color:#713f12;">
+          <strong>Lần chạy đầu tiên:</strong> hãy đặt mật khẩu quản trị (ít nhất 8 ký tự).
+          Ghi nhớ mật khẩu này — không có cách khôi phục qua email.
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:12px;">
+        <label id="auth-password-label">Mật khẩu quản trị:</label>
+        <input type="password" id="auth-password-input" autocomplete="current-password" placeholder="Nhập mật khẩu quản trị..." onkeydown="if(event.key==='Enter'){submitAuthForm();}" />
+      </div>
+      <div class="form-group" style="margin-bottom:16px;" id="auth-confirm-group" hidden>
+        <label>Nhập lại mật khẩu:</label>
+        <input type="password" id="auth-password-confirm" autocomplete="new-password" placeholder="Nhập lại mật khẩu..." onkeydown="if(event.key==='Enter'){submitAuthForm();}" />
+      </div>
+      <div id="auth-error" style="color:#dc2626; font-size:0.85rem; margin-bottom:10px;" hidden></div>
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button class="btn btn-outline" onclick="closeModal('auth-modal')">Hủy</button>
+        <button class="btn btn-primary" id="auth-submit-btn" onclick="submitAuthForm()">🔐 Đăng nhập</button>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-backdrop" id="ai-config-modal">
     <div class="modal-box">
       <div class="card-header">
@@ -3943,34 +3977,18 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         <button class="btn btn-outline btn-sm" onclick="closeModal('ai-config-modal')">Đóng ✕</button>
       </div>
       <div class="alert">
-        Khóa API được lưu trữ và gọi trực tiếp từ <strong>Máy chủ (server.js)</strong>, tuyệt đối không nhúng trong mã
-        HTML trình duyệt. Nếu để trống, ứng dụng tự động vận hành bằng <strong>Bộ máy Tri thức & Phân tích Tài liệu Nội
-          bộ</strong>.
+        Khóa API chỉ được đặt trong file <strong>data/ai_config.json</strong> trên máy local
+        (hoặc biến môi trường), <strong>không còn nhập qua giao diện web</strong> — route
+        đổi khóa qua API đã bị xóa (GĐ1, P0-06). Nếu chưa cấu hình, ứng dụng tự động
+        vận hành bằng <strong>Bộ máy Tri thức & Phân tích Tài liệu Nội bộ</strong>.
+        Địa chỉ máy chủ AI được cố định theo allowlist trong mã nguồn (QĐ6).
       </div>
       <div class="form-group" style="margin-bottom:12px;">
-        <label>Nhà cung cấp dịch vụ AI:</label>
-        <select id="ai-provider-select">
-          <option value="gemini">Google Gemini API (gemini-2.5-flash / gemini-2.0-flash)</option>
-          <option value="openai">OpenAI / Compatible API (gpt-4o-mini / gpt-4o)</option>
-          <option value="anthropic">Anthropic Claude API (claude-3-5-sonnet-latest)</option>
-        </select>
-      </div>
-      <div class="form-group" style="margin-bottom:12px;">
-        <label>Tên mô hình (Model Name):</label>
-        <input type="text" id="ai-model-input" value="gemini-2.5-flash" />
-      </div>
-      <div class="form-group" style="margin-bottom:12px;">
-        <label>API Key (Lưu trên Server):</label>
-        <input type="text" id="ai-key-input" autocomplete="off" data-lpignore="true" style="-webkit-text-security:disc;" placeholder="Nhập API Key mới (hoặc để trống nếu giữ nguyên)..." />
-        <small id="ai-current-key-hint" style="color:var(--muted);"></small>
-      </div>
-      <div class="form-group" style="margin-bottom:16px;">
-        <label>Custom Endpoint URL (Tùy chọn):</label>
-        <input type="text" id="ai-baseurl-input" placeholder="Để trống nếu dùng địa chỉ chuẩn của Google/OpenAI..." />
+        <label>Trạng thái cấu hình AI hiện tại:</label>
+        <div id="ai-current-key-hint" style="font-size:0.9rem; padding:10px; background:#f8fafc; border-radius:6px;"></div>
       </div>
       <div style="display:flex; justify-content:flex-end; gap:8px;">
-        <button class="btn btn-outline" onclick="closeModal('ai-config-modal')">Hủy</button>
-        <button class="btn btn-primary" onclick="saveAiConfigToServer()">💾 Lưu cấu hình AI trên Máy chủ</button>
+        <button class="btn btn-primary" onclick="closeModal('ai-config-modal')">Đóng</button>
       </div>
     </div>
   </div>
@@ -7337,43 +7355,107 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       openProfilesModal();
     }
 
+    // --- GĐ1 (P0-05, QĐ3): trạng thái đăng nhập quản trị ---
+    window.__mxAuthed = false;
+    window.__mxAuthSetup = false;
+
+    async function checkAuthStatus() {
+      try {
+        const res = await fetch('/api/auth/status');
+        const data = await res.json();
+        window.__mxAuthSetup = !!data.setup;
+        window.__mxAuthed = !!data.authenticated;
+      } catch (_) {
+        window.__mxAuthSetup = false;
+        window.__mxAuthed = false;
+      }
+      updateAuthHeaderBtn();
+      return { setup: window.__mxAuthSetup, authenticated: window.__mxAuthed };
+    }
+
+    function updateAuthHeaderBtn() {
+      const btn = document.getElementById('auth-header-btn');
+      if (!btn) return;
+      if (window.__mxAuthed) {
+        btn.textContent = '🔓 Quản trị viên • Đăng xuất';
+        btn.onclick = logoutAdmin;
+      } else {
+        btn.textContent = window.__mxAuthSetup ? '🔐 Đăng nhập' : '🔐 Đặt mật khẩu';
+        btn.onclick = openAuthModal;
+      }
+    }
+
+    function openAuthModal() {
+      const setupMode = !window.__mxAuthSetup;
+      document.getElementById('auth-setup-hint').hidden = !setupMode;
+      document.getElementById('auth-confirm-group').hidden = !setupMode;
+      document.getElementById('auth-password-label').textContent = setupMode ? 'Mật khẩu quản trị mới:' : 'Mật khẩu quản trị:';
+      document.getElementById('auth-submit-btn').textContent = setupMode ? '🔐 Đặt mật khẩu & Đăng nhập' : '🔐 Đăng nhập';
+      document.getElementById('auth-error').hidden = true;
+      document.getElementById('auth-password-input').value = '';
+      const cf = document.getElementById('auth-password-confirm');
+      if (cf) cf.value = '';
+      document.getElementById('auth-modal').classList.add('open');
+      setTimeout(() => document.getElementById('auth-password-input').focus(), 50);
+    }
+
+    async function submitAuthForm() {
+      const setupMode = !window.__mxAuthSetup;
+      const pw = document.getElementById('auth-password-input').value;
+      const errEl = document.getElementById('auth-error');
+      const showErr = (msg) => { errEl.textContent = msg; errEl.hidden = false; };
+      if (setupMode) {
+        const pw2 = document.getElementById('auth-password-confirm').value;
+        if (pw.length < 8) { showErr('Mật khẩu phải dài ít nhất 8 ký tự.'); return; }
+        if (pw !== pw2) { showErr('Hai lần nhập mật khẩu chưa khớp.'); return; }
+        const res = await fetch('/api/auth/setup', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pw })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) { showErr(data.message || 'Không đặt được mật khẩu.'); return; }
+      } else {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pw })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) { showErr(data.message || 'Đăng nhập thất bại.'); return; }
+      }
+      window.__mxAuthSetup = true;
+      window.__mxAuthed = true;
+      updateAuthHeaderBtn();
+      closeModal('auth-modal');
+      showToast(setupMode ? 'Đã đặt mật khẩu quản trị và đăng nhập.' : 'Đăng nhập thành công.', 'success');
+      // Sau khi đăng nhập mới tải lại ngân hàng kèm đáp án.
+      globalDriveBankData = null;
+      await loadDriveBankData();
+    }
+
+    async function logoutAdmin() {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.__mxAuthed = false;
+      updateAuthHeaderBtn();
+      globalDriveBankData = null;
+      await loadDriveBankData();
+      showToast('Đã đăng xuất.', 'info');
+    }
+
+    // GĐ1 (P0-06, QĐ5): modal AI chỉ hiển thị trạng thái — không còn nhập khóa qua web.
     async function openAiConfigModal() {
       document.getElementById('ai-config-modal').classList.add('open');
       const res = await fetch('/api/health');
       const data = await res.json();
+      const hint = document.getElementById('ai-current-key-hint');
       if (data.ok && data.aiConfig) {
-        document.getElementById('ai-provider-select').value = data.aiConfig.provider || 'gemini';
-        document.getElementById('ai-model-input').value = data.aiConfig.model || 'gemini-2.5-flash';
-        document.getElementById('ai-baseurl-input').value = data.aiConfig.baseUrl || '';
-        document.getElementById('ai-current-key-hint').textContent = data.aiConfig.hasKey
-          ? `Đang lưu khóa trên Server: ${data.aiConfig.maskedKey}`
-          : 'Hiện chưa cấu hình API Key bên ngoài (đang dùng Bộ máy Tri thức Nội bộ).';
-      }
-    }
-
-    async function saveAiConfigToServer() {
-      const provider = document.getElementById('ai-provider-select').value;
-      const model = document.getElementById('ai-model-input').value.trim();
-      const apiKey = document.getElementById('ai-key-input').value.trim();
-      const baseUrl = document.getElementById('ai-baseurl-input').value.trim();
-
-      const payload = { provider, model, baseUrl };
-      if (apiKey) payload.apiKey = apiKey;
-
-      const res = await fetch('/api/ai-config', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const data = await res.json();
-      if (data.ok) {
-        const badge = document.getElementById('ai-status-badge');
-        badge.textContent = data.aiConfig.hasKey
-          ? `🤖 Đã kết nối AI (${data.aiConfig.provider.toUpperCase()})`
-          : '⚡ Bộ máy Tri thức & AI Sẵn sàng';
-        document.getElementById('ai-key-input').value = '';
-        closeModal('ai-config-modal');
-        showToast(data.message, 'success');
+        hint.innerHTML = `Nhà cung cấp: <strong>${escapeHtml(data.aiConfig.provider || 'gemini')}</strong><br>` +
+          `Mô hình: <strong>${escapeHtml(data.aiConfig.model || '')}</strong><br>` +
+          (data.aiConfig.hasKey
+            ? 'Trạng thái: <strong style="color:#16a34a;">Đã cấu hình khóa AI trên máy chủ.</strong>'
+            : 'Trạng thái: <strong>Chưa cấu hình khóa AI — đang dùng Bộ máy Tri thức Nội bộ.</strong><br>' +
+              'Để dùng AI: mở file <code>data/ai_config.json</code> trên máy (định dạng {"provider","model","apiKey"}) rồi khởi động lại máy chủ.');
+      } else {
+        hint.textContent = 'Không đọc được trạng thái AI.';
       }
     }
 
@@ -8264,7 +8346,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
           if (modalSub) modalSub.textContent = `Bóc tách từ thư mục: ${data.folderName || 'Google Drive'} (${data.folderId || ''}) — ${data.totalQuestions || 0} câu`;
         }
 
-        const qRes = await fetch('/api/drive-bank/questions?limit=200');
+        const qRes = await fetch('/api/drive-bank/questions?limit=200' + (window.__mxAuthed ? '&includeAnswers=1' : ''));
         const qData = await qRes.json();
         if (qData.ok) {
           globalDriveBankData = qData.questions || [];
@@ -8339,11 +8421,15 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
           </div>`;
         } else if (q.format === 'true_false' && Array.isArray(q.items)) {
           bodyHtml = `<div style="display:flex; flex-direction:column; gap:4px; margin-top:6px; font-size:0.83rem; background:#f8fafc; padding:8px; border-radius:6px;">
-            ${q.items.map(it => `<div><strong>${it.letter})</strong> ${escapeHtml(it.text)} <span style="font-weight:700; color:${it.isCorrect ? '#16a34a' : '#dc2626'};">[${it.isCorrect ? 'ĐÚNG' : 'SAI'}] (${it.level || 'Biết'})</span></div>`).join('')}
+            ${q.items.map(it => `<div><strong>${it.letter})</strong> ${escapeHtml(it.text)}${it.isCorrect === undefined ? '' : ` <span style="font-weight:700; color:${it.isCorrect ? '#16a34a' : '#dc2626'};">[${it.isCorrect ? 'ĐÚNG' : 'SAI'}]</span>`} (${it.level || 'Biết'})</div>`).join('')}
           </div>`;
         } else {
-          bodyHtml = `<div style="margin-top:6px; font-size:0.83rem; color:#475569; background:#f8fafc; padding:6px 10px; border-radius:6px;">
-            <strong>Đáp án/HD:</strong> ${escapeHtml(q.answer || 'Theo chuẩn kiến thức SGK')}
+          bodyHtml = q.answer
+            ? `<div style="margin-top:6px; font-size:0.83rem; color:#475569; background:#f8fafc; padding:6px 10px; border-radius:6px;">
+            <strong>Đáp án/HD:</strong> ${escapeHtml(q.answer)}
+          </div>`
+            : `<div style="margin-top:6px; font-size:0.83rem; color:#475569; background:#f8fafc; padding:6px 10px; border-radius:6px;">
+            🔒 <strong>Đáp án ẩn</strong> — đăng nhập quản trị để xem.
           </div>`;
         }
 
@@ -8373,6 +8459,11 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
     // Kiểm tra các file .docx có trong thư mục dự án để hiển thị nút chọn nhanh (KHÔNG tự động nạp đề mẫu ảo khi khởi chạy để tránh chấm nhầm đáp án ở Bước 7)
     window.addEventListener('DOMContentLoaded', async () => {
       try {
+        // GĐ1 (P0-05): kiểm tra đăng nhập trước; chưa đặt mật khẩu hoặc chưa
+        // đăng nhập thì mở hộp thoại đăng nhập/đặt mật khẩu.
+        const authState = await checkAuthStatus();
+        if (!authState.authenticated) openAuthModal();
+
         const healthRes = await fetch('/api/health');
         const healthData = await healthRes.json();
         if (healthData.ok && healthData.aiConfig?.hasKey) {
