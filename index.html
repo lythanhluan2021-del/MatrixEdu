@@ -664,49 +664,6 @@
       transform: none !important;
     }
 
-    /* 7 BƯỚC — MỘT MÀU CHỦ ĐẠO DUY NHẤT (GĐ5/UI-03) */
-    .glass-zone-step-1,
-    .glass-zone-step-2,
-    .glass-zone-step-3,
-    .glass-zone-step-4,
-    .glass-zone-step-5,
-    .glass-zone-step-6,
-
-
-    .icon-tint-1,
-    .icon-tint-2,
-    .icon-tint-3,
-    .icon-tint-4,
-    .icon-tint-5,
-    .icon-tint-6,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /* Grid & Form Controls */
     .grid-4 {
       display: grid;
@@ -2132,6 +2089,42 @@
     @media (max-width: 768px) {
       #step-1 .meta-grid { grid-template-columns: 1fr; }
     }
+    /* ================================================================== */
+    /* GĐ5d (UI-15): BỐ CỤC BƯỚC 1 — SỬA TỚI GỐC                          */
+    /* Nguyên nhân gốc: khối selector "treo" của GĐ5 (dòng ~667:          */
+    /* .glass-zone-step-1..6 + .icon-tint-1..6, không có thân rule) đã  */
+    /* gộp vào rule .grid-4 phía sau, khiến mọi <section> bước thành    */
+    /* lưới 4 cột repeat(4, 1fr) = minmax(auto, 1fr): cột không co được  */
+    /* dưới min-content → lưới rộng hơn khung chứa → tràn ngang, bị      */
+    /* .main-viewport { overflow-x: hidden } cắt mất mép phải; cột 1.1  */
+    /* chỉ còn ~170px. Đã xóa khối selector treo đó; dưới đây là bố cục */
+    /* tường minh thay thế: 1.1 full-width (8 trường 4 cột), 1.2 + 1.3  */
+    /* 2 cột khi đủ rộng, xếp chồng khi hẹp. Mọi track dùng            */
+    /* minmax(0, 1fr) để không bao giờ phình quá khung chứa.            */
+    /* ================================================================== */
+    #step-1 { display: block; }
+    #step-1 .meta-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+    #step-1 .meta-grid .form-group label { white-space: normal; overflow: visible; text-overflow: clip; }
+    #step-1-lower { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: stretch; margin-top: 16px; }
+    #step-1-lower > * { min-width: 0; }
+    #step-1 .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    /* UI-17 Toast lên góc trên-phải (dưới header) để không che nút     */
+    /* footer bước; giới hạn 3 toast cùng lúc (xem showToast).          */
+    #toast-container { position: fixed; top: 76px; bottom: auto; right: 20px; z-index: 1200; }
+    /* UI-20 Bảng Bước 2: thanh cuộn ngang nhìn thấy được ở cỡ hẹp.     */
+    .matrix-table-wrap { scrollbar-width: thin; scrollbar-color: var(--mx-blue) var(--mx-line-soft); }
+    .matrix-table-wrap::-webkit-scrollbar { height: 10px; }
+    .matrix-table-wrap::-webkit-scrollbar-thumb { background: var(--mx-blue); border-radius: 5px; }
+    .matrix-table-wrap::-webkit-scrollbar-track { background: var(--mx-line-soft); border-radius: 5px; }
+    .matrix-table { min-width: 860px; }
+    @media (max-width: 1280px) {
+      #step-1-lower { grid-template-columns: 1fr; }
+      #step-1 .meta-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 768px) {
+      #step-1 .meta-grid { grid-template-columns: 1fr; }
+      #step-1 .grid-2 { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 
@@ -2172,7 +2165,7 @@
           <span class="header-status"><span id="ai-status-badge" class="badge badge-amber"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> AI chưa cấu hình khóa</span>
           <span id="session-autosave-badge"
             class="autosave-badge"
-            title="Tự động sao lưu"><span id="autosave-dot" class="autosave-dot">●</span></span> <span
+            title="Tự động sao lưu">Tự động sao lưu <span id="autosave-dot" class="autosave-dot">●</span></span> <span
               id="autosave-text">Chưa đồng bộ</span></span>
           <button class="btn btn-ghost-light btn-sm" onclick="openProfilesModal()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Hồ sơ</button>
           <button class="btn btn-ghost-light btn-sm" onclick="openAiConfigModal()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> AI</button>
@@ -2421,6 +2414,7 @@
               </div>
             </div>
 
+            <div id="step-1-lower">
             <!-- 1.2. NẠP MA TRẬN & GOOGLE DRIVE -->
             <div class="card">
               <div class="card-header">
@@ -2442,7 +2436,7 @@
                     <input type="file" id="file-upload-input" style="display: none"
                       accept=".docx,.pdf,.txt,.md,.png,.jpg,.jpeg" onchange="handleFileUpload(event)" />
                     <div style="font-size: 1.7rem; margin-bottom: 4px"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-                    <div style="font-weight: 700; color: var(--primary)">Tải lên Ma trận gốc (.docx, .pdf)</div>
+                    <div style="font-weight: 700; color: var(--primary)">Tải lên Ma trận gốc</div><div style="font-size: 0.8rem; color: var(--mx-ink-2); font-weight: 600">.docx, .pdf</div>
                   </div>
                   <div id="uploaded-files-list" style="margin-top: 8px; font-size: 0.84rem"></div>
                 </div>
@@ -2518,6 +2512,7 @@
                 </button>
               </div>
             </div>
+            </div>
           </section>
 
           <!-- ================================================================== -->
@@ -2548,7 +2543,7 @@
                   <button type="button" class="btn btn-sm"
                     class="drive-panel"
                     onclick="downloadMatrixAndSpecDocx(this)"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Xuất Word</button>
-                  <button type="button" class="btn btn-primary btn-sm" onclick="confirmStep2AndGoStep4()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="8" width="14" height="10" rx="2"/><line x1="12" y1="8" x2="12" y2="4"/><circle cx="12" cy="3" r="1"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg> Soạn đề →</button>
+                  <button type="button" class="btn btn-primary btn-sm" onclick="confirmStep2AndGoStep4()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="8" width="14" height="10" rx="2"/><line x1="12" y1="8" x2="12" y2="4"/><circle cx="12" cy="3" r="1"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg> Sinh đề →</button>
                 </div>
               </div>
 
@@ -2604,7 +2599,7 @@
                 <button class="btn btn-secondary" onclick="goToStep(1)">← Bước 1</button>
                 <div style="display: flex; gap: 8px">
                   <button class="btn btn-secondary" onclick="confirmStep2AndGoStep3()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Bước 3: Đặc tả →</button>
-                  <button class="btn btn-primary btn-lg" onclick="confirmStep2AndGoStep4()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="8" width="14" height="10" rx="2"/><line x1="12" y1="8" x2="12" y2="4"/><circle cx="12" cy="3" r="1"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg> Bước 4: Soạn đề →</button>
+                  <button class="btn btn-primary btn-lg" onclick="confirmStep2AndGoStep4()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="8" width="14" height="10" rx="2"/><line x1="12" y1="8" x2="12" y2="4"/><circle cx="12" cy="3" r="1"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg> Bước 4: Sinh đề →</button>
                 </div>
               </div>
             </div>
@@ -2640,7 +2635,7 @@
               <div class="step-footer">
                 <button class="btn btn-secondary" onclick="goToStep(2)">← Bước 2</button>
                 <button class="btn btn-primary btn-lg" onclick="confirmStep3AndGoStep4()">
-                  Bước 4: Soạn đề →
+                  Bước 4: Sinh đề →
                 </button>
               </div>
             </div>
@@ -4491,6 +4486,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       if (type === 'error') el.style.borderLeftColor = 'var(--mx-err)';
       if (type === 'warn') el.style.borderLeftColor = 'var(--mx-amber)';
       el.textContent = msg;
+      while (container.children.length >= 3) container.firstChild.remove();
       container.appendChild(el);
       setTimeout(() => el.remove(), 4200);
     }
@@ -6173,7 +6169,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       const specs = appState.specification || [];
 
       if (specs.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px">Nhấn "Đồng bộ lại Bản đặc tả từ Ma trận" để hiển thị.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px">Nhấn "Đồng bộ Ma trận" để hiển thị.</td></tr>`;
         return;
       }
 
@@ -6328,7 +6324,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
     function renderQuestionsEditorList(questions) {
       const container = document.getElementById('exam-editor-container');
       if (!questions || questions.length === 0) {
-        container.innerHTML = `<div class="alert alert-warn">Chưa có câu hỏi nào. Hãy nhấn "Tự động Sinh Bộ Câu Hỏi bám sát Ma trận & Đặc tả".</div>`;
+        container.innerHTML = `<div class="alert alert-warn">Chưa có câu hỏi nào. Hãy nhấn "Sinh đề".</div>`;
         return;
       }
 
