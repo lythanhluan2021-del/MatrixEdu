@@ -112,9 +112,9 @@ check('UI-17 showToast caps concurrent toasts at 3 (drops oldest)',
 check('UI-17 showToast still auto-dismisses',
   /function showToast[\s\S]*?setTimeout\(\(\)\s*=>\s*el\.remove\(\),\s*4200\)/.test(html),
   'auto-dismiss missing');
-check('UI-17 "Đang sinh…" toast only inside runStep4GenerateExam (no auto-generate on step-4 entry)',
+check('UI-17 [GĐ5h thay thế] "Đang soạn…" toast only inside runStep4GenerateExam (no auto-generate on step-4 entry)',
   (() => {
-    const needle = 'Đang sinh bộ câu hỏi';
+    const needle = 'Đang soạn bộ câu hỏi';
     const first = html.indexOf(needle);
     const last = html.lastIndexOf(needle);
     const genStart = html.indexOf('async function runStep4GenerateExam');
@@ -122,21 +122,21 @@ check('UI-17 "Đang sinh…" toast only inside runStep4GenerateExam (no auto-gen
     return first > 0 && first === last && first > genStart && first < genEnd
       && !/goToStep\(4\)[\s\S]{0,200}?runStep4GenerateExam/.test(html);
   })(), '"Đang sinh…" toast appears outside runStep4GenerateExam');
-// GĐ5g (UI-25) supersedes: nút chuyển bước CHỈ chuyển trang, không sinh
-// đề — nhãn "Bước 4: Sinh đề →" đổi thành "Bước 4: Soạn đề →" (footer
-// Bước 2/3) và "Bước 4 →" (toolbar Bước 2). Nút sinh đề thật vẫn ở Bước 4.
-check('UI-17 [GĐ5g thay thế] nút chuyển bước mang nhãn "Soạn đề", không sinh đề',
-  html.includes('Bước 4: Soạn đề →') && html.includes('Bước 4 →')
-  && !html.includes('Bước 4: Sinh đề →'),
-  'nhãn nút chuyển bước chưa đổi theo GĐ5g');
+// GĐ5h (UI-30) supersedes: lối tắt Bước 2 -> Bước 4 đã xóa hẳn (cả nút
+// toolbar "Bước 4 →", nút footer "Bước 4: Soạn đề →" và hàm
+// confirmStep2AndGoStep4); chỉ còn nút "Bước 4: Soạn đề →" ở footer Bước 3.
+check('UI-17 [GĐ5h thay thế] không còn lối tắt Bước 2 -> Bước 4',
+  html.includes('Bước 4: Soạn đề →') && !html.includes('Bước 4 →')
+  && !html.includes('confirmStep2AndGoStep4()'),
+  'lối tắt Bước 2 -> Bước 4 còn sót');
 
 // --- 7. Empty-state instructions name the real buttons ---
 check('UI-18 step-3 empty state names "Đồng bộ Ma trận"',
   html.includes('Nhấn "Đồng bộ Ma trận" để hiển thị.')
   && !html.includes('Đồng bộ lại Bản đặc tả từ Ma trận'),
   'step-3 instruction still names the wrong button');
-check('UI-18 step-4 empty state names "Sinh đề"',
-  html.includes('Hãy nhấn "Sinh đề".')
+check('UI-18 [GĐ5h thay thế] step-4 empty state names "Soạn đề"',
+  html.includes('Hãy nhấn "Soạn đề".')
   && !html.includes('Tự động Sinh Bộ Câu Hỏi'),
   'step-4 instruction still names the wrong button');
 

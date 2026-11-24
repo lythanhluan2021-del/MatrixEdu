@@ -106,11 +106,13 @@ check('UI-23 goToStep(3) still renders the spec table too',
   'renderSpecTable() lost from goToStep(3)');
 
 // --- 7. Step footers still navigate correctly ---
-check('UI-23 Step-2 footer: back to 1, "Bước 3: Đặc tả →", "Bước 4: Sinh đề →"',
+// GĐ5h (UI-30) supersedes: footer Bước 2 chỉ đi tiếp Bước 3 (lối tắt
+// "Bước 4: Soạn đề →" đã xóa — luồng tuần tự 1 -> 2 -> 3 -> 4).
+check('UI-23 [GĐ5h thay thế] Step-2 footer: back to 1, chỉ "Bước 3: Đặc tả →" (không tắt Bước 4)',
   step2.includes('onclick="goToStep(1)"') && step2.includes('onclick="confirmStep2AndGoStep3()"')
-  && step2.includes('onclick="confirmStep2AndGoStep4()"'),
+  && !step2.includes('onclick="confirmStep2AndGoStep4()"'),
   'Step-2 footer navigation broken');
-check('UI-23 Step-3 footer: back to 2, "Bước 4: Sinh đề →"',
+check('UI-23 Step-3 footer: back to 2, "Bước 4: Soạn đề →"',
   step3.includes('onclick="goToStep(2)"') && step3.includes('onclick="confirmStep3AndGoStep4()"'),
   'Step-3 footer navigation broken');
 

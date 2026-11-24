@@ -2315,7 +2315,7 @@
             </div>
             <div class="step-meta">
               <div class="step-title">4. Soạn &amp; Trộn</div>
-              <div class="step-desc">Sinh đề &amp; Mã đề</div>
+              <div class="step-desc">Soạn đề &amp; Mã đề</div>
             </div>
           </button>
 
@@ -2532,13 +2532,16 @@
                   </div>
                   <div class="bank-source-row">
                     <input type="text" id="gdrive-folder-url"
-                      value="https://drive.google.com/drive/folders/1MbQqovIMutXQP-qDRqehjAeRZzVqojF-?usp=sharing"
+                      value="drive.google.com/drive/folders/1MbQ…ojF-"
                       placeholder="Link thư mục Google Drive..."
+                      title="ID thư mục đã được ẩn — bấm “Đổi thư mục” rồi dán link mới để đổi thư mục"
                       style="flex: 1; padding: 7px 10px; font-size: 0.84rem" />
+                    <button class="btn btn-secondary btn-sm" onclick="editDriveFolderUrl()"
+                      style="white-space: nowrap; padding: 7px 10px" title="Dán link thư mục Google Drive mới">Đổi thư mục</button>
                     <button class="btn btn-primary btn-sm" onclick="connectAndScanGoogleDriveBank()"
                       style="white-space: nowrap; padding: 7px 14px"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Quét</button>
                   </div>
-                  <div class="bank-source-hint">Quét để đồng bộ câu hỏi từ thư mục Drive về ngân hàng.</div>
+                  <div class="bank-source-hint">Quét để đồng bộ câu hỏi từ thư mục Drive về ngân hàng. ID thư mục đã được ẩn — bấm “Đổi thư mục” rồi dán link mới để đổi thư mục.</div>
                 </div>
               </div>
 
@@ -2588,7 +2591,6 @@
                   <button type="button" class="btn btn-secondary btn-sm" onclick="runStep2GenerateMatrix()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Cân bằng 10đ</button>
                   <button type="button" class="btn btn-sm"
                     onclick="downloadMatrixAndSpecDocx(this)"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Xuất Word</button>
-                  <button type="button" class="btn btn-primary btn-sm" onclick="confirmStep2AndGoStep4()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="8" width="14" height="10" rx="2"/><line x1="12" y1="8" x2="12" y2="4"/><circle cx="12" cy="3" r="1"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg> Bước 4 →</button>
                 </div>
               </div>
 
@@ -2643,8 +2645,7 @@
               <div class="step-footer">
                 <button class="btn btn-secondary" onclick="goToStep(1)">← Bước 1</button>
                 <div style="display: flex; gap: 8px">
-                  <button class="btn btn-secondary" onclick="confirmStep2AndGoStep3()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Bước 3: Đặc tả →</button>
-                  <button class="btn btn-primary btn-lg" onclick="confirmStep2AndGoStep4()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="8" width="14" height="10" rx="2"/><line x1="12" y1="8" x2="12" y2="4"/><circle cx="12" cy="3" r="1"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg> Bước 4: Soạn đề →</button>
+                  <button class="btn btn-primary btn-lg" onclick="confirmStep2AndGoStep3()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Bước 3: Đặc tả →</button>
                 </div>
               </div>
             </div>
@@ -2731,7 +2732,7 @@
                     title="Tải file đề gốc Word (.docx) tự soạn để trộn mã đề — giữ nguyên 100% công thức Equation/MathType & Hình ảnh">
                     <svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Nạp đề gốc (.docx)
                   </button>
-                  <button class="btn btn-primary btn-sm" onclick="runStep4GenerateExam()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="8" width="14" height="10" rx="2"/><line x1="12" y1="8" x2="12" y2="4"/><circle cx="12" cy="3" r="1"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg> Sinh đề</button>
+                  <button class="btn btn-primary btn-sm" onclick="runStep4GenerateExam()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="8" width="14" height="10" rx="2"/><line x1="12" y1="8" x2="12" y2="4"/><circle cx="12" cy="3" r="1"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg> Soạn đề</button>
                   <button class="btn btn-secondary btn-sm" onclick="openShuffleVariantsModal()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg> Trộn mã đề</button>
                   <button class="btn btn-secondary btn-sm" id="toggle-preview-btn" onclick="toggleExamViewMode()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Bản in A4</button>
                 </div>
@@ -3663,8 +3664,12 @@
           <div style="display: flex; gap: 6px; flex-wrap: wrap">
             <button class="btn btn-secondary btn-sm" onclick="addOmrRosterRow()" style="font-size: 0.75rem">+ Thêm học
               sinh</button>
-            <button class="btn btn-secondary btn-sm" onclick="clearAllOmrRostersFromModal()"
-              style="font-size: 0.75rem"> Xóa tất cả DS</button>
+            <!-- GĐ5h (UI-32): nút xóa toàn bộ DS đã có confirm() trong
+                 clearAllOmrRostersFromModal — đổi sang btn-danger để không
+                 nhầm với các nút lành bên cạnh; vị trí giữ trong thanh
+                 công cụ của bảng danh sách (không đặt cạnh nút xuất). -->
+            <button class="btn btn-danger btn-sm" onclick="clearAllOmrRostersFromModal()"
+              style="font-size: 0.75rem" title="Xóa sạch toàn bộ danh sách lớp đang lưu (có hỏi xác nhận)"> Xóa tất cả DS</button>
             <button class="btn btn-secondary btn-sm" onclick="resetOmrRosterToDefault()"
               style="font-size: 0.75rem" title="Chỉ dùng để nạp danh sách mẫu chạy thử Demo"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M10 3v6L4.5 19a2 2 0 0 0 1.8 3h11.4a2 2 0 0 0 1.8-3L14 9V3"/><line x1="7.5" y1="14" x2="16.5" y2="14"/></svg> Nạp thử 35 HS mẫu (Demo)</button>
           </div>
@@ -4869,7 +4874,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         setNavPill(4,
           variants.length > 0
             ? (isSaved ? ` Đã lưu (${variants.length} mã đề)` : ` ${variants.length} mã đề (Chưa lưu Kho)`)
-            : (qCount > 0 ? ` ${qCount} câu gốc` : 'Chưa sinh đề'),
+            : (qCount > 0 ? ` ${qCount} câu gốc` : 'Chưa soạn đề'),
           variants.length > 0 ? (isSaved ? '#0369a1' : '#b45309') : '#94a3b8'
         );
 
@@ -5269,7 +5274,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
               <button class="btn btn-primary btn-sm" onclick="openMatrixFullscreenModal()" style="font-weight: 700"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg> Mở Modal Full-Screen (Rà soát & Sửa)</button>
               <button class="btn btn-secondary btn-sm" onclick="goToStep(2)"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg> Bảng Ma trận (Bước 2)</button>
               <button class="btn btn-secondary btn-sm" onclick="goToStep(3)"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Xem Bản đặc tả (Bước 3)</button>
-              <button class="btn btn-primary btn-sm" onclick="goToStep(4)"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Xem Đề kiểm tra đã sinh (Bước 4)</button>
+              <button class="btn btn-primary btn-sm" onclick="goToStep(4)"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Xem Đề kiểm tra đã soạn (Bước 4)</button>
             </div>
           </div>
           <div class="table-wrap">
@@ -5621,13 +5626,9 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       }
     }
 
-    // GĐ5g (UI-25): nút chuyển bước CHỈ chuyển trang (xem ghi chú ở
-    // confirmStep1AndGoStep2). Trước đây hàm này tự tạo đặc tả (nếu thiếu)
-    // rồi tự sinh đề — cùng lỗi như confirmStep3AndGoStep4. Đã đổi nhãn
-    // nút thành "Bước 4: Soạn đề →" cho đúng hành vi mới.
-    function confirmStep2AndGoStep4() {
-      goToStep(4);
-    }
+    // GĐ5h (UI-30): đã xóa lối tắt Bước 2 -> Bước 4 (nút toolbar,
+    // nút footer "Bước 4: Soạn đề →" và hàm confirmStep2AndGoStep4) —
+    // luồng đi tuần tự 1 -> 2 -> 3 -> 4.
 
     function tuDongDienMaCau() {
       const rows = appState.matrix?.rows || [];
@@ -6343,7 +6344,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
     // ========================================================================
     async function runStep4GenerateExam() {
       try {
-        showToast('Đang sinh bộ câu hỏi, trộn mã đề và tạo hướng dẫn chấm...', 'info');
+        showToast('Đang soạn bộ câu hỏi, trộn mã đề và tạo hướng dẫn chấm...', 'info');
         const res = await fetch('/api/step4-exam', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -6378,7 +6379,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         scheduleAutoSave();
         showToast(`Đã tạo xong ${appState.questions.length} câu hỏi và ${appState.variants.length} mã đề! Hãy bấm [Lưu Đề vào Kho Đề Thi] để dùng chấm nhiều lớp.`, 'success');
       } catch (err) {
-        showToast('Lỗi sinh đề kiểm tra: ' + err.message, 'error');
+        showToast('Lỗi soạn đề kiểm tra: ' + err.message, 'error');
       }
     }
 
@@ -6416,8 +6417,8 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       const vCount = (appState.variants || []).length;
       const isSaved = Boolean(appState.savedExamProfileId && appState.id && appState.savedExamProfileId === appState.id);
       const steps = [
-        { done: qCount > 0, title: '1. Sinh đề', text: qCount > 0 ? `Đã có ${qCount} câu hỏi` : 'Chưa có câu hỏi — bấm nút "Sinh đề" ở trên' },
-        { done: vCount > 1, title: '2. Trộn mã đề', text: vCount > 1 ? `Đã có ${vCount} mã đề` : (qCount > 0 ? 'Chưa trộn — bấm nút "Trộn mã đề" ở trên' : 'Chờ sinh đề xong mới trộn được') },
+        { done: qCount > 0, title: '1. Soạn đề', text: qCount > 0 ? `Đã có ${qCount} câu hỏi` : 'Chưa có câu hỏi — bấm nút "Soạn đề" ở trên' },
+        { done: vCount > 1, title: '2. Trộn mã đề', text: vCount > 1 ? `Đã có ${vCount} mã đề` : (qCount > 0 ? 'Chưa trộn — bấm nút "Trộn mã đề" ở trên' : 'Chờ soạn đề xong mới trộn được') },
         { done: isSaved, title: '3. Lưu kho', text: isSaved ? 'Đã lưu vào Kho Đề' : 'Chưa lưu — bấm "Lưu kho" ở cuối trang' }
       ];
       el.innerHTML = `<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
@@ -6476,7 +6477,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
     function renderQuestionsEditorList(questions) {
       const container = document.getElementById('exam-editor-container');
       if (!questions || questions.length === 0) {
-        container.innerHTML = `<div class="alert alert-warn">Chưa có câu hỏi nào. Hãy nhấn "Sinh đề".</div>`;
+        container.innerHTML = `<div class="alert alert-warn">Chưa có câu hỏi nào. Hãy nhấn "Soạn đề".</div>`;
         return;
       }
 
@@ -7246,7 +7247,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         `;
       } else {
         // GĐ5c (UI-14): trạng thái trống thay vì thẻ trắng trống.
-        qaEl.innerHTML = `<div class="alert" style="margin-bottom: 14px">Chưa có báo cáo kiểm định chất lượng (QA). Hãy hoàn thành Bước 4 (Soạn &amp; Trộn Sinh đề) rồi quay lại đây.</div>`;
+        qaEl.innerHTML = `<div class="alert" style="margin-bottom: 14px">Chưa có báo cáo kiểm định chất lượng (QA). Hãy hoàn thành Bước 4 (Soạn &amp; Trộn đề) rồi quay lại đây.</div>`;
       }
 
       // Render Bảng Đáp án & Hướng dẫn chấm
@@ -7315,7 +7316,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
 
       // GĐ5c (UI-14): trạng thái trống thay vì bảng trắng trống.
       if (baseQs.length === 0) {
-        html = `<div class="alert" style="margin-bottom: 14px">Chưa có câu hỏi nào — hãy hoàn thành Bước 4 (Soạn &amp; Trộn Sinh đề) để tạo đề, rồi quay lại đây xem đáp án và hướng dẫn chấm.</div>`;
+        html = `<div class="alert" style="margin-bottom: 14px">Chưa có câu hỏi nào — hãy hoàn thành Bước 4 (Soạn &amp; Trộn đề) để tạo đề, rồi quay lại đây xem đáp án và hướng dẫn chấm.</div>`;
       }
 
       ansEl.innerHTML = html;
@@ -7607,6 +7608,9 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
     // --- GĐ1 (P0-05, QĐ3): trạng thái đăng nhập quản trị ---
     window.__mxAuthed = false;
     window.__mxAuthSetup = false;
+    // GĐ5h (UI-33): true khi đã lấy trạng thái từ /api/auth/status ít nhất
+    // một lần — mở modal trước lúc đó thì lấy im lặng, không chạm nút.
+    window.__mxAuthKnown = false;
 
     async function checkAuthStatus() {
       try {
@@ -7618,8 +7622,26 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         window.__mxAuthSetup = false;
         window.__mxAuthed = false;
       }
+      window.__mxAuthKnown = true;
       updateAuthHeaderBtn();
       return { setup: window.__mxAuthSetup, authenticated: window.__mxAuthed };
+    }
+
+    // GĐ5h (UI-33): lấy trạng thái auth mà KHÔNG chạm tới nút đầu trang —
+    // dùng khi mở modal trước khi trạng thái tải xong; nhãn nút chỉ đổi
+    // khi trạng thái đăng nhập thật sự thay đổi (đăng nhập/đăng xuất/đặt
+    // mật khẩu), không đổi khi chỉ đóng/mở modal.
+    async function fetchAuthStatusFlags() {
+      try {
+        const res = await fetch('/api/auth/status');
+        const data = await res.json();
+        window.__mxAuthSetup = !!data.setup;
+        window.__mxAuthed = !!data.authenticated;
+      } catch (_) {
+        window.__mxAuthSetup = false;
+        window.__mxAuthed = false;
+      }
+      window.__mxAuthKnown = true;
     }
 
     function updateAuthHeaderBtn() {
@@ -7634,14 +7656,15 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       }
     }
 
-    // GĐ5g (UI-29): nếu trạng thái đăng nhập chưa biết (fetch
-    // /api/auth/status chưa về) thì đợi nó về rồi mới chọn chế độ modal
-    // (đặt mật khẩu mới / đăng nhập) — trước đây modal mở ngay với
-    // __mxAuthSetup === undefined nên luôn rơi vào chế độ "đặt mật khẩu",
-    // sai khi máy chủ đã có mật khẩu.
+    // GĐ5h (UI-33): nếu trạng thái đăng nhập chưa biết (fetch
+    // /api/auth/status chưa về) thì đợi bản lấy trạng thái im lặng về rồi
+    // mới chọn chế độ modal (đặt mật khẩu mới / đăng nhập) — KHÔNG gọi
+    // checkAuthStatus() ở đây vì nó cập nhật nút đầu trang, gây cảm giác
+    // nhãn nút đổi chỉ vì đóng/mở modal. Nhãn nút chỉ do checkAuthStatus
+    // lúc tải trang và các lần đăng nhập/đăng xuất thật cập nhật.
     async function openAuthModal() {
-      if (window.__mxAuthSetup === undefined) {
-        await checkAuthStatus();
+      if (!window.__mxAuthKnown) {
+        await fetchAuthStatusFlags();
       }
       const setupMode = !window.__mxAuthSetup;
       document.getElementById('auth-setup-hint').hidden = !setupMode;
@@ -8443,13 +8466,58 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
     // ========================================================================
     // KẾT NỐI & PHÂN TÍCH NGÂN HÀNG CÂU HỎI GOOGLE DRIVE (100% NGUỒN DRIVE)
     // ========================================================================
-    async function connectAndScanGoogleDriveBank() {
+    // GĐ5h (UI-31): ẩn ID thư mục Drive khỏi ô nhập — ô chỉ hiển thị
+    // dạng rút gọn (4 ký tự đầu + … + 4 ký tự cuối của ID); URL thật giữ
+    // trong window.__mxDriveFolderUrl. Mọi chỗ quét/đồng bộ đều đọc qua
+    // getDriveFolderUrl()/resolveDriveFolderUrlFromInput() nên logic quét
+    // không đổi. Người dùng dán link mới vào ô rồi bấm Quét thì link mới
+    // được nhận làm thư mục hiện tại.
+    const DEFAULT_DRIVE_FOLDER_URL = 'https://drive.google.com/drive/folders/1MbQqovIMutXQP-qDRqehjAeRZzVqojF-?usp=sharing';
+    window.__mxDriveFolderUrl = null;
+    function maskDriveFolderUrl(url) {
+      const m = String(url || '').match(/\/folders\/([A-Za-z0-9_-]+)/);
+      if (!m) return 'drive.google.com/drive/folders/…';
+      const id = m[1];
+      return 'drive.google.com/drive/folders/' + id.slice(0, 4) + '…' + id.slice(-4);
+    }
+    function getDriveFolderUrl() {
+      if (window.__mxDriveFolderUrl) return window.__mxDriveFolderUrl;
+      try {
+        const saved = localStorage.getItem('gdrive_folder_url');
+        if (saved) { window.__mxDriveFolderUrl = saved; return saved; }
+      } catch (_) {}
+      window.__mxDriveFolderUrl = DEFAULT_DRIVE_FOLDER_URL;
+      return window.__mxDriveFolderUrl;
+    }
+    // Đọc URL thư mục: nếu ô nhập chứa link đầy đủ (người dùng vừa dán
+    // link mới) thì nhận link đó; nếu ô chỉ hiện dạng rút gọn hoặc trống
+    // thì dùng URL thật đang lưu — quét không bao giờ gửi dạng rút gọn.
+    function resolveDriveFolderUrlFromInput() {
       const urlInput = document.getElementById('gdrive-folder-url');
-      let folderUrl = (urlInput?.value || '').trim();
-      if (!folderUrl) {
-        folderUrl = localStorage.getItem('gdrive_folder_url') || 'https://drive.google.com/drive/folders/1MbQqovIMutXQP-qDRqehjAeRZzVqojF-?usp=sharing';
-        if (urlInput) urlInput.value = folderUrl;
+      const typed = (urlInput?.value || '').trim();
+      const current = getDriveFolderUrl();
+      if (typed && typed !== maskDriveFolderUrl(current)) {
+        window.__mxDriveFolderUrl = typed;
+        try { localStorage.setItem('gdrive_folder_url', typed); } catch (_) {}
+        return typed;
       }
+      return current;
+    }
+    // Bấm "Đổi thư mục": xóa ô hiển thị để dán link mới; URL thật vẫn
+    // giữ trong state cho tới khi bấm Quét với link mới.
+    function editDriveFolderUrl() {
+      const inp = document.getElementById('gdrive-folder-url');
+      if (!inp) return;
+      inp.value = '';
+      inp.placeholder = 'Dán link thư mục Google Drive mới...';
+      inp.focus();
+    }
+
+    async function connectAndScanGoogleDriveBank() {
+      // GĐ5h (UI-31): đọc URL thật từ state (ô nhập chỉ hiện dạng rút gọn).
+      const folderUrl = resolveDriveFolderUrlFromInput();
+      const urlInput = document.getElementById('gdrive-folder-url');
+      if (urlInput) urlInput.value = maskDriveFolderUrl(folderUrl);
 
       const reportBox = document.getElementById('gdrive-scan-report');
       if (reportBox) {
@@ -8495,8 +8563,10 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         const data = await res.json();
         if (data && data.ok) {
           const urlInput = document.getElementById('gdrive-folder-url');
-          if (urlInput && data.folderUrl) {
-            urlInput.value = data.folderUrl;
+          if (data.folderUrl) {
+            // GĐ5h (UI-31): lưu URL thật vào state, ô nhập chỉ hiện dạng rút gọn.
+            window.__mxDriveFolderUrl = data.folderUrl;
+            if (urlInput) urlInput.value = maskDriveFolderUrl(data.folderUrl);
           }
           renderDriveBankReport(data);
           return;
@@ -8546,7 +8616,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       const sa = data.saCount || 0;
       const files = data.filesCount || (data.files ? data.files.length : 0);
       const underlinePts = data.underlinePercent !== undefined ? data.underlinePercent : 100;
-      const folderUrl = data.folderUrl || (document.getElementById('gdrive-folder-url')?.value) || 'https://drive.google.com/drive/folders/1MbQqovIMutXQP-qDRqehjAeRZzVqojF-?usp=sharing';
+      const folderUrl = data.folderUrl || getDriveFolderUrl();
       const folderName = displayBankName(data.folderName);
 
       // Cập nhật header button & step 4 badge
@@ -8698,8 +8768,10 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
     async function syncDriveBankNow() {
       showToast('Đang đồng bộ lại dữ liệu từ Google Drive...', 'info');
       try {
+        // GĐ5h (UI-31): đọc URL thật từ state (ô nhập chỉ hiện dạng rút gọn).
+        const folderUrl = resolveDriveFolderUrlFromInput();
         const urlInput = document.getElementById('gdrive-folder-url');
-        const folderUrl = (urlInput?.value || '').trim();
+        if (urlInput) urlInput.value = maskDriveFolderUrl(folderUrl);
         const res = await fetch('/api/drive-bank/sync', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -10102,7 +10174,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         }
         const cfg = data.profile.omrConfig;
         if (!cfg || !cfg.answerKeysByCode || Object.keys(cfg.answerKeysByCode).length === 0) {
-          showToast('Hồ sơ đề này chưa có mã đề & đáp án! Hãy mở Bước 4 để sinh đề trước.', 'warning');
+          showToast('Hồ sơ đề này chưa có mã đề & đáp án! Hãy mở Bước 4 để soạn đề trước.', 'warning');
           return;
         }
         applyExamOmrConfig(cfg, {
@@ -16239,8 +16311,8 @@ Phần III:
 
       showToast('Đang đóng gói CSDL Bảng điểm & Nhật ký Lưu vết...', 'info');
       try {
-        const driveInputVal = document.getElementById('gdrive-folder-url')?.value
-          || (() => { try { return localStorage.getItem('gdrive_folder_url') || ''; } catch (_) { return ''; } })();
+        // GĐ5h (UI-31): đọc URL thật từ state (ô nhập chỉ hiện dạng rút gọn).
+        const driveInputVal = getDriveFolderUrl();
         const folderIdMatch = String(driveInputVal || '').match(/\/folders\/([a-zA-Z0-9_-]+)/);
         const resolvedFolderId = folderIdMatch ? folderIdMatch[1] : String(driveInputVal || '').trim();
         const activeCls = (appState.omr.selectedClassName && appState.omr.selectedClassName !== '__ALL__')

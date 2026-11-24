@@ -64,7 +64,7 @@ check('UI-24 renderDetectedMatrixPreview guard box null',
   'không có if (!box) return;');
 
 // --- A2. Nút chuyển bước chỉ chuyển trang ---
-const navFns = ['confirmStep1AndGoStep2', 'confirmStep2AndGoStep3', 'confirmStep3AndGoStep4', 'confirmStep2AndGoStep4', 'confirmStep4AndGoStep5'];
+const navFns = ['confirmStep1AndGoStep2', 'confirmStep2AndGoStep3', 'confirmStep3AndGoStep4', 'confirmStep4AndGoStep5'];
 for (const fn of navFns) {
   const code = fnCode(fn);
   check(`UI-25 ${fn} chỉ gọi goToStep (không fetch/phân tích/sinh đề/toast)`,
@@ -75,13 +75,20 @@ for (const fn of navFns) {
 }
 check('UI-25 không còn nhãn "Bước 4: Sinh đề →" trên nút chuyển bước',
   !html.includes('Bước 4: Sinh đề →'), 'nhãn cũ còn sót');
-check('UI-25 nút chuyển bước mang nhãn đúng hành vi mới',
-  html.includes('Bước 4: Soạn đề →') && html.includes('Bước 4 →'),
-  'thiếu "Bước 4: Soạn đề →" hoặc "Bước 4 →"');
+// GĐ5h (UI-30) supersedes: lối tắt Bước 2 -> Bước 4 đã xóa — hàm
+// confirmStep2AndGoStep4 không còn, không còn nút "Bước 4 →"; chỉ còn
+// "Bước 4: Soạn đề →" ở footer Bước 3.
+check('UI-25 [GĐ5h thay thế] lối tắt Bước 2 -> Bước 4 đã xóa hẳn',
+  html.includes('Bước 4: Soạn đề →') && !html.includes('Bước 4 →')
+  && !html.includes('confirmStep2AndGoStep4('),
+  'lối tắt Bước 2 -> Bước 4 còn sót');
+check('UI-25 [GĐ5h thay thế] hàm confirmStep2AndGoStep4 đã xóa',
+  !html.includes('function confirmStep2AndGoStep4('),
+  'hàm lối tắt còn tồn tại');
 // Các nút hành động trong bước vẫn tồn tại (người dùng bấm tay mới chạy).
-check('UI-25 nút "Sinh đề" trong Bước 4 vẫn gọi runStep4GenerateExam',
-  /onclick="runStep4GenerateExam\(\)"[^>]*>[\s\S]{0,200}?Sinh đề/.test(html) || html.includes('onclick="runStep4GenerateExam()"'),
-  'mất nút Sinh đề trong bước');
+check('UI-25 [GĐ5h thay thế] nút "Soạn đề" trong Bước 4 vẫn gọi runStep4GenerateExam',
+  /onclick="runStep4GenerateExam\(\)"[^>]*>[\s\S]{0,600}?Soạn đề/.test(html),
+  'mất nút Soạn đề trong bước');
 check('UI-25 nút "Đồng bộ Ma trận" ở Bước 3 vẫn gọi runStep3GenerateSpec',
   html.includes('onclick="runStep3GenerateSpec()"'), 'mất nút Đồng bộ Ma trận');
 check('UI-25 nút "Phân tích" ở 1.2 vẫn gọi runStep1Analysis',
@@ -214,9 +221,15 @@ const authBtn = html.slice(html.indexOf('id="auth-header-btn"'), html.indexOf('i
 check('UI-29 nhãn tĩnh nút đầu trang là "Quản trị" (trung lập, không nhấp nháy)',
   /Quản trị/.test(authBtn) && !/> Đăng nhập</.test(authBtn) && !/> Đặt mật khẩu</.test(authBtn),
   'nhãn tĩnh vẫn là Đăng nhập/Đặt mật khẩu');
-check('UI-29 openAuthModal đợi /api/auth/status nếu trạng thái chưa biết',
-  /async function openAuthModal\(\) \{[\s\S]{0,300}?if \(window\.__mxAuthSetup === undefined\) \{[\s\S]{0,80}?await checkAuthStatus\(\)/.test(html),
-  'openAuthModal mở ngay không đợi trạng thái');
+// GĐ5h (UI-33) supersedes: openAuthModal đợi bản lấy trạng thái IM LẶNG
+// (fetchAuthStatusFlags — không chạm nút đầu trang) khi trạng thái chưa
+// biết; không gọi checkAuthStatus() (nó cập nhật nút, gây cảm giác nhãn
+// đổi chỉ vì đóng/mở modal).
+check('UI-29 [GĐ5h thay thế] openAuthModal đợi trạng thái im lặng, không chạm nút đầu trang',
+  /async function openAuthModal\(\) \{[\s\S]{0,300}?if \(!window\.__mxAuthKnown\) \{[\s\S]{0,80}?await fetchAuthStatusFlags\(\)/.test(html)
+  && !/async function openAuthModal\(\)[\s\S]{0,400}?checkAuthStatus\(\)/.test(html)
+  && !/async function openAuthModal\(\)[\s\S]{0,400}?updateAuthHeaderBtn/.test(html),
+  'openAuthModal mở ngay không đợi trạng thái, hoặc vẫn chạm nút đầu trang');
 
 // --- B12. Độ tương phản dòng "Không tìm thấy câu hỏi phù hợp" ---
 check('UI-24 dòng trống dùng var(--mx-ink-2) (~5,5:1), không dùng var(--mx-line)',
