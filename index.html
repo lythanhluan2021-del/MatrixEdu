@@ -1706,6 +1706,14 @@
       box-shadow: var(--shadow-sm);
     }
 
+    /* GĐ5i (UI-35): pill AI là nút bấm mở modal cấu hình AI — con trỏ
+       pointer + kế thừa font chữ của trang (phần tử button mặc định
+       không kế thừa font). */
+    #ai-status-badge {
+      cursor: pointer;
+      font-family: inherit;
+    }
+
     .alert {
       border-radius: 13px;
       box-shadow: var(--shadow-sm);
@@ -2214,7 +2222,7 @@
         <div class="header-actions">
           <button id="header-drive-bank-btn" class="btn btn-ghost-light btn-sm" onclick="openDriveBankModal()"
             title="Ngân hàng câu hỏi Google Drive"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg> Ngân hàng Drive</button>
-          <span class="header-status"><span id="ai-status-badge" class="badge badge-amber"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> AI chưa cấu hình khóa</span>
+          <span class="header-status"><button type="button" id="ai-status-badge" class="badge badge-amber" onclick="openAiConfigModal()" title="Bấm để xem cấu hình dịch vụ AI"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> AI chưa cấu hình khóa</button>
           <span id="session-autosave-badge"
             class="autosave-badge"
             title="Tự động sao lưu">Tự động sao lưu <span id="autosave-dot" class="autosave-dot">●</span> <span
@@ -7418,6 +7426,21 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
             showToast(` Đã lưu đề thi "${data.title}" (${(data.examCodes || []).length} mã đề) vào Kho Đề Thi! Thầy/Cô có thể chọn lại đề này ở Bước 7 để chấm nhiều lớp.`, 'success');
           }
           return data;
+        }
+        // GĐ5i (UI-34): trước đây mọi lỗi đều lặng lẽ return null — nút Lưu
+        // (cả "Lưu kho" Bước 4/5, "Lưu hồ sơ" Bước 6, "Chấm OMR") bấm vào
+        // như không có phản hồi. Báo rõ từng trường hợp, theo đúng mẫu GĐ4
+        // (401 mở modal đăng nhập). silent=true (ghi nền) giữ nguyên
+        // không hiện toast.
+        if (!silent) {
+          if (res.status === 401) {
+            showToast(data.message || 'Yêu cầu đăng nhập quản trị.', 'error');
+            if (typeof openAuthModal === 'function') openAuthModal();
+          } else if (res.status === 503 && data.errorCode === 'DEMO_MODE_READONLY') {
+            showToast(data.message || 'Bản giới thiệu trên Vercel không lưu được dữ liệu. Hãy dùng bản Windows chạy trên máy để lưu hồ sơ.', 'error');
+          } else {
+            showToast('Lỗi lưu hồ sơ: ' + (data.message || ('Máy chủ trả mã ' + res.status + '.')), 'error');
+          }
         }
       } catch (err) {
         if (!silent) showToast('Lỗi lưu hồ sơ: ' + err.message, 'error');
