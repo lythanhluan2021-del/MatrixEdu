@@ -168,9 +168,172 @@ function decodeXmlEntities(str) {
     .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
 }
 
+// ============================================================================
+// GĐ5b (UI-09): CHUYỂN CÔNG THỨC OMML (Word Equation Editor) THÀNH VĂN BẢN
+// Có cấu trúc: phân số <m:f> -> "tử/mẫu", căn <m:rad> -> "√(...)", lũy thừa /
+// chỉ số <m:sup>/<m:sub> (và <m:sSup>/<m:sSub>) -> ^/_ , tổng/tích phân
+// <m:nary> giữ ký tự và cận. Trước GĐ5b, trích xuất chỉ nối các <m:t> rời nên
+// phân số 1/2 thành "12", a/b thành "ab", căn mất dấu √.
+// ============================================================================
+
+function ommlLocalName(tag) {
+  const i = String(tag || '').indexOf(':');
+  return i >= 0 ? String(tag).slice(i + 1) : String(tag || '');
+}
+
+function ommlAttrVal(attrs, localName) {
+  const m = String(attrs || '').match(new RegExp('(?:^|\\s)(?:[A-Za-z]+:)?' + localName + '\\s*=\\s*"([^"]*)"'));
+  return m ? m[1] : '';
+}
+
+// Trình phân tích XML tối thiểu, đủ cho mảnh OMML (thẻ, thuộc tính, văn bản).
+function parseXmlTree(xml) {
+  const root = { tag: '#root', attrs: '', children: [] };
+  const stack = [root];
+  const tagRe = /<(\/?)([A-Za-z][\w:.-]*)([^>]*?)(\/?)>|([^<]+)/g;
+  let m;
+  while ((m = tagRe.exec(String(xml || ''))) !== null) {
+    if (m[5] !== undefined) {
+      stack[stack.length - 1].children.push(m[5]);
+      continue;
+    }
+    const tag = m[2];
+    if (tag.startsWith('?') || tag.startsWith('!')) continue;
+    if (m[1] === '/') {
+      if (stack.length > 1) stack.pop();
+    } else {
+      const node = { tag, attrs: m[3] || '', children: [] };
+      stack[stack.length - 1].children.push(node);
+      if (m[4] !== '/') stack.push(node);
+    }
+  }
+  return root;
+}
+
+function ommlNodeText(node) {
+  if (typeof node === 'string') return decodeXmlEntities(node);
+  const kids = node.children || [];
+  const textOf = () => kids.map(ommlNodeText).join('');
+  const childByLocal = (name) => kids.find(c => typeof c === 'object' && ommlLocalName(c.tag) === name);
+  const childTexts = (name) => kids.filter(c => typeof c === 'object' && ommlLocalName(c.tag) === name).map(ommlNodeText);
+  const local = ommlLocalName(node.tag);
+  switch (local) {
+    case 't':
+      return textOf();
+    case 'r':
+      return kids
+        .filter(c => !(typeof c === 'object' && ommlLocalName(c.tag) === 'ctrlPr'))
+        .map(ommlNodeText).join('');
+    case 'ctrlPr': case 'naryPr': case 'fPr': case 'radPr': case 'dPr':
+    case 'sPrePr': case 'sSubPr': case 'sSupPr': case 'limLowPr': case 'limUppPr':
+    case 'funcPr': case 'eqArrPr': case 'accPr': case 'barPr': case 'boxPr':
+    case 'groupChrPr': case 'mPr': case 'oMathPr':
+      return '';
+    case 'f': {
+      const n = childByLocal('num') ? ommlNodeText(childByLocal('num')) : '';
+      const d = childByLocal('den') ? ommlNodeText(childByLocal('den')) : '';
+      const wrap = (s) => (/[+\-*/=\s]/.test(s) && s.length > 1 ? `(${s})` : s);
+      return `${wrap(n)}/${wrap(d)}`;
+    }
+    case 'rad': {
+      const degNode = childByLocal('deg');
+      const deg = degNode ? ommlNodeText(degNode).trim() : '';
+      const eNode = childByLocal('e');
+      const eTxt = eNode ? ommlNodeText(eNode) : '';
+      if (!deg || deg === '2') {
+        return /^[A-Za-z0-9^_]+$/.test(eTxt) && eTxt.length <= 4 ? `√${eTxt}` : `√(${eTxt})`;
+      }
+      return `căn bậc ${deg} của (${eTxt})`;
+    }
+    case 'sup': case 'sub': {
+      const base = childByLocal('e');
+      const scr = childByLocal(local);
+      return (base ? ommlNodeText(base) : '') + (local === 'sup' ? '^' : '_') + (scr ? ommlNodeText(scr) : '');
+    }
+    case 'sSup': case 'sSub': {
+      const base = childByLocal('e');
+      const scr = childByLocal(local === 'sSup' ? 'sup' : 'sub');
+      return (base ? ommlNodeText(base) : '') + (local === 'sSup' ? '^' : '_') + (scr ? ommlNodeText(scr) : '');
+    }
+    case 'sPre': {
+      const base = childByLocal('e');
+      const sub = childByLocal('sub');
+      const sup = childByLocal('sup');
+      return (sub ? `_${ommlNodeText(sub)}` : '') + (sup ? `^${ommlNodeText(sup)}` : '') + (base ? ommlNodeText(base) : '');
+    }
+    case 'nary': {
+      const pr = childByLocal('naryPr');
+      let chr = '';
+      if (pr) {
+        const chrNode = (pr.children || []).find(c => typeof c === 'object' && ommlLocalName(c.tag) === 'chr');
+        if (chrNode) chr = ommlAttrVal(chrNode.attrs, 'val');
+      }
+      if (!chr) chr = '∑';
+      const sub = childByLocal('sub');
+      const sup = childByLocal('sup');
+      const e = childByLocal('e');
+      const eTxt = e ? ommlNodeText(e) : '';
+      const sTxt = sub ? ommlNodeText(sub) : '';
+      const pTxt = sup ? ommlNodeText(sup) : '';
+      if (chr === '∫') return `∫(từ ${sTxt} đến ${pTxt}) ${eTxt}`;
+      if (sTxt || pTxt) return `${chr}(${sTxt}→${pTxt}) ${eTxt}`;
+      return `${chr} ${eTxt}`;
+    }
+    case 'd': {
+      const pr = childByLocal('dPr');
+      let beg = '(';
+      let end = ')';
+      if (pr) {
+        const begNode = (pr.children || []).find(c => typeof c === 'object' && ommlLocalName(c.tag) === 'begChr');
+        const endNode = (pr.children || []).find(c => typeof c === 'object' && ommlLocalName(c.tag) === 'endChr');
+        if (begNode) beg = ommlAttrVal(begNode.attrs, 'val') || beg;
+        if (endNode) end = ommlAttrVal(endNode.attrs, 'val') || end;
+      }
+      return `${beg}${childTexts('e').join(' ')}${end}`;
+    }
+    case 'limLow': {
+      const base = childByLocal('e');
+      const lim = childByLocal('lim');
+      return (base ? ommlNodeText(base) : '') + '_' + (lim ? ommlNodeText(lim) : '');
+    }
+    case 'limUpp': {
+      const base = childByLocal('e');
+      const lim = childByLocal('lim');
+      return (base ? ommlNodeText(base) : '') + '^' + (lim ? ommlNodeText(lim) : '');
+    }
+    case 'func': {
+      const fn = childByLocal('fName');
+      const e = childByLocal('e');
+      return (fn ? ommlNodeText(fn) : '') + '(' + (e ? ommlNodeText(e) : '') + ')';
+    }
+    case 'eqArr':
+      return childTexts('e').join('; ');
+    default:
+      return textOf();
+  }
+}
+
+// Chuyển một khối <m:oMath> hoặc <m:oMathPara> thành văn bản có cấu trúc.
+function ommlBlockToText(blockXml) {
+  try {
+    return ommlNodeText(parseXmlTree(blockXml));
+  } catch (_) {
+    return '';
+  }
+}
+
+// GĐ5b: thay khối OMML trong một đoạn XML bằng <w:t> chứa văn bản đã chuyển,
+// để vòng trích xuất <w:t> sẵn có nhặt được theo đúng thứ tự.
+function replaceOmmlBlocksWithRuns(xml) {
+  return String(xml || '').replace(
+    /<m:oMathPara\b[\s\S]*?<\/m:oMathPara>|<m:oMath\b[\s\S]*?<\/m:oMath>/g,
+    (blk) => `<w:t xml:space="preserve">${escapeXml(ommlBlockToText(blk))}</w:t>`
+  );
+}
+
 function extractParagraphText(pXml) {
   let text = '';
-  const tokenRegex = /<w:r\b[\s\S]*?<\/w:r>|<m:t(?:\s[^>]*)?>([\s\S]*?)<\/m:t>|<w:tab\s*\/?>|<w:br\s*\/?>/g;
+  const tokenRegex = /<m:oMathPara\b[\s\S]*?<\/m:oMathPara>|<m:oMath\b[\s\S]*?<\/m:oMath>|<w:r\b[\s\S]*?<\/w:r>|<m:t(?:\s[^>]*)?>([\s\S]*?)<\/m:t>|<w:tab\s*\/?>|<w:br\s*\/?>/g;
   let match;
   while ((match = tokenRegex.exec(pXml)) !== null) {
     const tok = match[0];
@@ -178,15 +341,20 @@ function extractParagraphText(pXml) {
       text += '\t';
     } else if (tok.startsWith('<w:br')) {
       text += '\n';
+    } else if (tok.startsWith('<m:oMath')) {
+      text += ommlBlockToText(tok);
     } else if (tok.startsWith('<m:t')) {
       text += decodeXmlEntities(match[1]);
     } else {
       const vertMatch = tok.match(/<w:vertAlign\b[^>]*w:val="(superscript|subscript)"/i);
       const vert = vertMatch ? vertMatch[1].toLowerCase() : '';
       let rTxt = '';
+      // GĐ5b: công thức OMML nằm trong <w:r> (không chuẩn nhưng vẫn gặp) cũng
+      // được chuyển thành <w:t> trước khi trích, thay vì bị bỏ mất.
+      const runXml = replaceOmmlBlocksWithRuns(tok);
       const tRe = /<w:t(?:\s[^>]*)?>([\s\S]*?)<\/w:t>|<w:tab\s*\/?>|<w:br\s*\/?>/g;
       let tm;
-      while ((tm = tRe.exec(tok)) !== null) {
+      while ((tm = tRe.exec(runXml)) !== null) {
         if (tm[0].startsWith('<w:tab')) rTxt += '\t';
         else if (tm[0].startsWith('<w:br')) rTxt += '\n';
         else rTxt += decodeXmlEntities(tm[1]);
@@ -209,7 +377,7 @@ function extractParagraphDetails(pXml) {
   let taggedText = '';
   const underlinedParts = [];
 
-  const rRegex = /<w:r\b[\s\S]*?<\/w:r>|<m:t(?:\s[^>]*)?>([\s\S]*?)<\/m:t>|<w:tab\s*\/?>|<w:br\s*\/?>/g;
+  const rRegex = /<m:oMathPara\b[\s\S]*?<\/m:oMathPara>|<m:oMath\b[\s\S]*?<\/m:oMath>|<w:r\b[\s\S]*?<\/w:r>|<m:t(?:\s[^>]*)?>([\s\S]*?)<\/m:t>|<w:tab\s*\/?>|<w:br\s*\/?>/g;
   let rMatch;
   while ((rMatch = rRegex.exec(pXml)) !== null) {
     const item = rMatch[0];
@@ -221,6 +389,14 @@ function extractParagraphDetails(pXml) {
     if (item.startsWith('<w:br')) {
       plainText += '\n';
       taggedText += '\n';
+      continue;
+    }
+    if (item.startsWith('<m:oMath')) {
+      // GĐ5b: khối OMML giữ cấu trúc (phân số "a/b", căn "√(...)") thay vì
+      // nối các <m:t> rời thành "ab".
+      const mathTxt = ommlBlockToText(item);
+      plainText += mathTxt;
+      taggedText += mathTxt;
       continue;
     }
     if (item.startsWith('<m:t')) {
@@ -235,9 +411,11 @@ function extractParagraphDetails(pXml) {
     const vert = vertMatch ? vertMatch[1].toLowerCase() : '';
 
     let runText = '';
+    // GĐ5b: công thức OMML nằm trong <w:r> cũng được chuyển trước khi trích.
+    const runXml = replaceOmmlBlocksWithRuns(item);
     const tRegex = /<w:t(?:\s[^>]*)?>([\s\S]*?)<\/w:t>/g;
     let tMatch;
-    while ((tMatch = tRegex.exec(item)) !== null) {
+    while ((tMatch = tRegex.exec(runXml)) !== null) {
       runText += decodeXmlEntities(tMatch[1]);
     }
 
@@ -391,6 +569,19 @@ function normalizeMathForWord(input) {
   s = s.replace(/\\lim_\{([^{}]+)\}/g, 'lim($1) ');
   s = s.replace(/\\overrightarrow\{([^{}]+)\}/g, 'vectơ($1)');
   s = s.replace(/\\vec\{([^{}]+)\}/g, 'vectơ($1)');
+
+  // GĐ5b: tên hàm lượng giác / logarit / mũ — bỏ dấu "\" nhưng giữ tên hàm
+  // (dùng (?![A-Za-z]) để "\log_2" và "\sin^2" vẫn chuyển, "\sinh" thì không).
+  const latexFunctions = [
+    [/\\sin(?![A-Za-z])/g, 'sin'], [/\\cos(?![A-Za-z])/g, 'cos'],
+    [/\\tan(?![A-Za-z])/g, 'tan'], [/\\cot(?![A-Za-z])/g, 'cot'],
+    [/\\log(?![A-Za-z])/g, 'log'], [/\\ln(?![A-Za-z])/g, 'ln'],
+    [/\\lg(?![A-Za-z])/g, 'lg'], [/\\exp(?![A-Za-z])/g, 'exp'],
+    [/\\min(?![A-Za-z])/g, 'min'], [/\\max(?![A-Za-z])/g, 'max']
+  ];
+  for (const [pattern, replacement] of latexFunctions) {
+    s = s.replace(pattern, replacement);
+  }
 
   // Các ký hiệu Toán - Lý - Hóa phổ biến
   const latexSymbols = [

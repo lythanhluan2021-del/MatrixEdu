@@ -178,6 +178,18 @@
       flex-shrink: 0;
     }
 
+    /* GĐ5b (UI-10): banner bản giới thiệu trên Vercel (hiện khi demoMode) */
+    .demo-banner {
+      flex-shrink: 0;
+      background: var(--mx-amber-soft);
+      color: var(--mx-warn);
+      border-bottom: 1px solid var(--mx-amber);
+      padding: 8px 18px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
     /* Mobile Hamburger */
     .sidebar-mobile-toggle {
       display: none;
@@ -436,7 +448,7 @@
     }
 
     .step-desc {
-      font-size: 0.75rem;
+      font-size: 0.81rem;
       color: var(--mx-ink-2);
       white-space: nowrap;
       overflow: hidden;
@@ -456,7 +468,7 @@
       border-radius: 6px;
       padding: 6px 8px;
       border: 1px solid var(--mx-line-soft);
-      font-size: 0.75rem;
+      font-size: 0.81rem;
       color: var(--mx-ink-2);
     }
 
@@ -1970,6 +1982,32 @@
       }
     }
 
+    /* GĐ5b (UI-10): màn hẹp ~909px — header xuống dòng thay vì cắt tiêu đề
+       và khuất nút; bảng được cuộn ngang thay vì bị bóp cột. */
+    @media (max-width: 1100px) {
+      .header-inner {
+        flex-wrap: wrap;
+      }
+
+      .brand-title h1,
+      .brand-title p {
+        white-space: normal;
+      }
+
+      .header-actions {
+        flex-wrap: wrap;
+        flex-shrink: 1;
+      }
+
+      .header-status {
+        flex-wrap: wrap;
+      }
+
+      .main-viewport {
+        overflow-x: auto;
+      }
+    }
+
     @media (max-width: 768px) {
       .sidebar-mobile-toggle {
         display: flex;
@@ -2097,11 +2135,11 @@
         <div class="header-actions">
           <button id="header-drive-bank-btn" class="btn btn-ghost-light btn-sm" onclick="openDriveBankModal()"
             title="Ngân hàng câu hỏi Google Drive"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg> Ngân hàng Drive</button>
-          <span class="header-status"><span id="ai-status-badge" class="badge badge-teal"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> AI Sẵn sàng</span>
+          <span class="header-status"><span id="ai-status-badge" class="badge badge-amber"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> AI chưa cấu hình khóa</span>
           <span id="session-autosave-badge"
             class="autosave-badge"
             title="Tự động sao lưu"><span id="autosave-dot" class="autosave-dot">●</span></span> <span
-              id="autosave-text">Đã đồng bộ</span></span>
+              id="autosave-text">Chưa đồng bộ</span></span>
           <button class="btn btn-ghost-light btn-sm" onclick="openProfilesModal()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Hồ sơ</button>
           <button class="btn btn-ghost-light btn-sm" onclick="openAiConfigModal()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> AI</button>
           <button id="auth-header-btn" class="btn btn-ghost-light btn-sm" onclick="openAuthModal()"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Đăng nhập</button>
@@ -2109,6 +2147,9 @@
         </div>
       </div>
     </header>
+
+    <!-- GĐ5b (UI-10): banner bản giới thiệu — hiện khi /api/health báo demoMode -->
+    <div id="demo-mode-banner" class="demo-banner" style="display: none"></div>
 
     <!-- SMART SESSION RESTORE BANNER -->
     <div id="session-restore-banner" class="restore-banner" style="display: none">
@@ -2374,8 +2415,8 @@
                     </div>
                     <div style="display: flex; gap: 6px">
                       <span id="gdrive-status-badge" class="badge"
-                        style="background: var(--mx-ok); color: var(--mx-surface); font-size: 0.75rem">● Đã kết nối</span>
-                      <span class="badge" style="background: var(--mx-blue); color: var(--mx-surface); font-size: 0.75rem">100% Drive</span>
+                        style="background: var(--mx-surface); color: var(--mx-ink-2); font-size: 0.75rem">○ Chưa đồng bộ</span>
+                      <span id="gdrive-count-badge" class="badge" style="background: var(--mx-blue); color: var(--mx-surface); font-size: 0.75rem">0 câu</span>
                     </div>
                   </div>
 
@@ -2595,7 +2636,7 @@
                   <span id="step4-ooxml-status-pill" class="badge badge-green" style="display: none"></span>
                 </div>
                 <div style="display: flex; align-items: center; gap: 8px">
-                  <span style="font-size: 0.78rem; color: var(--mx-ok); font-weight: 700"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> <strong id="step4-drive-bank-badge">Ngân hàng Drive (162 câu)</strong></span>
+                  <span style="font-size: 0.78rem; color: var(--mx-ok); font-weight: 700"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> <strong id="step4-drive-bank-badge">Ngân hàng Drive (0 câu)</strong></span>
                   <button class="btn btn-secondary btn-sm" onclick="openDriveBankModal()" style="padding: 3px 9px; font-size: 0.75rem"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Kho gốc</button>
                 </div>
               </div>
@@ -2808,12 +2849,7 @@
                       </div>
                       <div style="grid-column: span 2">
                         <label style="font-weight: 700; color: var(--mx-ink-2); display: block; margin-bottom: 2px">Thang điểm Phần II (Đúng/Sai):</label>
-                        <select id="omr-tf-style-drawer-selector" class="form-control"
-                          style="height: 26px; padding: 1px 4px; font-size: 0.75rem; font-weight: 600"
-                          onchange="onOmrTfStyleChanged(this.value)">
-                          <option value="fixed025" selected>Chia đều 0.25đ / mỗi ý đúng (Không điểm lẻ .10, .35, .60)</option>
-                          <option value="moet2025">Lũy tiến Bộ GD&ĐT 2025 (Đúng 1 ý=0.1đ, 2 ý=0.25đ, 3 ý=0.5đ, 4 ý=1.0đ)</option>
-                        </select>
+                        <span class="badge badge-teal" style="font-size: 0.75rem">P.II: Lũy tiến BGD 2025 (1 ý=0.1đ, 2 ý=0.25đ, 3 ý=0.5đ, 4 ý=1.0đ)</span>
                       </div>
                     </div>
                     <div style="margin-bottom: 6px">
@@ -2879,12 +2915,7 @@
                           style="flex: 1; min-width: 0; font-size: 0.75rem; font-weight: 600; padding: 3px 6px; border: 1px solid var(--mx-line); border-radius: 4px; background: var(--mx-surface); color: var(--mx-ink); text-overflow: ellipsis">
                           <option value="__CURRENT__">-- Chưa có đề đang soạn --</option>
                         </select>
-                        <select id="omr-tf-style-inline-selector" onchange="onOmrTfStyleChanged(this.value)"
-                          style="font-size: 0.75rem; font-weight: 700; color: var(--mx-dark); background: var(--mx-surface); padding: 3px 5px; border-radius: 4px; border: 1px solid var(--mx-line); cursor: pointer; white-space: nowrap; flex-shrink: 0"
-                          title="Cách tính điểm Phần II (Đúng/Sai)">
-                          <option value="fixed025" selected>P.II: 0.25đ/ý</option>
-                          <option value="moet2025">P.II: Lũy tiến BGD</option>
-                        </select>
+                        <span class="badge badge-teal" style="font-size: 0.75rem; font-weight: 700">P.II: Lũy tiến BGD</span>
                       </div>
 
                       <div id="omr-exam-identity-banner"
@@ -3175,13 +3206,7 @@
                     </div>
 
                     <div style="display: flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.16)">
-                      <label for="omr-tf-style-selector" style="font-size: 0.75rem; color: var(--mx-amber); font-weight: 700; white-space: nowrap"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M7 7l-2.5 6a3 3 0 0 0 5 0L7 7zm10 0l-2.5 6a3 3 0 0 0 5 0L17 7z"/></svg> P.II:</label>
-                      <select id="omr-tf-style-selector" onchange="onOmrTfStyleChanged(this.value)"
-                        style="background: var(--mx-dark); color: var(--mx-amber-soft); border: 1px solid var(--mx-amber); font-size: 0.75rem; padding: 2px 5px; border-radius: 4px; font-weight: 600; cursor: pointer; max-width: 165px"
-                        title="Thang điểm Phần II">
-                        <option value="fixed025" selected>0.25đ / ý</option>
-                        <option value="moet2025">Lũy tiến BGD 2025</option>
-                      </select>
+                      <span style="font-size: 0.75rem; color: var(--mx-amber); font-weight: 700; white-space: nowrap">P.II: Lũy tiến BGD 2025</span>
                     </div>
                     <button class="btn btn-sm" id="omr-flip-180-btn" onclick="rotateActiveOmrPaper(180)"
                       style="border: 1px solid var(--mx-amber); padding: 3px 8px; font-weight: 700; font-size: 0.75rem; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; flex-shrink: 0"
@@ -4438,6 +4463,65 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         .replace(/"/g, '&quot;');
     }
 
+    // GĐ5b-START formatMathForDisplay
+    // GĐ5b (UI-09): hiển thị công thức LaTeX dạng văn bản Unicode trên giao
+    // diện (không CDN, không thư viện) — tái dùng đúng bảng chuyển đổi của
+    // normalizeMathForWord phía máy chủ. Chỉ chuẩn hóa lúc hiển thị; dữ liệu
+    // gốc (câu hỏi, đáp án) không đổi. Dùng kèm escapeHtml ở chỗ hiển thị.
+    function formatMathForDisplay(input) {
+      if (input === null || input === undefined) return '';
+      let s = String(input);
+      s = s.replace(/\$\$([\s\S]*?)\$\$/g, '$1');
+      s = s.replace(/\$([^$\n]+?)\$/g, '$1');
+      for (let i = 0; i < 3; i++) {
+        s = s.replace(/\\d?frac\{([^{}]+)\}\{([^{}]+)\}/g, (_, num, den) => {
+          const n = num.trim();
+          const d = den.trim();
+          const nWrap = /[+\-\s]/.test(n) ? `(${n})` : n;
+          const dWrap = /[+\-\s]/.test(d) ? `(${d})` : d;
+          return `${nWrap}/${dWrap}`;
+        });
+      }
+      s = s.replace(/\\sqrt\[([^\]]+)\]\{([^{}]+)\}/g, ' căn bậc $1 của ($2)');
+      s = s.replace(/\\sqrt\{([^{}]+)\}/g, (_, inner) => inner.length <= 2 ? `√${inner}` : `√(${inner})`);
+      s = s.replace(/\\int_\{([^{}]+)\}\^\{([^{}]+)\}/g, '∫(từ $1 đến $2) ');
+      s = s.replace(/\\int/g, '∫');
+      s = s.replace(/\\sum_\{([^{}]+)\}\^\{([^{}]+)\}/g, '∑($1→$2) ');
+      s = s.replace(/\\sum/g, '∑');
+      s = s.replace(/\\lim_\{([^{}]+)\}/g, 'lim($1) ');
+      s = s.replace(/\\overrightarrow\{([^{}]+)\}/g, 'vectơ($1)');
+      s = s.replace(/\\vec\{([^{}]+)\}/g, 'vectơ($1)');
+      const latexFunctions = [
+        [/\\sin(?![A-Za-z])/g, 'sin'], [/\\cos(?![A-Za-z])/g, 'cos'],
+        [/\\tan(?![A-Za-z])/g, 'tan'], [/\\cot(?![A-Za-z])/g, 'cot'],
+        [/\\log(?![A-Za-z])/g, 'log'], [/\\ln(?![A-Za-z])/g, 'ln'],
+        [/\\lg(?![A-Za-z])/g, 'lg'], [/\\exp(?![A-Za-z])/g, 'exp'],
+        [/\\min(?![A-Za-z])/g, 'min'], [/\\max(?![A-Za-z])/g, 'max']
+      ];
+      for (const [pattern, replacement] of latexFunctions) s = s.replace(pattern, replacement);
+      const latexSymbols = [
+        [/\\pm/g, '±'], [/\\mp/g, '∓'], [/\\times/g, '×'], [/\\cdot/g, '·'], [/\\div/g, '÷'],
+        [/\\le(?!q)/g, '≤'], [/\\leq/g, '≤'], [/\\ge(?!q)/g, '≥'], [/\\geq/g, '≥'],
+        [/\\ne(?!q)/g, '≠'], [/\\neq/g, '≠'], [/\\approx/g, '≈'], [/\\equiv/g, '≡'],
+        [/\\infty/g, '∞'], [/\\pi/g, 'π'], [/\\alpha/g, 'α'], [/\\beta/g, 'β'],
+        [/\\gamma/g, 'γ'], [/\\delta/g, 'δ'], [/\\Delta/g, 'Δ'], [/\\theta/g, 'θ'],
+        [/\\lambda/g, 'λ'], [/\\mu/g, 'μ'], [/\\omega/g, 'ω'], [/\\Omega/g, 'Ω'],
+        [/\\sigma/g, 'σ'], [/\\phi/g, 'φ'], [/\\varphi/g, 'φ'],
+        [/\\in\b/g, '∈'], [/\\notin\b/g, '∉'], [/\\subset/g, '⊂'], [/\\subseteq/g, '⊆'],
+        [/\\cup/g, '∪'], [/\\cap/g, '∩'], [/\\emptyset/g, '∅'],
+        [/\\mathbb\{R\}/g, 'ℝ'], [/\\mathbb\{Z\}/g, 'ℤ'], [/\\mathbb\{N\}/g, 'ℕ'], [/\\mathbb\{Q\}/g, 'ℚ'],
+        [/\\rightarrow/g, '→'], [/\\to\b/g, '→'], [/\\Rightarrow/g, '⇒'],
+        [/\\leftrightarrow/g, '↔'], [/\\Leftrightarrow/g, '⇔'], [/\\iff/g, '⇔'],
+        [/\\perp/g, '⊥'], [/\\parallel/g, '∥'], [/\\angle/g, '∠'], [/\\triangle/g, '△'],
+        [/\\circ/g, '°'], [/\\degree/g, '°'], [/\\left\(/g, '('], [/\\right\)/g, ')'],
+        [/\\left\[/g, '['], [/\\right\]/g, ']'], [/\\left\\\{/g, '{'], [/\\right\\\}/g, '}'],
+        [/\\left\|/g, '|'], [/\\right\|/g, '|'], [/\\,/g, ' '], [/\\;/g, ' '], [/\\quad/g, '  ']
+      ];
+      for (const [pattern, replacement] of latexSymbols) s = s.replace(pattern, replacement);
+      return s;
+    }
+    // GĐ5b-END formatMathForDisplay
+
     // ========================================================================
     // ĐIỀU HƯỚNG 6 BƯỚC (STEPPER)
     // ========================================================================
@@ -4480,7 +4564,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       clone.omrSettings = {
         selectedTemplateId: appState.omr?.selectedTemplateId || 'bgd_2025_4code',
         selectedClassName: appState.omr?.selectedClassName || '',
-        tfStyle: appState.omr?.pointRules?.tfStyle || 'fixed025'
+        tfStyle: appState.omr?.pointRules?.tfStyle || 'moet2025'
       };
       return clone;
     }
@@ -6407,14 +6491,18 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
           if (v.questions && v.questions[targetIdx]) {
             const copyQ = JSON.parse(JSON.stringify(mergedQ));
             if (copyQ.type === 'MCQ' && Array.isArray(copyQ.options) && copyQ.options.length === 4) {
+              // GĐ5b: câu không có đáp án hợp lệ thì không xoay phương án
+              // (không mặc định đáp án A) — giữ nguyên câu gốc.
               const letters = ['A', 'B', 'C', 'D'];
-              const origAnsIdx = Math.max(0, letters.indexOf(String(copyQ.answer || 'A').toUpperCase()));
-              const correctText = copyQ.options[origAnsIdx];
-              // Xoay vòng phương án theo vIdx để các mã đề khác nhau có đáp án khác nhau
-              const shift = (vIdx + 1) % 4;
-              const rotated = copyQ.options.map((_, i) => copyQ.options[(i + shift) % 4]);
-              copyQ.options = rotated;
-              copyQ.answer = letters[rotated.indexOf(correctText)];
+              const origAnsIdx = letters.indexOf(String(copyQ.answer || '').toUpperCase());
+              if (origAnsIdx >= 0) {
+                const correctText = copyQ.options[origAnsIdx];
+                // Xoay vòng phương án theo vIdx để các mã đề khác nhau có đáp án khác nhau
+                const shift = (vIdx + 1) % 4;
+                const rotated = copyQ.options.map((_, i) => copyQ.options[(i + shift) % 4]);
+                copyQ.options = rotated;
+                copyQ.answer = letters[rotated.indexOf(correctText)];
+              }
             }
             v.questions[targetIdx] = copyQ;
           }
@@ -6610,7 +6698,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
           bodyPreview = `
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; margin-top: 8px; font-size: 0.83rem">
               ${labels.map((lb, oIdx) => {
-                const isAns = String(c.answer || 'A').toUpperCase() === lb;
+                const isAns = String(c.answer || '').toUpperCase() === lb;
                 const cleanOpt = String(c.options[oIdx] || '').replace(/^[A-D][\.\:\)]\s*/i, '');
                 return `
                   <div style="padding: 5px 8px; border-radius: 6px; border: 1px solid ${isAns ? 'var(--mx-line)' : 'var(--mx-line-soft)'}; background: ${isAns ? 'var(--mx-ok-soft)' : 'var(--mx-surface)'}; color: ${isAns ? 'var(--mx-ok)' : 'var(--mx-ink)'}; font-weight: ${isAns ? '700' : '400'}">
@@ -6800,12 +6888,12 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
           }
 
           html += `<div style="margin-bottom: 10px">
-            <div><strong>Câu ${i + 1}:</strong> ${q.richHtml || escapeHtml(q.stem)}</div>
+            <div><strong>Câu ${i + 1}:</strong> ${q.richHtml || escapeHtml(formatMathForDisplay(q.stem))}</div>
             <div style="display: grid; grid-template-columns: repeat(${gridCols}, 1fr); gap: 6px 12px; margin-top: 4px; padding-left: 12px">
-              <div><strong>A.</strong> ${(Array.isArray(q.optionRichHtmls) && q.optionRichHtmls[0]) ? q.optionRichHtmls[0] : escapeHtml(opts[0] || '')}</div>
-              <div><strong>B.</strong> ${(Array.isArray(q.optionRichHtmls) && q.optionRichHtmls[1]) ? q.optionRichHtmls[1] : escapeHtml(opts[1] || '')}</div>
-              <div><strong>C.</strong> ${(Array.isArray(q.optionRichHtmls) && q.optionRichHtmls[2]) ? q.optionRichHtmls[2] : escapeHtml(opts[2] || '')}</div>
-              <div><strong>D.</strong> ${(Array.isArray(q.optionRichHtmls) && q.optionRichHtmls[3]) ? q.optionRichHtmls[3] : escapeHtml(opts[3] || '')}</div>
+              <div><strong>A.</strong> ${(Array.isArray(q.optionRichHtmls) && q.optionRichHtmls[0]) ? q.optionRichHtmls[0] : escapeHtml(formatMathForDisplay(opts[0] || ''))}</div>
+              <div><strong>B.</strong> ${(Array.isArray(q.optionRichHtmls) && q.optionRichHtmls[1]) ? q.optionRichHtmls[1] : escapeHtml(formatMathForDisplay(opts[1] || ''))}</div>
+              <div><strong>C.</strong> ${(Array.isArray(q.optionRichHtmls) && q.optionRichHtmls[2]) ? q.optionRichHtmls[2] : escapeHtml(formatMathForDisplay(opts[2] || ''))}</div>
+              <div><strong>D.</strong> ${(Array.isArray(q.optionRichHtmls) && q.optionRichHtmls[3]) ? q.optionRichHtmls[3] : escapeHtml(formatMathForDisplay(opts[3] || ''))}</div>
             </div>
           </div>`;
         });
@@ -6818,9 +6906,9 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         tfs.forEach((q, i) => {
           const stmts = q.statements || [];
           html += `<div style="margin-bottom: 10px">
-            <div><strong>Câu ${i + 1}:</strong> ${q.richHtml || escapeHtml(q.stem)}</div>
+            <div><strong>Câu ${i + 1}:</strong> ${q.richHtml || escapeHtml(formatMathForDisplay(q.stem))}</div>
             <div style="padding-left: 16px; margin-top: 4px">
-              ${stmts.map((s, si) => `<div><strong>${['a)', 'b)', 'c)', 'd)'][si]}</strong> ${s.richHtml || escapeHtml(s.text || '')}</div>`).join('')}
+              ${stmts.map((s, si) => `<div><strong>${['a)', 'b)', 'c)', 'd)'][si]}</strong> ${s.richHtml || escapeHtml(formatMathForDisplay(s.text || ''))}</div>`).join('')}
             </div>
           </div>`;
         });
@@ -6831,7 +6919,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         html += `<div style="font-weight: 700; margin-top: 12px">PHẦN ${roman[pIdx++]}. TRẮC NGHIỆM TRẢ LỜI NGẮN (${pts.toFixed(1)} điểm)</div>`;
         sas.forEach((q, i) => {
           html += `<div style="margin-bottom: 10px">
-            <div><strong>Câu ${i + 1}:</strong> ${q.richHtml || escapeHtml(q.stem)}</div>
+            <div><strong>Câu ${i + 1}:</strong> ${q.richHtml || escapeHtml(formatMathForDisplay(q.stem))}</div>
             <div style="font-style: italic; padding-left: 12px">Đáp số: .............................................</div>
           </div>`;
         });
@@ -6843,7 +6931,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         essays.forEach((q, i) => {
           html += `<div style="margin-bottom: 10px">
             ${q.sectionTitle ? `<div style="font-weight: 700; margin-top: 6px">${escapeHtml(q.sectionTitle)}</div>` : ''}
-            <div><strong>Câu ${i + 1} (${Number(q.points || 1.0).toFixed(1)} điểm):</strong> ${q.richHtml || escapeHtml(q.stem)}</div>
+            <div><strong>Câu ${i + 1} (${Number(q.points || 1.0).toFixed(1)} điểm):</strong> ${q.richHtml || escapeHtml(formatMathForDisplay(q.stem))}</div>
           </div>`;
         });
       }
@@ -6965,7 +7053,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
           html += `<tr><td style="text-align: center; font-weight: 700">Câu ${i + 1}</td>`;
           variants.forEach(v => {
             const vMcqs = (v.questions || []).filter(q => q.type === 'MCQ');
-            html += `<td style="text-align: center; font-weight: 700; color: var(--primary)">${escapeHtml(vMcqs[i]?.answer || 'A')}</td>`;
+            html += `<td style="text-align: center; font-weight: 700; color: var(--primary)">${escapeHtml(vMcqs[i]?.answer || '—')}</td>`;
           });
           html += `</tr>`;
         }
@@ -6995,7 +7083,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
                 <td style="text-align: center"><span class="badge badge-blue">${q.type} (${q.points}đ)</span></td>
                 <td style="text-align: center; font-size: 0.8rem">${escapeHtml(q.matrixRef || '')}</td>
                 <td style="font-weight: 700; color: var(--success); text-align: center">${escapeHtml(ansDisp)}</td>
-                <td style="white-space: pre-line">${escapeHtml(q.explanation || '')}</td>
+                <td style="white-space: pre-line">${escapeHtml(formatMathForDisplay(q.explanation || ''))}</td>
               </tr>
             `;
       }).join('')}
@@ -7254,7 +7342,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
           editingPaperId: null,
           answerKeysByCode: prevOmr.answerKeysByCode || {},
           selectedTemplateId: data.profile.omrSettings?.selectedTemplateId || prevOmr.selectedTemplateId || 'bgd_2025_4code',
-          pointRules: prevOmr.pointRules || { mcq: 0.25, tfStyle: 'fixed025', sa: 0.5 },
+          pointRules: prevOmr.pointRules || { mcq: 0.25, tfStyle: 'moet2025', sa: 0.5 },
           currentSessionId: null,
           activeKeySource: targetStep === 7 ? 'saved_profile' : 'current_workflow',
           selectedExamProfileId: data.profile.id || id,
@@ -8146,6 +8234,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         });
         const data = await res.json();
         if (!data.ok) {
+          setGdriveSyncBadge(false);
           if (reportBox) {
             reportBox.innerHTML = `<div class="alert alert-danger" style="margin: 0">Lỗi kết nối: ${escapeHtml(data.message || 'Không thể đồng bộ thư mục.')}</div>`;
           }
@@ -8157,6 +8246,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         renderDriveBankReport(data);
         showToast(data.message || ' Đã kết nối và phân tích chính xác Ngân hàng câu hỏi từ Google Drive!', 'success');
       } catch (err) {
+        setGdriveSyncBadge(false);
         if (reportBox) {
           reportBox.innerHTML = `<div class="alert alert-danger" style="margin: 0">Lỗi kết nối mạng: ${escapeHtml(err.message)}</div>`;
         }
@@ -8179,6 +8269,22 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       await connectAndScanGoogleDriveBank();
     }
 
+    // GĐ5b (UI-10): trạng thái đồng bộ Drive — chỉ "Đã đồng bộ" sau một
+    // lần quét thành công; mọi trạng thái khác là "Chưa đồng bộ".
+    function setGdriveSyncBadge(synced) {
+      const el = document.getElementById('gdrive-status-badge');
+      if (!el) return;
+      if (synced) {
+        el.textContent = '● Đã đồng bộ';
+        el.style.background = 'var(--mx-ok)';
+        el.style.color = 'var(--mx-surface)';
+      } else {
+        el.textContent = '○ Chưa đồng bộ';
+        el.style.background = 'var(--mx-surface)';
+        el.style.color = 'var(--mx-ink-2)';
+      }
+    }
+
     function renderDriveBankReport(data) {
       const reportBox = document.getElementById('gdrive-scan-report');
 
@@ -8196,6 +8302,12 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
       if (headerBtn) headerBtn.textContent = ` Ngân hàng Google Drive (${total} câu)`;
       const step4Badge = document.getElementById('step4-drive-bank-badge');
       if (step4Badge) step4Badge.textContent = `Ngân hàng Google Drive của Thầy/Cô (${total} câu hỏi gốc - ${folderName})`;
+
+      // GĐ5b (UI-10): chỉ báo "Đã đồng bộ" khi lần quét vừa rồi thành công;
+      // số câu hiện đúng tổng thật (0 câu khi trống).
+      setGdriveSyncBadge(true);
+      const gdriveCount = document.getElementById('gdrive-count-badge');
+      if (gdriveCount) gdriveCount.textContent = `${total} câu`;
 
       if (!reportBox) return;
 
@@ -8350,7 +8462,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         let bodyHtml = '';
         if (q.format === 'mcq' && Array.isArray(q.options)) {
           bodyHtml = `<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px; font-size: 0.83rem; background: var(--mx-surface); padding: 8px; border-radius: 6px">
-            ${q.options.map((opt, oi) => `<div><strong>${['A', 'B', 'C', 'D'][oi]}.</strong> ${escapeHtml(opt)}</div>`).join('')}
+            ${q.options.map((opt, oi) => `<div><strong>${['A', 'B', 'C', 'D'][oi]}.</strong> ${escapeHtml(formatMathForDisplay(opt))}</div>`).join('')}
           </div>`;
         } else if (q.format === 'true_false' && Array.isArray(q.items)) {
           bodyHtml = `<div style="display: flex; flex-direction: column; gap: 4px; margin-top: 6px; font-size: 0.83rem; background: var(--mx-surface); padding: 8px; border-radius: 6px">
@@ -8359,7 +8471,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
         } else {
           bodyHtml = q.answer
             ? `<div style="margin-top: 6px; font-size: 0.83rem; color: var(--mx-ink-2); background: var(--mx-surface); padding: 6px 10px; border-radius: 6px">
-            <strong>Đáp án/HD:</strong> ${escapeHtml(q.answer)}
+            <strong>Đáp án/HD:</strong> ${escapeHtml(formatMathForDisplay(q.answer))}
           </div>`
             : `<div style="margin-top: 6px; font-size: 0.83rem; color: var(--mx-ink-2); background: var(--mx-surface); padding: 6px 10px; border-radius: 6px">
             <svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> <strong>Đáp án ẩn</strong> — đăng nhập quản trị để xem.
@@ -8382,7 +8494,7 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
               </div>
               <span style="font-size: 0.75rem; color: var(--mx-blue); background: var(--mx-blue-soft); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--mx-line)"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> ${escapeHtml(q.sourceFile || '')}</span>
             </div>
-            <div style="font-weight: 600; font-size: 0.88rem; color: var(--mx-ink)">${escapeHtml(q.prompt)}</div>
+            <div style="font-weight: 600; font-size: 0.88rem; color: var(--mx-ink)">${escapeHtml(formatMathForDisplay(q.prompt))}</div>
             ${bodyHtml}
           </div>
         `;
@@ -8399,8 +8511,27 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
 
         const healthRes = await fetch('/api/health');
         const healthData = await healthRes.json();
-        if (healthData.ok && healthData.aiConfig?.hasKey) {
-          document.getElementById('ai-status-badge').textContent = ` Đã kết nối AI (${healthData.aiConfig.provider.toUpperCase()})`;
+        if (healthData.ok) {
+          // GĐ5b (UI-10): trạng thái AI phản ánh thật — chỉ báo "Đã kết nối"
+          // khi máy chủ xác nhận đã có khóa; còn không thì "AI chưa cấu hình khóa".
+          const aiBadge = document.getElementById('ai-status-badge');
+          if (aiBadge) {
+            if (healthData.aiConfig?.hasKey) {
+              aiBadge.textContent = ` Đã kết nối AI (${healthData.aiConfig.provider.toUpperCase()})`;
+              aiBadge.className = 'badge badge-teal';
+            } else {
+              aiBadge.textContent = ' AI chưa cấu hình khóa';
+              aiBadge.className = 'badge badge-amber';
+            }
+          }
+          // GĐ5b (UI-10): hiện banner bản giới thiệu khi chạy demo trên Vercel.
+          if (healthData.demoMode) {
+            const demoBanner = document.getElementById('demo-mode-banner');
+            if (demoBanner) {
+              demoBanner.textContent = healthData.demoNotice || 'Bản giới thiệu — dữ liệu không được lưu trên máy chủ này.';
+              demoBanner.style.display = 'block';
+            }
+          }
         }
 
         const wfRes = await fetch('/api/workspace-files');
@@ -9366,11 +9497,10 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
     const OMR_TF_STYLE_STORAGE_KEY = 'matrixedu_omr_tfStyle_v2';
 
     function getOmrTfStyle() {
-      const explicit = appState.omr?.pointRules?.tfStyle;
-      if (explicit === 'fixed025' || explicit === 'moet2025') return explicit;
-      const saved = localStorage.getItem(OMR_TF_STYLE_STORAGE_KEY);
-      if (saved === 'fixed025' || saved === 'moet2025') return saved;
-      return 'fixed025';
+      // GĐ5b: chỉ còn thang lũy tiến BGD 2025 — mọi giá trị cũ 'fixed025'
+      // (hồ sơ cũ, localStorage cũ) đều quy về 'moet2025', đúng thang mà
+      // máy chủ GĐ2 dùng để chấm. Không còn lựa chọn đổi thang trên giao diện.
+      return 'moet2025';
     }
 
     function summarizeMatrixRows(rows = [], pointRules = {}) {
@@ -10136,17 +10266,18 @@ Phần III: 1: 12.5 | 2: -3"></textarea>
     }
 
     /**
-     * Chuyển đổi Thang điểm Phần II (Đúng/Sai) giữa:
-     * - 'fixed025': Chia đều 0.25đ / mỗi ý đúng (Không sinh điểm lẻ .10, .35, .60)
-     * - 'moet2025': Thang điểm lũy tiến Bộ GD&ĐT 2025 (0.1 - 0.25 - 0.5 - 1.0đ)
+     * GĐ5b: thang Phần II (Đúng/Sai) đã cố định là lũy tiến Bộ GD&ĐT 2025
+     * (0.1 - 0.25 - 0.5 - 1.0đ). Hàm còn lại để tương thích với các lệnh gọi
+     * cũ — mọi giá trị truyền vào đều quy về 'moet2025'.
      */
     async function onOmrTfStyleChanged(val) {
+      val = 'moet2025';
       if (!appState.omr.pointRules) appState.omr.pointRules = {};
       appState.omr.pointRules.tfStyle = val;
       localStorage.setItem(OMR_TF_STYLE_STORAGE_KEY, val);
       syncOmrTfStyleSelectors(val);
 
-      const styleLabel = val === 'fixed025' ? 'Chia đều 0.25đ / mỗi ý đúng (Không điểm lẻ)' : 'Lũy tiến chuẩn Bộ GD&ĐT 2025';
+      const styleLabel = 'Lũy tiến chuẩn Bộ GD&ĐT 2025';
       showToast(` Đã chuyển thang điểm Phần II sang: ${styleLabel}`, 'info');
 
       await regradeCurrentPapersBatch();
@@ -10677,7 +10808,7 @@ Phần III:
         html += `<tr style="border-bottom: 1px solid var(--mx-line-soft)">
           <td style="padding: 5px 8px; text-align: center; font-weight: 700; color: var(--mx-ink-2); background: var(--mx-surface)">Câu ${q}</td>
           ${codes.map(c => {
-          const currentOpt = keys[c]?.part1?.[q - 1] || 'A';
+          const currentOpt = keys[c]?.part1?.[q - 1] || '—';
           return `
               <td style="padding: 3px 6px; text-align: center">
                 <div style="display: inline-flex; gap: 3px">
@@ -11606,7 +11737,7 @@ Phần III:
       const info = typeof getActiveOmrStructureSummary === 'function'
         ? getActiveOmrStructureSummary()
         : { codes: [], p1Count: 24, p2Count: 4, p3Count: 0, maxOmrScore: 10, structureLabel: '' };
-      const tfStyle = typeof getOmrTfStyle === 'function' ? getOmrTfStyle() : 'fixed025';
+      const tfStyle = typeof getOmrTfStyle === 'function' ? getOmrTfStyle() : 'moet2025';
       const meta = appState.metadata || {};
       const subjectGrade = `${meta.subject || 'Tin học'} ${meta.grade || ''}`.trim();
       const clsName = (appState.omr?.selectedClassName && appState.omr.selectedClassName !== '__ALL__')
@@ -11698,10 +11829,7 @@ Phần III:
         cards.push(`
           <div style="background: var(--mx-amber-soft); border: 1px solid var(--mx-amber); border-left: 4px solid var(--mx-amber); border-radius: 6px; padding: 6px 9px; color: var(--mx-warn)">
             <div style="font-weight: 800"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M7 7l-2.5 6a3 3 0 0 0 5 0L7 7zm10 0l-2.5 6a3 3 0 0 0 5 0L17 7z"/></svg> Điểm lẻ (.10, .35, .60) do Thang Phần II Lũy tiến Bộ GD 2025</div>
-            <div>Có <b>${moetDecimalCount}</b> bài bị lẻ (đúng 1 ý = 0.10đ). Nếu trường chấm <b>0.25đ/mỗi ý</b>, bấm nút bên dưới để đổi & chấm lại ngay:</div>
-            <div style="margin-top: 5px">
-              <button class="btn btn-sm" onclick="onOmrTfStyleChanged('fixed025')" style="font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border: none; border-radius: 5px; cursor: pointer"><svg class="mx-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M5 7h14M7 7l-2.5 6a3 3 0 0 0 5 0L7 7zm10 0l-2.5 6a3 3 0 0 0 5 0L17 7z"/></svg> Đổi ngay sang 0.25đ/ý (Hết điểm lẻ)</button>
-            </div>
+            <div>Có <b>${moetDecimalCount}</b> bài bị lẻ (đúng 1 ý = 0.10đ). Đây là thang lũy tiến chuẩn Bộ GD&ĐT 2025 mà máy chủ đang dùng để chấm.</div>
           </div>
         `);
       }
@@ -15417,7 +15545,8 @@ Phần III:
       const opts = ['A', 'B', 'C', 'D'];
       const maxP1ToFill = Math.min(40, p1List.length || 24);
       for (let q = 1; q <= maxP1ToFill; q++) {
-        const correctOpt = p1List[q - 1] || 'A';
+        const correctOpt = p1List[q - 1] || '';
+        if (!correctOpt) continue;
         const colIdx = Math.floor((q - 1) / 10);
         const rowIdx = (q - 1) % 10;
         const colBaseX = p1Cfg.colBases[colIdx];
@@ -15992,7 +16121,6 @@ Phần III:
       const countInput = document.getElementById('meta-variants');
       if (countInput) countInput.value = codes.length;
 
-      const keepFirstCodeOrder = Boolean(document.getElementById('shuffle-keep-first-order')?.checked);
       const shuffleTfStatements = Boolean(document.getElementById('shuffle-tf-statements')?.checked);
 
       closeModal('modalShuffleVariants');
@@ -16006,7 +16134,6 @@ Phần III:
             questions: appState.questions,
             numVariants: codes.length,
             customCodes: codes,
-            keepFirstCodeOrder,
             shuffleTfStatements
           })
         });
@@ -16072,7 +16199,6 @@ Phần III:
             fileBase64,
             numVariants: customCodes.length,
             customCodes,
-            keepFirstCodeOrder: true,
             shuffleTfStatements: false
           })
         });
@@ -16220,10 +16346,6 @@ Phần III:
       </div>
 
       <div style="margin-bottom: 14px; padding: 10px 12px; border-radius: 10px; background: var(--mx-line-soft); display: flex; flex-direction: column; gap: 6px; font-size: 0.82rem">
-        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; color: var(--mx-ink)">
-          <input type="checkbox" id="shuffle-keep-first-order" style="width: 15px; height: 15px; cursor: pointer" />
-          Giữ nguyên thứ tự câu &amp; phương án cho mã đề đầu tiên (mã gốc)
-        </label>
         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; color: var(--mx-ink)">
           <input type="checkbox" id="shuffle-tf-statements" style="width: 15px; height: 15px; cursor: pointer" />
           Đảo thứ tự 4 ý a), b), c), d) trong Phần II (Đúng/Sai)
